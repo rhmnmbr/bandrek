@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#E6E6E6;font-family:'Segoe UI','Segoe UI Variable',system-ui,sans-serif;font-variant-numeric:tabular-nums}a{color:#0F6CBD}a:hover{color:#115EA3}.dv-turn{padding:40px 44px 32px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px 'Cascadia Mono',Consolas,monospace;padding:3px 7px;background:#242424;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#242424}.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px 'Cascadia Mono',Consolas,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#242424;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-card{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.07);overflow:hidden}.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Spesifikasi design system Bandrek — token, komponen, pattern, copy</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Token — CSS variables siap tempel</div>
+<div class="dv-card" style="width:1480px;background:#FFFFFF;color:#242424">
+<div style="padding:18px 26px;border-bottom:1px solid #E1DFDD;background:#FAFAFA;display:flex;align-items:baseline;gap:14px"><div style="font-size:20px;font-weight:600">Token</div><div style="font-size:13.5px;color:#424242">Nama semantik, bukan nama warna. Ganti nilainya sekali, seluruh aplikasi ikut.</div></div>
+
+<div style="display:flex;gap:0;align-items:stretch">
+<div style="width:730px;flex:none;border-right:1px solid #E1DFDD;padding:18px 22px">
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin-bottom:10px">WARNA · DASAR &amp; PERMUKAAN</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;font-size:12.5px;font-family:'Cascadia Mono',Consolas,monospace">
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#0F6CBD;flex:none"></span>--color-brand<span style="margin-left:auto;color:#5C5A58">#0F6CBD</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#115EA3;flex:none"></span>--color-brand-pressed<span style="margin-left:auto;color:#5C5A58">#115EA3</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#EBF3FC;border:1px solid #E1DFDD;flex:none"></span>--color-brand-subtle<span style="margin-left:auto;color:#5C5A58">#EBF3FC</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#0C548F;flex:none"></span>--color-brand-ink<span style="margin-left:auto;color:#5C5A58">#0C548F</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#FFFFFF;border:1px solid #E1DFDD;flex:none"></span>--color-surface<span style="margin-left:auto;color:#5C5A58">#FFFFFF</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#F5F5F5;border:1px solid #E1DFDD;flex:none"></span>--color-canvas<span style="margin-left:auto;color:#5C5A58">#F5F5F5</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#FAFAFA;border:1px solid #E1DFDD;flex:none"></span>--color-surface-alt<span style="margin-left:auto;color:#5C5A58">#FAFAFA</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#EDEBE9;flex:none"></span>--color-surface-sunken<span style="margin-left:auto;color:#5C5A58">#EDEBE9</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#242424;flex:none"></span>--color-text<span style="margin-left:auto;color:#5C5A58">#242424</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#424242;flex:none"></span>--color-text-secondary<span style="margin-left:auto;color:#5C5A58">#424242</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#5C5A58;flex:none"></span>--color-text-muted<span style="margin-left:auto;color:#5C5A58">#5C5A58</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#8A8886;flex:none"></span>--color-icon-faint<span style="margin-left:auto;color:#5C5A58">#8A8886</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#E1DFDD;flex:none"></span>--color-border<span style="margin-left:auto;color:#5C5A58">#E1DFDD</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#C8C6C4;flex:none"></span>--color-border-strong<span style="margin-left:auto;color:#5C5A58">#C8C6C4</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#EDEBE9;flex:none"></span>--color-border-subtle<span style="margin-left:auto;color:#5C5A58">#EDEBE9</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:16px;border-radius:3px;background:#242424;flex:none"></span>--color-focus-ring<span style="margin-left:auto;color:#5C5A58">#242424</span></div>
+</div>
+
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin:18px 0 10px">WARNA · SEMANTIK <span style="letter-spacing:0;text-transform:none;color:#8A5200">· sukses &amp; peringatan dari PrimeNG Ultima</span></div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;font-size:11.5px;font-family:'Cascadia Mono',Consolas,monospace">
+<div style="border:1px solid #E1DFDD;border-radius:6px;overflow:hidden"><div style="height:22px;background:#4CAF50"></div><div style="padding:6px 8px;line-height:1.6">--color-success<br><span style="color:#5C5A58">#4CAF50</span><br>-subtle <span style="color:#5C5A58">#E8F5E9</span><br>-ink <span style="color:#5C5A58">#2E7D32</span></div></div>
+<div style="border:1px solid #E1DFDD;border-radius:6px;overflow:hidden"><div style="height:22px;background:#F0A82E"></div><div style="padding:6px 8px;line-height:1.6">--color-warning<br><span style="color:#5C5A58">#F0A82E</span><br>-subtle <span style="color:#5C5A58">#FFF3E0</span><br>-ink <span style="color:#5C5A58">#8A5200</span></div></div>
+<div style="border:1px solid #E1DFDD;border-radius:6px;overflow:hidden"><div style="height:22px;background:#C50F1F"></div><div style="padding:6px 8px;line-height:1.6">--color-danger<br><span style="color:#5C5A58">#C50F1F</span><br>-subtle <span style="color:#5C5A58">#FDE7E9</span><br>-ink <span style="color:#5C5A58">#9B0C18</span></div></div>
+<div style="border:1px solid #E1DFDD;border-radius:6px;overflow:hidden"><div style="height:22px;background:#0F6CBD"></div><div style="padding:6px 8px;line-height:1.6">--color-info<br><span style="color:#5C5A58">#0F6CBD</span><br>-subtle <span style="color:#5C5A58">#EBF3FC</span><br>-ink <span style="color:#5C5A58">#0C548F</span></div></div>
+</div>
+<div style="font-size:12.5px;color:#424242;line-height:1.55;margin-top:8px">Aturan: <b>-subtle</b> untuk latar, <b>-ink</b> untuk huruf &amp; ikon di atasnya, warna penuh untuk garis dan isian besar. Jangan pernah menaruh huruf kecil langsung di atas warna penuh sukses/peringatan — kontrasnya tidak cukup.</div>
+
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin:18px 0 10px">WARNA · STATUS KEHADIRAN &amp; KEGIATAN</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;font-size:11.5px;margin-bottom:9px">
+<span style="border:1px solid #4CAF50;border-radius:4px;padding:3px 9px;background:#E8F5E9;color:#2E7D32">✓ Hadir <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px;opacity:.8">--color-status-hadir</span></span>
+<span style="border:1px solid #F0A82E;border-radius:4px;padding:3px 9px;background:#FFF3E0;color:#8A5200">◐ Sakit <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px;opacity:.8">--color-status-sakit</span></span>
+<span style="border:1px solid #0F6CBD;border-radius:4px;padding:3px 9px;background:#EBF3FC;color:#0C548F">✉ Izin <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px;opacity:.8">--color-status-izin</span></span>
+<span style="border:1px solid #C50F1F;border-radius:4px;padding:3px 9px;background:#FDE7E9;color:#9B0C18">✕ Alpa <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px;opacity:.8">--color-status-alpa</span></span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;font-size:11.5px">
+<span style="border:1px solid #0F6CBD;border-radius:12px;padding:3px 10px;color:#0C548F;background:#fff">● Terjadwal</span>
+<span style="border:1px solid #F0A82E;border-radius:12px;padding:3px 10px;color:#8A5200;background:#FFF3E0">⚠ Belum direalisasi</span>
+<span style="border:1px solid #4CAF50;border-radius:12px;padding:3px 10px;color:#2E7D32;background:#fff">✓ Terealisasi</span>
+<span style="border:1px solid #C8C6C4;border-radius:12px;padding:3px 10px;color:#5C5A58;background:#F5F5F5;text-decoration:line-through">✕ Dibatalkan</span>
+<span style="border:1px dashed #8764B8;border-radius:12px;padding:3px 10px;color:#5B4394;background:#fff">↻ Dijadwal ulang</span>
+</div>
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11px;color:#5C5A58;margin-top:7px">--color-event-terjadwal · -belum · -terealisasi · -dibatalkan · -dijadwal-ulang</div>
+
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin:18px 0 10px">WARNA · JENIS KEGIATAN</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;font-size:11px">
+<div style="border-left:4px solid #0F6CBD;border-radius:3px;background:#EBF3FC;color:#0C548F;padding:5px 7px">Pembelajaran<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-pembelajaran</div></div>
+<div style="border-left:4px solid #8764B8;border-radius:3px;background:#F3EFFA;color:#5B4394;padding:5px 7px">Rapat<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-rapat</div></div>
+<div style="border-left:4px solid #4CAF50;border-radius:3px;background:#E8F5E9;color:#2E7D32;padding:5px 7px">Olahraga<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-olahraga</div></div>
+<div style="border-left:4px solid #C50F1F;border-radius:3px;background:#FDE7E9;color:#9B0C18;padding:5px 7px">Ujian<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-ujian</div></div>
+<div style="border-left:4px solid #F0A82E;border-radius:3px;background:#FFF3E0;color:#8A5200;padding:5px 7px">Kunjungan<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-kunjungan</div></div>
+<div style="border-left:4px solid #038387;border-radius:3px;background:#E0F4F4;color:#02686B;padding:5px 7px">Konsultasi<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-konsultasi</div></div>
+<div style="border-left:4px solid #4F6BED;border-radius:3px;background:#EDEFFC;color:#3B52B8;padding:5px 7px">Pelatihan<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-pelatihan</div></div>
+<div style="border-left:4px solid #605E5C;border-radius:3px;background:#EDEBE9;color:#424242;padding:5px 7px">Lainnya<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:9.5px">--color-event-lainnya</div></div>
+</div>
+</div>
+
+<div style="flex:1;min-width:0;padding:18px 22px">
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin-bottom:10px">TIPOGRAFI</div>
+<div style="display:grid;grid-template-columns:150px 1fr auto;gap:6px 12px;font-size:12.5px;align-items:baseline">
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-title</span><span style="font-size:22px;font-weight:600;line-height:1.25">Judul halaman</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">22/600/1.25</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-section</span><span style="font-size:18px;font-weight:600;line-height:1.3">Judul bagian</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">18/600/1.3</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-card</span><span style="font-size:15px;font-weight:600;line-height:1.4">Judul kartu &amp; dialog</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">15/600/1.4</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-body</span><span style="font-size:13.5px;line-height:1.5">Teks isi &amp; isian form</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">13.5/400/1.5</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-table</span><span style="font-size:12.5px;line-height:1.4">Baris tabel · compact</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">12.5/400/1.4</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-dense</span><span style="font-size:12px;line-height:1.35">Blok kalender</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">12/400/1.35</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-label</span><span style="font-size:11px;font-weight:600;letter-spacing:.09em;line-height:1.3">LABEL KOLOM</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">11/600/1.3</span>
+<span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">--text-mono</span><span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:12.5px">08:00–09:30 · 16 Sep · 5/7</span><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58;font-size:11px">Cascadia</span>
+</div>
+<div style="font-size:12.5px;color:#424242;line-height:1.55;margin-top:9px;padding:9px 11px;border:1px solid #E1DFDD;border-radius:6px;background:#FAFAFA"><span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">--font-sans: "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;<br>--font-mono: "Cascadia Mono",Consolas,monospace;</span><br>Segoe dari sistem; Cascadia Mono dibundel (±90KB, OFL). Seluruh aplikasi memakai <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">font-variant-numeric: tabular-nums</span>.</div>
+
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin:18px 0 10px">SPACING · RADIUS · BORDER</div>
+<div style="display:flex;gap:16px">
+<div style="flex:1">
+<div style="display:flex;align-items:flex-end;gap:5px;height:38px">
+<div style="width:2px;height:2px;background:#0F6CBD"></div><div style="width:4px;height:4px;background:#0F6CBD"></div><div style="width:8px;height:8px;background:#0F6CBD"></div><div style="width:12px;height:12px;background:#0F6CBD"></div><div style="width:16px;height:16px;background:#0F6CBD"></div><div style="width:24px;height:24px;background:#0F6CBD"></div><div style="width:32px;height:32px;background:#0F6CBD"></div>
+</div>
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58;margin-top:5px;line-height:1.6">--space-0 2 · --space-1 4 · --space-2 8<br>--space-3 12 · --space-4 16 · --space-5 24 · --space-6 32</div>
+</div>
+<div style="flex:1">
+<div style="display:flex;gap:6px;align-items:center;height:38px">
+<span style="width:34px;height:26px;border:1px solid #C8C6C4;border-radius:2px;background:#fff"></span>
+<span style="width:34px;height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff"></span>
+<span style="width:34px;height:26px;border:1px solid #C8C6C4;border-radius:8px;background:#fff"></span>
+<span style="width:40px;height:26px;border:1px solid #C8C6C4;border-radius:999px;background:#fff"></span>
+</div>
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58;margin-top:5px;line-height:1.6">--radius-sm 2 (sel, blok)<br>--radius-md 4 (kontrol)<br>--radius-lg 8 (kartu, panel)<br>--radius-pill 999 (badge, chip)</div>
+</div>
+<div style="flex:1">
+<div style="display:flex;gap:6px;align-items:center;height:38px">
+<span style="width:34px;height:26px;border:1px solid #EDEBE9;border-radius:4px;background:#fff"></span>
+<span style="width:34px;height:26px;border:1px solid #E1DFDD;border-radius:4px;background:#fff"></span>
+<span style="width:34px;height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff"></span>
+</div>
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58;margin-top:5px;line-height:1.6">--border-subtle 1px #EDEBE9<br>--border-default 1px #E1DFDD<br>--border-strong 1px #C8C6C4<br><span style="color:#8A5200">tidak ada garis &gt; 1px</span></div>
+</div>
+</div>
+
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin:18px 0 10px">ELEVASI · MOTION · UKURAN</div>
+<div style="display:flex;gap:16px">
+<div style="flex:1">
+<div style="display:flex;gap:8px;align-items:center;height:40px">
+<span style="width:40px;height:28px;border:1px solid #E1DFDD;border-radius:6px;background:#fff"></span>
+<span style="width:40px;height:28px;border-radius:6px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.1),0 0 2px rgba(0,0,0,.06)"></span>
+<span style="width:40px;height:28px;border-radius:6px;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,.12),0 0 2px rgba(0,0,0,.1)"></span>
+<span style="width:40px;height:28px;border-radius:6px;background:#fff;box-shadow:0 8px 16px rgba(0,0,0,.14),0 0 2px rgba(0,0,0,.12)"></span>
+</div>
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58;margin-top:5px;line-height:1.6">--shadow-none (kartu di tabel)<br>--shadow-sm (kartu, blok kalender)<br>--shadow-md (popover, dropdown)<br>--shadow-lg (panel samping, dialog)</div>
+</div>
+<div style="flex:1">
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58;line-height:1.65;padding-top:4px">--motion-instant 0ms<br>--motion-fast 120ms<br>--motion-panel 180ms<br>--ease-standard cubic-bezier(.33,0,.67,1)</div>
+<div style="font-size:12px;color:#424242;line-height:1.5;margin-top:7px">Tabel, kalender, dan matriks memakai <b>instant</b> — tidak pernah beranimasi. Hanya panel, dialog, toast, dan dropdown yang bertransisi.</div>
+</div>
+<div style="flex:1">
+<div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58;line-height:1.65;padding-top:4px">--size-control 26px<br>--size-row 32px<br>--size-cell 28px<br>--size-slot 36px<br>--size-row-attendance 34px<br>--size-rail 48px<br>--size-sidebar 208px</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Komponen — varian, ukuran, state, perilaku keyboard</div>
+<div class="dv-card" style="width:1480px;background:#FFFFFF;color:#242424">
+<div style="padding:18px 26px;border-bottom:1px solid #E1DFDD;background:#FAFAFA;display:flex;align-items:baseline;gap:14px"><div style="font-size:20px;font-weight:600">Komponen</div><div style="font-size:13.5px;color:#424242">Semua state digambar, bukan dideskripsikan. Fokus = cincin <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:12px">2px #242424</span> dengan jarak 2px di semua komponen.</div></div>
+
+<div style="padding:20px 26px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Tombol</div>
+<div style="padding:13px">
+<div style="display:grid;grid-template-columns:64px repeat(6,1fr);gap:7px 8px;align-items:center;font-size:11px">
+<span style="color:#5C5A58"></span><span style="color:#5C5A58;text-align:center">default</span><span style="color:#5C5A58;text-align:center">hover</span><span style="color:#5C5A58;text-align:center">active</span><span style="color:#5C5A58;text-align:center">focus</span><span style="color:#5C5A58;text-align:center">disabled</span><span style="color:#5C5A58;text-align:center">loading</span>
+<span style="color:#424242">Primary</span>
+<span style="height:26px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px">Simpan</span>
+<span style="height:26px;border-radius:4px;background:#115EA3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px">Simpan</span>
+<span style="height:26px;border-radius:4px;background:#0E4C84;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px">Simpan</span>
+<span style="height:26px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px;outline:2px solid #242424;outline-offset:2px">Simpan</span>
+<span style="height:26px;border-radius:4px;background:#EDEBE9;color:#8A8886;display:flex;align-items:center;justify-content:center;font-size:11.5px">Simpan</span>
+<span style="height:26px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11.5px">◌ Simpan</span>
+<span style="color:#424242">Secondary</span>
+<span style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batal</span>
+<span style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#F5F5F5;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batal</span>
+<span style="height:26px;border:1px solid #8A8886;border-radius:4px;background:#EDEBE9;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batal</span>
+<span style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:11.5px;outline:2px solid #242424;outline-offset:2px">Batal</span>
+<span style="height:26px;border:1px solid #EDEBE9;border-radius:4px;background:#fff;color:#8A8886;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batal</span>
+<span style="color:#8A8886;text-align:center;font-size:10.5px">—</span>
+<span style="color:#424242">Ghost</span>
+<span style="height:26px;border-radius:4px;color:#0F6CBD;display:flex;align-items:center;justify-content:center;font-size:11.5px">Lihat</span>
+<span style="height:26px;border-radius:4px;background:#F5F5F5;color:#115EA3;display:flex;align-items:center;justify-content:center;font-size:11.5px">Lihat</span>
+<span style="height:26px;border-radius:4px;background:#EDEBE9;color:#0E4C84;display:flex;align-items:center;justify-content:center;font-size:11.5px">Lihat</span>
+<span style="height:26px;border-radius:4px;color:#0F6CBD;display:flex;align-items:center;justify-content:center;font-size:11.5px;outline:2px solid #242424;outline-offset:2px">Lihat</span>
+<span style="height:26px;border-radius:4px;color:#8A8886;display:flex;align-items:center;justify-content:center;font-size:11.5px">Lihat</span>
+<span style="color:#8A8886;text-align:center;font-size:10.5px">—</span>
+<span style="color:#424242">Danger</span>
+<span style="height:26px;border:1px solid #C50F1F;border-radius:4px;background:#fff;color:#9B0C18;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batalkan</span>
+<span style="height:26px;border:1px solid #C50F1F;border-radius:4px;background:#FDE7E9;color:#9B0C18;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batalkan</span>
+<span style="height:26px;border:1px solid #9B0C18;border-radius:4px;background:#F8D5D8;color:#7A0912;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batalkan</span>
+<span style="height:26px;border:1px solid #C50F1F;border-radius:4px;background:#fff;color:#9B0C18;display:flex;align-items:center;justify-content:center;font-size:11.5px;outline:2px solid #242424;outline-offset:2px">Batalkan</span>
+<span style="height:26px;border:1px solid #EDEBE9;border-radius:4px;background:#fff;color:#8A8886;display:flex;align-items:center;justify-content:center;font-size:11.5px">Batalkan</span>
+<span style="color:#8A8886;text-align:center;font-size:10.5px">—</span>
+</div>
+<div style="margin-top:11px;padding-top:10px;border-top:1px solid #EDEBE9;font-size:12.5px;line-height:1.6;color:#424242"><b>Keyboard:</b> <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Tab</span> berpindah, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span>/<span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Space</span> menekan. Tombol disabled dilewati Tab. Primary di form aktif lewat <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Ctrl+S</span>. Danger tidak pernah jadi tombol default dialog.</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Isian teks &amp; dropdown</div>
+<div style="padding:13px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:11.5px">
+<div><div style="color:#5C5A58;margin-bottom:4px">default</div><div style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12.5px">Matematika SD</div></div>
+<div><div style="color:#5C5A58;margin-bottom:4px">hover</div><div style="height:26px;border:1px solid #8A8886;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12.5px">Matematika SD</div></div>
+<div><div style="color:#5C5A58;margin-bottom:4px">focus</div><div style="height:26px;border:1px solid #0F6CBD;border-bottom:2px solid #0F6CBD;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12.5px">Matematika SD<span style="margin-left:auto;width:1px;height:13px;background:#242424"></span></div></div>
+<div><div style="color:#5C5A58;margin-bottom:4px">placeholder</div><div style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12.5px;color:#5C5A58">Nama kegiatan</div></div>
+<div><div style="color:#5C5A58;margin-bottom:4px">disabled</div><div style="height:26px;border:1px solid #EDEBE9;border-radius:4px;background:#F5F5F5;display:flex;align-items:center;padding:0 8px;font-size:12.5px;color:#8A8886">Matematika SD</div></div>
+<div><div style="color:#9B0C18;margin-bottom:4px">error</div><div style="height:26px;border:1px solid #C50F1F;border-bottom:2px solid #C50F1F;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12.5px">09:30</div></div>
+</div>
+<div style="margin-top:9px;display:flex;gap:7px;align-items:flex-start;font-size:12px;color:#9B0C18;line-height:1.5"><b>⚠</b><div>Jam selesai harus lebih besar dari jam mulai. Ubah jam selesai menjadi setelah 08:00.</div></div>
+<div style="margin-top:11px;padding-top:10px;border-top:1px solid #EDEBE9;font-size:12.5px;line-height:1.6;color:#424242"><b>Dropdown:</b> <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span>/<span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">↓</span> membuka, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">↑↓</span> memilih, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span> menetapkan, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Esc</span> menutup tanpa mengubah, huruf melompat ke item yang diawali huruf itu. Pesan error selalu di bawah isian, tidak pernah hanya berupa garis merah.</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Segmented · kehadiran</div>
+<div style="padding:13px">
+<div style="display:flex;flex-direction:column;gap:8px;font-size:11.5px">
+<div style="display:flex;align-items:center;gap:10px"><span style="width:62px;flex:none;color:#5C5A58">default</span><div style="display:flex;border:1px solid #C8C6C4;border-radius:4px;overflow:hidden;height:26px;width:200px"><span style="flex:1;display:flex;align-items:center;justify-content:center;background:#0F6CBD;color:#fff">Hadir</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Izin</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Sakit</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Alpa</span></div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="width:62px;flex:none;color:#5C5A58">hover</span><div style="display:flex;border:1px solid #8A8886;border-radius:4px;overflow:hidden;height:26px;width:200px"><span style="flex:1;display:flex;align-items:center;justify-content:center;background:#0F6CBD;color:#fff">Hadir</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD;background:#F5F5F5">Izin</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Sakit</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Alpa</span></div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="width:62px;flex:none;color:#5C5A58">focus</span><div style="display:flex;border:1px solid #C8C6C4;border-radius:4px;overflow:hidden;height:26px;width:200px;outline:2px solid #242424;outline-offset:2px"><span style="flex:1;display:flex;align-items:center;justify-content:center;background:#0F6CBD;color:#fff">Hadir</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Izin</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Sakit</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #E1DFDD">Alpa</span></div></div>
+<div style="display:flex;align-items:center;gap:10px"><span style="width:62px;flex:none;color:#9B0C18">belum diisi</span><div style="display:flex;border:1px solid #C50F1F;border-radius:4px;overflow:hidden;height:26px;width:200px;background:#FDE7E9"><span style="flex:1;display:flex;align-items:center;justify-content:center">Hadir</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #F3C6CA">Izin</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #F3C6CA">Sakit</span><span style="flex:1;display:flex;align-items:center;justify-content:center;border-left:1px solid #F3C6CA">Alpa</span></div></div>
+</div>
+<div style="margin-top:11px;padding-top:10px;border-top:1px solid #EDEBE9;font-size:12.5px;line-height:1.6;color:#424242"><b>Keyboard:</b> satu <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Tab</span> untuk seluruh grup, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">←→</span> memilih, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">H I S A</span> pintasan langsung, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">↓</span> pindah ke siswa berikutnya. Pola tercepat: "Tandai semua hadir" lalu koreksi yang berbeda.</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Blok kalender · semua status</div>
+<div style="padding:13px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px">
+<div><div style="color:#5C5A58;font-size:11px;margin-bottom:4px">terjadwal</div><div style="border-left:4px solid #0F6CBD;border-radius:3px;background:#EBF3FC;color:#0C548F;padding:4px 7px;line-height:1.3;box-shadow:0 1px 2px rgba(0,0,0,.08)"><div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px">08:00–09:30</div><div style="font-weight:600">Matematika</div></div></div>
+<div><div style="color:#5C5A58;font-size:11px;margin-bottom:4px">terealisasi</div><div style="border-left:4px solid #0F6CBD;border-radius:3px;background:#EBF3FC;color:#0C548F;padding:4px 7px;line-height:1.3;box-shadow:0 1px 2px rgba(0,0,0,.08)"><div style="display:flex;justify-content:space-between;font-family:'Cascadia Mono',Consolas,monospace;font-size:10px">08:00–09:30 <span style="color:#2E7D32">✓</span></div><div style="font-weight:600">Matematika</div></div></div>
+<div><div style="color:#5C5A58;font-size:11px;margin-bottom:4px">belum direalisasi</div><div style="border:1px solid #F0A82E;border-left:4px solid #F0A82E;border-radius:3px;background:#FFF3E0;color:#8A5200;padding:4px 7px;line-height:1.3"><div style="display:flex;justify-content:space-between;font-family:'Cascadia Mono',Consolas,monospace;font-size:10px">08:00–09:30 <b>⚠</b></div><div style="font-weight:600">Matematika</div></div></div>
+<div><div style="color:#5C5A58;font-size:11px;margin-bottom:4px">dibatalkan</div><div style="border:1px solid #E1DFDD;border-radius:3px;background:#F5F5F5;color:#5C5A58;padding:4px 7px;line-height:1.3"><div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px">08:00–09:30</div><div style="text-decoration:line-through">Matematika</div></div></div>
+<div><div style="color:#5C5A58;font-size:11px;margin-bottom:4px">dijadwal ulang</div><div style="border:1px dashed #8764B8;border-left:4px solid #8764B8;border-radius:3px;background:#F3EFFA;color:#5B4394;padding:4px 7px;line-height:1.3"><div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px">08:00–09:30 ↻</div><div style="font-weight:600">Matematika</div></div></div>
+<div><div style="color:#5C5A58;font-size:11px;margin-bottom:4px">terpilih / fokus</div><div style="border-left:4px solid #0F6CBD;border-radius:3px;background:#EBF3FC;color:#0C548F;padding:4px 7px;line-height:1.3;outline:2px solid #242424;outline-offset:2px"><div style="font-family:'Cascadia Mono',Consolas,monospace;font-size:10px">08:00–09:30</div><div style="font-weight:600">Matematika</div></div></div>
+</div>
+<div style="margin-top:11px;padding-top:10px;border-top:1px solid #EDEBE9;font-size:12.5px;line-height:1.6;color:#424242"><b>Ukuran:</b> tinggi = durasi × (36px/jam), minimum 26px. Di bawah 36px hanya jam + nama; di bawah 54px tanpa baris ketiga. <b>Keyboard:</b> <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Tab</span> menyusuri blok urut waktu, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span> membuka popover, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Esc</span> menutup.</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Baris tabel &amp; sel matriks</div>
+<div style="padding:13px">
+<div style="border:1px solid #E1DFDD;border-radius:4px;overflow:hidden;font-size:12.5px;margin-bottom:11px">
+<div style="display:flex;align-items:center;height:26px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;padding:0 9px;font-size:10.5px;letter-spacing:.09em;color:#5C5A58">TANGGAL<span style="flex:1;margin-left:12px">KEGIATAN</span><span>STATUS</span></div>
+<div style="display:flex;align-items:center;height:32px;border-bottom:1px solid #EDEBE9;padding:0 9px"><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">14 Sep</span><span style="flex:1;margin-left:12px">default</span></div>
+<div style="display:flex;align-items:center;height:32px;border-bottom:1px solid #EDEBE9;padding:0 9px;background:#FAFAFA"><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">15 Sep</span><span style="flex:1;margin-left:12px">hover</span></div>
+<div style="display:flex;align-items:center;height:32px;border-bottom:1px solid #EDEBE9;padding:0 9px;background:#EBF3FC;box-shadow:inset 3px 0 0 #0F6CBD"><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#0C548F">16 Sep</span><span style="flex:1;margin-left:12px;color:#0C548F">terpilih</span></div>
+<div style="display:flex;align-items:center;height:32px;padding:0 9px;outline:2px solid #242424;outline-offset:-2px"><span style="font-family:'Cascadia Mono',Consolas,monospace;color:#5C5A58">17 Sep</span><span style="flex:1;margin-left:12px">fokus keyboard</span></div>
+</div>
+<div style="display:flex;border:1px solid #E1DFDD;border-radius:4px;overflow:hidden;height:28px;font-size:12.5px">
+<div style="flex:1;background:#E8F5E9;color:#2E7D32;display:flex;align-items:center;justify-content:center;border-right:1px solid #EDEBE9">✓</div>
+<div style="flex:1;background:#FFF3E0;color:#8A5200;display:flex;align-items:center;justify-content:center;border-right:1px solid #EDEBE9;font-size:11px">◐</div>
+<div style="flex:1;background:#EBF3FC;color:#0C548F;display:flex;align-items:center;justify-content:center;border-right:1px solid #EDEBE9;font-size:11px">✉</div>
+<div style="flex:1;background:#FDE7E9;color:#9B0C18;display:flex;align-items:center;justify-content:center;border-right:1px solid #EDEBE9;font-size:11px">✕</div>
+<div style="flex:1;background:#F5F5F5;color:#5C5A58;display:flex;align-items:center;justify-content:center;border-right:1px solid #EDEBE9;font-size:11px;text-decoration:line-through">✕</div>
+<div style="flex:1;color:#8A8886;display:flex;align-items:center;justify-content:center;border-right:1px solid #EDEBE9">·</div>
+<div style="flex:1;background:#EBF3FC;display:flex;align-items:center;justify-content:center;outline:2px solid #242424;outline-offset:-2px;color:#0C548F">✓</div>
+</div>
+<div style="display:flex;font-size:10px;color:#5C5A58;margin-top:4px;text-align:center"><span style="flex:1">hadir</span><span style="flex:1">sakit</span><span style="flex:1">izin</span><span style="flex:1">alpa</span><span style="flex:1">batal</span><span style="flex:1">belum</span><span style="flex:1">fokus</span></div>
+<div style="margin-top:11px;padding-top:10px;border-top:1px solid #EDEBE9;font-size:12.5px;line-height:1.6;color:#424242"><b>Keyboard tabel:</b> <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">↑↓</span> pindah baris, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span> buka detail, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Home/End</span> baris pertama/terakhir. <b>Matriks:</b> <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">↑↓←→</span> antar sel, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span> membuka daftar kegiatan sel itu.</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Badge, chip, sidebar rail</div>
+<div style="padding:13px">
+<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px;margin-bottom:11px">
+<span style="border:1px solid #0F6CBD;border-radius:999px;padding:3px 10px;color:#0C548F;background:#fff">● Terjadwal</span>
+<span style="border:1px solid #F0A82E;border-radius:999px;padding:3px 10px;color:#8A5200;background:#FFF3E0">⚠ Belum direalisasi</span>
+<span style="border:1px solid #4CAF50;border-radius:999px;padding:3px 10px;color:#2E7D32;background:#fff">✓ Terealisasi</span>
+<span style="border:1px solid #C8C6C4;border-radius:999px;padding:3px 10px;color:#5C5A58;background:#F5F5F5;text-decoration:line-through">✕ Dibatalkan</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px;margin-bottom:11px;align-items:center">
+<span style="border:1px solid #0F6CBD;border-radius:999px;padding:3px 9px;background:#EBF3FC;color:#0C548F">Bu Sari · Pengisi ✕</span>
+<span style="border:1px solid #C8C6C4;border-radius:999px;padding:3px 9px;color:#424242">Pak Dedi · Support ✕</span>
+<span style="border:1px solid #C8C6C4;border-radius:999px;padding:3px 9px;color:#424242;background:#F5F5F5;outline:2px solid #242424;outline-offset:2px">fokus ✕</span>
+<span style="border:1px dashed #8A8886;border-radius:999px;padding:3px 9px;color:#424242">+ tambah</span>
+</div>
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="width:48px;flex:none;border:1px solid #E1DFDD;border-radius:6px;background:#FAFAFA;padding:7px 0;display:flex;flex-direction:column;align-items:center;gap:5px">
+<span style="width:28px;height:28px;border-radius:4px;background:#242424;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px">≡</span>
+<span style="width:28px;height:28px;border-radius:4px;background:#EBF3FC;border:1px solid #0F6CBD;color:#0C548F;display:flex;align-items:center;justify-content:center;font-size:12px">▦</span>
+<span style="width:28px;height:28px;border-radius:4px;background:#F5F5F5;color:#424242;display:flex;align-items:center;justify-content:center;font-size:12px">☰</span>
+<span style="width:28px;height:28px;border-radius:4px;color:#5C5A58;display:flex;align-items:center;justify-content:center;font-size:12px;outline:2px solid #242424;outline-offset:1px">▤</span>
+</div>
+<div style="flex:1;font-size:12.5px;line-height:1.6;color:#424242">Rail 48px: aktif = <b>brand-subtle + garis brand + ikon fill</b>, hover = surface-alt, fokus = cincin. Setiap ikon wajib tooltip yang muncul setelah 400ms, berisi nama menu yang sama persis dengan versi melebar.<div style="margin-top:7px"><b>Keyboard:</b> <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Ctrl+B</span> melebar/menciut, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Alt+1…6</span> lompat ke menu.</div></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Pattern — CRUD master, form &amp; validasi, bentrok, tabel, dialog, toast, empty state</div>
+<div class="dv-card" style="width:1480px;background:#FFFFFF;color:#242424">
+<div style="padding:18px 26px;border-bottom:1px solid #E1DFDD;background:#FAFAFA;display:flex;align-items:baseline;gap:14px"><div style="font-size:20px;font-weight:600">Pattern</div><div style="font-size:13.5px;color:#424242">Tujuh pola yang menutup hampir seluruh interaksi aplikasi. Setiap layar baru harus memetakan diri ke salah satunya.</div></div>
+
+<div style="padding:20px 26px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden;grid-column:span 2">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P1 · CRUD data master</div>
+<div style="padding:13px;display:flex;gap:18px">
+<div style="flex:1;font-size:12.5px;line-height:1.65;color:#424242">
+<b>Bentuk:</b> daftar di kiri + panel sunting di kanan, satu layar, tanpa dialog. Pindah baris langsung mengganti isi panel.<br>
+<b>Urutan aksi:</b> pilih baris → ubah isi → <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Ctrl+S</span> atau tombol Simpan → toast "Perubahan disimpan".<br>
+<b>Tambah:</b> tombol primary di header membuka panel kosong dengan fokus di isian pertama; baris baru muncul di daftar setelah disimpan.<br>
+<b>Perubahan belum disimpan</b> + pindah baris → dialog "Buang perubahan?".<br>
+<b>Tidak ada hapus.</b> Hanya <i>Nonaktifkan</i>, dan konfirmasinya wajib menyebut dampak dalam angka.
+</div>
+<div style="width:470px;flex:none;border:1px solid #E1DFDD;border-radius:6px;overflow:hidden">
+<div style="display:flex;align-items:center;height:30px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;padding:0 10px;font-size:12.5px;font-weight:600">Subjek<span style="margin-left:auto;height:22px;padding:0 9px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;font-size:11px">+ Subjek</span></div>
+<div style="display:flex">
+<div style="width:200px;flex:none;border-right:1px solid #E1DFDD;font-size:12px">
+<div style="display:flex;align-items:center;height:28px;border-bottom:1px solid #EDEBE9;padding:0 10px;background:#EBF3FC;box-shadow:inset 3px 0 0 #0F6CBD;color:#0C548F">Bu Sari<span style="margin-left:auto;font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px">22</span></div>
+<div style="display:flex;align-items:center;height:28px;border-bottom:1px solid #EDEBE9;padding:0 10px">Pak Andi<span style="margin-left:auto;font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58">18</span></div>
+<div style="display:flex;align-items:center;height:28px;border-bottom:1px solid #EDEBE9;padding:0 10px">Bu Rina<span style="margin-left:auto;font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px;color:#5C5A58">14</span></div>
+<div style="display:flex;align-items:center;height:28px;padding:0 10px;color:#5C5A58">Pak Dedi<span style="margin-left:auto;font-family:'Cascadia Mono',Consolas,monospace;font-size:10.5px">6</span></div>
+</div>
+<div style="flex:1;background:#FAFAFA;padding:10px;display:flex;flex-direction:column;gap:8px">
+<div><div style="font-size:11px;color:#5C5A58;margin-bottom:3px">Nama <span style="color:#C50F1F">*</span></div><div style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12px">Sari Handayani</div></div>
+<div><div style="font-size:11px;color:#5C5A58;margin-bottom:3px">Panggilan</div><div style="height:26px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;padding:0 8px;font-size:12px">Bu Sari</div></div>
+<div style="display:flex;gap:6px;margin-top:2px"><span style="height:26px;padding:0 11px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;font-size:11.5px">Simpan</span><span style="height:26px;padding:0 11px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;font-size:11.5px">Batal</span><span style="margin-left:auto;height:26px;padding:0 10px;display:flex;align-items:center;font-size:11.5px;color:#0F6CBD">Nonaktifkan</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P2 · Form &amp; validasi</div>
+<div style="padding:13px">
+<div style="border:1px solid #C50F1F;border-radius:6px;background:#FDE7E9;padding:9px 11px;font-size:12.5px;line-height:1.55;color:#9B0C18;margin-bottom:11px">
+<div style="font-weight:600;display:flex;gap:7px"><span>⚠</span>2 isian perlu diperbaiki sebelum disimpan</div>
+<ul style="margin:5px 0 0;padding-left:26px">
+<li><a href="#1c" style="color:#9B0C18">Jam selesai</a> harus setelah jam mulai</li>
+<li><a href="#1c" style="color:#9B0C18">3 siswa</a> belum punya status kehadiran</li>
+</ul>
+</div>
+<div style="font-size:12.5px;line-height:1.65;color:#424242">
+<b>Kapan divalidasi:</b> saat isian kehilangan fokus (blur), bukan saat sedang diketik. Ringkasan di atas hanya muncul setelah percobaan simpan.<br>
+<b>Tombol simpan tidak pernah disembunyikan</b> — ia nonaktif dengan alasan tertulis di dekatnya, supaya pengguna tahu apa yang kurang.<br>
+<b>Wajib:</b> tanda <span style="color:#C50F1F">*</span> pada label, bukan kata "(wajib)".<br>
+<b>Setiap butir ringkasan adalah tautan</b> yang memindahkan fokus ke isian bermasalah pertama.<br>
+<b>Draf otomatis</b> tersimpan lokal setiap 3 detik; kegagalan jaringan tidak boleh menghilangkan isian.
+</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P3 · Peringatan bentrok <span style="font-weight:400;color:#8A5200">· lunak, tidak memblokir</span></div>
+<div style="padding:13px">
+<div style="border:1px solid #F0A82E;border-radius:6px;background:#FFF3E0;padding:9px 11px;font-size:12.5px;line-height:1.55;color:#8A5200;margin-bottom:11px">
+<div style="font-weight:600;display:flex;gap:7px"><span>⚠</span>R. Melati sudah dipakai pada jam ini</div>
+<div style="margin-top:4px">"IPA Kelas SMP" memakai R. Melati 08:30–10:00 pada Rab, 16 Sep.</div>
+<div style="margin-top:7px;display:flex;gap:6px"><span style="height:24px;padding:0 10px;border:1px solid #8A5200;border-radius:4px;background:#fff;display:flex;align-items:center;font-size:11.5px">Lihat di kalender</span><span style="height:24px;padding:0 10px;border:1px solid #8A5200;border-radius:4px;background:#fff;display:flex;align-items:center;font-size:11.5px">Pilih ruangan lain</span><span style="height:24px;padding:0 10px;display:flex;align-items:center;font-size:11.5px;text-decoration:underline">Simpan tetap</span></div>
+</div>
+<div style="font-size:12.5px;line-height:1.65;color:#424242">
+<b>Tiga jenis bentrok:</b> ruangan dipakai, subjek terjadwal di tempat lain, kapasitas ruangan terlampaui. Semuanya <b>peringatan</b>, bukan error — warna peringatan, bukan bahaya.<br>
+<b>Selalu tiga jalan keluar:</b> lihat penyebabnya, perbaiki cepat, atau lanjut dengan sadar.<br>
+<b>Tidak menanyakan alasan.</b> Alasan hanya diminta saat membatalkan dan menjadwalkan ulang.<br>
+<b>Dicek ulang</b> setiap kali tanggal, jam, ruangan, atau subjek berubah.
+</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P4 · Tabel</div>
+<div style="padding:13px;font-size:12.5px;line-height:1.65;color:#424242">
+<b>Struktur tetap:</b> baris filter → header kolom → baris data → footer paginasi. Header dan kolom pertama menempel saat digulir.<br>
+<b>Urut:</b> klik header, panah menunjukkan arah, default tanggal+jam naik.<br>
+<b>Aksi per baris mengikuti status</b>, bukan seragam. Aksi utama muncul sebagai tombol; sisanya di menu <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">⋯</span>.<br>
+<b>Teks terpotong</b> pakai ellipsis + tooltip berisi teks penuh — tidak pernah dipotong tanpa tanda.<br>
+<b>Kolom angka</b> rata kanan dan selalu mono.<br>
+<b>Klik baris</b> membuka detail; klik tombol di dalam baris tidak ikut membuka detail.
+<div style="margin-top:9px;padding:9px 11px;border:1px solid #EDEBE9;border-radius:6px;background:#FAFAFA">
+<b>Kolom "dipakai"</b> di semua layar master — itu yang membedakan boleh-dihapus (0) dari hanya-boleh-dinonaktifkan.
+</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P5 · Dialog konfirmasi</div>
+<div style="padding:13px">
+<div style="border:1px solid #C8C6C4;border-radius:8px;background:#fff;padding:11px 13px;font-size:12.5px;line-height:1.55;box-shadow:0 8px 16px rgba(0,0,0,.12);margin-bottom:11px">
+<div style="font-size:15px;font-weight:600">Batalkan kegiatan ini?</div>
+<div style="color:#424242;margin-top:4px">Kegiatan tetap tersimpan dan terlihat di kalender dengan tanda dibatalkan. Tidak ada data yang dihapus.</div>
+<div style="margin-top:8px;padding:8px 10px;border:1px solid #F0A82E;border-radius:6px;background:#FFF3E0;color:#8A5200">Materi <b>B. Inggris › Reading</b> menjadi belum tersampaikan untuk <b>4 siswa</b>.</div>
+<div style="margin-top:10px;display:flex;gap:6px;justify-content:flex-end"><span style="height:26px;padding:0 11px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;font-size:11.5px">Tutup</span><span style="height:26px;padding:0 11px;border:1px solid #C50F1F;border-radius:4px;background:#fff;color:#9B0C18;display:flex;align-items:center;font-size:11.5px">Batalkan kegiatan</span></div>
+</div>
+<div style="font-size:12.5px;line-height:1.65;color:#424242">
+<b>Judul selalu pertanyaan</b> yang menyebut objeknya. <b>Isi menjelaskan akibat</b>, dan bila bisa dihitung, sebut angkanya.<br>
+<b>Tombol memakai kata kerja yang sama</b> dengan aksi pemicunya — tidak pernah "OK".<br>
+<b>Fokus awal di tombol aman</b> (Tutup). <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Esc</span> = tutup, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Tab</span> terkurung di dalam dialog, <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">Enter</span> tidak memicu aksi merusak.<br>
+Dialog hanya untuk yang <b>tidak bisa diurungkan dengan mudah</b>; sisanya cukup toast + Urungkan.
+</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P6 · Toast</div>
+<div style="padding:13px">
+<div style="display:flex;flex-direction:column;gap:7px;font-size:12.5px;margin-bottom:11px">
+<div style="border:1px solid #C8C6C4;border-radius:6px;background:#fff;padding:8px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 4px 8px rgba(0,0,0,.1)"><span style="color:#2E7D32">✓</span>Realisasi disimpan<span style="margin-left:auto;color:#0F6CBD">Lihat detail</span><span style="color:#5C5A58">✕</span></div>
+<div style="border:1px solid #C8C6C4;border-radius:6px;background:#fff;padding:8px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 4px 8px rgba(0,0,0,.1)"><span style="color:#5C5A58">✕</span>Kegiatan dibatalkan<span style="margin-left:auto;color:#0F6CBD">Urungkan</span><span style="color:#5C5A58">✕</span></div>
+<div style="border:1px solid #C50F1F;border-radius:6px;background:#FDE7E9;padding:8px 11px;display:flex;align-items:center;gap:9px;color:#9B0C18;box-shadow:0 4px 8px rgba(0,0,0,.1)"><span>⚠</span>Gagal menyimpan realisasi<span style="margin-left:auto;text-decoration:underline">Coba lagi</span><span>✕</span></div>
+</div>
+<div style="font-size:12.5px;line-height:1.65;color:#424242">
+<b>Posisi:</b> kanan bawah, bertumpuk maksimum 3, yang terlama hilang lebih dulu.<br>
+<b>Durasi:</b> 5 detik biasa, 8 detik bila ada Urungkan, <b>tidak hilang sendiri</b> bila error.<br>
+<b>Hanya untuk</b> aksi yang bisa diurungkan atau butuh tautan lanjutan. Perubahan yang sudah terlihat di layar tidak perlu toast.<br>
+Hover atau fokus keyboard <b>menghentikan hitungan</b> waktu.
+</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden;grid-column:span 2">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">P7 · Empty state — tiga jenis, tiga jawaban berbeda</div>
+<div style="padding:13px;display:flex gap:14px;display:flex;gap:14px">
+<div style="flex:1;border:1px solid #EDEBE9;border-radius:6px;padding:13px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px">
+<span style="width:32px;height:32px;border:2px dashed #C8C6C4;border-radius:7px"></span>
+<b style="font-size:13.5px">Belum ada data</b>
+<span style="font-size:12px;color:#424242;line-height:1.5">"Belum ada kegiatan. Siapkan data master dulu, lalu jadwal bisa dibuat dalam hitungan detik."</span>
+<span style="height:26px;padding:0 11px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;font-size:11.5px">Siapkan data master</span>
+<span style="font-size:11.5px;color:#5C5A58;line-height:1.45">Arahkan ke langkah pertama, bukan sekadar "tidak ada data".</span>
+</div>
+<div style="flex:1;border:1px solid #EDEBE9;border-radius:6px;padding:13px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px">
+<div style="display:flex;gap:5px;font-size:10.5px;color:#0C548F"><span style="border:1px solid #0F6CBD;border-radius:999px;padding:2px 7px;background:#EBF3FC">Dibatalkan ✕</span><span style="border:1px solid #0F6CBD;border-radius:999px;padding:2px 7px;background:#EBF3FC">Pak Andi ✕</span></div>
+<b style="font-size:13.5px">Filter tidak menemukan apa pun</b>
+<span style="font-size:12px;color:#424242;line-height:1.5">"Tidak ada kegiatan yang cocok. Dua filter sedang aktif — longgarkan salah satunya."</span>
+<div style="display:flex;gap:6px"><span style="height:26px;padding:0 11px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;font-size:11.5px">Reset filter</span><span style="height:26px;padding:0 11px;border:1px solid #C8C6C4;border-radius:4px;background:#fff;display:flex;align-items:center;font-size:11.5px">Perluas ke 3 bulan</span></div>
+<span style="font-size:11.5px;color:#5C5A58;line-height:1.45">Sebut jumlah filter aktif, tawarkan melonggarkan.</span>
+</div>
+<div style="flex:1;border:1px solid #EDEBE9;border-radius:6px;padding:13px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px">
+<span style="color:#8A5200;font-size:20px">⚠</span>
+<b style="font-size:13.5px">Prasyarat belum lengkap</b>
+<span style="font-size:12px;color:#424242;line-height:1.5">"Matriks belum bisa ditampilkan. Seni Budaya belum punya materi, jadi belum ada kolom untuk dibandingkan."</span>
+<span style="height:26px;padding:0 11px;border-radius:4px;background:#0F6CBD;color:#fff;display:flex;align-items:center;font-size:11.5px">Tambah materi</span>
+<span style="font-size:11.5px;color:#5C5A58;line-height:1.45">Sebut penyebabnya, tautkan ke layar yang memperbaikinya.</span>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Aturan copy UI — kamus aksi, sentence case, pesan error</div>
+<div class="dv-card" style="width:1480px;background:#FFFFFF;color:#242424">
+<div style="padding:18px 26px;border-bottom:1px solid #E1DFDD;background:#FAFAFA;display:flex;align-items:baseline;gap:14px"><div style="font-size:20px;font-weight:600">Copy UI</div><div style="font-size:13.5px;color:#424242">Satu aksi = satu kata kerja, dipakai sama dari tombol sampai riwayat. Kamus ini yang mengikat semuanya.</div></div>
+
+<div style="padding:20px 26px">
+<div style="font-size:10.5px;letter-spacing:.1em;color:#5C5A58;margin-bottom:10px">KAMUS AKSI · satu baris = satu rantai kata yang wajib konsisten</div>
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden;font-size:12.5px">
+<div style="display:flex;align-items:center;height:30px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;padding:0 12px;font-size:10.5px;letter-spacing:.09em;color:#5C5A58"><div style="width:176px;flex:none">TOMBOL</div><div style="width:216px;flex:none">JUDUL DIALOG</div><div style="width:230px;flex:none">TOAST BERHASIL</div><div style="width:196px;flex:none">STATUS / BADGE</div><div style="flex:1">RIWAYAT</div></div>
+
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px"><div style="width:176px;flex:none"><b>Simpan</b></div><div style="width:216px;flex:none;color:#5C5A58">—</div><div style="width:230px;flex:none">Perubahan disimpan</div><div style="width:196px;flex:none;color:#5C5A58">—</div><div style="flex:1;color:#424242">Data diubah</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px;background:#FAFAFA"><div style="width:176px;flex:none"><b>Simpan realisasi</b></div><div style="width:216px;flex:none;color:#5C5A58">—</div><div style="width:230px;flex:none">Realisasi disimpan</div><div style="width:196px;flex:none"><span style="border:1px solid #4CAF50;border-radius:999px;padding:1px 8px;font-size:11px;color:#2E7D32">✓ Terealisasi</span></div><div style="flex:1;color:#424242">Realisasi diisi</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px"><div style="width:176px;flex:none"><b>Batalkan kegiatan</b></div><div style="width:216px;flex:none">Batalkan kegiatan ini?</div><div style="width:230px;flex:none">Kegiatan dibatalkan</div><div style="width:196px;flex:none"><span style="border:1px solid #C8C6C4;border-radius:999px;padding:1px 8px;font-size:11px;color:#5C5A58;background:#F5F5F5">✕ Dibatalkan</span></div><div style="flex:1;color:#424242">Kegiatan dibatalkan</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px;background:#FAFAFA"><div style="width:176px;flex:none"><b>Jadwalkan ulang</b></div><div style="width:216px;flex:none">Jadwalkan ulang kegiatan ini?</div><div style="width:230px;flex:none">Kegiatan dijadwalkan ulang</div><div style="width:196px;flex:none"><span style="border:1px dashed #8764B8;border-radius:999px;padding:1px 8px;font-size:11px;color:#5B4394">↻ Dijadwal ulang</span></div><div style="flex:1;color:#424242">Kegiatan dijadwalkan ulang</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px"><div style="width:176px;flex:none"><b>Nonaktifkan</b></div><div style="width:216px;flex:none">Nonaktifkan Bu Sari?</div><div style="width:230px;flex:none">Bu Sari dinonaktifkan</div><div style="width:196px;flex:none"><span style="border:1px solid #C8C6C4;border-radius:999px;padding:1px 8px;font-size:11px;color:#5C5A58">Nonaktif</span></div><div style="flex:1;color:#424242">Subjek dinonaktifkan</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px;background:#FAFAFA"><div style="width:176px;flex:none"><b>Aktifkan</b></div><div style="width:216px;flex:none;color:#5C5A58">—</div><div style="width:230px;flex:none">Bu Sari diaktifkan</div><div style="width:196px;flex:none"><span style="border:1px solid #4CAF50;border-radius:999px;padding:1px 8px;font-size:11px;color:#2E7D32">Aktif</span></div><div style="flex:1;color:#424242">Subjek diaktifkan</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px"><div style="width:176px;flex:none"><b>Isi realisasi</b></div><div style="width:216px;flex:none;color:#5C5A58">—</div><div style="width:230px;flex:none;color:#5C5A58">(lihat Simpan realisasi)</div><div style="width:196px;flex:none"><span style="border:1px solid #F0A82E;border-radius:999px;padding:1px 8px;font-size:11px;color:#8A5200;background:#FFF3E0">⚠ Belum direalisasi</span></div><div style="flex:1;color:#5C5A58">—</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px;background:#FAFAFA"><div style="width:176px;flex:none"><b>Ubah realisasi</b></div><div style="width:216px;flex:none;color:#5C5A58">—</div><div style="width:230px;flex:none">Realisasi diperbarui</div><div style="width:196px;flex:none;color:#5C5A58">tetap Terealisasi</div><div style="flex:1;color:#424242">Realisasi diubah</div></div>
+<div style="display:flex;align-items:center;height:34px;border-bottom:1px solid #EDEBE9;padding:0 12px"><div style="width:176px;flex:none"><b>Buang perubahan</b></div><div style="width:216px;flex:none">Buang perubahan?</div><div style="width:230px;flex:none;color:#5C5A58">— (tidak perlu toast)</div><div style="width:196px;flex:none;color:#5C5A58">—</div><div style="flex:1;color:#5C5A58">—</div></div>
+<div style="display:flex;align-items:center;height:34px;padding:0 12px;background:#FAFAFA"><div style="width:176px;flex:none"><b>Urungkan</b></div><div style="width:216px;flex:none;color:#5C5A58">—</div><div style="width:230px;flex:none">Pembatalan diurungkan</div><div style="width:196px;flex:none;color:#5C5A58">kembali ke status sebelumnya</div><div style="flex:1;color:#424242">Pembatalan diurungkan</div></div>
+</div>
+<div style="font-size:12.5px;color:#424242;line-height:1.6;margin-top:9px">Perhatikan pasangannya: tombol memakai <b>kata perintah</b> ("Batalkan kegiatan"), toast dan riwayat memakai <b>bentuk pasif selesai</b> ("Kegiatan dibatalkan"). Itu satu-satunya perubahan bentuk yang diizinkan — kata dasarnya tidak boleh berganti.</div>
+</div>
+
+<div style="padding:0 26px 22px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Sentence case &amp; nada</div>
+<div style="padding:13px;font-size:12.5px;line-height:1.7;color:#424242">
+<div style="display:flex;gap:8px;margin-bottom:7px"><span style="color:#2E7D32;font-weight:600;flex:none">✓</span><div>Judul, label, tombol, dan pesan pakai <b>sentence case</b>: huruf besar hanya di awal dan untuk nama.</div></div>
+<div style="display:flex;gap:8px;margin-bottom:7px"><span style="color:#9B0C18;font-weight:600;flex:none">✕</span><div><s>Simpan Realisasi Kegiatan</s> → <b>Simpan realisasi</b></div></div>
+<div style="display:flex;gap:8px;margin-bottom:7px"><span style="color:#9B0C18;font-weight:600;flex:none">✕</span><div><s>Anda tidak memiliki izin</s> → aplikasi ini tidak punya peran; jangan pernah menulis pesan izin.</div></div>
+<div style="display:flex;gap:8px;margin-bottom:7px"><span style="color:#2E7D32;font-weight:600;flex:none">✓</span><div>Label kolom tabel tetap <b>HURUF BESAR</b> dengan jarak huruf — itu pengecualian yang disengaja.</div></div>
+<div style="display:flex;gap:8px"><span style="color:#2E7D32;font-weight:600;flex:none">✓</span><div>Sebut pengguna dengan <b>"Anda"</b> hanya bila perlu; umumnya kalimat tanpa subjek lebih pendek dan lebih netral.</div></div>
+<div style="margin-top:10px;padding-top:9px;border-top:1px solid #EDEBE9"><b>Angka &amp; waktu:</b> tanggal <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">16 Sep 2026</span>, jam <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">08:00–09:30</span> (en dash, tanpa spasi), ribuan pakai titik <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">1.140</span>, satuan disingkat <span style="font-family:'Cascadia Mono',Consolas,monospace;font-size:11.5px">90 mnt</span>.</div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Pesan error · rumusnya</div>
+<div style="padding:13px;font-size:12.5px;line-height:1.7;color:#424242">
+<div style="padding:9px 11px;border:1px solid #EDEBE9;border-radius:6px;background:#FAFAFA;margin-bottom:10px"><b>apa yang salah</b> + <b>cara memperbaikinya</b><br><span style="color:#5C5A58">Tanpa bagian kedua, pesan itu belum selesai.</span></div>
+<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#9B0C18;font-weight:600;flex:none">✕</span><div><s>Input tidak valid</s><br><s>Terjadi kesalahan</s><br><s>Gagal menyimpan data</s></div></div>
+<div style="display:flex;gap:8px"><span style="color:#2E7D32;font-weight:600;flex:none">✓</span><div>"Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah 08:00."<br><br>"3 siswa belum punya status kehadiran. Isi kehadiran mereka atau tandai semua hadir dulu."<br><br>"Sambungan terputus saat menyimpan. Isian masih tersimpan di perangkat ini — coba lagi."</div></div>
+</div>
+</div>
+
+<div style="border:1px solid #E1DFDD;border-radius:8px;overflow:hidden">
+<div style="padding:9px 13px;background:#FAFAFA;border-bottom:1px solid #E1DFDD;font-size:13.5px;font-weight:600">Istilah baku · jangan bervariasi</div>
+<div style="padding:13px;font-size:12.5px;line-height:1.75;color:#424242">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px">
+<span style="color:#2E7D32">kegiatan</span><span style="color:#9B0C18"><s>acara, jadwal, sesi</s></span>
+<span style="color:#2E7D32">subjek</span><span style="color:#9B0C18"><s>guru, pengajar, tutor</s></span>
+<span style="color:#2E7D32">realisasi</span><span style="color:#9B0C18"><s>laporan, absensi</s></span>
+<span style="color:#2E7D32">materi</span><span style="color:#9B0C18"><s>topik, bab, pokok bahasan</s></span>
+<span style="color:#2E7D32">mata pelajaran</span><span style="color:#9B0C18"><s>mapel (di UI), subjek</s></span>
+<span style="color:#2E7D32">tempat · ruangan</span><span style="color:#9B0C18"><s>lokasi, kelas (untuk ruang)</s></span>
+<span style="color:#2E7D32">kelas</span><span style="color:#9B0C18"><s>grup, rombel</s></span>
+<span style="color:#2E7D32">pengisi · support</span><span style="color:#9B0C18"><s>utama, pendamping</s></span>
+<span style="color:#2E7D32">matriks belajar</span><span style="color:#9B0C18"><s>laporan cakupan</s></span>
+</div>
+<div style="margin-top:10px;padding-top:9px;border-top:1px solid #EDEBE9;line-height:1.6"><b>"Subjek"</b> dipakai untuk pengajar karena itu istilah yang sudah dipakai di data master — konsisten lebih penting daripada enak didengar. <b>"Mapel"</b> boleh di label kolom sempit, tidak di kalimat.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="end"></div>
+</div>
+<p class="dv-next">Berikutnya: spesifikasi komponen (1b), pattern (1c), aturan copy (1d).</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic { renderVals(){ return {}; } }
+</script>
+</body>
+</html>
