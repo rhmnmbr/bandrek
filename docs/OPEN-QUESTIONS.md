@@ -16,3 +16,4 @@ Kalau sudah diputuskan, pindahkan hasilnya ke `ARCHITECTURE.md` atau `DOMAIN.md`
 | Q8 | Distribusi installer: code signing Windows, tempat hosting file update | Belum ditentukan | Proses rilis desktop, peringatan SmartScreen saat instalasi |
 | Q9 | Berapa lama data cache offline boleh ditampilkan? | Selalu tampil, dengan penanda waktu | Aturan kedaluwarsa cache, pesan ke pengguna |
 | Q10 | Apakah field Tempat yang tergabung di dropdown ruangan (optgroup) tetap cukup? | Cukup untuk 2–3 tempat | Kalau tempat bertambah banyak, perlu filter tempat di atas dropdown ruangan |
+| Q11 | Peringatan "beban berlebih" dan "jam di luar ketersediaan" subjek, yang disebut di DESIGN.md prinsip 4 | Tidak diimplementasikan. Belum ada data ketersediaan maupun batas beban subjek. Yang ada hanya peringatan bentrok | Field ketersediaan dan batas beban di subjek, aturan tambahan di pengecekan bentrok |

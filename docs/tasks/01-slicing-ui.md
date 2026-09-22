@@ -19,6 +19,8 @@ Build the full Bandrek desktop UI in `desktop/`, **as close to the prototype as 
 
 - `docs/prototype/` — Claude Design export (source files). Treat as read-only reference.
 - `docs/prototype/screenshots/` — screenshots of each screen at 1366×768.
+- `docs/design/Bandrek DS Spesifikasi.dc.html` — visual rendering of DESIGN.md. Primary reference for Phase 2.
+- `docs/design/Bandrek Hi-Fi Batch B.dc.html` — hi-fi mockups for B1–B6 and special states.
 - `docs/DESIGN.md`, `docs/DOMAIN.md`, `docs/ARCHITECTURE.md`.
 
 ## Rules for this task
@@ -37,11 +39,12 @@ Build the full Bandrek desktop UI in `desktop/`, **as close to the prototype as 
 Read `AGENTS.md`, `README.md`, all of `docs/`, and the prototype export. Do not write code.
 
 Report:
-1. Which screens you found in the prototype (by code A1–A9, B1–B6), and which exist only as screenshots.
+1. Which screens you found in the prototype (by code A1–A9, B1–B6) and whether each is fully built or a static placeholder. For each B screen, say whether you will follow the prototype or Hi-Fi Batch B.
 2. Whether the prototype source is readable. If files are bundled or encoded so the markup can't be read, say so — do not guess from fragments.
 3. Whether the prototype can be opened and rendered in a browser for side-by-side comparison.
 4. Where the prototype's seed data lives and what shape it has.
-5. Every conflict you notice between the prototype, DESIGN.md, and DOMAIN.md.
+5. Every conflict you notice between the prototype, Hi-Fi Batch B, DESIGN.md, DS Spesifikasi, and DOMAIN.md. Include anything in DESIGN.md that assumes the old offline, single-computer design (see ARCHITECTURE.md D5).
+7. Screens or states in Hi-Fi Batch B that DOMAIN.md does not mention (for example a profile screen). List them; do not plan to build them yet.
 6. Anything in the docs you find ambiguous.
 
 **CHECKPOINT 0** — wait.
@@ -65,6 +68,7 @@ Then update the "Development" section of `README.md` with the real commands.
 
 - Translate every token in DESIGN.md into CSS variables in `globals.css`, and wire them into the Tailwind theme. Tokens are the single source — no hardcoded colors, sizes, or radii in components.
 - Theme the shadcn/ui components with these tokens. The result must look like Bandrek, not like default shadcn.
+- Use `docs/design/Bandrek DS Spesifikasi.dc.html` as the visual reference for how each component should look.
 - Build a development-only route `/katalog` that shows every component in every state: default, hover, focus, active, disabled, error. Include at least:
   - buttons (all variants), inputs, selects, the grouped ruangan select, date and time inputs, checkboxes
   - subjek chip with role menu, student checklist with search and grouping
@@ -111,7 +115,7 @@ Build **one screen per step**, in this order, stopping after each:
 8. A3 Daftar kegiatan
 9. B1 Siswa — establishes the CRUD pattern
 10. B2–B6 Remaining master data, using the pattern from B1
-11. Client-server screens not in the prototype (DOMAIN.md §13): setup server address, login, user management, offline state, save conflict, update required. **Propose each design first** and wait for approval — there is no prototype for these.
+11. Client-server screens not in the prototype (DOMAIN.md §13): setup server address, login, user management, offline state, save conflict, update required. First check the special states in Hi-Fi Batch B and reuse whatever fits. **Propose each design first** and wait for approval.
 
 After each screen:
 - Open the prototype screen and your implementation side by side at **1366×768**. Take screenshots of both.

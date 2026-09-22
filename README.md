@@ -37,7 +37,8 @@ Details and reasons: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | [`docs/DOMAIN.md`](docs/DOMAIN.md) | Business rules and screen behavior (Bahasa Indonesia) |
 | [`docs/DESIGN.md`](docs/DESIGN.md) | Design system: tokens, components, patterns. Wins every style conflict |
 | [`docs/OPEN-QUESTIONS.md`](docs/OPEN-QUESTIONS.md) | Decisions not yet made, and what each one affects |
-| [`docs/prototype/`](docs/prototype/) | Claude Design prototype export and screenshots. Read-only reference |
+| [`docs/prototype/`](docs/prototype/) | Final interactive prototype from Claude Design, its seed data, and screenshots. Read-only |
+| [`docs/design/`](docs/design/) | Design-system specification page and hi-fi mockups for data master screens (Batch B). Read-only |
 | [`docs/tasks/`](docs/tasks/) | Task briefs for implementation phases |
 
 Three sources, three kinds of answers: the **prototype** answers layout, **DESIGN.md** answers style, **DOMAIN.md** answers behavior.
