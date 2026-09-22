@@ -63,11 +63,12 @@ Prerequisites (Windows):
 ```bash
 cd desktop
 npm install
-npm run dev          # browser, mock data
+npm run dev          # browser, mock data (http://localhost:1420)
 npm run tauri dev    # desktop window
+npm run build        # type-check and frontend bundle
 ```
 
-> Commands will be confirmed once the project is scaffolded (slicing task, phase 1).
+> Commands confirmed and tested in Phase 1 scaffolding.
 
 ### Server
 

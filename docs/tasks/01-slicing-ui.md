@@ -145,7 +145,14 @@ _Update this section at each approved checkpoint: what was done, and any decisio
   - Verified 7 points: all A1–A9 and B1–B6 screens are fully built and interactive in the prototype. B screens follow the prototype per rule.
   - Reported and resolved 3 ambiguity items: reference screenshots verified in `docs/prototype/screenshots/` (25 screenshots), profile screens confirmed, and `support.js` added to `docs/design/`.
   - Confirmed offline-write/sync in DESIGN.md is superseded by ARCHITECTURE.md D5 (online-only, read cache, no offline write/sync).
-- [ ] Phase 1 — Scaffold
+- [x] Phase 1 — Scaffold
+  - Scaffolded Tauri 2 + React 19 + TypeScript + Vite desktop client in `desktop/`.
+  - Pinned toolchain and version files: `.nvmrc` (Node 22 LTS), `.npmrc` (`engine-strict=true`), `package.json` (`engines.node = ^22.0.0`), `src-tauri/rust-toolchain.toml` (`channel = "stable"`).
+  - Bundled Cascadia Mono font locally (no CDN), configured Fluent System Icons (`@fluentui/react-icons`), Tailwind v4 + design tokens CSS variables.
+  - Configured strict TypeScript with path aliases (`@/*`).
+  - Established folder structure: `components/ui`, `screens`, `data/{interfaces,mock,types}`, `routes`, `lib`.
+  - Verified both run modes (`npm run dev` and `npm run tauri dev` at 1366×768 min window) and clean build (`tsc && vite build`).
+  - Updated `README.md` development section.
 - [ ] Phase 2 — Tokens and component catalog
 - [ ] Phase 3 — Data layer
 - [ ] Phase 4 — App shell
