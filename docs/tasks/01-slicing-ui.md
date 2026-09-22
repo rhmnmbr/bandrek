@@ -140,7 +140,11 @@ After each screen:
 
 _Update this section at each approved checkpoint: what was done, and any decisions made along the way._
 
-- [ ] Phase 0 — Read and report
+- [x] Phase 0 — Read and report
+  - Investigated all docs, prototype (`Bandrek Prototipe.dc.html`, `seed.js`, `support.js`), design specs, and Batch B hi-fi.
+  - Verified 7 points: all A1–A9 and B1–B6 screens are fully built and interactive in the prototype. B screens follow the prototype per rule.
+  - Reported and resolved 3 ambiguity items: reference screenshots verified in `docs/prototype/screenshots/` (25 screenshots), profile screens confirmed, and `support.js` added to `docs/design/`.
+  - Confirmed offline-write/sync in DESIGN.md is superseded by ARCHITECTURE.md D5 (online-only, read cache, no offline write/sync).
 - [ ] Phase 1 — Scaffold
 - [ ] Phase 2 — Tokens and component catalog
 - [ ] Phase 3 — Data layer
