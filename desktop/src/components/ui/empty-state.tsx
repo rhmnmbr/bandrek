@@ -14,7 +14,7 @@ export interface EmptyStateProps {
   cause: string; // Explains the reason
   primaryAction: EmptyStateAction;
   secondaryAction?: EmptyStateAction;
-  metaSummary?: React.ReactNode; // e.g. "✓ 48 siswa · 6 subjek sudah terdaftar" or active filter chips
+  metaSummary?: React.ReactNode; // e.g. "48 siswa · 6 subjek sudah terdaftar" or active filter chips
   className?: string;
 }
 

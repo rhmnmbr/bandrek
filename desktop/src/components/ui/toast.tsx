@@ -1,5 +1,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import {
+  Checkmark16Regular,
+  Dismiss12Regular,
+  ErrorCircle16Regular,
+  Info16Regular,
+  Warning16Regular,
+} from "@fluentui/react-icons";
 
 export type ToastType = "success" | "info" | "warning" | "error";
 
@@ -104,14 +111,14 @@ export const ToastCard: React.FC<{
   const renderIcon = () => {
     switch (toast.type) {
       case "error":
-        return <span className="text-[var(--color-danger-ink)] font-bold text-[13px]">⚠</span>;
+        return <ErrorCircle16Regular className="text-[var(--color-danger-ink)] flex-none" />;
       case "warning":
-        return <span className="text-[var(--color-warning-ink)] font-bold text-[13px]">⚠</span>;
+        return <Warning16Regular className="text-[var(--color-warning-ink)] flex-none" />;
       case "info":
-        return <span className="text-[var(--color-info-ink)] font-bold text-[13px]">●</span>;
+        return <Info16Regular className="text-[var(--color-info-ink)] flex-none" />;
       case "success":
       default:
-        return <span className="text-[var(--color-success-ink)] font-bold text-[13px]">✓</span>;
+        return <Checkmark16Regular className="text-[var(--color-success-ink)] flex-none" />;
     }
   };
 
@@ -128,7 +135,7 @@ export const ToastCard: React.FC<{
       className={cn(
         "pointer-events-auto w-[310px] rounded-[var(--radius-lg)] p-2.5 flex items-center gap-2.5 text-[12.5px] leading-snug select-none",
         "shadow-[var(--shadow-toast)] transition-all duration-[var(--dur-normal)] animate-in slide-in-from-bottom-2",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-1",
+        "focus-visible:outline-none focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
         isError
           ? "border border-[var(--color-danger)] bg-[var(--color-danger-bg)] text-[var(--color-danger-ink)]"
           : "border border-[var(--color-border-strong)] bg-white text-[var(--color-text)]"
@@ -158,9 +165,9 @@ export const ToastCard: React.FC<{
         type="button"
         onClick={onDismiss}
         title="Tutup pemberitahuan"
-        className="flex-none text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] cursor-pointer p-0.5"
+        className="flex-none text-[var(--color-text-muted)] hover:text-[var(--color-text)] cursor-pointer p-0.5 rounded-[var(--radius-sm)] flex items-center justify-center"
       >
-        ✕
+        <Dismiss12Regular />
       </button>
     </div>
   );

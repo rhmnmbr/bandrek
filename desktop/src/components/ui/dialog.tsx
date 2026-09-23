@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Warning16Regular, Info16Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 
@@ -123,9 +124,11 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 : "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]"
             )}
           >
-            <span className="flex-none font-bold">
-              {impactCard.type === "warning" ? "⚠" : "●"}
-            </span>
+            {impactCard.type === "warning" ? (
+              <Warning16Regular className="flex-none text-[var(--color-warning-ink)] mt-0.5" />
+            ) : (
+              <Info16Regular className="flex-none text-[var(--color-info-ink)] mt-0.5" />
+            )}
             <div className="flex-1">{impactCard.text}</div>
           </div>
         )}

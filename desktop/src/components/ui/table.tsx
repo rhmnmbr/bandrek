@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
-  density?: "compact" | "comfortable";
+  density?: "compact";
 }
 
 export const Table = React.forwardRef<HTMLTableElement, TableProps>(
@@ -11,8 +11,7 @@ export const Table = React.forwardRef<HTMLTableElement, TableProps>(
       <table
         ref={ref}
         className={cn(
-          "w-full caption-bottom text-[12.5px] border-collapse text-left",
-          density === "compact" ? "[--row-h:32px]" : "[--row-h:40px]",
+          "w-full caption-bottom text-[12.5px] border-collapse text-left [--row-h:32px]",
           className
         )}
         {...props}
@@ -61,7 +60,7 @@ export const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
       tabIndex={0}
       className={cn(
         "h-[var(--row-h,32px)] border-b border-[var(--color-border-subtle)] transition-colors duration-[var(--dur-instant)] cursor-pointer select-none",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:-outline-offset-2",
+        "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_#000000]",
         warning
           ? "bg-[var(--color-warning-bg)] text-[var(--color-warning-ink)] hover:bg-[#FFE8CC]"
           : selected

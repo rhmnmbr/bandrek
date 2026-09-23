@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input, SearchInput, Textarea, FormLabel, InlineError } from "@/components/ui/input";
 import { Select, GroupedRuanganSelect } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+import { TimePicker, TimeRangePicker } from "@/components/ui/time-picker";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   KegiatanBadge,
@@ -40,14 +42,24 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import {
+  ArrowLeft16Regular,
+  CalendarLtr24Regular,
+  Checkmark16Regular,
+  LineHorizontal316Regular,
+  Search24Regular,
+  Warning16Regular,
+  Warning24Regular,
+} from "@fluentui/react-icons";
 
 export function KatalogScreen() {
   const { showToast } = useToast();
 
   // Screen interactive state
-  const [density, setDensity] = React.useState<"compact" | "comfortable">("compact");
-  const [themeDark, setThemeDark] = React.useState(false);
   const [offlineBannerActive, setOfflineBannerActive] = React.useState(true);
+  const [offlineVariant, setOfflineVariant] = React.useState<
+    "dark-charcoal" | "danger-subtle" | "surface-sunken" | "warning"
+  >("dark-charcoal");
 
   // Segmented control interactive state
   const [kehadiranVal, setKehadiranVal] = React.useState<KehadiranValue>("hadir");
@@ -99,54 +111,64 @@ export function KatalogScreen() {
     },
   ];
 
-  // Sample grouped ruangan
+  // Sample grouped ruangan (matches prototype exact data)
   const sampleRuanganGroups = [
     {
       id: "t1",
-      nama: "Tempat Utama",
+      nama: "Bandrek Pusat",
       ruangan: [
-        { id: "r1", nama: "R. Melati", kapasitas: 15 },
-        { id: "r2", nama: "R. Mawar", kapasitas: 12 },
-        { id: "r3", nama: "Lab Komputer", kapasitas: 20 },
+        { id: "r1", nama: "R. Melati", kapasitas: 12 },
+        { id: "r2", nama: "R. Anggrek", kapasitas: 14 },
+        { id: "r3", nama: "R. Rapat", kapasitas: 8 },
+        { id: "r4", nama: "R. Kenanga", kapasitas: 20 },
       ],
     },
     {
       id: "t2",
-      nama: "Tempat Cabang",
+      nama: "Cabang Utara",
       ruangan: [
-        { id: "r4", nama: "R. Anggrek", kapasitas: 10 },
-        { id: "r5", nama: "R. Tulip", kapasitas: 8 },
+        { id: "r5", nama: "Lap. Utama", kapasitas: 30 },
+        { id: "r6", nama: "R. Cempaka", kapasitas: 16 },
+        { id: "r7", nama: "R. Dahlia", kapasitas: 10 },
+      ],
+    },
+    {
+      id: "t3",
+      nama: "Cabang Timur",
+      ruangan: [
+        { id: "r8", nama: "R. Bougenville", kapasitas: 12 },
       ],
     },
   ];
 
   return (
     <div
-      data-density={density}
-      data-theme={themeDark ? "dark" : "light"}
       className="min-h-screen bg-[var(--color-canvas)] text-[var(--color-text)] transition-colors duration-[var(--dur-normal)]"
     >
-      {/* Offline banner demo at top */}
-      {offlineBannerActive && (
-        <OfflineBanner
-          onRetry={() => {
-            showToast({
-              type: "info",
-              message: "Mencoba menyambung kembali ke server...",
-            });
-            setTimeout(() => {
-              setOfflineBannerActive(false);
+      {/* Pinned Top Container: Offline Banner + Header stay fixed at top and never scroll */}
+      <div className="sticky top-0 z-40 w-full flex flex-col">
+        {offlineBannerActive && (
+          <OfflineBanner
+            variant={offlineVariant}
+            cachedAt="16 Sep 2026, 11:45"
+            onRetry={() => {
               showToast({
-                type: "success",
-                message: "Tersambung ke server",
+                type: "info",
+                message: "Mencoba menyambung kembali ke server...",
               });
-            }, 1200);
-          }}
-        />
-      )}
+              setTimeout(() => {
+                setOfflineBannerActive(false);
+                showToast({
+                  type: "success",
+                  message: "Tersambung ke server",
+                });
+              }, 1200);
+            }}
+          />
+        )}
 
-      {/* Header bar */}
-      <header className="sticky top-0 z-30 bg-white border-b border-[var(--color-border)] px-6 py-3 flex items-center justify-between shadow-xs">
+        {/* Header bar */}
+        <header className="bg-white border-b border-[var(--color-border)] px-6 py-3 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-[var(--radius-md)] bg-[var(--color-brand)] text-white font-bold flex items-center justify-center text-[15px]">
             B
@@ -156,63 +178,95 @@ export function KatalogScreen() {
               Katalog Komponen Bandrek
             </h1>
             <p className="text-[11.5px] text-[var(--color-text-muted)]">
-              Acuan Implementasi Design System · Sesuai DESIGN.md &amp; Bandrek DS Spesifikasi
+              Acuan Implementasi Design System · Sesuai DESIGN.md &amp; Bandrek DS Spesifikasi (Selalu Compact)
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Density toggle */}
-          <div className="flex items-center gap-1 bg-[var(--color-surface-alt)] p-0.5 border border-[var(--color-border)] rounded-[var(--radius-md)] text-[11.5px]">
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Offline Treatment Proposal Switcher */}
+          <div className="flex items-center gap-1 bg-[var(--color-surface-alt)] p-0.5 border border-[var(--color-border)] rounded-[var(--radius-md)] text-[11px]">
+            <span className="px-1.5 text-[var(--color-text-muted)] font-medium">Banner Offline:</span>
             <button
               type="button"
-              onClick={() => setDensity("compact")}
-              className={`px-2.5 py-1 rounded-[var(--radius-sm)] font-medium cursor-pointer transition-colors ${
-                density === "compact"
-                  ? "bg-white text-[var(--color-brand-ink)] shadow-xs"
+              onClick={() => {
+                setOfflineBannerActive(true);
+                setOfflineVariant("dark-charcoal");
+              }}
+              title="Proposal 1: Dark Charcoal OS/System Banner"
+              className={`px-2 py-0.5 rounded-[var(--radius-sm)] cursor-pointer ${
+                offlineBannerActive && offlineVariant === "dark-charcoal"
+                  ? "bg-[#242424] text-white font-semibold"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
               }`}
             >
-              Compact (Default)
+              Dark Slate
             </button>
             <button
               type="button"
-              onClick={() => setDensity("comfortable")}
-              className={`px-2.5 py-1 rounded-[var(--radius-sm)] font-medium cursor-pointer transition-colors ${
-                density === "comfortable"
-                  ? "bg-white text-[var(--color-brand-ink)] shadow-xs"
+              onClick={() => {
+                setOfflineBannerActive(true);
+                setOfflineVariant("danger-subtle");
+              }}
+              title="Proposal 2: Danger-Subtle (Error blocks)"
+              className={`px-2 py-0.5 rounded-[var(--radius-sm)] cursor-pointer ${
+                offlineBannerActive && offlineVariant === "danger-subtle"
+                  ? "bg-[var(--color-danger-bg)] text-[var(--color-danger-ink)] border border-[var(--color-danger)] font-semibold"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
               }`}
             >
-              Comfortable
+              Merah
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setOfflineBannerActive(true);
+                setOfflineVariant("surface-sunken");
+              }}
+              title="Proposal 3: Muted Surface Sunken with locked icon"
+              className={`px-2 py-0.5 rounded-[var(--radius-sm)] cursor-pointer ${
+                offlineBannerActive && offlineVariant === "surface-sunken"
+                  ? "bg-[var(--color-surface-sunken)] text-[var(--color-text)] border border-[var(--color-border-strong)] font-semibold"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              Abu Muted
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setOfflineBannerActive(true);
+                setOfflineVariant("warning");
+              }}
+              title="Perbandingan: Warning Kuning (Lunak)"
+              className={`px-2 py-0.5 rounded-[var(--radius-sm)] cursor-pointer ${
+                offlineBannerActive && offlineVariant === "warning"
+                  ? "bg-[var(--color-warning-bg)] text-[var(--color-warning-ink)] border border-[var(--color-warning)] font-semibold"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+              }`}
+            >
+              Kuning
             </button>
           </div>
 
-          {/* Dark theme toggle */}
-          <Button
-            variant="secondary"
-            size="compact"
-            onClick={() => setThemeDark(!themeDark)}
-          >
-            {themeDark ? "☀ Light Mode" : "🌙 Dark Mode"}
-          </Button>
-
-          {/* Offline banner toggle */}
+          {/* Toggle Banner on/off */}
           <Button
             variant="ghost"
             size="compact"
             onClick={() => setOfflineBannerActive(!offlineBannerActive)}
           >
-            {offlineBannerActive ? "Sembunyikan Banner" : "Tampilkan Banner Offline"}
+            {offlineBannerActive ? "Tutup Banner" : "Tampilkan Banner"}
           </Button>
 
           <Link to="/">
-            <Button variant="secondary" size="compact">
-              ← Beranda
+            <Button variant="secondary" size="compact" className="inline-flex items-center gap-1.5">
+              <ArrowLeft16Regular />
+              <span>Beranda</span>
             </Button>
           </Link>
         </div>
       </header>
+      </div>
 
       {/* Main Content Showcase */}
       <main className="max-w-[1366px] mx-auto p-6 space-y-10 pb-24">
@@ -403,7 +457,7 @@ export function KatalogScreen() {
                     </span>
                   </td>
                   <td className="py-3 px-3 text-center">
-                    <Button variant="primary" className="outline-2 outline-[var(--color-focus-ring)] outline-offset-2">
+                    <Button variant="primary" className="border-black shadow-[inset_0_0_0_1px_#000000,inset_0_0_0_2px_#ffffff]">
                       Simpan
                     </Button>
                   </td>
@@ -436,7 +490,7 @@ export function KatalogScreen() {
                     </span>
                   </td>
                   <td className="py-3 px-3 text-center">
-                    <Button variant="secondary" className="outline-2 outline-[var(--color-focus-ring)] outline-offset-2">
+                    <Button variant="secondary" className="border-black shadow-[inset_0_0_0_1px_#000000]">
                       Batal
                     </Button>
                   </td>
@@ -469,7 +523,7 @@ export function KatalogScreen() {
                     </span>
                   </td>
                   <td className="py-3 px-3 text-center">
-                    <Button variant="ghost" className="outline-2 outline-[var(--color-focus-ring)] outline-offset-2">
+                    <Button variant="ghost" className="border-black shadow-[inset_0_0_0_1px_#000000]">
                       Lihat
                     </Button>
                   </td>
@@ -502,7 +556,7 @@ export function KatalogScreen() {
                     </span>
                   </td>
                   <td className="py-3 px-3 text-center">
-                    <Button variant="danger" className="outline-2 outline-[var(--color-focus-ring)] outline-offset-2">
+                    <Button variant="danger" className="border-black shadow-[inset_0_0_0_1px_#000000] bg-[var(--color-danger-bg)]">
                       Batalkan
                     </Button>
                   </td>
@@ -522,18 +576,12 @@ export function KatalogScreen() {
 
             {/* Sizes demo */}
             <div className="mt-4 pt-3 border-t border-[var(--color-border-subtle)] flex items-center gap-4 text-[12px]">
-              <span className="text-[var(--color-text-muted)] font-medium">Ukuran:</span>
+              <span className="text-[var(--color-text-muted)] font-medium">Ukuran (Selalu Compact per DESIGN.md §2.4):</span>
               <Button size="compact" variant="primary">
                 Compact (26px)
               </Button>
-              <Button size="comfortable" variant="primary">
-                Comfortable (32px)
-              </Button>
-              <Button size="icon" variant="secondary" title="Icon Compact">
-                ≡
-              </Button>
-              <Button size="icon-comfortable" variant="secondary" title="Icon Comfortable">
-                ≡
+              <Button size="icon" variant="secondary" title="Icon Compact (26px)">
+                <LineHorizontal316Regular />
               </Button>
             </div>
           </div>
@@ -575,7 +623,7 @@ export function KatalogScreen() {
               <FormLabel>Focus State (2px Brand Bottom)</FormLabel>
               <Input
                 defaultValue="Matematika SD"
-                className="border-[var(--color-brand)] border-b-2 border-b-[var(--color-brand)]"
+                className="border-[var(--color-brand)] shadow-[inset_0_-1px_0_0_var(--color-brand)]"
               />
             </div>
 
@@ -596,7 +644,7 @@ export function KatalogScreen() {
               <FormLabel required error>
                 Jam Selesai (Error)
               </FormLabel>
-              <Input defaultValue="09:30" error mono />
+              <TimePicker defaultValue="09:30" error />
               <InlineError message="Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah 08:00." />
             </div>
 
@@ -606,35 +654,54 @@ export function KatalogScreen() {
               <SearchInput defaultValue="Aisyah" onClear={() => {}} />
             </div>
 
-            {/* Cascadia Mono Time & Date */}
+            {/* Time & Date */}
             <div>
-              <FormLabel>Waktu (Jam Mono)</FormLabel>
-              <Input defaultValue="08:00–09:30" mono />
+              <FormLabel>Waktu (Jam Tunggal)</FormLabel>
+              <TimePicker defaultValue="08:00" />
             </div>
 
             <div>
-              <FormLabel>Tanggal (Date Mono)</FormLabel>
-              <Input defaultValue="16 Sep 2026" mono />
+              <FormLabel>Tanggal (Date Picker)</FormLabel>
+              <DatePicker defaultValue="2026-09-16" />
+            </div>
+
+            <div>
+              <FormLabel>Rentang Waktu (Mulai – Selesai)</FormLabel>
+              <TimeRangePicker defaultStart="08:00" defaultEnd="09:30" />
             </div>
 
             {/* Standard Select */}
             <div>
-              <FormLabel>Dropdown Standar</FormLabel>
-              <Select defaultValue="sd">
-                <option value="sd">Jenjang SD</option>
-                <option value="smp">Jenjang SMP</option>
-                <option value="sma">Jenjang SMA</option>
+              <FormLabel required>Jenis kegiatan</FormLabel>
+              <Select defaultValue="">
+                <option value="">Pilih jenis kegiatan</option>
+                <option value="pembelajaran">Pembelajaran</option>
+                <option value="rapat">Rapat</option>
+                <option value="olahraga">Olahraga</option>
+                <option value="ujian">Ujian</option>
+                <option value="konsultasi">Konsultasi</option>
               </Select>
             </div>
 
-            {/* Grouped Ruangan Select (Task brief requirement!) */}
-            <div className="md:col-span-2">
-              <FormLabel required>
-                Ruangan (Grouped Ruangan Select per Tempat)
-              </FormLabel>
+            {/* Grouped Ruangan Select (Tanpa Ruangan) */}
+            <div>
+              <FormLabel>Ruangan</FormLabel>
+              <GroupedRuanganSelect
+                groups={sampleRuanganGroups}
+                defaultValue=""
+                allowNone
+                noneLabel="Tanpa ruangan"
+              />
+            </div>
+
+            {/* Grouped Ruangan Select (Terpilih) */}
+            <div>
+              <FormLabel>Ruangan Terpilih</FormLabel>
               <GroupedRuanganSelect
                 groups={sampleRuanganGroups}
                 defaultValue="r1"
+                allowNone
+                noneLabel="Tanpa ruangan"
               />
             </div>
           </div>
@@ -752,7 +819,7 @@ export function KatalogScreen() {
               </div>
 
               <div>
-                <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Terealisasi (✓)</div>
+                <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Terealisasi</div>
                 <CalendarEvent
                   status="terealisasi"
                   jamMulai="08:00"
@@ -764,7 +831,7 @@ export function KatalogScreen() {
               </div>
 
               <div>
-                <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Belum direalisasi (⚠)</div>
+                <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Belum direalisasi</div>
                 <CalendarEvent
                   status="belum"
                   jamMulai="08:00"
@@ -788,7 +855,7 @@ export function KatalogScreen() {
               </div>
 
               <div>
-                <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Dijadwal ulang (↻)</div>
+                <div className="text-[11px] text-[var(--color-text-muted)] mb-1">Dijadwal ulang</div>
                 <CalendarEvent
                   status="dijadwal-ulang"
                   jamMulai="08:00"
@@ -877,13 +944,13 @@ export function KatalogScreen() {
             <div className="flex items-center gap-6 flex-wrap">
               {(
                 [
-                  { state: "tersampaikan", label: "Tersampaikan (✓)" },
-                  { state: "sakit", label: "Sakit (◐)" },
-                  { state: "izin", label: "Izin (✉)" },
-                  { state: "alpa", label: "Alpa (✕)" },
+                  { state: "tersampaikan", label: "Tersampaikan" },
+                  { state: "sakit", label: "Sakit" },
+                  { state: "izin", label: "Izin" },
+                  { state: "alpa", label: "Alpa" },
                   { state: "batal", label: "Batal (Coret)" },
-                  { state: "terjadwal", label: "Terjadwal (●)" },
-                  { state: "kosong", label: "Belum (·)" },
+                  { state: "terjadwal", label: "Terjadwal" },
+                  { state: "kosong", label: "Belum" },
                 ] as { state: MatrixCellState; label: string }[]
               ).map((item) => (
                 <div key={item.state} className="flex flex-col items-center gap-1.5">
@@ -896,7 +963,7 @@ export function KatalogScreen() {
 
               {/* Focus state */}
               <div className="flex flex-col items-center gap-1.5">
-                <MatrixCell state="tersampaikan" className="outline-2 outline-[var(--color-focus-ring)] -outline-offset-2" />
+                <MatrixCell state="tersampaikan" className="shadow-[inset_0_0_0_2px_var(--color-focus-ring)] z-10" />
                 <span className="text-[11px] text-[var(--color-text-muted)] whitespace-nowrap">
                   Fokus Keyboard
                 </span>
@@ -928,7 +995,7 @@ export function KatalogScreen() {
           </div>
 
           <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-lg)] overflow-hidden">
-            <Table density={density}>
+            <Table density="compact">
               <TableHeader>
                 <tr>
                   <TableHead className="w-24">Waktu</TableHead>
@@ -981,7 +1048,10 @@ export function KatalogScreen() {
                 {/* Warning Row (Perlu Tindakan) */}
                 <TableRow warning>
                   <TableCell mono>
-                    <span className="font-bold mr-1">⚠</span>13:00
+                    <span className="inline-flex items-center gap-1 align-middle">
+                      <Warning16Regular className="text-[var(--color-warning-ink)] flex-none -translate-y-[0.5px]" />
+                      <span>13:00</span>
+                    </span>
                   </TableCell>
                   <TableCell>
                     Statistika Dasar (Baris Perlu Tindakan · latar warning penuh)
@@ -1088,7 +1158,7 @@ export function KatalogScreen() {
               <FormLabel>Checkbox States</FormLabel>
               <div className="flex items-center gap-6 pt-1">
                 <Checkbox label="Unchecked" />
-                <Checkbox defaultChecked label="Checked (✓)" />
+                <Checkbox defaultChecked label="Checked" />
                 <Checkbox checked="indeterminate" label="Indeterminate" />
                 <Checkbox disabled label="Disabled" />
                 <Checkbox disabled defaultChecked label="Disabled Checked" />
@@ -1383,11 +1453,11 @@ export function KatalogScreen() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <FormLabel required>Jam Mulai</FormLabel>
-                  <Input defaultValue="08:00" mono />
+                  <Input defaultValue="08:00" />
                 </div>
                 <div>
                   <FormLabel required>Jam Selesai</FormLabel>
-                  <Input defaultValue="09:30" mono />
+                  <Input defaultValue="09:30" />
                 </div>
               </div>
 
@@ -1512,12 +1582,13 @@ export function KatalogScreen() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* 1. Pemakaian Pertama */}
             <EmptyState
-              icon={<span className="text-[28px]">▦</span>}
+              icon={<CalendarLtr24Regular className="w-8 h-8 text-[var(--color-brand)]" />}
               title="Belum ada data"
               cause="Belum ada kegiatan. Siapkan data master dulu, lalu jadwal bisa dibuat dalam hitungan detik."
               metaSummary={
-                <span className="text-[11.5px] text-[var(--color-text-muted)] flex items-center justify-center gap-1">
-                  <span className="text-[var(--color-success-ink)] font-bold">✓</span> 48 siswa · 6 subjek · 7 mapel terdaftar
+                <span className="text-[11.5px] text-[var(--color-text-muted)] flex items-center justify-center gap-1.5">
+                  <Checkmark16Regular className="text-[var(--color-success-ink)] flex-none" />
+                  <span>48 siswa · 6 subjek · 7 mapel terdaftar</span>
                 </span>
               }
               primaryAction={{
@@ -1532,7 +1603,7 @@ export function KatalogScreen() {
 
             {/* 2. Filter Terlalu Sempit */}
             <EmptyState
-              icon={<span className="text-[28px] text-[var(--color-text-muted)]">⌕</span>}
+              icon={<Search24Regular className="w-8 h-8 text-[var(--color-text-muted)]" />}
               title="Filter tidak menemukan apa pun"
               cause="Tidak ada kegiatan yang cocok. Tiga filter sedang aktif — longgarkan salah satunya."
               metaSummary={
@@ -1553,7 +1624,7 @@ export function KatalogScreen() {
 
             {/* 3. Prasyarat Belum Lengkap */}
             <EmptyState
-              icon={<span className="text-[28px] text-[var(--color-warning-ink)]">⚠</span>}
+              icon={<Warning24Regular className="w-8 h-8 text-[var(--color-warning-ink)]" />}
               title="Prasyarat belum lengkap"
               cause="Matriks belum bisa ditampilkan. Seni Budaya belum punya materi, jadi belum ada kolom untuk dibandingkan."
               primaryAction={{

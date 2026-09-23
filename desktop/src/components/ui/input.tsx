@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Search12Regular, Dismiss12Regular, Warning12Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -23,10 +24,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           mono && "font-mono",
           // States
           error
-            ? "border border-[var(--color-danger)] border-b-2 border-b-[var(--color-danger)]"
+            ? "border border-[var(--color-danger)] shadow-[inset_0_-1px_0_0_var(--color-danger)]"
             : disabled
-            ? "border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)] cursor-not-allowed border-b"
-            : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:border-b-2 focus:border-b-[var(--color-brand)]",
+            ? "border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)] cursor-not-allowed"
+            : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
           className
         )}
         {...props}
@@ -41,28 +42,52 @@ export interface SearchInputProps extends Omit<InputProps, "type"> {
 }
 
 export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, value, onClear, density = "compact", ...props }, ref) => {
+  ({ className, value: propValue, defaultValue, onChange, onClear, density = "compact", ...props }, ref) => {
+    const isControlled = propValue !== undefined;
+    const [internalVal, setInternalVal] = React.useState<string>(
+      (propValue ?? defaultValue ?? "") as string
+    );
+
+    const currentVal = isControlled ? (propValue as string) : internalVal;
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!isControlled) {
+        setInternalVal(e.target.value);
+      }
+      onChange?.(e);
+    };
+
+    const handleClear = () => {
+      if (!isControlled) {
+        setInternalVal("");
+      }
+      onClear?.();
+    };
+
+    const hasValue = Boolean(currentVal && String(currentVal).length > 0);
+
     return (
       <div className="relative flex items-center w-full">
-        <span className="absolute left-2.5 text-[var(--color-text-muted)] text-[12px] pointer-events-none select-none">
-          ⌕
+        <span className="absolute left-2.5 text-[var(--color-text-muted)] pointer-events-none select-none flex items-center justify-center">
+          <Search12Regular />
         </span>
         <Input
           ref={ref}
           type="search"
-          value={value}
+          value={isControlled ? propValue : internalVal}
+          onChange={handleChange}
           density={density}
-          className={cn("pl-7 rounded-full", Boolean(value) && onClear && "pr-7", className)}
+          className={cn("pl-7 rounded-full", hasValue && onClear && "pr-7", className)}
           {...props}
         />
-        {Boolean(value) && onClear && (
+        {hasValue && onClear && (
           <button
             type="button"
-            onClick={onClear}
-            className="absolute right-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] text-[11px] p-0.5 cursor-pointer"
+            onClick={handleClear}
+            className="absolute right-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] p-0.5 rounded-[var(--radius-sm)] cursor-pointer flex items-center justify-center"
             title="Hapus pencarian"
           >
-            ✕
+            <Dismiss12Regular />
           </button>
         )}
       </div>
@@ -137,12 +162,14 @@ export const InlineError: React.FC<InlineErrorProps> = ({ message, className }) 
   return (
     <div
       className={cn(
-        "mt-1.5 flex items-start gap-1.5 text-[11.5px] leading-snug text-[var(--color-danger-ink)]",
+        "mt-1 flex items-start gap-1 text-[11px] leading-4 text-[var(--color-danger-ink)]",
         className
       )}
       role="alert"
     >
-      <span className="font-bold flex-none">⚠</span>
+      <span className="flex-none h-4 flex items-center justify-center text-[var(--color-danger)] translate-y-[0.5px]">
+        <Warning12Regular />
+      </span>
       <span>{message}</span>
     </div>
   );

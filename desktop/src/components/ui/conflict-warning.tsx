@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Warning16Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export interface ConflictWarningProps {
@@ -37,7 +38,7 @@ export const ConflictWarning: React.FC<ConflictWarningProps> = ({
       )}
     >
       <div className="flex items-start gap-1.5 font-semibold">
-        <span className="flex-none font-bold text-[13px] leading-none">⚠</span>
+        <Warning16Regular className="flex-none mt-0.5" />
         <span>{title}</span>
       </div>
 

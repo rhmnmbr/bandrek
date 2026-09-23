@@ -115,38 +115,12 @@
     --text-dense:   12px;
     --text-label:   11px;
 
-    /* Density Default (Compact) */
+    /* Density: Selalu Compact (DESIGN.md §2.4) */
     --density-row-h: 32px;
     --density-matrix-h: 28px;
     --density-control-h: 26px;
     --density-cell-p: 4px 11px;
-  }
-
-  [data-density="comfortable"] {
-    --density-row-h: 40px;
-    --density-matrix-h: 34px;
-    --density-control-h: 32px;
-    --density-cell-p: 8px 12px;
-  }
-
-  [data-theme="dark"] {
-    --color-canvas:         #1B1A19;
-    --color-surface:        #252423;
-    --color-surface-alt:    #2D2C2B;
-    --color-surface-sunken: #1B1A19;
-    --color-text:           #F3F2F1;
-    --color-text-secondary: #D6D4D2;
-    --color-text-muted:     #A19F9D;
-    --color-border:         #3B3A39;
-    --color-border-strong:  #484644;
-    --color-border-subtle:  #323130;
-    --color-brand:          #479EF5;
-    --color-brand-subtle:   #0C3A61;
-    --color-brand-ink:      #A9D3F2;
-    --color-focus-ring:     #FFFFFF;
-    --color-success-bg:     #0F3D18;
-    --color-warning-bg:     #402B00;
-    --color-danger-bg:      #4A1116;
+    --density-attendance-row-h: 34px;
   }
 
   html, body {
@@ -157,18 +131,50 @@
     font-family: var(--font-sans);
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
+  }
+
+  /* Prevent Radix / react-remove-scroll from hiding desktop window scrollbar when dropdowns open */
+  body[data-scroll-locked] {
+    overflow-y: auto !important;
+    margin-right: 0px !important;
   }
 
   * {
     box-sizing: border-box;
   }
 
-  /* Global focus ring per DESIGN.md §3.1 */
-  :focus-visible {
-    outline: 2px solid var(--color-focus-ring) !important;
-    outline-offset: 2px !important;
+  /* Native Desktop Focus Conventions:
+     1. Mouse clicks never leave a focus ring
+     2. Form controls use border transitions and bottom accent (outline: none)
+     3. Keyboard navigation (:focus-visible) uses tight dual-ring accent
+  */
+  :focus:not(:focus-visible) {
+    outline: none !important;
+  }
+
+  button,
+  select,
+  input,
+  textarea {
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none !important;
+  }
+
+  /* Disable default webkit search cancel button so our custom Fluent dismiss button is used */
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    display: none;
   }
 
   ::-webkit-scrollbar {
@@ -181,6 +187,22 @@
     border: 2px solid var(--color-surface-alt);
   }
   ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Compact slim scrollbar for popover dropdown columns (TimePicker) */
+  [data-time-column] {
+    scrollbar-width: thin;
+  }
+  [data-time-column]::-webkit-scrollbar {
+    width: 4px;
+  }
+  [data-time-column]::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    border: none;
+  }
+  [data-time-column]::-webkit-scrollbar-track {
     background: transparent;
   }
 

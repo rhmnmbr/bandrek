@@ -1,9 +1,21 @@
+import * as React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { ToastProvider } from "@/components/ui/toast";
 import { KatalogScreen } from "@/screens/KatalogScreen";
 import { Button } from "@/components/ui/button";
 
 export default function App() {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Enable developer reload in Tauri desktop window
+      if (e.key === "F5" || (e.ctrlKey && e.key.toLowerCase() === "r")) {
+        e.preventDefault();
+        window.location.reload();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   return (
     <ToastProvider>
       <Routes>

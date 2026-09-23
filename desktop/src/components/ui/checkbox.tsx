@@ -1,59 +1,98 @@
 import * as React from "react";
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { cn } from "@/lib/utils";
 
 export interface CheckboxProps
-  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "checked" | "onChange"> {
+  checked?: boolean | "indeterminate";
+  defaultChecked?: boolean;
+  onCheckedChange?: (checked: boolean | "indeterminate") => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label?: React.ReactNode;
 }
 
-export const Checkbox = React.forwardRef<
-  React.ComponentRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps
->(({ className, label, id, disabled, ...props }, ref) => {
-  const generatedId = React.useId();
-  const checkboxId = id || (label ? generatedId : undefined);
+export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  (
+    {
+      className,
+      label,
+      id,
+      checked,
+      defaultChecked,
+      onCheckedChange,
+      onChange,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const innerRef = React.useRef<HTMLInputElement>(null);
+    const generatedId = React.useId();
+    const checkboxId = id || (label ? generatedId : undefined);
 
-  const checkboxNode = (
-    <CheckboxPrimitive.Root
-      ref={ref}
-      id={checkboxId}
-      disabled={disabled}
-      className={cn(
-        "peer h-4 w-4 shrink-0 rounded-[var(--radius-sm)] border transition-colors duration-[var(--dur-fast)] cursor-pointer select-none",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-2",
-        "disabled:cursor-not-allowed disabled:bg-[var(--color-surface-sunken)] disabled:border-[var(--color-border-subtle)]",
-        "data-[state=unchecked]:bg-[var(--color-surface)] data-[state=unchecked]:border-[var(--color-border-strong)] data-[state=unchecked]:hover:border-[#8A8886]",
-        "data-[state=checked]:bg-[var(--color-brand)] data-[state=checked]:border-[var(--color-brand)] data-[state=checked]:text-white",
-        "data-[state=indeterminate]:bg-[var(--color-brand)] data-[state=indeterminate]:border-[var(--color-brand)] data-[state=indeterminate]:text-white",
-        className
-      )}
-      {...props}
-    >
-      <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
-        <span className="text-[12px] font-bold leading-none select-none">✓</span>
-      </CheckboxPrimitive.Indicator>
-    </CheckboxPrimitive.Root>
-  );
+    const isIndeterminate = checked === "indeterminate";
+    const isControlled = checked !== undefined;
 
-  if (!label) {
-    return checkboxNode;
-  }
+    // Keep forwardRef and innerRef in sync
+    const setRef = React.useCallback(
+      (node: HTMLInputElement | null) => {
+        innerRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+        }
+      },
+      [ref]
+    );
 
-  return (
-    <div className="inline-flex items-center gap-2">
-      {checkboxNode}
-      <label
-        htmlFor={checkboxId}
+    // Sync indeterminate property to the native DOM element
+    React.useEffect(() => {
+      if (innerRef.current) {
+        innerRef.current.indeterminate = isIndeterminate;
+      }
+    }, [isIndeterminate]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange?.(e);
+      onCheckedChange?.(e.target.checked);
+    };
+
+    const inputNode = (
+      <input
+        ref={setRef}
+        type="checkbox"
+        id={checkboxId}
+        disabled={disabled}
+        checked={isControlled ? checked === true : undefined}
+        defaultChecked={defaultChecked}
+        onChange={handleChange}
         className={cn(
-          "text-[12.5px] select-none cursor-pointer leading-none",
-          disabled ? "text-[var(--color-text-muted)] cursor-not-allowed" : "text-[var(--color-text)]"
+          "w-[14px] h-[14px] accent-[var(--color-brand)] cursor-pointer m-0 flex-none",
+          "disabled:cursor-not-allowed",
+          className
         )}
-      >
-        {label}
-      </label>
-    </div>
-  );
-});
-Checkbox.displayName = "Checkbox";
+        {...props}
+      />
+    );
 
+    if (!label) {
+      return inputNode;
+    }
+
+    return (
+      <div className="inline-flex items-center gap-2">
+        {inputNode}
+        <label
+          htmlFor={checkboxId}
+          className={cn(
+            "text-[12.5px] select-none cursor-pointer leading-none",
+            disabled ? "text-[var(--color-text-muted)] cursor-not-allowed" : "text-[var(--color-text)]"
+          )}
+        >
+          {label}
+        </label>
+      </div>
+    );
+  }
+);
+Checkbox.displayName = "Checkbox";

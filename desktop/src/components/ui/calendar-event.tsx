@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Checkmark12Regular, Warning12Regular, ArrowClockwise12Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 import type { KegiatanStatus } from "./badge";
 
@@ -99,11 +100,11 @@ export const CalendarEvent: React.FC<CalendarEventProps> = ({
   const renderStatusGlyph = () => {
     switch (status) {
       case "terealisasi":
-        return <span className="text-[var(--color-success-ink)] font-bold text-[11px]">✓</span>;
+        return <Checkmark12Regular className="text-[var(--color-success-ink)]" />;
       case "belum":
-        return <span className="text-[var(--color-warning-ink)] font-bold text-[11px]">⚠</span>;
+        return <Warning12Regular className="text-[var(--color-warning-ink)]" />;
       case "dijadwal-ulang":
-        return <span className="text-[#5B4394] font-bold text-[11px]">↻</span>;
+        return <ArrowClockwise12Regular className="text-[#5B4394]" />;
       default:
         return null;
     }
@@ -135,8 +136,8 @@ export const CalendarEvent: React.FC<CalendarEventProps> = ({
           : isDijadwalUlang
           ? "border border-dashed border-[#8764B8] border-l-[4px] border-l-solid border-l-[#8764B8] bg-[#F3EFFA] text-[#5B4394] shadow-[var(--shadow-raised)]"
           : "border-l-[4px] shadow-[var(--shadow-raised)]",
-        selected && "outline-2 outline-[var(--color-focus-ring)] outline-offset-2",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-2",
+        selected && "shadow-[inset_0_0_0_2px_#000000]",
+        "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_#000000]",
         className
       )}
       style={
@@ -188,7 +189,7 @@ export const MoreEventsGroup: React.FC<MoreEventsGroupProps> = ({ count, classNa
         "w-full h-[22px] px-2 rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface-alt)]",
         "text-[11px] font-medium text-[var(--color-brand)] hover:bg-[var(--color-brand-subtle)] hover:border-[var(--color-brand)]",
         "transition-colors flex items-center justify-center cursor-pointer select-none",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-1",
+        "focus-visible:outline-none focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
         className
       )}
       {...props}

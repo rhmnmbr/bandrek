@@ -13,7 +13,7 @@ export interface SegmentedControlProps<T extends string> {
   onChange: (value: T) => void;
   error?: boolean;
   disabled?: boolean;
-  size?: "compact" | "attendance" | "comfortable";
+  size?: "compact" | "attendance";
   className?: string;
   onKeyDownNextRow?: () => void;
   onKeyDownPrevRow?: () => void;
@@ -74,8 +74,7 @@ export function SegmentedControl<T extends string>({
     }
   };
 
-  const heightClass =
-    size === "attendance" ? "h-[34px]" : size === "comfortable" ? "h-[32px]" : "h-[26px]";
+  const heightClass = size === "attendance" ? "h-[34px]" : "h-[26px]";
 
   return (
     <div
@@ -86,7 +85,7 @@ export function SegmentedControl<T extends string>({
       className={cn(
         "inline-flex rounded-[var(--radius-md)] overflow-hidden select-none transition-colors border",
         heightClass,
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-2",
+        "focus-visible:outline-none focus-visible:border-[var(--color-focus-ring)] focus-visible:shadow-[inset_0_0_0_1px_var(--color-focus-ring)]",
         error
           ? "border-[var(--color-danger)] bg-[var(--color-danger-bg)]"
           : "border-[var(--color-border-strong)] bg-white hover:border-[#8A8886]",
@@ -133,7 +132,7 @@ export const KehadiranSegmentedControl: React.FC<{
   onChange: (val: KehadiranValue) => void;
   error?: boolean;
   disabled?: boolean;
-  size?: "compact" | "attendance" | "comfortable";
+  size?: "compact" | "attendance";
   className?: string;
   onKeyDownNextRow?: () => void;
   onKeyDownPrevRow?: () => void;
@@ -154,7 +153,7 @@ export const KetuntasanSegmentedControl: React.FC<{
   onChange: (val: KetuntasanValue) => void;
   error?: boolean;
   disabled?: boolean;
-  size?: "compact" | "comfortable";
+  size?: "compact";
   className?: string;
 }> = (props) => {
   const options: SegmentedOption<KetuntasanValue>[] = [

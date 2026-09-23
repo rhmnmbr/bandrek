@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Warning16Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export interface ErrorSummaryItem {
@@ -34,7 +35,7 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
       )}
     >
       <div className="flex items-center gap-1.5 font-semibold">
-        <span className="font-bold flex-none text-[13px] leading-none">⚠</span>
+        <Warning16Regular className="flex-none" />
         <span>{displayTitle}</span>
       </div>
 

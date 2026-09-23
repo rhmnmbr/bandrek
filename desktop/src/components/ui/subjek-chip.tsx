@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { ChevronDown12Regular, Checkmark12Regular, Add12Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export type SubjekPeran = "Pengisi" | "Support" | "Pendamping" | string;
@@ -32,8 +33,9 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
       <span
         tabIndex={disabled ? -1 : 0}
         className={cn(
-          "inline-flex items-center gap-1.5 h-[24px] px-2.5 rounded-full border text-[11.5px] whitespace-nowrap select-none transition-colors",
-          "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-2",
+          "inline-flex items-center gap-1.5 h-[24px] rounded-full border text-[11.5px] whitespace-nowrap select-none transition-colors",
+          onRemove ? "pl-2.5 pr-1" : "px-2.5",
+          "focus-visible:outline-none focus-visible:border-[var(--color-focus-ring)] focus-visible:shadow-[inset_0_0_0_1px_var(--color-focus-ring)]",
           isPrimary
             ? "border-[var(--color-brand)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-ink)] font-medium"
             : "border-[var(--color-border-strong)] bg-white text-[var(--color-text-secondary)]",
@@ -41,27 +43,29 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
           className
         )}
       >
-        <span>{nama}</span>
-        {peran && (
-          <>
-            <span className="opacity-50">·</span>
-            {onPeranChange ? (
-              <PopoverPrimitive.Trigger asChild>
-                <button
-                  type="button"
-                  disabled={disabled}
-                  className="hover:underline cursor-pointer font-normal flex items-center gap-0.5 focus:outline-none"
-                  title="Ganti peran subjek"
-                >
-                  <span>{peran}</span>
-                  <span className="text-[9px] opacity-70">▾</span>
-                </button>
-              </PopoverPrimitive.Trigger>
-            ) : (
-              <span className="font-normal opacity-90">{peran}</span>
-            )}
-          </>
-        )}
+        <span className="inline-flex items-center">
+          <span>{nama}</span>
+          {peran && (
+            <>
+              <span className="mx-1 opacity-50">·</span>
+              {onPeranChange ? (
+                <PopoverPrimitive.Trigger asChild>
+                  <button
+                    type="button"
+                    disabled={disabled}
+                    className="hover:underline cursor-pointer font-normal inline-flex items-center gap-0.5 focus:outline-none"
+                    title="Ganti peran subjek"
+                  >
+                    <span>{peran}</span>
+                    <ChevronDown12Regular className="w-[10px] h-[10px] opacity-70 flex-none" />
+                  </button>
+                </PopoverPrimitive.Trigger>
+              ) : (
+                <span className="font-normal opacity-90">{peran}</span>
+              )}
+            </>
+          )}
+        </span>
 
         {onRemove && (
           <button
@@ -71,10 +75,23 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="text-[10px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] ml-0.5 p-0.5 cursor-pointer leading-none"
-            title={`Hapus ${nama}`}
+            className="w-4 h-4 -ml-1 flex-none rounded-full cursor-pointer text-inherit flex items-center justify-center transition-colors hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-focus-ring)]"
+            title={`Keluarkan ${nama}`}
           >
-            ✕
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              className="w-[10px] h-[10px] flex-none"
+              aria-hidden="true"
+            >
+              <line x1="4" y1="4" x2="12" y2="12" />
+              <line x1="12" y1="4" x2="4" y2="12" />
+            </svg>
           </button>
         )}
       </span>
@@ -105,7 +122,7 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
                 )}
               >
                 <span>{p}</span>
-                {p === peran && <span className="font-bold text-[11px]">✓</span>}
+                {p === peran && <Checkmark12Regular className="text-[var(--color-brand)] flex-none" />}
               </button>
             ))}
           </PopoverPrimitive.Content>
@@ -122,13 +139,14 @@ export const AddSubjekButton: React.FC<AddSubjekButtonProps> = ({ className, ...
     <button
       type="button"
       className={cn(
-        "inline-flex items-center gap-1 h-[24px] px-2.5 rounded-full border border-dashed border-[#8A8886] bg-transparent text-[11.5px] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-alt)] hover:border-[var(--color-text)] cursor-pointer select-none transition-colors",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:outline-offset-2",
+        "inline-flex items-center gap-1 h-[24px] px-2 rounded-full border border-dashed border-[#8A8886] bg-transparent text-[11.5px] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-alt)] hover:border-[var(--color-text)] cursor-pointer select-none transition-colors",
+        "focus-visible:outline-none focus-visible:border-solid focus-visible:border-[var(--color-focus-ring)] focus-visible:shadow-[inset_0_0_0_1px_var(--color-focus-ring)]",
         className
       )}
       {...props}
     >
-      <span>+ tambah</span>
+      <Add12Regular className="flex-none" />
+      <span>tambah</span>
     </button>
   );
 };

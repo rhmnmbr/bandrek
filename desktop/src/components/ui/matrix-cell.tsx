@@ -1,4 +1,11 @@
 import * as React from "react";
+import {
+  Checkmark16Regular,
+  CircleHalfFill16Regular,
+  Mail16Regular,
+  Dismiss16Regular,
+  Circle12Filled,
+} from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export type MatrixCellState =
@@ -12,28 +19,27 @@ export type MatrixCellState =
 
 export interface MatrixCellProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   state: MatrixCellState;
-  size?: "compact" | "comfortable";
+  size?: "compact";
   count?: number; // Optional number of activities or count
 }
 
 export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
   ({ state, size = "compact", count, className, ...props }, ref) => {
-    const isCompact = size === "compact";
 
     const renderContent = () => {
       switch (state) {
         case "tersampaikan":
-          return <span className="font-bold">✓</span>;
+          return <Checkmark16Regular className="text-current" />;
         case "sakit":
-          return <span className="font-bold text-[11px]">◐</span>;
+          return <CircleHalfFill16Regular className="text-current" />;
         case "izin":
-          return <span className="text-[11px]">✉</span>;
+          return <Mail16Regular className="text-current" />;
         case "alpa":
-          return <span className="font-bold text-[11px]">✕</span>;
+          return <Dismiss16Regular className="text-current" />;
         case "batal":
-          return <span className="font-bold text-[11px] line-through">✕</span>;
+          return <Dismiss16Regular className="text-current opacity-60" />;
         case "terjadwal":
-          return <span className="text-[10px]">●</span>;
+          return <Circle12Filled className="text-current text-[10px]" />;
         case "kosong":
         default:
           return <span className="text-[14px] leading-none opacity-60">·</span>;
@@ -66,8 +72,8 @@ export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
         type="button"
         className={cn(
           "flex items-center justify-center font-mono select-none cursor-pointer transition-colors duration-[var(--dur-instant)]",
-          isCompact ? "w-[28px] h-[28px] text-[12px]" : "w-[34px] h-[34px] text-[13.5px]",
-          "focus-visible:outline-2 focus-visible:outline-[var(--color-focus-ring)] focus-visible:-outline-offset-2",
+          "w-[28px] h-[28px] text-[12px]",
+          "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_#000000] focus-visible:z-10",
           getStateClasses(),
           className
         )}

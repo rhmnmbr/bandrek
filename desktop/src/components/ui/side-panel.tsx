@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Dismiss16Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export interface SidePanelProps {
@@ -66,7 +67,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
             title="Tutup (Esc)"
             className="w-6 h-6 rounded-full flex items-center justify-center text-[var(--color-text-muted)] hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)] transition-colors cursor-pointer"
           >
-            ✕
+            <Dismiss16Regular />
           </button>
         </div>
 
