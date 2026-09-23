@@ -153,7 +153,12 @@ _Update this section at each approved checkpoint: what was done, and any decisio
   - Established folder structure: `components/ui`, `screens`, `data/{interfaces,mock,types}`, `routes`, `lib`.
   - Verified both run modes (`npm run dev` and `npm run tauri dev` at 1366×768 min window) and clean build (`tsc && vite build`).
   - Updated `README.md` development section.
-- [ ] Phase 2 — Tokens and component catalog
+- [x] Phase 2 — Tokens and component catalog
+  - Defined all CSS variables from `DESIGN.md §2` in `desktop/src/index.css` (brand, surface, semantic, status, 8 calendar event types, spacing, radius, border, elevation, motion, typography, density).
+  - Implemented full set of Bandrek design system components in `desktop/src/components/ui/`: `button`, `input`, `select`, `checkbox`, `badge`, `segmented-control`, `calendar-event`, `matrix-cell`, `subjek-chip`, `student-checklist`, `conflict-warning`, `error-summary`, `dialog`, `side-panel`, `popover`, `toast`, `empty-state`, `offline-banner`, `table`.
+  - Built interactive `/katalog` screen (`desktop/src/screens/KatalogScreen.tsx`) covering every component in all states (default, hover, focus, active, disabled, error/warning, loading) with traceability to sections in `DESIGN.md`.
+  - Audited token mapping (100% mapped, 0 unmapped) and resolved style discrepancies where `DESIGN.md` wins over the prototype (control heights 26px/32px/34px, semantic variables, focus ring conventions, and read-only cache offline banner per ARCHITECTURE.md D5).
+  - Verified clean TypeScript compilation and production build (`tsc && vite build`).
 - [ ] Phase 3 — Data layer
 - [ ] Phase 4 — App shell
 - [ ] Phase 5 — Screens

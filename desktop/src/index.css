@@ -10,42 +10,75 @@
 
 @layer base {
   :root {
+    /* 2.1 Font */
     --font-sans: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
     --font-mono: "Cascadia Mono", Consolas, monospace;
 
-    /* Brand & surface */
-    --color-brand: #0F6CBD;
-    --color-brand-pressed: #115EA3;
-    --color-brand-subtle: #EBF3FC;
-    --color-brand-ink: #0C548F;
-    --color-surface: #FFFFFF;
-    --color-surface-alt: #FAFAFA;
+    /* Brand & Permukaan */
+    --color-brand:          #0F6CBD;
+    --color-brand-pressed:  #115EA3;
+    --color-brand-subtle:   #EBF3FC;
+    --color-brand-ink:      #0C548F;
+    --color-surface:        #FFFFFF;
+    --color-surface-alt:    #FAFAFA;
     --color-surface-sunken: #EDEBE9;
-    --color-canvas: #F5F5F5;
+    --color-canvas:         #F5F5F5;
 
-    /* Text & border */
-    --color-text: #242424;
+    /* Teks & Garis */
+    --color-text:           #242424;
     --color-text-secondary: #424242;
-    --color-text-muted: #5C5A58;
-    --color-icon-faint: #8A8886;
-    --color-border: #E1DFDD;
-    --color-border-strong: #C8C6C4;
-    --color-border-subtle: #EDEBE9;
-    --color-focus-ring: #242424;
+    --color-text-muted:     #5C5A58;
+    --color-icon-faint:     #8A8886;
+    --color-border:         #E1DFDD;
+    --color-border-strong:  #C8C6C4;
+    --color-border-subtle:  #EDEBE9;
+    --color-focus-ring:     #242424;
 
-    /* Semantic */
-    --color-success: #4CAF50;
-    --color-success-bg: #E8F5E9;
-    --color-success-ink: #2E7D32;
-    --color-warning: #F0A82E;
-    --color-warning-bg: #FFF3E0;
-    --color-warning-ink: #8A5200;
-    --color-danger: #C50F1F;
-    --color-danger-bg: #FDE7E9;
-    --color-danger-ink: #9B0C18;
-    --color-info: #0F6CBD;
-    --color-info-bg: #EBF3FC;
-    --color-info-ink: #0C548F;
+    /* Semantik */
+    --color-success:        #4CAF50;
+    --color-success-bg:     #E8F5E9;
+    --color-success-ink:    #2E7D32;
+    --color-warning:        #F0A82E;
+    --color-warning-bg:     #FFF3E0;
+    --color-warning-ink:    #8A5200;
+    --color-danger:         #C50F1F;
+    --color-danger-bg:      #FDE7E9;
+    --color-danger-ink:     #9B0C18;
+    --color-info:           #0F6CBD;
+    --color-info-bg:        #EBF3FC;
+    --color-info-ink:       #0C548F;
+
+    /* Status Kehadiran */
+    --color-status-hadir:      #4CAF50;  --color-status-hadir-bg: #E8F5E9;  --color-status-hadir-ink: #2E7D32;
+    --color-status-sakit:      #F0A82E;  --color-status-sakit-bg: #FFF3E0;  --color-status-sakit-ink: #8A5200;
+    --color-status-izin:       #0F6CBD;  --color-status-izin-bg:  #EBF3FC;  --color-status-izin-ink:  #0C548F;
+    --color-status-alpa:       #C50F1F;  --color-status-alpa-bg:  #FDE7E9;  --color-status-alpa-ink:  #9B0C18;
+
+    /* Status Kegiatan */
+    --color-event-terjadwal:      #0F6CBD;
+    --color-event-belum:          #F0A82E;
+    --color-event-terealisasi:    #4CAF50;
+    --color-event-dibatalkan:     #C8C6C4;
+    --color-event-dijadwal-ulang: #8764B8;
+
+    /* Jenis Kegiatan — 8 Penanda Kalender */
+    --color-jenis-pembelajaran: #0F6CBD; --color-jenis-pembelajaran-bg: #EBF3FC; --color-jenis-pembelajaran-ink: #0C548F;
+    --color-jenis-rapat:        #8764B8; --color-jenis-rapat-bg:        #F3EFFA; --color-jenis-rapat-ink:        #5B4394;
+    --color-jenis-olahraga:     #4CAF50; --color-jenis-olahraga-bg:     #E8F5E9; --color-jenis-olahraga-ink:     #2E7D32;
+    --color-jenis-ujian:        #C50F1F; --color-jenis-ujian-bg:        #FDE7E9; --color-jenis-ujian-ink:        #9B0C18;
+    --color-jenis-kunjungan:    #F0A82E; --color-jenis-kunjungan-bg:    #FFF3E0; --color-jenis-kunjungan-ink:    #8A5200;
+    --color-jenis-konsultasi:   #038387; --color-jenis-konsultasi-bg:   #E0F4F4; --color-jenis-konsultasi-ink:   #02686B;
+    --color-jenis-pelatihan:    #4F6BED; --color-jenis-pelatihan-bg:    #EDEFFC; --color-jenis-pelatihan-ink:    #3B52B8;
+    --color-jenis-lainnya:      #605E5C; --color-jenis-lainnya-bg:      #EDEBE9; --color-jenis-lainnya-ink:      #424242;
+
+    /* Spacing */
+    --space-0: 2px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
 
     /* Radius */
     --radius-sm: 2px;
@@ -53,6 +86,67 @@
     --radius-lg: 6px;
     --radius-xl: 8px;
     --radius-pill: 999px;
+
+    /* Border */
+    --border-hairline: 1px solid var(--color-border-subtle);
+    --border-default:  1px solid var(--color-border);
+    --border-control:  1px solid var(--color-border-strong);
+
+    /* Elevation */
+    --shadow-raised:  0 1px 2px rgba(0,0,0,.08);
+    --shadow-toast:   0 4px 8px rgba(0,0,0,.12);
+    --shadow-overlay: 0 8px 16px rgba(0,0,0,.14), 0 0 2px rgba(0,0,0,.12);
+    --scrim:          rgba(36,36,36,.32);
+
+    /* Motion */
+    --dur-instant: 0ms;
+    --dur-fast:    120ms;
+    --dur-normal:  180ms;
+    --dur-slow:    240ms;
+    --ease-out:    cubic-bezier(.16,1,.3,1);
+    --ease-in-out: cubic-bezier(.4,0,.2,1);
+
+    /* Tipografi */
+    --text-title:   22px;
+    --text-section: 18px;
+    --text-card:    15px;
+    --text-body:    13.5px;
+    --text-table:   12.5px;
+    --text-dense:   12px;
+    --text-label:   11px;
+
+    /* Density Default (Compact) */
+    --density-row-h: 32px;
+    --density-matrix-h: 28px;
+    --density-control-h: 26px;
+    --density-cell-p: 4px 11px;
+  }
+
+  [data-density="comfortable"] {
+    --density-row-h: 40px;
+    --density-matrix-h: 34px;
+    --density-control-h: 32px;
+    --density-cell-p: 8px 12px;
+  }
+
+  [data-theme="dark"] {
+    --color-canvas:         #1B1A19;
+    --color-surface:        #252423;
+    --color-surface-alt:    #2D2C2B;
+    --color-surface-sunken: #1B1A19;
+    --color-text:           #F3F2F1;
+    --color-text-secondary: #D6D4D2;
+    --color-text-muted:     #A19F9D;
+    --color-border:         #3B3A39;
+    --color-border-strong:  #484644;
+    --color-border-subtle:  #323130;
+    --color-brand:          #479EF5;
+    --color-brand-subtle:   #0C3A61;
+    --color-brand-ink:      #A9D3F2;
+    --color-focus-ring:     #FFFFFF;
+    --color-success-bg:     #0F3D18;
+    --color-warning-bg:     #402B00;
+    --color-danger-bg:      #4A1116;
   }
 
   html, body {
@@ -71,17 +165,80 @@
     box-sizing: border-box;
   }
 
+  /* Global focus ring per DESIGN.md §3.1 */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring) !important;
+    outline-offset: 2px !important;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-thumb {
     background: var(--color-border-strong);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 2px solid var(--color-surface-alt);
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: var(--dur-instant) !important;
+      transition-duration: var(--dur-instant) !important;
+    }
+  }
+}
+
+/* 2.2 Tipografi utilities */
+.text-title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.text-section {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.text-card {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.text-body {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.text-table {
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.text-dense {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.text-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
