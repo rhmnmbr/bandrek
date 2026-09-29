@@ -1,0 +1,283 @@
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+import { Add12Regular, Checkmark12Regular, Warning12Regular, ArrowClockwise12Regular } from '@fluentui/react-icons';
+import type { Kegiatan } from '@/data/types';
+import type { LayoutEventItem } from './kalenderLayout';
+import { JAM_AWAL, JAM_AKHIR, SLOT_PX } from '@/lib/dateUtils';
+import { jenisColorMap, type JenisKegiatanKey } from '@/components/ui/calendar-event';
+
+export interface DayColumnData {
+  iso: string;
+  dow: string;
+  num: number;
+  isToday: boolean;
+  isWeekend: boolean;
+  events: LayoutEventItem[];
+}
+
+export interface KalenderGridProps {
+  days: DayColumnData[];
+  nowLine?: {
+    show: boolean;
+    label: string;
+    top: number;
+    badgeTop: number;
+  };
+  onSelectEvent: (kegiatan: Kegiatan, e: React.MouseEvent) => void;
+  onSelectSlot: (iso: string, hour: number) => void;
+  onMoreClick: (iso: string) => void;
+  className?: string;
+}
+
+export const KalenderGrid: React.FC<KalenderGridProps> = ({
+  days,
+  nowLine,
+  onSelectEvent,
+  onSelectSlot,
+  onMoreClick,
+  className,
+}) => {
+  // Generate 07:00 .. 18:00 hour marks
+  const hourMarks = React.useMemo(() => {
+    const list = [];
+    for (let h = JAM_AWAL; h <= JAM_AKHIR; h++) {
+      list.push({
+        hour: h,
+        label: `${String(h).padStart(2, '0')}:00`,
+        top: (h - JAM_AWAL) * SLOT_PX - 6,
+      });
+    }
+    return list;
+  }, []);
+
+  return (
+    <div className={cn('flex flex-1 flex-col min-h-0 bg-white select-none', className)}>
+      {/* 1. Day Column Headers */}
+      <div className="flex border-b border-(--color-border) bg-[#FAFAFA] flex-none">
+        {/* Left Spacer for Hour Column (56px) */}
+        <div className="w-14 flex-none" />
+
+        {/* Day Header Cells */}
+        {days.map((d) => (
+          <div
+            key={d.iso}
+            className={cn(
+              'flex-1 min-w-0 h-7.5 flex items-center justify-center gap-1.5 border-l border-[#EDEBE9]',
+              d.isToday ? 'bg-[#EBF3FC]' : d.isWeekend ? 'bg-[#FAFAFA]' : 'bg-transparent'
+            )}
+          >
+            <span className="text-[11px] font-semibold text-(--color-text-secondary) tracking-wider">
+              {d.dow}
+            </span>
+            <span
+              className={cn(
+                "font-mono text-[13px] font-semibold min-w-5.5 h-4.5 px-1.5 rounded-full flex items-center justify-center leading-none",
+                d.isToday
+                  ? "bg-(--color-brand) text-white"
+                  : "text-(--color-text)"
+              )}
+            >
+              {d.num}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* 2. Scrollable Time Grid Body */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
+        <div className="flex relative pt-2 pb-6 min-h-[420px]">
+          {/* Left Hour Scale (56px) */}
+          <div className="w-14 flex-none relative bg-white">
+            {hourMarks.map((hm) => (
+              <div
+                key={`hm-${hm.hour}`}
+                style={{ top: `${hm.top}px` }}
+                className="absolute right-2 font-mono text-[11px] text-(--color-text-secondary) leading-none select-none"
+              >
+                {hm.label}
+              </div>
+            ))}
+
+            {/* Current Time Badge */}
+            {nowLine?.show && (
+              <div
+                style={{ top: `${nowLine.badgeTop}px` }}
+                className="absolute right-1 z-10 font-mono text-[10px] bg-[#C50F1F] text-white px-1 py-0.5 rounded leading-none shadow-xs"
+              >
+                {nowLine.label}
+              </div>
+            )}
+          </div>
+
+          {/* Grid Columns */}
+          <div className="flex-1 min-w-0 flex relative">
+            {days.map((d) => (
+              <div
+                key={`col-${d.iso}`}
+                className={cn(
+                  'flex-1 min-w-0 relative border-l border-[#EDEBE9]',
+                  d.isToday
+                    ? 'bg-[rgba(235,243,252,.35)]'
+                    : d.isWeekend
+                    ? 'bg-[#FAFAFA]'
+                    : 'bg-white'
+                )}
+              >
+                {/* 11 Hourly Slot Cells */}
+                {Array.from({ length: JAM_AKHIR - JAM_AWAL }).map((_, slotIdx) => {
+                  const hour = JAM_AWAL + slotIdx;
+                  return (
+                    <div
+                      key={`slot-${d.iso}-${hour}`}
+                      style={{ height: `${SLOT_PX}px` }}
+                      className="border-b border-[#EDEBE9] relative group"
+                    >
+                      {/* Clickable slot area with hover + indicator */}
+                      <button
+                        type="button"
+                        onClick={() => onSelectSlot(d.iso, hour)}
+                        title={`Klik untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
+                        className="absolute inset-[1px_2px] rounded-[3px] border border-transparent group-hover:border-[#8CC3F0] group-hover:bg-[#EBF3FC] text-transparent group-hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
+                      >
+                        <Add12Regular className="text-[13px]" />
+                      </button>
+                    </div>
+                  );
+                })}
+
+                {/* Overlaid Events Layer */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {d.events.map((ev) => {
+                    // Render "+N lainnya" group button
+                    if (ev.lebih) {
+                      return (
+                        <div
+                          key={ev.id}
+                          style={{
+                            top: `${ev.top}px`,
+                            height: `${ev.height}px`,
+                            left: `${ev.left}%`,
+                            width: `${ev.width}%`,
+                          }}
+                          className="absolute pr-1 pointer-events-auto"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => onMoreClick(ev.iso)}
+                            title={ev.title}
+                            className="w-full h-full rounded-[2px] border border-dashed border-[#8A8886] bg-[#F5F5F5] text-[#424242] hover:bg-[#EDEBE9] hover:border-[#5C5A58] p-1 flex flex-col items-center justify-center text-[11px] leading-tight cursor-pointer overflow-hidden transition-colors"
+                          >
+                            <span className="font-semibold whitespace-nowrap">
+                              +{ev.lebihN}
+                            </span>
+                            <span className="text-[10px] text-(--color-text-muted) truncate">
+                              lainnya
+                            </span>
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    // Render Standard Event Block
+                    const k = ev.kegiatan;
+                    if (!k) return null;
+
+                    const jenisKey = (k.warnaJenis || 'pembelajaran') as JenisKegiatanKey;
+                    const jInfo = jenisColorMap[jenisKey] || jenisColorMap.pembelajaran;
+                    const isBatal = k.status === 'dibatalkan';
+                    const isBelum = k.status === 'belum_direalisasi';
+                    const isDijadwalUlang = k.status === 'dijadwal_ulang';
+                    const isTerealisasi = k.status === 'terealisasi';
+
+                    return (
+                      <div
+                        key={ev.id}
+                        style={{
+                          top: `${ev.top}px`,
+                          height: `${ev.height}px`,
+                          left: `${ev.left}%`,
+                          width: `${ev.width}%`,
+                        }}
+                        className="absolute pr-1 pointer-events-auto"
+                      >
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          onClick={(e) => onSelectEvent(k, e)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              onSelectEvent(k, e as unknown as React.MouseEvent);
+                            }
+                          }}
+                          title={ev.title}
+                          style={{
+                            backgroundColor: isBatal ? '#F5F5F5' : jInfo.bg,
+                            borderLeftColor: isBatal ? '#C8C6C4' : jInfo.border,
+                            color: isBatal ? '#5C5A58' : jInfo.ink,
+                          }}
+                          className={cn(
+                            'h-full rounded-[2px] p-1 overflow-hidden cursor-pointer flex flex-col gap-0.5 border-l-4 transition-all duration-(--dur-fast) select-none',
+                            'hover:brightness-96 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black',
+                            isBatal
+                              ? 'border border-(--color-border)'
+                              : isBelum
+                              ? 'border border-[#F0A82E] shadow-(--shadow-raised)'
+                              : isDijadwalUlang
+                              ? 'border border-dashed border-[#8764B8] shadow-(--shadow-raised)'
+                              : 'border border-transparent shadow-(--shadow-raised)'
+                          )}
+                        >
+                          {/* Row 1: Time + Status Glyph */}
+                          <div className="flex items-center justify-between font-mono text-[10px] leading-tight opacity-90">
+                            <span className="truncate">{ev.jamLabel}</span>
+                            <span className="flex-none ml-1">
+                              {isTerealisasi && (
+                                <Checkmark12Regular className="text-(--color-success-ink)" />
+                              )}
+                              {isBelum && (
+                                <Warning12Regular className="text-[#C47D00]" />
+                              )}
+                              {isDijadwalUlang && (
+                                <ArrowClockwise12Regular className="text-[#8764B8]" />
+                              )}
+                            </span>
+                          </div>
+
+                          {/* Row 2: Title */}
+                          <div
+                            className={cn(
+                              'text-[12px] font-semibold leading-snug truncate',
+                              isBatal && 'line-through text-(--color-text-muted)'
+                            )}
+                          >
+                            {k.nama}
+                          </div>
+
+                          {/* Row 3: Metadata (hidden if block height < 48px per prototype) */}
+                          {ev.meta && (
+                            <div className="text-[10.5px] leading-tight truncate opacity-85">
+                              {ev.meta}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+
+            {/* Red Current Time Line across grid */}
+            {nowLine?.show && (
+              <div
+                style={{ top: `${nowLine.top}px` }}
+                className="absolute left-0 right-0 h-0 border-t border-[#C50F1F] pointer-events-none z-10"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

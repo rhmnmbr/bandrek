@@ -178,3 +178,14 @@ _Update this section at each approved checkpoint: what was done, and any decisio
   - Set up routing in `App.tsx` nesting all core routes (`/kalender`, `/kegiatan`, `/matriks`, and `/master/*`) within `AppShell` with `PlaceholderScreen` displaying live entity counts from TanStack Query.
   - Verified with 31 automated shell tests (100% pass), 27 data layer tests (100% pass), and clean production build (`tsc && vite build`).
 - [ ] Phase 5 — Screens
+  - [x] Step 1: A2 Kalender (week, day, month views, filters, "+N lainnya")
+    - Built pure date math utilities (`desktop/src/lib/dateUtils.ts`) with Monday-based weeks, Cascadia Mono formatting, and Indonesian locale strings.
+    - Implemented overlapping cluster layout algorithm (`desktop/src/components/kalender/kalenderLayout.ts`) with min 84px track width and condensation into `+N lainnya` button card when overlapping density exceeds screen width.
+    - Implemented calendar state management (`useKalenderState.ts`) supporting view modes (`minggu` default, `hari`, `bulan`), date navigation, mini calendar anchor, filters (jenis, subjek, kelas, ruangan), status toggles, and keyboard shortcut (`T` for today).
+    - Built 212px `KalenderSidebar.tsx` with mini calendar, dropdown filters, and 5 status checkboxes with custom glyphs (`·`, `✓`, `⚠`, `↻`, `✕`).
+    - Built 44px `KalenderToolbar.tsx` with date range label, count badge, and view segmented control.
+    - Built `KalenderGrid.tsx` with 07:00–18:00 time grid (36px slot), 56px left scale, red now line (`11:39`), event blocks styled per `DESIGN.md §3.4` (superimposed status glyphs and left border), and condensed `+N lainnya` card.
+    - Built `KalenderMonthView.tsx` with 7-column grid and event chips, plus `KalenderEmptyState.tsx` for zero-result filter states.
+    - Verified against reference screenshot `docs/prototype/screenshots/Screenshot.png` (19 activities in week 14–20 Sep 2026, 8 activities at 08:00 on Rabu 16 Sep).
+    - Passed all 26 automated calendar tests, 31 shell tests, and 27 data layer tests (84/84 tests passed, 0 TypeScript errors).
+
