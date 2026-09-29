@@ -188,7 +188,7 @@ _Update this section at each approved checkpoint: what was done, and any decisio
     - Built `KalenderMonthView.tsx` with 7-column grid and event chips, plus `KalenderEmptyState.tsx` for zero-result filter states.
     - Verified against reference screenshot `docs/prototype/screenshots/Screenshot.png` (19 activities in week 14–20 Sep 2026, 8 activities at 08:00 on Rabu 16 Sep).
     - Passed all 26 automated calendar tests, 31 shell tests, and 27 data layer tests (84/84 tests passed, 0 TypeScript errors).
-  - [x] Step 2: A2 Popover kegiatan
+   - [x] Step 2: A2 Popover kegiatan
     - Exported `PopoverAnchor` and `PopoverClose` in `desktop/src/components/ui/popover.tsx`.
     - Added `formatTanggalRingkas` in `desktop/src/lib/dateUtils.ts` (e.g. `Rab, 16 Sep 2026`).
     - Implemented `desktop/src/components/kalender/KegiatanPopover.tsx` (340px width, tokens `--shadow-overlay`, `--dur-normal`, `--color-border-strong`).
@@ -198,4 +198,17 @@ _Update this section at each approved checkpoint: what was done, and any decisio
     - Wired allowed action button footers strictly per server rules (5 actions for `terjadwal`/`belum_direalisasi`, 2 for `terealisasi`, disabled `Isi realisasi` for `dibatalkan`/`dijadwal_ulang`).
     - Integrated clean event-driven popover lifecycle in `KalenderScreen.tsx` with key-based unmount/remount (0 `useEffect` state sync loops).
     - Verified with 14 automated popover tests (98/98 tests passed across test suite, 0 TypeScript errors).
+  - [x] Step 3: A4 Form kegiatan (side panel)
+    - Implemented 498px side panel `desktop/src/components/kegiatan/FormKegiatanPanel.tsx` with light scrim overlay (`rgba(36,36,36,0.18)`), smooth slide-in motion, and sticky header/footer per `DESIGN.md §3.10`.
+    - Header: Dynamic title (`Kegiatan baru` / `Ubah kegiatan`), context slot pill (e.g. `Rab, 16 Sep · 08:00`), `Riwayat perubahan` link in edit mode, and close button with `Esc` shortcut.
+    - Dynamic fields: Nama kegiatan, Jenis kegiatan with `materiWajib` & `siswaWajib` guidance notes, Tanggal picker (Cascadia Mono), Mulai & Selesai 5-minute stepper with `selesai > mulai` validation, Ruangan grouped by Tempat with room capacity, cascading Mapel & Materi dropdowns, Subjek chips with role selector popover (`Pengisi`, `Pendamping`, `Pengganti`, `Support`) and "+ tambah" popover with uniqueness constraints.
+    - Siswa selection: Header count `Siswa · N dipilih *`, "+ Dari kelas" batch importer with duplicate skipping and removable origin chips, inline search box, "Pilih semua yang tampil", "Kosongkan", grouped student checkboxes with jenjang and class labels.
+    - Conflict warning: Real-time conflict detection via TanStack Query query hooks with 3 interactive action buttons ("Sorot di kalender", "Pilih ruangan lain / Ubah jam", "Simpan tetap").
+    - Soft validation: ErrorSummary box and inline errors only display after first save attempt (`dicoba = true`) or blur (`touched`), Save button remains active initially per `DOMAIN.md §5`.
+    - Footer: Autosave draft timestamp (`Draf disimpan HH:mm`), "Batal", "Simpan & buat lagi" (preserves jenis, ruangan, subjek, mapel, tanggal per DOMAIN.md §5), "Simpan" (`Ctrl+S`).
+    - Dialog confirmation: Intercepts `Esc`, backdrop click, and "Batal" when form is dirty to prevent accidental data loss.
+    - Dynamic toast repositioning: Integrates with `ToastContext` shifting offset right to 514px when panel is open.
+    - Verified against prototype screenshot `docs/prototype/screenshots/Screenshot_5.png` at 1366×768 and 1920×1080.
+    - Passed all 6 automated form tests (100%), 14 popover tests, 31 shell tests, and 27 data layer tests (104/104 tests passed, 0 TypeScript errors, 0 lint warnings).
+
 

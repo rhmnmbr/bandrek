@@ -89,9 +89,10 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
     React.useEffect(() => {
       if (open) {
         const idx = parsedOptions.findIndex((o) => o.value === currentValue);
-        setHighlightedIndex(idx >= 0 ? idx : 0);
+        const target = idx >= 0 ? idx : 0;
+        setHighlightedIndex((prev) => (prev === target ? prev : target));
       }
-    }, [open, currentValue, parsedOptions]);
+    }, [open, currentValue]);
 
     const handleSelect = (val: string) => {
       if (!isControlled) {
@@ -344,9 +345,10 @@ export const GroupedRuanganSelect = React.forwardRef<
     React.useEffect(() => {
       if (open) {
         const idx = flatOptions.findIndex((o) => o.id === currentValue);
-        setHighlightedIndex(idx >= 0 ? idx : 0);
+        const target = idx >= 0 ? idx : 0;
+        setHighlightedIndex((prev) => (prev === target ? prev : target));
       }
-    }, [open, currentValue, flatOptions]);
+    }, [open, currentValue]);
 
     const handleSelect = (val: string) => {
       if (!isControlled) {

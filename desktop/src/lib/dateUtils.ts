@@ -145,3 +145,14 @@ export function formatTanggalRingkas(iso: string): string {
   return `${h}, ${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+/**
+ * Format tampilan tanggal pendek tanpa tahun (misal: "Rab, 16 Sep")
+ */
+export function formatTanggalPendek(iso: string): string {
+  if (!iso) return '';
+  const d = toDate(iso);
+  const dow = (d.getDay() + 6) % 7;
+  const h = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'][dow];
+  return `${h}, ${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]}`;
+}
+

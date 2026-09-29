@@ -7,6 +7,7 @@ export const BANDREK_EVENTS = {
   TOGGLE_RAIL: 'bandrek:toggle-rail',
   QUICK_SEARCH: 'bandrek:quick-search',
   ESC_PRESSED: 'bandrek:esc-pressed',
+  SIDE_PANEL_STATE_CHANGE: 'bandrek:side-panel-change',
 } as const;
 
 export interface KeyboardShortcutHandlers {

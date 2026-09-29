@@ -17,6 +17,10 @@ import { KalenderGrid, type DayColumnData } from '@/components/kalender/Kalender
 import { KalenderMonthView } from '@/components/kalender/KalenderMonthView';
 import { KalenderEmptyState } from '@/components/kalender/KalenderEmptyState';
 import { KegiatanPopover } from '@/components/kalender/KegiatanPopover';
+import {
+  FormKegiatanPanel,
+  type FormKegiatanInitialData,
+} from '@/components/kegiatan/FormKegiatanPanel';
 import { susunLayoutKegiatan } from '@/components/kalender/kalenderLayout';
 import {
   toDate,
@@ -26,6 +30,7 @@ import {
   JAM_AKHIR,
   SLOT_PX,
 } from '@/lib/dateUtils';
+import { BANDREK_EVENTS } from '@/lib/keyboardShortcuts';
 import type { Kegiatan } from '@/data/types';
 
 export const KalenderScreen: React.FC = () => {
@@ -47,6 +52,12 @@ export const KalenderScreen: React.FC = () => {
     kegiatan: Kegiatan;
     anchorElement: HTMLElement;
   } | null>(null);
+
+  // Form Kegiatan (Side Panel) State
+  const [formState, setFormState] = React.useState<{
+    open: boolean;
+    initialData?: FormKegiatanInitialData | null;
+  }>({ open: false });
 
   // Calendar State & Navigation Hook
   const {
@@ -192,27 +203,84 @@ export const KalenderScreen: React.FC = () => {
     [semuaKegiatan, setAnchorDate, setView, view]
   );
 
-  // Popover Action Handlers
+  // Popover & Form Action Handlers
   const handleOpenDetail = React.useCallback(
-    (kegiatan: Kegiatan) => {
+    (kegiatanOrId: Kegiatan | string) => {
       setActivePopover(null);
+      const nama =
+        typeof kegiatanOrId === 'string'
+          ? semuaKegiatan.find((k) => k.id === kegiatanOrId)?.nama || kegiatanOrId
+          : kegiatanOrId.nama;
       showToast({
-        message: `Membuka detail kegiatan: ${kegiatan.nama}`,
+        message: `Membuka detail kegiatan: ${nama}`,
         type: 'info',
       });
     },
-    [showToast]
+    [semuaKegiatan, showToast]
   );
+
+  // Listen to global BANDREK_EVENTS.NEW_KEGIATAN (Ctrl+N or TopBar button)
+  React.useEffect(() => {
+    const handleGlobalNew = () => {
+      setActivePopover(null);
+      setFormState({
+        open: true,
+        initialData: {
+          mode: 'create',
+          tanggal: anchorDate || todayIso,
+          mulai: '08:00',
+          selesai: '09:30',
+          ruangan: filters.ruangan || '',
+        },
+      });
+    };
+    window.addEventListener(BANDREK_EVENTS.NEW_KEGIATAN, handleGlobalNew);
+    return () => window.removeEventListener(BANDREK_EVENTS.NEW_KEGIATAN, handleGlobalNew);
+  }, [anchorDate, todayIso, filters.ruangan]);
+
+  // Support direct opening via ?form=new
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('form') === 'new') {
+      setFormState((prev) =>
+        prev.open
+          ? prev
+          : {
+              open: true,
+              initialData: {
+                mode: 'create',
+                tanggal: '2026-09-16',
+                mulai: '08:00',
+                selesai: '09:30',
+              },
+            }
+      );
+    }
+  }, []);
 
   const handleOpenEdit = React.useCallback(
     (kegiatan: Kegiatan) => {
       setActivePopover(null);
-      showToast({
-        message: `Membuka form ubah kegiatan: ${kegiatan.nama}`,
-        type: 'info',
+      setFormState({
+        open: true,
+        initialData: {
+          mode: 'edit',
+          kegiatanId: kegiatan.id,
+          nama: kegiatan.nama,
+          jenis: kegiatan.jenis,
+          tanggal: kegiatan.tanggal,
+          mulai: kegiatan.mulai,
+          selesai: kegiatan.selesai,
+          ruangan: kegiatan.ruangan || '',
+          mapel: kegiatan.mapel || '',
+          materi: kegiatan.materi || '',
+          subjek: kegiatan.subjek,
+          siswa: kegiatan.siswa,
+          catatan: kegiatan.catatan || '',
+        },
       });
     },
-    [showToast]
+    []
   );
 
   const handleOpenRealisasi = React.useCallback(
@@ -251,14 +319,53 @@ export const KalenderScreen: React.FC = () => {
   // Handle Empty Slot Selection (Click on calendar grid to create kegiatan)
   const handleSelectSlot = React.useCallback(
     (iso: string, hour: number) => {
+      setActivePopover(null);
       const jamMulai = `${String(hour).padStart(2, '0')}:00`;
       const jamSelesai = `${String(hour + 1).padStart(2, '0')}:30`;
-      showToast({
-        message: `Membuat kegiatan baru: ${iso} pukul ${jamMulai}–${jamSelesai}`,
-        type: 'info',
+      setFormState({
+        open: true,
+        initialData: {
+          mode: 'create',
+          tanggal: iso,
+          mulai: jamMulai,
+          selesai: jamSelesai,
+          ruangan: filters.ruangan || '',
+        },
       });
     },
-    [showToast]
+    [filters.ruangan]
+  );
+
+  // Handle Highlight Conflict on calendar
+  const handleHighlightConflict = React.useCallback(
+    (conflictId: string, conflictDate: string) => {
+      setAnchorDate(conflictDate);
+      if (view === 'bulan') setView('minggu');
+      showToast({
+        message: `Menyorot kegiatan bentrok di tanggal ${conflictDate}`,
+        type: 'warning',
+      });
+      setTimeout(() => {
+        const el = document.querySelector(`[data-kegiatan-id="${conflictId}"]`) as HTMLElement;
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    },
+    [setAnchorDate, setView, showToast, view]
+  );
+
+  // Handle Form Success
+  const handleFormSuccess = React.useCallback(
+    (saved: Kegiatan, buatLagi: boolean) => {
+      if (!tanggalTampil.includes(saved.tanggal)) {
+        setAnchorDate(saved.tanggal);
+      }
+      if (!buatLagi) {
+        setFormState({ open: false });
+      }
+    },
+    [setAnchorDate, tanggalTampil]
   );
 
   // Handle "+N lainnya" click: jumps to Day View for that date
@@ -392,6 +499,19 @@ export const KalenderScreen: React.FC = () => {
           onOpenJadwalUlang={handleOpenJadwalUlang}
           onOpenBatal={handleOpenBatal}
           onNavigateKegiatan={handleNavigateKegiatan}
+        />
+      )}
+
+      {/* 4. A4 Form Kegiatan Side Panel */}
+      {formState.open && (
+        <FormKegiatanPanel
+          key={`${formState.initialData?.mode || 'create'}-${formState.initialData?.kegiatanId || 'new'}-${formState.initialData?.tanggal || ''}-${formState.initialData?.mulai || ''}`}
+          open={formState.open}
+          initialData={formState.initialData}
+          onClose={() => setFormState({ open: false })}
+          onSuccess={handleFormSuccess}
+          onHighlightConflict={handleHighlightConflict}
+          onOpenDetail={handleOpenDetail}
         />
       )}
     </div>
