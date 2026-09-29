@@ -166,3 +166,27 @@ export function formatTanggalSlash(iso: string): string {
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
+/**
+ * Format tanggal dengan bulan pendek dan tahun (misal: "12 Feb 2013")
+ */
+export function formatTanggalTahun(iso: string): string {
+  if (!iso) return '—';
+  const d = toDate(iso);
+  return `${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/**
+ * Hitung umur berdasarkan tanggal lahir dalam tahun
+ */
+export function hitungUmur(isoLahir: string, isoToday?: string): number | null {
+  if (!isoLahir) return null;
+  const dLahir = toDate(isoLahir);
+  const dToday = isoToday ? toDate(isoToday) : new Date();
+  let age = dToday.getFullYear() - dLahir.getFullYear();
+  const mDiff = dToday.getMonth() - dLahir.getMonth();
+  if (mDiff < 0 || (mDiff === 0 && dToday.getDate() < dLahir.getDate())) {
+    age--;
+  }
+  return age >= 0 ? age : null;
+}
+

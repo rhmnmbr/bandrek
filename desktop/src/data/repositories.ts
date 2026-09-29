@@ -24,7 +24,7 @@ import {
   MockJenisKegiatanRepository,
   MockAuthRepository,
   MockSimulasiRepository,
-} from './mock/index.ts';
+} from './mock';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;

@@ -97,6 +97,38 @@ export class MockKelasRepository implements IKelasRepository {
     );
   }
 
+  public async ubahAnggota(kelasId: string, siswaId: string, tambah: boolean): Promise<Kelas> {
+    return mockRunner(
+      () => {
+        const idx = mockStore.kelas.findIndex((item) => item.id === kelasId);
+        if (idx === -1) {
+          throw new BandrekApiError('unknown', `Kelas dengan ID "${kelasId}" tidak ditemukan.`, 404);
+        }
+
+        const existing = mockStore.kelas[idx];
+        let newAnggota = [...existing.anggota];
+        if (tambah) {
+          if (!newAnggota.includes(siswaId)) {
+            newAnggota.push(siswaId);
+          }
+        } else {
+          newAnggota = newAnggota.filter((id) => id !== siswaId);
+        }
+
+        const updated: Kelas = {
+          ...existing,
+          anggota: newAnggota,
+          jumlahSiswa: newAnggota.length,
+        };
+
+        mockStore.kelas[idx] = updated;
+        mockStore.persist();
+        return updated;
+      },
+      { isMutation: true }
+    );
+  }
+
   public async delete(id: string): Promise<DeleteMasterResult> {
     return mockRunner(
       () => {

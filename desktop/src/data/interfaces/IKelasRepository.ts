@@ -11,5 +11,6 @@ export interface IKelasRepository {
   getById(id: string): Promise<Kelas>;
   create(input: CreateKelasInput): Promise<Kelas>;
   update(id: string, input: UpdateKelasInput): Promise<Kelas>;
+  ubahAnggota(kelasId: string, siswaId: string, tambah: boolean): Promise<Kelas>;
   delete(id: string): Promise<DeleteMasterResult>;
 }

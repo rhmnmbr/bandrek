@@ -346,6 +346,52 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Wired `BatalkanKegiatanModal` (A6) and `JadwalUlangModal` (A7) with chaining support.
       - Wired `FormKegiatanPanel` (A4) listening to `BANDREK_EVENTS.NEW_KEGIATAN` (Ctrl+N or TopBar button) and empty state.
     - Verified with 7/7 automated tests in `desktop/scripts/test-daftar-kegiatan.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 9: B1 Siswa — establishes the Master Data CRUD pattern (P1) & Profil Siswa
+    - Implemented master-detail CRUD pattern (P1) with side-by-side table and 380px edit panel (`desktop/src/screens/SiswaScreen.tsx`) on route `/master/siswa` and `/master/siswa/:id`.
+    - Toolbar & Filter Bar (`desktop/src/components/master/siswa/SiswaToolbar.tsx`):
+      - Top Meta Bar (H: 44px): dynamic count `70 aktif · 10 nonaktif`, disabled `Impor CSV` button (`title="Impor CSV menyusul di tahap berikutnya"`), primary `+ Siswa baru` button (`title="Tambah siswa baru · Ctrl+N"`).
+      - Filter Bar (H: ~48px, bg `#FAFAFA`, border-b `#E1DFDD`): search input `Cari nama siswa` (by name, school, wali), `Jenjang` dropdown (`Semua`, `SD`, `SMP`, `SMA`), `Kelas` dropdown (`Semua`, `Belum punya`, + list of classes), `Status` dropdown (`Aktif` [default], `Nonaktif`, `Semua`), `Reset filter` button.
+    - Master Table (`desktop/src/components/master/siswa/SiswaTable.tsx`):
+      - Sticky header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `NAMA ↑/↓` (interactive sort toggle), `JNJ` (52px), `LAHIR` (86px), `ASAL SEKOLAH` (flex-1 min 110px), `WALI` (118px), `WHATSAPP` (118px), `KEG` (40px, text-right), `STATUS` (74px).
+      - 32px row height with hover `#FAFAFA`, selected state `#EBF3FC` with `box-shadow: inset 3px 0 0 #0F6CBD`.
+      - Inactive students styled with muted text `#5C5A58` and `line-through`.
+      - Click on row selects student and opens/updates right side panel in edit mode.
+      - Click on student name text specifically navigates to full `Profil Siswa` view (`/master/siswa/:id` or inline profile mode).
+      - Status Badge Pills: `Aktif` (`#E8F5E9`, border `#4CAF50`, text `#2E7D32`) and `Nonaktif` (`#F5F5F5`, border `#C8C6C4`, text `#5C5A58`).
+      - Sticky footer (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): `Menampilkan X dari 80 siswa · siswa nonaktif disembunyikan`.
+    - Empty State (`desktop/src/components/master/siswa/SiswaEmptyState.tsx`):
+      - Informative empty display with glyph `◇`, clear cause explanation, `[Tampilkan semua status]` and `[Reset filter]` or `[+ Siswa baru]`.
+    - Side Panel Form (`desktop/src/components/master/siswa/SiswaFormPanel.tsx`):
+      - 380px fixed width, background `#FAFAFA`, sticky header and footer.
+      - Header: dynamic initials avatar circle, title (`Siswa baru` / student name), subtitle (`Isi data dasarnya, lalu simpan` / `<jenjang> · <kelas> · bergabung <tanggal>`), status pill (`Belum disimpan`, `Aktif`, `Nonaktif`).
+      - Soft validation (DOMAIN.md §12 & prototype): ErrorSummary box and inline errors only display after first save attempt (`dicoba = true`).
+      - Fields:
+        - `Nama lengkap *` with duplicate name check across dataset.
+        - `Tanggal lahir *` with Cascadia Mono date picker, popover calendar, and live age indicator (e.g. `13 tahun`).
+        - `Jenis kelamin` segmented control (`[Laki-laki]` `[Perempuan]`).
+        - `Jenjang *` dropdown selector with amber warning box if switching jenjang on existing student (`Memindahkan <nama> dari <lama> ke <baru> mengganti kolom materi yang berlaku untuknya di matriks belajar...`).
+        - `Tanggal bergabung` with Cascadia Mono date picker, default today.
+        - `Asal sekolah` text input.
+        - `Nama wali` and `No. WhatsApp` with Cascadia Mono and regex format check.
+        - `Kelas yang diikuti` removable chips + `+ tambah kelas` popover dropdown with available classes for student's jenjang.
+        - `Catatan` textarea.
+        - `RINGKASAN` card in edit mode: activity and checklist counts + `Lihat kegiatannya di daftar kegiatan` direct link.
+      - Footer:
+        - `Nonaktifkan` / `Aktifkan kembali` button with toast and `Urungkan` action.
+        - `Hapus` button: strictly follows DOMAIN.md §12 rule (disabled if student has any usage in activities, classes, or manual checklists, with descriptive usage tooltip directing user to `Nonaktifkan`; enabled only when 100% unused).
+        - `Batal` and `Simpan siswa` / `Simpan` primary button (`Ctrl+S`).
+    - Confirmation Modal Dialog (`desktop/src/components/master/siswa/SiswaConfirmModal.tsx`):
+      - 460px modal dialog for deactivate and delete actions with consequence explanation and numeric impact bullets.
+    - Full Student Profile View (`desktop/src/components/master/siswa/ProfilSiswaView.tsx` - Screenshot_17.png):
+      - Top Bar: breadcrumb `< Siswa › [Inisial] Nama [Status] Jenjang · Kelas`, `Cetak rapor kegiatan` (info toast), `Ubah data` (switches to table edit panel).
+      - 4 KPI cards: `KEGIATAN DIIKUTI`, `KEHADIRAN (%)`, `CAKUPAN MATERI (%)`, `MATERI TERLEWAT`.
+      - Left column: `RIWAYAT KEGIATAN` table with sticky header, quick filters (`Semua`, `Tidak hadir`, `Mapel` dropdown), presence badge pills, and student individual notes.
+      - Right column: `CAKUPAN MATERI PER MATA PELAJARAN` progress bars with fractional numbers (e.g. `4/6`), and `MATERI TERLEWAT` cards with direct `jadwalkan susulan` link (`BANDREK_EVENTS.NEW_KEGIATAN`).
+    - Data Layer & Business Rules:
+      - Enriched `Siswa` entity in `MockSiswaRepository` with server-computed usage statistics (`jumlahKegiatan`, `jumlahKelas`, `jumlahCeklis`, `dapatDihapus`, `alasanTidakBisaHapus`, `rincianPenggunaan`, `ringkasanPenggunaan`).
+      - Added `getProfil(id)` in `MockSiswaRepository` computing KPIs, attendance ratios, topic coverage %, and missed topics so UI components never compute business rules.
+      - Added `ubahAnggota(kelasId, siswaId, tambah)` in `MockKelasRepository` and `useUbahAnggotaKelas()` hook.
+    - Verified with 6/6 automated tests in `desktop/scripts/test-siswa.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 

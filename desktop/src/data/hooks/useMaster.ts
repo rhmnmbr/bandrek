@@ -29,6 +29,7 @@ export const siswaKeys = {
   all: ['siswa'] as const,
   list: (filter?: SiswaFilterParams) => ['siswa', 'list', filter] as const,
   detail: (id: string) => ['siswa', 'detail', id] as const,
+  profil: (id: string) => ['siswa', 'profil', id] as const,
 };
 
 export function useSiswaList(filter?: SiswaFilterParams) {
@@ -42,6 +43,14 @@ export function useSiswaDetail(id: string, enabled: boolean = true) {
   return useQuery({
     queryKey: siswaKeys.detail(id),
     queryFn: () => repositories.siswa.getById(id),
+    enabled: enabled && Boolean(id),
+  });
+}
+
+export function useSiswaProfil(id: string, enabled: boolean = true) {
+  return useQuery({
+    queryKey: siswaKeys.profil(id),
+    queryFn: () => repositories.siswa.getProfil(id),
     enabled: enabled && Boolean(id),
   });
 }
@@ -64,6 +73,7 @@ export function useUpdateSiswa() {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: siswaKeys.all });
       queryClient.invalidateQueries({ queryKey: siswaKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: siswaKeys.profil(id) });
       queryClient.invalidateQueries({ queryKey: ['matriks'] });
     },
   });
@@ -181,6 +191,28 @@ export function useUpdateKelas() {
       queryClient.invalidateQueries({ queryKey: kelasKeys.all });
       queryClient.invalidateQueries({ queryKey: kelasKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: siswaKeys.all });
+    },
+  });
+}
+
+export function useUbahAnggotaKelas() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      kelasId,
+      siswaId,
+      tambah,
+    }: {
+      kelasId: string;
+      siswaId: string;
+      tambah: boolean;
+    }) => repositories.kelas.ubahAnggota(kelasId, siswaId, tambah),
+    onSuccess: (_, { kelasId, siswaId }) => {
+      queryClient.invalidateQueries({ queryKey: kelasKeys.all });
+      queryClient.invalidateQueries({ queryKey: kelasKeys.detail(kelasId) });
+      queryClient.invalidateQueries({ queryKey: siswaKeys.all });
+      queryClient.invalidateQueries({ queryKey: siswaKeys.detail(siswaId) });
+      queryClient.invalidateQueries({ queryKey: siswaKeys.profil(siswaId) });
     },
   });
 }

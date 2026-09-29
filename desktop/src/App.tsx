@@ -6,6 +6,7 @@ import { DetailKegiatanScreen } from '@/screens/DetailKegiatanScreen';
 import { RealisasiScreen } from '@/screens/RealisasiScreen';
 import { MatriksScreen } from '@/screens/MatriksScreen';
 import { DaftarKegiatanScreen } from '@/screens/DaftarKegiatanScreen';
+import { SiswaScreen } from '@/screens/SiswaScreen';
 import { PlaceholderScreen } from '@/screens/PlaceholderScreen';
 import { KatalogScreen } from '@/screens/KatalogScreen';
 import { DataLayerScreen } from '@/screens/DataLayerScreen';
@@ -22,7 +23,8 @@ export default function App() {
           <Route path="/kegiatan/:id" element={<DetailKegiatanScreen />} />
           <Route path="/kegiatan" element={<DaftarKegiatanScreen />} />
           <Route path="/matriks" element={<MatriksScreen />} />
-          <Route path="/master/siswa" element={<PlaceholderScreen />} />
+          <Route path="/master/siswa" element={<SiswaScreen />} />
+          <Route path="/master/siswa/:id" element={<SiswaScreen />} />
           <Route path="/master/subjek" element={<PlaceholderScreen />} />
           <Route path="/master/mapel" element={<PlaceholderScreen />} />
           <Route path="/master/kelas" element={<PlaceholderScreen />} />

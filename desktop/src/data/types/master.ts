@@ -1,8 +1,15 @@
 import type { JenjangPendidikan, JenisKelamin } from './common';
+import type { StatusKehadiran } from './realisasi';
 
 // ==========================================
 // SISWA
 // ==========================================
+export interface SiswaKelasDetail {
+  id: string;
+  nama: string;
+  jenjang?: JenjangPendidikan;
+}
+
 export interface Siswa {
   id: string;
   nama: string;
@@ -17,6 +24,15 @@ export interface Siswa {
   catatan?: string;
   // Computed / joins
   daftarKelas?: string[]; // IDs of classes this student belongs to
+  daftarKelasDetail?: SiswaKelasDetail[];
+  jumlahKegiatan?: number;
+  jumlahKelas?: number;
+  jumlahCeklis?: number;
+  kegiatanMendatangCount?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  rincianPenggunaan?: string[];
+  ringkasanPenggunaan?: string;
 }
 
 export interface SiswaFilterParams {
@@ -24,6 +40,7 @@ export interface SiswaFilterParams {
   jenjang?: JenjangPendidikan | 'semua';
   kelasId?: string;
   q?: string;
+  desc?: boolean;
 }
 
 export interface CreateSiswaInput {
@@ -36,10 +53,70 @@ export interface CreateSiswaInput {
   waliNama?: string;
   waliWa?: string;
   catatan?: string;
+  bergabung?: string;
 }
 
 export interface UpdateSiswaInput extends Partial<CreateSiswaInput> {
   aktif?: boolean;
+}
+
+export interface SiswaKPI {
+  label: string;
+  val: string;
+  valFg: string;
+  brd: string;
+  bg: string;
+  lblFg: string;
+  sub: string;
+  subFg: string;
+}
+
+export interface SiswaRiwayatItem {
+  id: string;
+  tanggal: string; // ISO
+  tanggalFormatted: string; // e.g. "16 Sep"
+  nama: string;
+  materi: string;
+  statusKegiatan: string;
+  kehadiran: {
+    status: StatusKehadiran | 'batal' | 'belum';
+    label: string;
+    glyph: string;
+    brd: string;
+    bg: string;
+    ink: string;
+  };
+  catatan: string;
+}
+
+export interface SiswaCakupanItem {
+  mapelId: string;
+  nama: string;
+  tersampaikan: number;
+  total: number;
+  frac: string;
+  pct: number;
+  fracFg: string;
+  barW: string;
+  barBg: string;
+}
+
+export interface SiswaTerlewatItem {
+  mapelId: string;
+  materiId: string;
+  judul: string;
+  alasan: string;
+}
+
+export interface SiswaProfil {
+  siswa: Siswa;
+  inisial: string;
+  kelasTeks: string;
+  kpi: SiswaKPI[];
+  riwayat: SiswaRiwayatItem[];
+  opsiMapel: { id: string; nama: string }[];
+  cakupan: SiswaCakupanItem[];
+  terlewat: SiswaTerlewatItem[];
 }
 
 // ==========================================
