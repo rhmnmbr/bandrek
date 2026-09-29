@@ -124,6 +124,24 @@ export function enrichKegiatan(
     }
   }
 
+  const dToday = new Date(today);
+  const dEv = new Date(raw.tanggal);
+  const diffTime = dToday.getTime() - dEv.getTime();
+  const diffDays = Math.round(diffTime / 86400000);
+  const telatHari = diffDays > 0 ? diffDays : 0;
+  const perluRealisasi = status === 'belum_direalisasi';
+
+  let labelStatus = 'Terjadwal';
+  if (status === 'belum_direalisasi') {
+    labelStatus = telatHari > 0 ? `Belum · ${telatHari} hari` : 'Belum · hari ini';
+  } else if (status === 'terealisasi') {
+    labelStatus = 'Terealisasi';
+  } else if (status === 'dibatalkan') {
+    labelStatus = 'Dibatalkan';
+  } else if (status === 'dijadwal_ulang') {
+    labelStatus = 'Dijadwal ulang';
+  }
+
   return {
     ...raw,
     status,
@@ -138,6 +156,9 @@ export function enrichKegiatan(
     namaMateri: topic ? topic.nama : undefined,
     jumlahSiswa: raw.siswa.length,
     pengisiUtama,
+    perluRealisasi,
+    telatHari,
+    labelStatus,
   };
 }
 

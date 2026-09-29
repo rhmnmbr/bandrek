@@ -10,7 +10,7 @@ import type {
   IJenisKegiatanRepository,
   IAuthRepository,
   ISimulasiRepository,
-} from './interfaces';
+} from './interfaces/index.ts';
 
 import {
   MockKegiatanRepository,
@@ -24,7 +24,7 @@ import {
   MockJenisKegiatanRepository,
   MockAuthRepository,
   MockSimulasiRepository,
-} from './mock';
+} from './mock/index.ts';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;

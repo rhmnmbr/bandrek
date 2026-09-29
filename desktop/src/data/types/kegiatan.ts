@@ -87,6 +87,9 @@ export interface Kegiatan {
     id: string;
     nama: string;
   };
+  perluRealisasi?: boolean;
+  telatHari?: number;
+  labelStatus?: string;
 }
 
 // ==========================================
@@ -124,6 +127,8 @@ export interface CekBentrokInput {
 // ==========================================
 // FILTER PARAMS
 // ==========================================
+export type QuickFilterDaftar = 'perlu' | 'hari' | 'minggu' | 'datang';
+
 export interface KalenderFilterParams {
   rentangMulai: string; // YYYY-MM-DD
   rentangSelesai: string; // YYYY-MM-DD
@@ -143,7 +148,9 @@ export interface DaftarKegiatanFilterParams {
   kelasId?: string;
   status?: StatusKegiatan | 'semua';
   hanyaPerluRealisasi?: boolean; // Shortcut filter
+  cepat?: QuickFilterDaftar | null;
   q?: string;
+  sortDesc?: boolean;
 }
 
 // ==========================================

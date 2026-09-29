@@ -5,6 +5,7 @@ import { KalenderScreen } from '@/screens/KalenderScreen';
 import { DetailKegiatanScreen } from '@/screens/DetailKegiatanScreen';
 import { RealisasiScreen } from '@/screens/RealisasiScreen';
 import { MatriksScreen } from '@/screens/MatriksScreen';
+import { DaftarKegiatanScreen } from '@/screens/DaftarKegiatanScreen';
 import { PlaceholderScreen } from '@/screens/PlaceholderScreen';
 import { KatalogScreen } from '@/screens/KatalogScreen';
 import { DataLayerScreen } from '@/screens/DataLayerScreen';
@@ -19,7 +20,7 @@ export default function App() {
           <Route path="/kalender" element={<KalenderScreen />} />
           <Route path="/kegiatan/:id/realisasi" element={<RealisasiScreen />} />
           <Route path="/kegiatan/:id" element={<DetailKegiatanScreen />} />
-          <Route path="/kegiatan" element={<PlaceholderScreen />} />
+          <Route path="/kegiatan" element={<DaftarKegiatanScreen />} />
           <Route path="/matriks" element={<MatriksScreen />} />
           <Route path="/master/siswa" element={<PlaceholderScreen />} />
           <Route path="/master/subjek" element={<PlaceholderScreen />} />

@@ -1,5 +1,5 @@
-import type { Kegiatan } from '@/data/types';
-import { menit, JAM_AWAL, JAM_AKHIR, SLOT_PX } from '@/lib/dateUtils';
+import type { Kegiatan } from '../../data/types/index.ts';
+import { menit, JAM_AWAL, JAM_AKHIR, SLOT_PX } from '../../lib/dateUtils.ts';
 
 export interface LayoutEventItem {
   id: string;

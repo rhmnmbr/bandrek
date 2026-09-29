@@ -309,6 +309,43 @@ _Update this section at each approved checkpoint: what was done, and any decisio
     - Prerequisite Empty State (`desktop/src/components/matriks/MatriksEmptyState.tsx`):
       - Informative zero-states when no topics exist for jenjang or when filters match zero students.
     - Verified with 7/7 automated tests in `desktop/scripts/test-matriks.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 8: A3 Daftar kegiatan
+    - Implemented full activity list view `desktop/src/screens/DaftarKegiatanScreen.tsx` on route `/kegiatan` inside `AppShell`.
+    - Filter Toolbar (`desktop/src/components/daftar/DaftarToolbar.tsx`):
+      - Date range picker `dari` and `sampai` with Cascadia Mono timestamps and popover calendar; disabled with tooltip `title="Rentang tanggal diabaikan selama filter cepat aktif"` when quick filter is active.
+      - Default date range: 2 weeks before simulated today (`02/09/2026`) to latest date in seed dataset (`11/10/2026`).
+      - Dropdown selectors: `Jenis: semua` (with kinds list), `Status: semua` (with 5 statuses), `Subjek: semua` (with active subjects), `Kelas: semua` (with classes).
+      - Inline text search `Cari nama kegiatan` (width 158px).
+      - Disabled `Ekspor CSV` button with tooltip `title="Ekspor CSV menyusul di tahap berikutnya"`.
+    - Quick Filters Bar (`desktop/src/components/daftar/DaftarQuickFilters.tsx`):
+      - `Filter cepat` label.
+      - 4 quick chips with Cascadia Mono counts matching prototype `Screenshot_13.png`:
+        - `[⚠ Perlu realisasi 8]` (amber highlight `#FFF3E0`, border `#F0A82E`, text `#8A5200`, warning icon `⚠`, dismiss button `✕`).
+        - `[Hari ini 9]` (blue highlight when active).
+        - `[Minggu ini 19]`.
+        - `[Akan datang 53]`.
+      - Integrated with NavigationRail `Perlu Realisasi` badge: navigating via `?filter=perlu_realisasi` activates `perlu` chip immediately.
+      - `Reset filter` button (visible when any filter or search is active).
+      - Summary indicator on the right: `Menampilkan X dari 133 kegiatan · urut terbaru dulu / urut terlama dulu`.
+    - Activity List Table (`desktop/src/components/daftar/DaftarTable.tsx`):
+      - Sticky table header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `TANGGAL ↓/↑`, `JAM`, `NAMA KEGIATAN`, `JENIS`, `MATERI`, `RUANGAN`, `PENGISI`, `SISWA`, `STATUS`, `AKSI`.
+      - Interactive sort toggle on `TANGGAL` (toggles newest first `↓` vs oldest first `↑`, with secondary sort by `mulai`).
+      - Rows: 32px height, hover `#FAFAFA`, amber background `#FFF8EE` with `box-shadow: inset 3px 0 0 #F0A82E` for activities requiring realization.
+      - Date: Cascadia Mono `Sel, 15 Sep`, brand blue `#0C548F` when `tanggal === today`.
+      - Name: bold for `perluRealisasi`, line-through and muted `#5C5A58` for `dibatalkan`. Clickable to navigate to `/kegiatan/:id` with state `{ from: 'daftar' }`.
+      - Status Badge Pills: glyph and color styling matching DESIGN.md and prototype (`⚠ Belum · 1 hari`, `⚠ Belum · 5 hari`, `● Terjadwal`, `✓ Terealisasi`, `↻ Dijadwal ulang`, `✕ Dibatalkan`).
+      - Action Buttons per status (DOMAIN.md §3 & prototype):
+        - `terjadwal` & `belum_direalisasi`: Primary `[Isi realisasi]` button, `[↻]` reschedule button, `[✕]` cancel button.
+        - `terealisasi`: Primary `[Ubah realisasi]` button.
+        - `dibatalkan` & `dijadwal_ulang`: `[Lihat detail]` ghost button.
+      - Sticky Bottom Bar (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): displays date range summary or quick filter note (`8 kegiatan sudah lewat tapi belum direalisasi — rentang tanggal diabaikan selama filter ini aktif`), and truncation warning if > 300 rows.
+    - Zero State Display (`desktop/src/components/daftar/DaftarEmptyState.tsx`):
+      - Filtered empty state: `Tidak ada kegiatan yang cocok` with active filter count and `[Lepas semua filter]` / `[Reset semua filter]`.
+      - Empty date range state: `Belum ada kegiatan di rentang ini` with `[Kegiatan baru]` and `[Lebarkan rentang setahun]`.
+    - Modal & Panel Integration:
+      - Wired `BatalkanKegiatanModal` (A6) and `JadwalUlangModal` (A7) with chaining support.
+      - Wired `FormKegiatanPanel` (A4) listening to `BANDREK_EVENTS.NEW_KEGIATAN` (Ctrl+N or TopBar button) and empty state.
+    - Verified with 7/7 automated tests in `desktop/scripts/test-daftar-kegiatan.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 

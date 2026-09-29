@@ -94,36 +94,65 @@ export class MockKegiatanRepository implements IKegiatanRepository {
         kelasId,
         status,
         hanyaPerluRealisasi,
+        cepat,
         q,
+        sortDesc = true,
       } = params;
 
+      const dToday = new Date(mockStore.today);
+      const dow = (dToday.getDay() + 6) % 7;
+      const dMon = new Date(dToday.getFullYear(), dToday.getMonth(), dToday.getDate() - dow);
+      const dSun = new Date(dMon.getFullYear(), dMon.getMonth(), dMon.getDate() + 6);
+      const toIsoStr = (d: Date) =>
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const seninIni = toIsoStr(dMon);
+      const mingguIni = toIsoStr(dSun);
+
       return mockStore.kegiatan
+        .map((k) => this.enrich(k))
         .filter((k) => {
-          if (tanggalMulai && k.tanggal < tanggalMulai) return false;
-          if (tanggalSelesai && k.tanggal > tanggalSelesai) return false;
           if (jenisId && jenisId !== 'semua' && k.jenis !== jenisId) return false;
           if (subjekId && subjekId !== 'semua' && !k.subjek.some((s) => s.id === subjekId)) return false;
-          if (kelasId && kelasId !== 'semua' && k.kelas !== kelasId) return false;
+          if (kelasId && kelasId !== 'semua') {
+            const kl = mockStore.kelas.find((c) => c.id === kelasId);
+            const ang = kl ? kl.anggota : [];
+            if (k.kelas !== kelasId && !k.siswa.some((sid) => ang.includes(sid))) return false;
+          }
           if (q && q.trim().length > 0) {
             const qLower = q.trim().toLowerCase();
             if (!k.nama.toLowerCase().includes(qLower)) return false;
           }
-          return true;
-        })
-        .map((k) => this.enrich(k))
-        .filter((k) => {
-          if (hanyaPerluRealisasi && k.status !== 'belum_direalisasi') {
-            return false;
+          if (hanyaPerluRealisasi && k.status !== 'belum_direalisasi') return false;
+          if (status && status !== 'semua' && k.status !== status) return false;
+
+          // Filter rentang vs filter cepat
+          if (cepat === 'perlu') {
+            return k.status === 'belum_direalisasi';
           }
-          if (status && status !== 'semua' && k.status !== status) {
-            return false;
+          if (cepat === 'hari') {
+            return k.tanggal === mockStore.today;
           }
+          if (cepat === 'minggu') {
+            return k.tanggal >= seninIni && k.tanggal <= mingguIni;
+          }
+          if (cepat === 'datang') {
+            return k.tanggal >= mockStore.today;
+          }
+
+          if (tanggalMulai && k.tanggal < tanggalMulai) return false;
+          if (tanggalSelesai && k.tanggal > tanggalSelesai) return false;
+
           return true;
         })
         .sort((a, b) => {
-          // Default daftar kegiatan: tanggal terbaru di atas
-          if (b.tanggal !== a.tanggal) return b.tanggal.localeCompare(a.tanggal);
-          return b.mulai.localeCompare(a.mulai);
+          if (b.tanggal !== a.tanggal) {
+            return sortDesc
+              ? b.tanggal.localeCompare(a.tanggal)
+              : a.tanggal.localeCompare(b.tanggal);
+          }
+          return sortDesc
+            ? b.mulai.localeCompare(a.mulai)
+            : a.mulai.localeCompare(b.mulai);
         });
     });
   }
