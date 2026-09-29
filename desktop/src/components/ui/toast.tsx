@@ -25,12 +25,18 @@ interface ToastContextType {
   toasts: ToastItem[];
   showToast: (toast: Omit<ToastItem, "id">) => string;
   dismissToast: (id: string) => void;
+  offsetRight: number;
+  setOffsetRight: (offset: number) => void;
 }
 
 const ToastContext = React.createContext<ToastContextType | undefined>(undefined);
 
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ToastProvider: React.FC<{
+  children: React.ReactNode;
+  defaultOffsetRight?: number;
+}> = ({ children, defaultOffsetRight = 16 }) => {
   const [toasts, setToasts] = React.useState<ToastItem[]>([]);
+  const [offsetRight, setOffsetRight] = React.useState<number>(defaultOffsetRight);
 
   const dismissToast = React.useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -62,9 +68,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 
   return (
-    <ToastContext.Provider value={{ toasts, showToast, dismissToast }}>
+    <ToastContext.Provider value={{ toasts, showToast, dismissToast, offsetRight, setOffsetRight }}>
       {children}
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} offsetRight={offsetRight} />
     </ToastContext.Provider>
   );
 };
@@ -80,11 +86,15 @@ export const useToast = () => {
 export const ToastContainer: React.FC<{
   toasts: ToastItem[];
   onDismiss: (id: string) => void;
-}> = ({ toasts, onDismiss }) => {
+  offsetRight?: number;
+}> = ({ toasts, onDismiss, offsetRight = 16 }) => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none">
+    <div
+      style={{ right: `${offsetRight}px` }}
+      className="fixed bottom-4 z-60 flex flex-col gap-2 pointer-events-none transition-[right] duration-200"
+    >
       {toasts.map((toast) => (
         <ToastCard key={toast.id} toast={toast} onDismiss={() => onDismiss(toast.id)} />
       ))}

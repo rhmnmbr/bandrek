@@ -168,5 +168,13 @@ _Update this section at each approved checkpoint: what was done, and any decisio
   - Wired full TanStack Query hooks in `desktop/src/data/hooks/` and registered repository DI container in `repositories.ts`.
   - Built interactive test & inspection screen at `/data` (`DataLayerScreen.tsx`).
   - Verified with 27 integration tests (100% pass) and clean strict TypeScript build (`tsc && vite build`).
-- [ ] Phase 4 — App shell
+- [x] Phase 4 — App shell
+  - Implemented 48px/208px collapsible `NavigationRail` with Fluent transition, brand header, primary navigation items (`Alt+1`..`Alt+3`), master data items (`Alt+4`..`Alt+9`), and bottom "Perlu realisasi" badge linked directly to `/kegiatan?filter=perlu_realisasi` with live count from `usePerluRealisasiCount()`.
+  - Built 48px sticky `TopBar` with dynamic screen title, Ctrl+K quick search bar, offline read-only mode badge, and "+ Kegiatan baru" primary action button (`Ctrl+N`).
+  - Implemented `QuickSearchModal` (`Ctrl+K`) for real-time search across students, subjects, and activities with keyboard navigation (`↑↓`, `Enter`, `Esc`).
+  - Implemented global keyboard shortcuts hook (`useGlobalKeyboardShortcuts`) supporting `Ctrl+N` (new kegiatan event), `Ctrl+S` (save event), `Ctrl+B` (toggle rail), `Ctrl+K` (quick search), `Esc` (close panels/modals), and `Alt+1`..`Alt+9` (quick rail routing).
+  - Wired dynamic toast repositioning (`offsetRight` in `ToastContext` shifting to 514px when side panels are open to avoid blocking action buttons per DESIGN.md §3.8 & §14).
+  - Integrated sticky `OfflineBanner` infrastructure responding to simulator / connection state with retry button.
+  - Set up routing in `App.tsx` nesting all core routes (`/kalender`, `/kegiatan`, `/matriks`, and `/master/*`) within `AppShell` with `PlaceholderScreen` displaying live entity counts from TanStack Query.
+  - Verified with 31 automated shell tests (100% pass), 27 data layer tests (100% pass), and clean production build (`tsc && vite build`).
 - [ ] Phase 5 — Screens
