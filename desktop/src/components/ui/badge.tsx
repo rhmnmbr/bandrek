@@ -12,9 +12,11 @@ import { cn } from "@/lib/utils";
 export type KegiatanStatus =
   | "terjadwal"
   | "belum"
+  | "belum_direalisasi"
   | "terealisasi"
   | "dibatalkan"
-  | "dijadwal-ulang";
+  | "dijadwal-ulang"
+  | "dijadwal_ulang";
 
 export type KehadiranStatus = "hadir" | "sakit" | "izin" | "alpa";
 
@@ -27,8 +29,15 @@ export interface KegiatanBadgeProps {
 }
 
 export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, className }) => {
+  const normalizedStatus =
+    status === "belum_direalisasi"
+      ? "belum"
+      : status === "dijadwal_ulang"
+      ? "dijadwal-ulang"
+      : status;
+
   const configs: Record<
-    KegiatanStatus,
+    "terjadwal" | "belum" | "terealisasi" | "dibatalkan" | "dijadwal-ulang",
     { icon: React.ReactNode; defaultLabel: string; className: string }
   > = {
     terjadwal: {
@@ -70,7 +79,7 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
     },
   };
 
-  const config = configs[status];
+  const config = configs[normalizedStatus] || configs.terjadwal;
   return (
     <span
       className={cn(

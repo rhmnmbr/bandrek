@@ -4,6 +4,8 @@ import { ToastProvider } from "@/components/ui/toast";
 import { KatalogScreen } from "@/screens/KatalogScreen";
 import { Button } from "@/components/ui/button";
 
+import { DataLayerScreen } from "@/screens/DataLayerScreen";
+
 export default function App() {
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -20,6 +22,7 @@ export default function App() {
     <ToastProvider>
       <Routes>
         <Route path="/katalog" element={<KatalogScreen />} />
+        <Route path="/data" element={<DataLayerScreen />} />
         <Route
           path="/"
           element={
@@ -40,12 +43,18 @@ export default function App() {
                 <div className="p-3 rounded-md bg-(--color-surface-alt) border border-(--color-border-subtle) text-[12px] text-(--color-text-muted) w-full text-left space-y-1">
                   <div className="font-semibold text-(--color-text)">Status Pengembangan:</div>
                   <div>• Phase 1: Scaffold (Tauri 2 + React 19 + Vite 8) — Selesai</div>
-                  <div>• Phase 2: Tokens &amp; Component Catalog — Siap Ditinjau</div>
+                  <div>• Phase 2: Tokens &amp; Component Catalog — Selesai</div>
+                  <div>• Phase 3: Data Layer &amp; Mock (TanStack Query) — Siap Ditinjau</div>
                 </div>
 
-                <div className="flex items-center gap-3 pt-2">
-                  <Link to="/katalog">
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                  <Link to="/data">
                     <Button variant="primary">
+                      Uji Data Layer &amp; Mock (/data)
+                    </Button>
+                  </Link>
+                  <Link to="/katalog">
+                    <Button variant="secondary">
                       Buka Katalog Komponen (/katalog)
                     </Button>
                   </Link>

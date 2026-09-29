@@ -258,6 +258,11 @@ export function KatalogScreen() {
             {offlineBannerActive ? "Tutup Banner" : "Tampilkan Banner"}
           </Button>
 
+          <Link to="/data">
+            <Button variant="primary" size="compact" className="inline-flex items-center gap-1.5">
+              <span>Uji Data Layer (/data)</span>
+            </Button>
+          </Link>
           <Link to="/">
             <Button variant="secondary" size="compact" className="inline-flex items-center gap-1.5">
               <ArrowLeft16Regular />

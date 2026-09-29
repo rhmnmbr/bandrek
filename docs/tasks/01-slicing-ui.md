@@ -159,6 +159,14 @@ _Update this section at each approved checkpoint: what was done, and any decisio
   - Built interactive `/katalog` screen (`desktop/src/screens/KatalogScreen.tsx`) covering every component in all states (default, hover, focus, active, disabled, error/warning, loading) with traceability to sections in `DESIGN.md`.
   - Audited token mapping (100% mapped, 0 unmapped) and resolved style discrepancies where `DESIGN.md` wins over the prototype (control heights 26px/32px/34px, semantic variables, focus ring conventions, and read-only cache offline banner per ARCHITECTURE.md D5).
   - Verified clean TypeScript compilation and production build (`tsc && vite build`).
-- [ ] Phase 3 — Data layer
+- [x] Phase 3 — Data layer
+  - Defined provisional TypeScript types for all entities in `docs/DOMAIN.md` under `desktop/src/data/types/` (`common`, `master`, `kegiatan`, `realisasi`, `matriks`, `auth`, `simulasi`).
+  - Implemented 11 repository interfaces in `desktop/src/data/interfaces/` (`IKegiatanRepository`, `IRealisasiRepository`, `IMatriksRepository`, `ISiswaRepository`, `ISubjekRepository`, `IKelasRepository`, `IMapelRepository`, `ITempatRepository`, `IJenisKegiatanRepository`, `IAuthRepository`, `ISimulasiRepository`).
+  - Ported seed data from `docs/prototype/seed.js` into `desktop/src/data/mock/seedData.ts` (80 siswa, 12 subjek, 8 kelas, 6 mapel, 48 materi, 3 tempat, 9 ruangan, 5 jenis, 64 ceklis manual, 133 kegiatan).
+  - Implemented server-authoritative mock calculations marked as disposable in `businessRules.ts`: derived status (`belum_direalisasi` for past events), allowed actions per kegiatan, real-time schedule conflict detection on room, subject, and student, 7-state matrix learning grid calculations with priority resolution, and master data delete protection.
+  - Implemented network simulation and error injection (`mockRunner.ts`): latency toggle (0ms, 150ms, 500ms, 1000ms) and error injection (`offline`, 401 unauthorized, 409 conflict, 426 update required) with in-memory persistence and reset capabilities.
+  - Wired full TanStack Query hooks in `desktop/src/data/hooks/` and registered repository DI container in `repositories.ts`.
+  - Built interactive test & inspection screen at `/data` (`DataLayerScreen.tsx`).
+  - Verified with 27 integration tests (100% pass) and clean strict TypeScript build (`tsc && vite build`).
 - [ ] Phase 4 — App shell
 - [ ] Phase 5 — Screens
