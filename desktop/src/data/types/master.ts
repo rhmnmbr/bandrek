@@ -232,6 +232,12 @@ export interface Kelas {
   anggota: string[]; // List of Siswa IDs
   // Server-computed
   jumlahSiswa?: number;
+  jumlahKegiatan?: number;
+  jumlahKegiatanLangsung?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  rincianPenggunaan?: string[];
+  ringkasanPenggunaan?: string;
 }
 
 export interface KelasFilterParams {

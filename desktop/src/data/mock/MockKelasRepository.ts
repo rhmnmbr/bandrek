@@ -11,6 +11,38 @@ import { mockRunner } from './mockRunner';
 import { mockStore } from './mockStore';
 import { checkMasterUsage } from './businessRules';
 
+function enrichKelas(k: Kelas): Kelas {
+  const anggota = k.anggota || [];
+  const kegDirect = mockStore.kegiatan.filter((e) => e.kelas === k.id).length;
+  const kegAll = mockStore.kegiatan.filter(
+    (e) => e.kelas === k.id || e.siswa.some((sid) => anggota.includes(sid))
+  ).length;
+
+  const dapatDihapus = kegDirect === 0;
+  const alasanTidakBisaHapus = dapatDihapus
+    ? undefined
+    : `Tidak bisa dihapus: dipakai sebagai sumber impor di ${kegDirect} kegiatan.`;
+
+  return {
+    ...k,
+    anggota,
+    jumlahSiswa: anggota.length,
+    jumlahKegiatan: kegAll,
+    jumlahKegiatanLangsung: kegDirect,
+    dapatDihapus,
+    alasanTidakBisaHapus,
+    rincianPenggunaan: kegDirect > 0 ? [`${kegDirect} kegiatan`] : [],
+    ringkasanPenggunaan:
+      kegAll > 0
+        ? `${kegAll} kegiatan menyentuh kelas ini — ${
+            kegDirect > 0
+              ? `${kegDirect} di antaranya ditandai langsung dengan kelas ini, sisanya lewat anggotanya.`
+              : 'semuanya lewat anggotanya, tidak ada yang ditandai kelas ini.'
+          }`
+        : 'Belum ada kegiatan yang dijadwalkan untuk kelas ini.',
+  };
+}
+
 export class MockKelasRepository implements IKelasRepository {
   public async getAll(filter: KelasFilterParams = {}): Promise<Kelas[]> {
     return mockRunner(() => {
@@ -27,10 +59,7 @@ export class MockKelasRepository implements IKelasRepository {
           }
           return true;
         })
-        .map((k) => ({
-          ...k,
-          jumlahSiswa: k.anggota.length,
-        }))
+        .map(enrichKelas)
         .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
     });
   }
@@ -41,29 +70,29 @@ export class MockKelasRepository implements IKelasRepository {
       if (!k) {
         throw new BandrekApiError('unknown', `Kelas dengan ID "${id}" tidak ditemukan.`, 404);
       }
-      return {
-        ...k,
-        jumlahSiswa: k.anggota.length,
-      };
+      return enrichKelas(k);
     });
   }
 
   public async create(input: CreateKelasInput): Promise<Kelas> {
     return mockRunner(
       () => {
-        const newId = `K${mockStore.kelas.length + 1}`;
+        let n = mockStore.kelas.length + 1;
+        while (mockStore.kelas.some((x) => x.id === `K${n}`)) {
+          n++;
+        }
+        const newId = `K${n}`;
         const newKelas: Kelas = {
           id: newId,
-          nama: input.nama,
+          nama: input.nama.trim(),
           jenjang: input.jenjang,
-          keterangan: input.keterangan || '',
+          keterangan: input.keterangan ? input.keterangan.trim() : '',
           anggota: input.anggota || [],
-          jumlahSiswa: (input.anggota || []).length,
         };
 
         mockStore.kelas.push(newKelas);
         mockStore.persist();
-        return newKelas;
+        return enrichKelas(newKelas);
       },
       { isMutation: true }
     );
@@ -80,18 +109,15 @@ export class MockKelasRepository implements IKelasRepository {
         const existing = mockStore.kelas[idx];
         const updated: Kelas = {
           ...existing,
-          nama: input.nama ?? existing.nama,
+          nama: input.nama !== undefined ? input.nama.trim() : existing.nama,
           jenjang: input.jenjang !== undefined ? input.jenjang : existing.jenjang,
-          keterangan: input.keterangan !== undefined ? input.keterangan : existing.keterangan,
+          keterangan: input.keterangan !== undefined ? input.keterangan.trim() : existing.keterangan,
           anggota: input.anggota !== undefined ? input.anggota : existing.anggota,
         };
 
         mockStore.kelas[idx] = updated;
         mockStore.persist();
-        return {
-          ...updated,
-          jumlahSiswa: updated.anggota.length,
-        };
+        return enrichKelas(updated);
       },
       { isMutation: true }
     );
@@ -100,7 +126,7 @@ export class MockKelasRepository implements IKelasRepository {
   public async ubahAnggota(kelasId: string, siswaId: string, tambah: boolean): Promise<Kelas> {
     return mockRunner(
       () => {
-        const idx = mockStore.kelas.findIndex((item) => item.id === kelasId);
+        const idx = mockStore.kelas.findIndex((item) => item.id === idToClassId(kelasId));
         if (idx === -1) {
           throw new BandrekApiError('unknown', `Kelas dengan ID "${kelasId}" tidak ditemukan.`, 404);
         }
@@ -118,12 +144,11 @@ export class MockKelasRepository implements IKelasRepository {
         const updated: Kelas = {
           ...existing,
           anggota: newAnggota,
-          jumlahSiswa: newAnggota.length,
         };
 
         mockStore.kelas[idx] = updated;
         mockStore.persist();
-        return updated;
+        return enrichKelas(updated);
       },
       { isMutation: true }
     );
@@ -157,4 +182,8 @@ export class MockKelasRepository implements IKelasRepository {
       { isMutation: true }
     );
   }
+}
+
+function idToClassId(id: string): string {
+  return id;
 }

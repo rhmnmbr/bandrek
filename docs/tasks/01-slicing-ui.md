@@ -437,6 +437,45 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Added `getProfil(id)` in `MockSubjekRepository` computing 4 KPIs, weekly workload buckets with comfort limits, nearby activities, and routine availability.
       - Added `tambahKetersediaan`, `ubahKetersediaan`, and `hapusKetersediaan` in `MockSubjekRepository` and mutation hooks in `useMaster.ts`.
     - Verified with 6/6 automated tests in `desktop/scripts/test-subjek.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 10: B3 Kelas — Master Kelas & Detail/Form View (P1 Wide Master Pattern)
+    - Implemented wide master pattern with left table (288px) and right form area (flex-1) (`desktop/src/screens/KelasScreen.tsx`) on route `/master/kelas` and `/master/kelas/:id`.
+    - Toolbar & Filter Bar (`desktop/src/components/master/kelas/KelasToolbar.tsx`):
+      - Top Meta Bar (H: 44px): count e.g. `8 kelas · 96 keanggotaan`, primary `+ Kelas baru` button with `title="Tambah kelas baru · Ctrl+N"`.
+      - Filter Bar (H: 48px, bg `#FAFAFA`, border-b `#E1DFDD`): search input `Cari nama kelas` (by class name, notes), `Jenjang` dropdown (`Semua`, `SD`, `SMP`, `SMA`), `Reset filter` button.
+    - Master Table (`desktop/src/components/master/kelas/KelasTable.tsx`):
+      - Sticky header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `NAMA KELAS` (min-w 120px), `JENJANG` (66px), `SISWA` (54px, mono, right).
+      - 32px row height with hover `#FAFAFA`, selected state `#EBF3FC` with `box-shadow: inset 3px 0 0 #0F6CBD`.
+      - 0-member warning highlighted in bold amber `#8A5200`.
+      - Row click navigates to `/master/kelas/:id`.
+      - Sticky footer (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): `Menampilkan X dari Y kelas`.
+    - Empty State (`desktop/src/components/master/kelas/KelasEmptyState.tsx`):
+      - Informative empty display with glyph `◇`, clear cause explanation, and primary action (`[Reset filter]` or `[+ Kelas baru]`).
+    - Wide Form Panel (`desktop/src/components/master/kelas/KelasFormView.tsx`):
+      - Flexible wide right panel (`flex-1`, background `#FFFFFF`).
+      - Header: initials avatar square in blue `#EBF3FC` text `#0C548F`, title (`Kelas baru` / class name), subtitle (`Isi datanya, lalu simpan` / `<jenjang> · <N> anggota · <kegiatan> kegiatan`).
+      - Soft validation (DOMAIN.md §12 & prototype): ErrorSummary box and inline errors only display after first save attempt (`dicoba = true`).
+      - Fields:
+        - `Nama kelas *` with duplicate check across other classes.
+        - `Jenjang *` segmented control (`[SD]` `[SMP]` `[SMA]`).
+        - `Keterangan` optional text input.
+        - `Anggota · N siswa`:
+          - Header action `+ Tambah siswa` opens candidate search popover.
+          - Candidate search popover with live name search `Cari siswa [jenjang]`, active students matching class jenjang not yet members, sorted alphabetically.
+          - Member list (max-h 206px scrollable): student name, inactive badge `nonaktif` (gray) or mismatch jenjang badge (amber), remove button `[✕]`.
+          - Explanatory note below member list: `(N anggota di luar jenjang kelas (tetap boleh). ) Mengeluarkan anggota tidak menghapus riwayat kehadirannya.` / `Kelas kosong tetap bisa disimpan dan diisi nanti.`.
+        - Info Card `KELAS ITU PINTASAN`:
+          - `Mengubah anggota kelas tidak mengubah kegiatan yang sudah dibuat — kelas hanya dipakai saat "+ Dari kelas" di form kegiatan. Satu siswa boleh ada di beberapa kelas.`
+        - `RINGKASAN` card in edit mode: activity count summary + direct link `Lihat kegiatannya di daftar kegiatan` (`/kegiatan?kelas=<id>`).
+      - Footer:
+        - `Hapus` button: strictly follows DOMAIN.md §12 rule (disabled if class is directly imported as source in activities, with tooltip `Tidak bisa dihapus: dipakai sebagai sumber impor di X kegiatan. Ubah dulu kegiatan itu.`; enabled when 0 direct activities).
+        - `Batal` and `Simpan kelas` / `Simpan` primary button (`Ctrl+S`).
+    - Confirmation Modal Dialog (`desktop/src/components/master/kelas/KelasConfirmModal.tsx`):
+      - 460px modal dialog for class deletion with consequence explanation and numeric impact bullets.
+    - Data Layer & Business Rules:
+      - Enriched `Kelas` entity in `MockKelasRepository` with server-computed usage statistics (`jumlahSiswa`, `jumlahKegiatan`, `jumlahKegiatanLangsung`, `dapatDihapus`, `alasanTidakBisaHapus`, `rincianPenggunaan`, `ringkasanPenggunaan`).
+      - Enriched deletion logic: direct import tag checks (`kegDirect === 0`).
+      - Enriched `ubahAnggota(kelasId, siswaId, tambah)` and CRUD operations.
+    - Verified with 6/6 automated tests in `desktop/scripts/test-kelas.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 
