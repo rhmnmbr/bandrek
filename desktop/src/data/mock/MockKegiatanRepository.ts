@@ -277,7 +277,7 @@ export class MockKegiatanRepository implements IKegiatanRepository {
         // Kegiatan Asal (berstatus Dijadwal Ulang)
         const updatedAsal: RawKegiatanSeed = {
           ...existing,
-          status: 'dijadwal-ulang',
+          status: existing.status === 'dibatalkan' ? 'dibatalkan' : 'dijadwal-ulang',
           jadwalUlangKe: newId,
           penjadwalanUlang: {
             alasan: input.alasan,

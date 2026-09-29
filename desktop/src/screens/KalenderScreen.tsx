@@ -22,6 +22,8 @@ import {
   FormKegiatanPanel,
   type FormKegiatanInitialData,
 } from '@/components/kegiatan/FormKegiatanPanel';
+import { BatalkanKegiatanModal } from '@/components/kegiatan/BatalkanKegiatanModal';
+import { JadwalUlangModal } from '@/components/kegiatan/JadwalUlangModal';
 import { susunLayoutKegiatan } from '@/components/kalender/kalenderLayout';
 import {
   toDate,
@@ -60,6 +62,18 @@ export const KalenderScreen: React.FC = () => {
     open: boolean;
     initialData?: FormKegiatanInitialData | null;
   }>({ open: false });
+
+  // Dialog A6 (Batalkan) & A7 (Jadwal Ulang) State
+  const [modalBatalState, setModalBatalState] = React.useState<{
+    open: boolean;
+    kegiatan: Kegiatan | null;
+  }>({ open: false, kegiatan: null });
+
+  const [modalUlangState, setModalUlangState] = React.useState<{
+    open: boolean;
+    kegiatan: Kegiatan | null;
+    dariBatal?: boolean;
+  }>({ open: false, kegiatan: null, dariBatal: false });
 
   // Calendar State & Navigation Hook
   const {
@@ -293,25 +307,26 @@ export const KalenderScreen: React.FC = () => {
   );
 
   const handleOpenJadwalUlang = React.useCallback(
-    (kegiatan: Kegiatan) => {
+    (kegiatan: Kegiatan, dariBatal: boolean = false) => {
       setActivePopover(null);
-      showToast({
-        message: `Membuka dialog jadwal ulang: ${kegiatan.nama}`,
-        type: 'info',
+      setModalUlangState({
+        open: true,
+        kegiatan,
+        dariBatal,
       });
     },
-    [showToast]
+    []
   );
 
   const handleOpenBatal = React.useCallback(
     (kegiatan: Kegiatan) => {
       setActivePopover(null);
-      showToast({
-        message: `Membuka dialog pembatalan: ${kegiatan.nama}`,
-        type: 'warning',
+      setModalBatalState({
+        open: true,
+        kegiatan,
       });
     },
-    [showToast]
+    []
   );
 
   // Handle Empty Slot Selection (Click on calendar grid to create kegiatan)
@@ -510,6 +525,34 @@ export const KalenderScreen: React.FC = () => {
           onSuccess={handleFormSuccess}
           onHighlightConflict={handleHighlightConflict}
           onOpenDetail={handleOpenDetail}
+        />
+      )}
+
+      {/* 5. A6 Batalkan Kegiatan Modal */}
+      {modalBatalState.open && modalBatalState.kegiatan && (
+        <BatalkanKegiatanModal
+          open={modalBatalState.open}
+          kegiatan={modalBatalState.kegiatan}
+          onClose={() => setModalBatalState({ open: false, kegiatan: null })}
+          onOpenJadwalUlang={(kegiatanId, dariBatal) => {
+            const keg = semuaKegiatan.find((k) => k.id === kegiatanId);
+            if (keg) {
+              handleOpenJadwalUlang(keg, dariBatal);
+            }
+          }}
+        />
+      )}
+
+      {/* 6. A7 Jadwal Ulang Kegiatan Modal */}
+      {modalUlangState.open && modalUlangState.kegiatan && (
+        <JadwalUlangModal
+          open={modalUlangState.open}
+          kegiatan={modalUlangState.kegiatan}
+          dariBatal={modalUlangState.dariBatal}
+          onClose={() => setModalUlangState({ open: false, kegiatan: null, dariBatal: false })}
+          onNavigateBaru={(baruId) => {
+            handleNavigateKegiatan(baruId);
+          }}
         />
       )}
     </div>

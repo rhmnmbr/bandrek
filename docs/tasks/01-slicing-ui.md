@@ -224,5 +224,25 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - KEGIATAN TERKAIT: Bidirectional links to reschedule source/destination and up to 3 activities sharing the same mapel & kelas, navigable directly to `/kegiatan/:id`.
     - Full Integration: Direct launch of `FormKegiatanPanel` in edit mode when "Ubah kegiatan" is clicked, updating data seamlessly; wired `QuickSearchModal` and `KalenderScreen` to navigate to `/kegiatan/:id` with back-navigation state; Esc key shortcut handling.
     - Passed all 5 automated detail kegiatan tests (100%), 6 form tests, 14 popover tests (100%), with `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 5: A6 Batalkan kegiatan & A7 Jadwal ulang
+    - Implemented A6 modal dialog `desktop/src/components/kegiatan/BatalkanKegiatanModal.tsx` (520px max width per prototype line 2607):
+      - Header: title "Batalkan kegiatan ini?" with consequence explanation ("Kegiatan tetap tersimpan dan terlihat di kalender dengan tanda dibatalkan. Tidak ada data yang dihapus.").
+      - Activity summary card: activity name, Cascadia Mono date/time, subject & student count summary.
+      - Mandatory reason selection: dropdown from dynamic `useAlasanBatal()` with inline error handling ("Pilih alasan pembatalan...").
+      - Optional notes textarea.
+      - Impact warning box: amber warning box (`#FFF3E0`, border `#F0A82E`, text `#8A5200`) detailing unlearned materials in matriks belajar + "Lihat matriks" navigation button (or neutral notice for activities without students).
+      - Checkbox "Sekalian jadwalkan ulang": chains immediately into A7 Jadwal Ulang modal upon confirmation.
+      - Action buttons: safe "Tutup" button focused on open; danger "Batalkan kegiatan" button (red `#9B0C18`).
+    - Implemented A7 modal dialog `desktop/src/components/kegiatan/JadwalUlangModal.tsx` (744px max width per prototype line 2656):
+      - Two-column layout: Left column "JADWAL LAMA" (read-only old activity card with `line-through` time, mandatory reason selection from `useAlasanJadwalUlang()`, notes textarea, "Bawa serta subjek, siswa, materi, dan catatan rencana" checkbox default true with sub-caption).
+      - Right column "JADWAL BARU": Cascadia Mono date picker, 5-minute step time inputs with `selesai > mulai` order validation, grouped Ruangan select with room capacities.
+      - Availability preview (PRATINJAU KETERSEDIAAN): dynamic 4-hour slot preview around start time displaying conflict status (`slot dipilih · bebas`, `bentrok`, or `<Ruangan> terisi`), and subject concurrent schedule conflict card (green `✓ Semua subjek bebas...` or amber `⚠ <Subjek> sudah punya kegiatan...`).
+      - Footer: dynamic outcome summary (`Hasil: 1 kegiatan ditandai dijadwal ulang...`), "Batal", and "Jadwalkan ulang" primary button.
+    - Integration:
+      - Connected popover actions in `KalenderScreen.tsx` ("Batalkan kegiatan" and "Jadwalkan ulang").
+      - Connected `···` menu actions in `DetailKegiatanScreen.tsx` ("Batalkan kegiatan" and "Jadwalkan ulang").
+      - Chained flow: Batalkan with "Sekalian jadwalkan ulang" opens Jadwal Ulang modal with `dariBatal = true` (preserving dibatalkan status on origin per DOMAIN.md §8).
+    - Passed all 5/5 automated Step 5 test suites (100%), 5 detail tests, 6 form tests, 14 popover tests (100%), with `npm run build` passing with 0 errors and 0 lint warnings.
+
 
 

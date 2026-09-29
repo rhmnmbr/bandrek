@@ -15,6 +15,8 @@ import {
   useAllMateriList,
 } from '@/data/hooks';
 import { FormKegiatanPanel } from '@/components/kegiatan/FormKegiatanPanel';
+import { BatalkanKegiatanModal } from '@/components/kegiatan/BatalkanKegiatanModal';
+import { JadwalUlangModal } from '@/components/kegiatan/JadwalUlangModal';
 import {
   formatTanggalRingkas,
   formatTanggalPendek,
@@ -93,6 +95,11 @@ export const DetailKegiatanScreen: React.FC = () => {
 
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [formEditOpen, setFormEditOpen] = React.useState(false);
+  const [modalBatalOpen, setModalBatalOpen] = React.useState(false);
+  const [modalUlangState, setModalUlangState] = React.useState<{ open: boolean; dariBatal?: boolean }>({
+    open: false,
+    dariBatal: false,
+  });
   const menuRef = React.useRef<HTMLDivElement>(null);
 
   // Queries
@@ -147,7 +154,7 @@ export const DetailKegiatanScreen: React.FC = () => {
         if (menuOpen) {
           e.preventDefault();
           setMenuOpen(false);
-        } else if (!formEditOpen) {
+        } else if (!formEditOpen && !modalBatalOpen && !modalUlangState.open) {
           e.preventDefault();
           handleKembali();
         }
@@ -155,7 +162,7 @@ export const DetailKegiatanScreen: React.FC = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [menuOpen, formEditOpen, handleKembali]);
+  }, [menuOpen, formEditOpen, modalBatalOpen, modalUlangState.open, handleKembali]);
 
   if (isLoading) {
     return (
@@ -389,18 +396,12 @@ export const DetailKegiatanScreen: React.FC = () => {
 
   const handleJadwalUlang = () => {
     setMenuOpen(false);
-    showToast({
-      message: `Membuka dialog jadwal ulang: ${kegiatan.nama}`,
-      type: 'info',
-    });
+    setModalUlangState({ open: true, dariBatal: false });
   };
 
   const handleBatalkan = () => {
     setMenuOpen(false);
-    showToast({
-      message: `Membuka dialog pembatalan: ${kegiatan.nama}`,
-      type: 'warning',
-    });
+    setModalBatalOpen(true);
   };
 
   // Warning text for Realisasi Kosong
@@ -869,6 +870,33 @@ export const DetailKegiatanScreen: React.FC = () => {
             showToast({
               message: `Perubahan "${saved.nama}" berhasil disimpan`,
               type: 'success',
+            });
+          }}
+        />
+      )}
+
+      {/* A6 Batalkan Kegiatan Modal */}
+      {modalBatalOpen && (
+        <BatalkanKegiatanModal
+          open={modalBatalOpen}
+          kegiatan={kegiatan}
+          onClose={() => setModalBatalOpen(false)}
+          onOpenJadwalUlang={(_kegiatanId, dariBatal) => {
+            setModalUlangState({ open: true, dariBatal });
+          }}
+        />
+      )}
+
+      {/* A7 Jadwal Ulang Kegiatan Modal */}
+      {modalUlangState.open && (
+        <JadwalUlangModal
+          open={modalUlangState.open}
+          kegiatan={kegiatan}
+          dariBatal={modalUlangState.dariBatal}
+          onClose={() => setModalUlangState({ open: false, dariBatal: false })}
+          onNavigateBaru={(baruId) => {
+            navigate(`/kegiatan/${baruId}`, {
+              state: { fromTitle: breadcrumbAsal, fromPath: location.state?.fromPath },
             });
           }}
         />
