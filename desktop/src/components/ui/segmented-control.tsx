@@ -74,7 +74,7 @@ export function SegmentedControl<T extends string>({
     }
   };
 
-  const heightClass = size === "attendance" ? "h-[34px]" : "h-[26px]";
+  const heightClass = size === "attendance" ? "h-8.5" : "h-6.5";
 
   return (
     <div
@@ -83,13 +83,13 @@ export function SegmentedControl<T extends string>({
       tabIndex={disabled ? -1 : 0}
       onKeyDown={handleKeyDown}
       className={cn(
-        "inline-flex rounded-[var(--radius-md)] overflow-hidden select-none transition-colors border",
+        "inline-flex rounded-md overflow-hidden select-none transition-colors border",
         heightClass,
-        "focus-visible:outline-none focus-visible:border-[var(--color-focus-ring)] focus-visible:shadow-[inset_0_0_0_1px_var(--color-focus-ring)]",
+        "focus-visible:outline-none focus-visible:border-(--color-focus-ring) focus-visible:shadow-[inset_0_0_0_1px_var(--color-focus-ring)]",
         error
-          ? "border-[var(--color-danger)] bg-[var(--color-danger-bg)]"
-          : "border-[var(--color-border-strong)] bg-white hover:border-[#8A8886]",
-        disabled && "opacity-50 pointer-events-none bg-[var(--color-surface-sunken)]",
+          ? "border-(--color-danger) bg-(--color-danger-bg)"
+          : "border-(--color-border-strong) bg-white hover:border-[#8A8886]",
+        disabled && "opacity-50 pointer-events-none bg-(--color-surface-sunken)",
         className
       )}
     >
@@ -105,16 +105,16 @@ export function SegmentedControl<T extends string>({
             disabled={disabled}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex-1 px-3 flex items-center justify-center text-[12px] font-medium leading-none cursor-pointer transition-colors duration-[var(--dur-fast)] whitespace-nowrap",
+              "flex-1 px-3 flex items-center justify-center text-[12px] font-medium leading-none cursor-pointer transition-colors duration-(--dur-fast) whitespace-nowrap",
               idx > 0 &&
                 (error
-                  ? "border-l border-[var(--color-danger-subtle, #F3C6CA)]"
-                  : "border-l border-[var(--color-border-subtle)]"),
+                  ? "border-l border-[#F3C6CA]"
+                  : "border-l border-(--color-border-subtle)"),
               isSelected
-                ? "bg-[var(--color-brand)] text-white font-semibold"
+                ? "bg-(--color-brand) text-white font-semibold"
                 : error
-                ? "text-[var(--color-danger-ink)] hover:bg-[#FAD3D7]"
-                : "text-[var(--color-text)] hover:bg-[var(--color-surface-alt)]"
+                ? "text-(--color-danger-ink) hover:bg-[#FAD3D7]"
+                : "text-(--color-text) hover:bg-(--color-surface-alt)"
             )}
           >
             {opt.label}

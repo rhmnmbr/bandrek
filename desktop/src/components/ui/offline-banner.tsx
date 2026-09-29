@@ -33,26 +33,26 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
       case "danger-subtle":
         return {
           container:
-            "bg-[var(--color-danger-bg)] border-b border-[var(--color-danger)] text-[var(--color-danger-ink)]",
-          icon: <Warning16Regular className="text-[var(--color-danger-ink)] flex-none" />,
-          badge: "bg-[var(--color-danger)] text-white",
-          btn: "border-[var(--color-danger)] text-[var(--color-danger-ink)] bg-white hover:bg-[var(--color-danger-bg)]",
+            "bg-(--color-danger-bg) border-b border-(--color-danger) text-(--color-danger-ink)",
+          icon: <Warning16Regular className="text-(--color-danger-ink) flex-none" />,
+          badge: "bg-(--color-danger) text-white",
+          btn: "border-(--color-danger) text-(--color-danger-ink) bg-white hover:bg-(--color-danger-bg)",
         };
       case "surface-sunken":
         return {
           container:
-            "bg-[var(--color-surface-sunken)] border-b border-[var(--color-border-strong)] text-[var(--color-text)]",
-          icon: <PlugDisconnected16Regular className="text-[var(--color-text-secondary)] flex-none" />,
-          badge: "bg-[var(--color-border-strong)] text-[var(--color-text)]",
-          btn: "border-[var(--color-border-strong)] text-[var(--color-text)] bg-white hover:bg-[var(--color-surface-alt)]",
+            "bg-(--color-surface-sunken) border-b border-(--color-border-strong) text-(--color-text)",
+          icon: <PlugDisconnected16Regular className="text-(--color-text-secondary) flex-none" />,
+          badge: "bg-(--color-border-strong) text-(--color-text)",
+          btn: "border-(--color-border-strong) text-(--color-text) bg-white hover:bg-(--color-surface-alt)",
         };
       case "warning":
         return {
           container:
-            "bg-[var(--color-warning-bg)] border-b border-[var(--color-warning)] text-[var(--color-warning-ink)]",
-          icon: <Warning16Regular className="text-[var(--color-warning-ink)] flex-none" />,
-          badge: "bg-[var(--color-warning)] text-white",
-          btn: "border-[var(--color-warning-ink)] text-[var(--color-warning-ink)] bg-white hover:bg-[var(--color-warning-bg)]",
+            "bg-(--color-warning-bg) border-b border-(--color-warning) text-(--color-warning-ink)",
+          icon: <Warning16Regular className="text-(--color-warning-ink) flex-none" />,
+          badge: "bg-(--color-warning) text-white",
+          btn: "border-(--color-warning-ink) text-(--color-warning-ink) bg-white hover:bg-(--color-warning-bg)",
         };
       case "dark-charcoal":
       default:
@@ -72,7 +72,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
     <div
       role="status"
       className={cn(
-        "sticky top-0 z-50 w-full px-4 py-1.5 flex items-center justify-between text-[12px] select-none transition-colors duration-[var(--dur-fast)]",
+        "sticky top-0 z-50 w-full px-4 py-1.5 flex items-center justify-between text-[12px] select-none transition-colors duration-(--dur-fast)",
         styles.container,
         className
       )}
@@ -81,7 +81,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
         <span className="flex-none flex items-center justify-center">
           {styles.icon}
         </span>
-        <span className={cn("px-1.5 py-0.5 rounded-[var(--radius-sm)] text-[10.5px] font-semibold uppercase tracking-wider", styles.badge)}>
+        <span className={cn("px-1.5 py-0.5 rounded-sm text-[10.5px] font-semibold uppercase tracking-wider", styles.badge)}>
           Mode Baca
         </span>
         <span>
@@ -96,7 +96,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
           disabled={isRetrying}
           onClick={onRetry}
           className={cn(
-            "h-[22px] px-2.5 rounded-[var(--radius-sm)] border text-[11px] font-medium cursor-pointer select-none transition-colors disabled:opacity-50 ml-3 flex-none",
+            "h-5.5 px-2.5 rounded-sm border text-[11px] font-medium cursor-pointer select-none transition-colors disabled:opacity-50 ml-3 flex-none",
             styles.btn
           )}
         >

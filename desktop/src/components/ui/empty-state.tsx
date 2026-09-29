@@ -30,23 +30,23 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-center p-6 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-white max-w-[480px] mx-auto",
+        "flex flex-col items-center justify-center text-center p-6 rounded-lg border border-(--color-border-subtle) bg-white max-w-120 mx-auto",
         className
       )}
     >
       {metaSummary && <div className="mb-3">{metaSummary}</div>}
 
       {icon && (
-        <div className="mb-2 text-[24px] text-[var(--color-brand)] flex items-center justify-center">
+        <div className="mb-2 text-[24px] text-(--color-brand) flex items-center justify-center">
           {icon}
         </div>
       )}
 
-      <h3 className="text-[15px] font-semibold text-[var(--color-text)]">
+      <h3 className="text-[15px] font-semibold text-(--color-text)">
         {title}
       </h3>
 
-      <p className="mt-1.5 text-[12.5px] leading-relaxed text-[var(--color-text-secondary)] max-w-[360px]">
+      <p className="mt-1.5 text-[12.5px] leading-relaxed text-(--color-text-secondary) max-w-90">
         &ldquo;{cause}&rdquo;
       </p>
 

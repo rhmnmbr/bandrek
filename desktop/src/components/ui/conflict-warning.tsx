@@ -33,7 +33,7 @@ export const ConflictWarning: React.FC<ConflictWarningProps> = ({
     <div
       role="alert"
       className={cn(
-        "rounded-[var(--radius-lg)] border border-[var(--color-warning)] bg-[var(--color-warning-bg)] p-2.5 text-[12.5px] leading-relaxed text-[var(--color-warning-ink)]",
+        "rounded-lg border border-(--color-warning) bg-(--color-warning-bg) p-2.5 text-[12.5px] leading-relaxed text-(--color-warning-ink)",
         className
       )}
     >
@@ -51,7 +51,7 @@ export const ConflictWarning: React.FC<ConflictWarningProps> = ({
           <button
             type="button"
             onClick={onHighlightInCalendar}
-            className="h-[24px] px-2.5 rounded-[var(--radius-md)] border border-[var(--color-warning-ink)] bg-white text-[11.5px] font-medium text-[var(--color-warning-ink)] hover:bg-[var(--color-warning-bg)] cursor-pointer select-none transition-colors"
+            className="h-6 px-2.5 rounded-md border border-(--color-warning-ink) bg-white text-[11.5px] font-medium text-(--color-warning-ink) hover:bg-(--color-warning-bg) cursor-pointer select-none transition-colors"
           >
             {actionLabels.highlight}
           </button>
@@ -61,7 +61,7 @@ export const ConflictWarning: React.FC<ConflictWarningProps> = ({
           <button
             type="button"
             onClick={onChangeRoomOrSubject}
-            className="h-[24px] px-2.5 rounded-[var(--radius-md)] border border-[var(--color-warning-ink)] bg-white text-[11.5px] font-medium text-[var(--color-warning-ink)] hover:bg-[var(--color-warning-bg)] cursor-pointer select-none transition-colors"
+            className="h-6 px-2.5 rounded-md border border-(--color-warning-ink) bg-white text-[11.5px] font-medium text-(--color-warning-ink) hover:bg-(--color-warning-bg) cursor-pointer select-none transition-colors"
           >
             {actionLabels.change}
           </button>
@@ -71,7 +71,7 @@ export const ConflictWarning: React.FC<ConflictWarningProps> = ({
           <button
             type="button"
             onClick={onProceedAnyway}
-            className="h-[24px] px-2 text-[11.5px] text-[var(--color-warning-ink)] underline hover:no-underline cursor-pointer select-none"
+            className="h-6 px-2 text-[11.5px] text-(--color-warning-ink) underline hover:no-underline cursor-pointer select-none"
           >
             {actionLabels.proceed}
           </button>

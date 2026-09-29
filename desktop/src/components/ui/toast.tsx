@@ -111,14 +111,14 @@ export const ToastCard: React.FC<{
   const renderIcon = () => {
     switch (toast.type) {
       case "error":
-        return <ErrorCircle16Regular className="text-[var(--color-danger-ink)] flex-none" />;
+        return <ErrorCircle16Regular className="text-(--color-danger-ink) flex-none" />;
       case "warning":
-        return <Warning16Regular className="text-[var(--color-warning-ink)] flex-none" />;
+        return <Warning16Regular className="text-(--color-warning-ink) flex-none" />;
       case "info":
-        return <Info16Regular className="text-[var(--color-info-ink)] flex-none" />;
+        return <Info16Regular className="text-(--color-info-ink) flex-none" />;
       case "success":
       default:
-        return <Checkmark16Regular className="text-[var(--color-success-ink)] flex-none" />;
+        return <Checkmark16Regular className="text-(--color-success-ink) flex-none" />;
     }
   };
 
@@ -133,12 +133,12 @@ export const ToastCard: React.FC<{
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
       className={cn(
-        "pointer-events-auto w-[310px] rounded-[var(--radius-lg)] p-2.5 flex items-center gap-2.5 text-[12.5px] leading-snug select-none",
-        "shadow-[var(--shadow-toast)] transition-all duration-[var(--dur-normal)] animate-in slide-in-from-bottom-2",
+        "pointer-events-auto w-77.5 rounded-lg p-2.5 flex items-center gap-2.5 text-[12.5px] leading-snug select-none",
+        "shadow-(--shadow-toast) transition-all duration-(--dur-normal) animate-in slide-in-from-bottom-2",
         "focus-visible:outline-none focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
         isError
-          ? "border border-[var(--color-danger)] bg-[var(--color-danger-bg)] text-[var(--color-danger-ink)]"
-          : "border border-[var(--color-border-strong)] bg-white text-[var(--color-text)]"
+          ? "border border-(--color-danger) bg-(--color-danger-bg) text-(--color-danger-ink)"
+          : "border border-(--color-border-strong) bg-white text-(--color-text)"
       )}
     >
       <div className="flex-none flex items-center justify-center">{renderIcon()}</div>
@@ -154,7 +154,7 @@ export const ToastCard: React.FC<{
           }}
           className={cn(
             "flex-none text-[12px] font-medium hover:underline cursor-pointer",
-            isError ? "text-[var(--color-danger-ink)] underline" : "text-[var(--color-brand)]"
+            isError ? "text-(--color-danger-ink) underline" : "text-(--color-brand)"
           )}
         >
           {toast.action.label}
@@ -165,7 +165,7 @@ export const ToastCard: React.FC<{
         type="button"
         onClick={onDismiss}
         title="Tutup pemberitahuan"
-        className="flex-none text-[var(--color-text-muted)] hover:text-[var(--color-text)] cursor-pointer p-0.5 rounded-[var(--radius-sm)] flex items-center justify-center"
+        className="flex-none text-(--color-text-muted) hover:text-(--color-text) cursor-pointer p-0.5 rounded-sm flex items-center justify-center"
       >
         <Dismiss12Regular />
       </button>

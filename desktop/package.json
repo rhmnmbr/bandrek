@@ -8,9 +8,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run format:tailwind && tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "format:tailwind": "npx @tailwindcss/upgrade --force"
   },
   "dependencies": {
     "@fluentui/react-icons": "^2.0.341",

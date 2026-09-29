@@ -97,23 +97,23 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             type="button"
             disabled={disabled}
             className={cn(
-              "flex w-full items-center justify-between rounded-[var(--radius-md)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors duration-[var(--dur-fast)] cursor-pointer select-none",
+              "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
               "focus:outline-none",
               density === "compact"
-                ? "h-[var(--density-control-h)] px-2 text-[12.5px]"
-                : "h-[32px] px-3 text-[13.5px]",
+                ? "h-(--density-control-h) px-2 text-[12.5px]"
+                : "h-8 px-3 text-[13.5px]",
               error
-                ? "border border-[var(--color-danger)] shadow-[inset_0_-1px_0_0_var(--color-danger)] text-[var(--color-danger-ink)]"
-                : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-[var(--color-brand)] data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
+                ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
+                : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
               disabled &&
-                "cursor-not-allowed border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)]",
+                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
               className
             )}
           >
             <span
               className={cn(
                 "truncate text-left flex-1 font-mono tracking-tight",
-                !internalTime && "text-[var(--color-text-muted)] font-normal"
+                !internalTime && "text-(--color-text-muted) font-normal"
               )}
             >
               {internalTime || placeholder}
@@ -122,10 +122,10 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
               className={cn(
                 "flex-none ml-1.5",
                 error
-                  ? "text-[var(--color-danger)]"
+                  ? "text-(--color-danger)"
                   : disabled
-                  ? "text-[var(--color-text-muted)]"
-                  : "text-[var(--color-icon-faint)]"
+                  ? "text-(--color-text-muted)"
+                  : "text-(--color-icon-faint)"
               )}
             />
           </button>
@@ -136,17 +136,17 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             align="start"
             sideOffset={3}
             className={cn(
-              "z-50 w-[130px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-strong)] bg-white p-0 text-[var(--color-text)] shadow-[var(--shadow-overlay)] outline-none duration-75",
+              "z-50 w-32.5 overflow-hidden rounded-md border border-(--color-border-strong) bg-white p-0 text-(--color-text) shadow-(--shadow-overlay) outline-none duration-75",
               "animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1"
             )}
           >
             {/* Pinned Header: Jam & Menit menempel langsung di atas */}
-            <div className="grid grid-cols-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] py-1 text-[10.5px] font-semibold text-[var(--color-text-muted)] text-center select-none">
-              <div className="border-r border-[var(--color-border-subtle)]">Jam</div>
+            <div className="grid grid-cols-2 border-b border-(--color-border-subtle) bg-(--color-surface-alt) py-1 text-[10.5px] font-semibold text-(--color-text-muted) text-center select-none">
+              <div className="border-r border-(--color-border-subtle)">Jam</div>
               <div>Menit</div>
             </div>
 
-            <div className="flex h-[180px] divide-x divide-[var(--color-border-subtle)]">
+            <div className="flex h-45 divide-x divide-(--color-border-subtle)">
               {/* Hours Column */}
               <div
                 ref={hourContainerRef}
@@ -162,10 +162,10 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                       data-active={isSelected}
                       onClick={() => handleSelectHour(h)}
                       className={cn(
-                        "w-full h-[24px] text-center text-[12px] font-mono rounded-[var(--radius-sm)] cursor-pointer select-none transition-colors",
+                        "w-full h-6 text-center text-[12px] font-mono rounded-sm cursor-pointer select-none transition-colors",
                         isSelected
-                          ? "bg-[var(--color-brand)] text-white font-semibold"
-                          : "text-[var(--color-text)] hover:bg-[var(--color-brand-subtle)]"
+                          ? "bg-(--color-brand) text-white font-semibold"
+                          : "text-(--color-text) hover:bg-(--color-brand-subtle)"
                       )}
                     >
                       {h}
@@ -189,10 +189,10 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                       data-active={isSelected}
                       onClick={() => handleSelectMinute(m)}
                       className={cn(
-                        "w-full h-[24px] text-center text-[12px] font-mono rounded-[var(--radius-sm)] cursor-pointer select-none transition-colors",
+                        "w-full h-6 text-center text-[12px] font-mono rounded-sm cursor-pointer select-none transition-colors",
                         isSelected
-                          ? "bg-[var(--color-brand)] text-white font-semibold"
-                          : "text-[var(--color-text)] hover:bg-[var(--color-brand-subtle)]"
+                          ? "bg-(--color-brand) text-white font-semibold"
+                          : "text-(--color-text) hover:bg-(--color-brand-subtle)"
                       )}
                     >
                       {m}
@@ -255,7 +255,7 @@ export const TimeRangePicker: React.FC<TimeRangePickerProps> = ({
         error={error}
         density={density}
       />
-      <span className="text-[var(--color-text-muted)] text-[12px] flex-none select-none">–</span>
+      <span className="text-(--color-text-muted) text-[12px] flex-none select-none">–</span>
       <TimePicker
         value={endTime}
         onChange={handleEndChange}

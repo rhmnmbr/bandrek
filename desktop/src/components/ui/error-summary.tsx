@@ -30,7 +30,7 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
     <div
       role="alert"
       className={cn(
-        "rounded-[var(--radius-lg)] border border-[var(--color-danger)] bg-[var(--color-danger-bg)] p-2.5 text-[12.5px] leading-relaxed text-[var(--color-danger-ink)]",
+        "rounded-lg border border-(--color-danger) bg-(--color-danger-bg) p-2.5 text-[12.5px] leading-relaxed text-(--color-danger-ink)",
         className
       )}
     >
@@ -46,7 +46,7 @@ export const ErrorSummary: React.FC<ErrorSummaryProps> = ({
               <button
                 type="button"
                 onClick={item.onFocusField}
-                className="text-left font-medium underline hover:no-underline cursor-pointer text-[var(--color-danger-ink)]"
+                className="text-left font-medium underline hover:no-underline cursor-pointer text-(--color-danger-ink)"
               >
                 {item.field ? `${item.field} — ` : ""}
                 {item.message}

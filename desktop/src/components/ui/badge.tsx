@@ -35,7 +35,7 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
       icon: (
         <svg
           viewBox="0 0 8 8"
-          className="w-[8px] h-[8px] overflow-visible flex-none"
+          className="w-2 h-2 overflow-visible flex-none"
           fill="currentColor"
           aria-hidden="true"
         >
@@ -43,30 +43,30 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
         </svg>
       ),
       defaultLabel: "Terjadwal",
-      className: "border-[var(--color-event-terjadwal)] text-[var(--color-brand-ink)] bg-white",
+      className: "border-(--color-event-terjadwal) text-(--color-brand-ink) bg-white",
     },
     belum: {
-      icon: <Warning12Regular className="text-[10px] flex-none translate-y-[1px]" />,
+      icon: <Warning12Regular className="text-[10px] flex-none translate-y-px" />,
       defaultLabel: "Belum direalisasi",
       className:
-        "border-[var(--color-event-belum)] text-[var(--color-warning-ink)] bg-[var(--color-warning-bg)]",
+        "border-(--color-event-belum) text-(--color-warning-ink) bg-(--color-warning-bg)",
     },
     terealisasi: {
       icon: <Checkmark12Regular className="text-[11.5px] flex-none translate-y-[0.75px]" />,
       defaultLabel: "Terealisasi",
-      className: "border-[var(--color-event-terealisasi)] text-[var(--color-success-ink)] bg-white",
+      className: "border-(--color-event-terealisasi) text-(--color-success-ink) bg-white",
     },
     dibatalkan: {
-      icon: <Dismiss12Regular className="w-[10px] h-[10px] text-[10px] flex-none" />,
+      icon: <Dismiss12Regular className="w-2.5 h-2.5 text-[10px] flex-none" />,
       defaultLabel: "Dibatalkan",
       className:
-        "border-[var(--color-event-dibatalkan)] text-[var(--color-text-muted)] bg-[var(--color-canvas)]",
+        "border-(--color-event-dibatalkan) text-(--color-text-muted) bg-(--color-canvas)",
     },
     "dijadwal-ulang": {
       icon: <ArrowClockwise12Regular className="text-[10.5px] flex-none" />,
       defaultLabel: "Dijadwal ulang",
       className:
-        "border-dashed border-[var(--color-event-dijadwal-ulang)] text-[#5B4394] bg-white",
+        "border-dashed border-(--color-event-dijadwal-ulang) text-[#5B4394] bg-white",
     },
   };
 
@@ -74,12 +74,12 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
   return (
     <span
       className={cn(
-        "inline-flex items-center h-[18px] pr-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
+        "inline-flex items-center h-4.5 pr-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
         config.className,
         className
       )}
     >
-      <span className="w-[20px] h-full flex-none flex items-center justify-center">
+      <span className="w-5 h-full flex-none flex items-center justify-center">
         {config.icon}
       </span>
       <span className="leading-none">{label || config.defaultLabel}</span>
@@ -102,25 +102,25 @@ export const KehadiranBadge: React.FC<KehadiranBadgeProps> = ({ status, label, c
       icon: <Checkmark12Regular className="text-[11.5px] flex-none translate-y-[0.75px]" />,
       defaultLabel: "Hadir",
       className:
-        "border-[var(--color-status-hadir)] bg-[var(--color-status-hadir-bg)] text-[var(--color-status-hadir-ink)]",
+        "border-(--color-status-hadir) bg-(--color-status-hadir-bg) text-(--color-status-hadir-ink)",
     },
     sakit: {
       icon: <CircleHalfFill12Regular className="text-[10px] flex-none" />,
       defaultLabel: "Sakit",
       className:
-        "border-[var(--color-status-sakit)] bg-[var(--color-status-sakit-bg)] text-[var(--color-status-sakit-ink)]",
+        "border-(--color-status-sakit) bg-(--color-status-sakit-bg) text-(--color-status-sakit-ink)",
     },
     izin: {
-      icon: <Mail12Regular className="w-[14px] h-[14px] flex-none" />,
+      icon: <Mail12Regular className="w-3.5 h-3.5 flex-none" />,
       defaultLabel: "Izin",
       className:
-        "border-[var(--color-status-izin)] bg-[var(--color-status-izin-bg)] text-[var(--color-status-izin-ink)]",
+        "border-(--color-status-izin) bg-(--color-status-izin-bg) text-(--color-status-izin-ink)",
     },
     alpa: {
-      icon: <Dismiss12Regular className="w-[10px] h-[10px] text-[10px] flex-none" />,
+      icon: <Dismiss12Regular className="w-2.5 h-2.5 text-[10px] flex-none" />,
       defaultLabel: "Alpa",
       className:
-        "border-[var(--color-status-alpa)] bg-[var(--color-status-alpa-bg)] text-[var(--color-status-alpa-ink)]",
+        "border-(--color-status-alpa) bg-(--color-status-alpa-bg) text-(--color-status-alpa-ink)",
     },
   };
 
@@ -128,12 +128,12 @@ export const KehadiranBadge: React.FC<KehadiranBadgeProps> = ({ status, label, c
   return (
     <span
       className={cn(
-        "inline-flex items-center h-[18px] pr-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
+        "inline-flex items-center h-4.5 pr-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
         config.className,
         className
       )}
     >
-      <span className="w-[20px] h-full flex-none flex items-center justify-center">
+      <span className="w-5 h-full flex-none flex items-center justify-center">
         {config.icon}
       </span>
       <span className="leading-none">{label || config.defaultLabel}</span>
@@ -156,10 +156,10 @@ export const MasterStatusBadge: React.FC<MasterStatusBadgeProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center h-[18px] px-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
+        "inline-flex items-center h-4.5 px-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
         isAktif
-          ? "border-[var(--color-success)] text-[var(--color-success-ink)] bg-white"
-          : "border-[var(--color-border-strong)] text-[var(--color-text-muted)] bg-[var(--color-canvas)]",
+          ? "border-(--color-success) text-(--color-success-ink) bg-white"
+          : "border-(--color-border-strong) text-(--color-text-muted) bg-(--color-canvas)",
         className
       )}
     >
@@ -186,11 +186,11 @@ export const FilterChip: React.FC<FilterChipProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 h-[24px] rounded-full border text-[11.5px] whitespace-nowrap select-none transition-colors",
+        "inline-flex items-center gap-1.5 h-6 rounded-full border text-[11.5px] whitespace-nowrap select-none transition-colors",
         onRemove ? "pl-2.5 pr-1" : "px-2.5",
         active
-          ? "border-[var(--color-brand)] bg-[var(--color-brand-subtle)] text-[var(--color-brand-ink)] font-medium"
-          : "border-[var(--color-border-strong)] bg-white text-[var(--color-text)] hover:bg-[var(--color-surface-alt)]",
+          ? "border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-medium"
+          : "border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-alt)",
         className
       )}
     >
@@ -199,7 +199,7 @@ export const FilterChip: React.FC<FilterChipProps> = ({
         <button
           type="button"
           onClick={onRemove}
-          className="w-4 h-4 -ml-1 flex-none rounded-full cursor-pointer text-inherit flex items-center justify-center transition-colors hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-focus-ring)]"
+          className="w-4 h-4 -ml-1 flex-none rounded-full cursor-pointer text-inherit flex items-center justify-center transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-text) focus:outline-none focus-visible:ring-1 focus-visible:ring-(--color-focus-ring)"
           title={`Hapus filter ${label}`}
         >
           <svg
@@ -210,7 +210,7 @@ export const FilterChip: React.FC<FilterChipProps> = ({
             stroke="currentColor"
             strokeWidth="1.7"
             strokeLinecap="round"
-            className="w-[10px] h-[10px] flex-none"
+            className="w-2.5 h-2.5 flex-none"
             aria-hidden="true"
           >
             <line x1="4" y1="4" x2="12" y2="12" />

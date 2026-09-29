@@ -42,21 +42,21 @@ export const SidePanel: React.FC<SidePanelProps> = ({
       {/* Light scrim allowing calendar context behind it to be read */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-[#242424]/18 transition-opacity duration-[var(--dur-slow)] animate-in fade-in-0"
+        className="absolute inset-0 bg-[#242424]/18 transition-opacity duration-(--dur-slow) animate-in fade-in-0"
       />
 
       {/* Slide-in panel */}
       <aside
         style={{ width }}
         className={cn(
-          "absolute right-0 top-0 bottom-0 bg-white border-l border-[var(--color-border-strong)] shadow-[var(--shadow-overlay)] z-50 flex flex-col overflow-hidden",
-          "animate-in slide-in-from-right duration-[var(--dur-slow)] ease-[cubic-bezier(.16,1,.3,1)]",
+          "absolute right-0 top-0 bottom-0 bg-white border-l border-(--color-border-strong) shadow-(--shadow-overlay) z-50 flex flex-col overflow-hidden",
+          "animate-in slide-in-from-right duration-(--dur-slow) ease-[cubic-bezier(.16,1,.3,1)]",
           className
         )}
       >
         {/* Header */}
-        <div className="h-[44px] flex-none border-b border-[var(--color-border)] bg-[var(--color-surface-alt)] flex items-center gap-2 px-3.5">
-          <div className="text-[15px] font-semibold text-[var(--color-text)] truncate">
+        <div className="h-11 flex-none border-b border-(--color-border) bg-(--color-surface-alt) flex items-center gap-2 px-3.5">
+          <div className="text-[15px] font-semibold text-(--color-text) truncate">
             {title}
           </div>
           {subtitle && <div className="text-[12px]">{subtitle}</div>}
@@ -65,7 +65,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
             type="button"
             onClick={onClose}
             title="Tutup (Esc)"
-            className="w-6 h-6 rounded-full flex items-center justify-center text-[var(--color-text-muted)] hover:bg-[var(--color-surface-sunken)] hover:text-[var(--color-text)] transition-colors cursor-pointer"
+            className="w-6 h-6 rounded-full flex items-center justify-center text-(--color-text-muted) hover:bg-(--color-surface-sunken) hover:text-(--color-text) transition-colors cursor-pointer"
           >
             <Dismiss16Regular />
           </button>
@@ -78,7 +78,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="flex-none border-t border-[var(--color-border)] bg-white px-3.5 py-2.5">
+          <div className="flex-none border-t border-(--color-border) bg-white px-3.5 py-2.5">
             {footer}
           </div>
         )}

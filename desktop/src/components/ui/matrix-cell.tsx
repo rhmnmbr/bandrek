@@ -49,20 +49,20 @@ export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
     const getStateClasses = () => {
       switch (state) {
         case "tersampaikan":
-          return "bg-[var(--color-success-bg)] text-[var(--color-success-ink)] border-r border-b border-[var(--color-border-subtle)]";
+          return "bg-(--color-success-bg) text-(--color-success-ink) border-r border-b border-(--color-border-subtle)";
         case "sakit":
-          return "bg-[var(--color-warning-bg)] text-[var(--color-warning-ink)] shadow-[inset_0_0_0_1px_var(--color-warning)] border-r border-b border-[var(--color-border-subtle)]";
+          return "bg-(--color-warning-bg) text-(--color-warning-ink) shadow-[inset_0_0_0_1px_var(--color-warning)] border-r border-b border-(--color-border-subtle)";
         case "izin":
-          return "bg-[var(--color-info-bg)] text-[var(--color-info-ink)] shadow-[inset_0_0_0_1px_var(--color-info)] border-r border-b border-[var(--color-border-subtle)]";
+          return "bg-(--color-info-bg) text-(--color-info-ink) shadow-[inset_0_0_0_1px_var(--color-info)] border-r border-b border-(--color-border-subtle)";
         case "alpa":
-          return "bg-[var(--color-danger-bg)] text-[var(--color-danger-ink)] shadow-[inset_0_0_0_1px_var(--color-danger)] border-r border-b border-[var(--color-border-subtle)]";
+          return "bg-(--color-danger-bg) text-(--color-danger-ink) shadow-[inset_0_0_0_1px_var(--color-danger)] border-r border-b border-(--color-border-subtle)";
         case "batal":
-          return "bg-[var(--color-canvas)] text-[var(--color-text-muted)] border-r border-b border-[var(--color-border-subtle)]";
+          return "bg-(--color-canvas) text-(--color-text-muted) border-r border-b border-(--color-border-subtle)";
         case "terjadwal":
-          return "bg-[var(--color-brand-subtle)] text-[var(--color-brand-ink)] border-r border-b border-[var(--color-border-subtle)]";
+          return "bg-(--color-brand-subtle) text-(--color-brand-ink) border-r border-b border-(--color-border-subtle)";
         case "kosong":
         default:
-          return "bg-white text-[var(--color-icon-faint)] border-r border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-alt)]";
+          return "bg-white text-(--color-icon-faint) border-r border-b border-(--color-border-subtle) hover:bg-(--color-surface-alt)";
       }
     };
 
@@ -71,8 +71,8 @@ export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
         ref={ref}
         type="button"
         className={cn(
-          "flex items-center justify-center font-mono select-none cursor-pointer transition-colors duration-[var(--dur-instant)]",
-          "w-[28px] h-[28px] text-[12px]",
+          "flex items-center justify-center font-mono select-none cursor-pointer transition-colors duration-(--dur-instant)",
+          "w-7 h-7 text-[12px]",
           "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_#000000] focus-visible:z-10",
           getStateClasses(),
           className

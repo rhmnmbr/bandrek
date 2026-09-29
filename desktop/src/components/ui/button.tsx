@@ -28,22 +28,22 @@ const FluentProgressRing: React.FC<{ className?: string }> = ({ className }) => 
 );
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] text-[12px] font-medium transition-[background-color,border-color,box-shadow] duration-[var(--dur-fast)] cursor-pointer select-none disabled:pointer-events-none disabled:cursor-not-allowed focus-visible:outline-none",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-[12px] font-medium transition-[background-color,border-color,box-shadow] duration-(--dur-fast) cursor-pointer select-none disabled:pointer-events-none disabled:cursor-not-allowed focus-visible:outline-none",
   {
     variants: {
       variant: {
         primary:
-          "bg-[var(--color-brand)] border border-[var(--color-brand)] text-white font-semibold hover:bg-[var(--color-brand-pressed)] active:bg-[var(--color-brand-pressed)] disabled:bg-[#EDEBE9] disabled:text-[#8A8886] disabled:border-transparent focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000,inset_0_0_0_2px_#ffffff]",
+          "bg-(--color-brand) border border-(--color-brand) text-white font-semibold hover:bg-(--color-brand-pressed) active:bg-(--color-brand-pressed) disabled:bg-[#EDEBE9] disabled:text-[#8A8886] disabled:border-transparent focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000,inset_0_0_0_2px_#ffffff]",
         secondary:
-          "bg-[var(--color-surface)] border border-[var(--color-border-strong)] text-[var(--color-text)] hover:bg-[var(--color-surface-alt)] active:bg-[var(--color-surface-sunken)] disabled:text-[#8A8886] disabled:border-[var(--color-border-subtle)] focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
+          "bg-(--color-surface) border border-(--color-border-strong) text-(--color-text) hover:bg-(--color-surface-alt) active:bg-(--color-surface-sunken) disabled:text-[#8A8886] disabled:border-(--color-border-subtle) focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
         ghost:
-          "bg-transparent border border-transparent text-[var(--color-brand)] hover:bg-[var(--color-brand-subtle)] active:bg-[#DCE9F9] disabled:text-[#8A8886] focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
+          "bg-transparent border border-transparent text-(--color-brand) hover:bg-(--color-brand-subtle) active:bg-[#DCE9F9] disabled:text-[#8A8886] focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
         danger:
-          "bg-[var(--color-surface)] border border-[var(--color-danger)] text-[var(--color-danger-ink)] hover:bg-[var(--color-danger-bg)] active:bg-[#FAD3D7] disabled:text-[#8A8886] disabled:border-[var(--color-border-subtle)] focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000] focus-visible:bg-[var(--color-danger-bg)]",
+          "bg-(--color-surface) border border-(--color-danger) text-(--color-danger-ink) hover:bg-(--color-danger-bg) active:bg-[#FAD3D7] disabled:text-[#8A8886] disabled:border-(--color-border-subtle) focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000] focus-visible:bg-(--color-danger-bg)",
       },
       size: {
-        compact: "h-[26px] px-2.5 text-[12px]",
-        icon: "h-[26px] w-[26px] p-0",
+        compact: "h-6.5 px-2.5 text-[12px]",
+        icon: "h-6.5 w-6.5 p-0",
       },
     },
     defaultVariants: {

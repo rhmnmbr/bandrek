@@ -91,21 +91,21 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col border border-[var(--color-border)] rounded-[var(--radius-md)] bg-white overflow-hidden text-[12.5px]",
+        "flex flex-col border border-(--color-border) rounded-md bg-white overflow-hidden text-[12.5px]",
         className
       )}
     >
       {/* Search & Actions Header */}
-      <div className="p-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] flex flex-col gap-2">
+      <div className="p-2 border-b border-(--color-border-subtle) bg-(--color-surface-alt) flex flex-col gap-2">
         <SearchInput
           placeholder="Cari nama siswa..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery("")}
         />
-        <div className="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] px-0.5">
+        <div className="flex items-center justify-between text-[11px] text-(--color-text-muted) px-0.5">
           <span>
-            <strong className="font-mono text-[var(--color-text)] font-semibold">
+            <strong className="font-mono text-(--color-text) font-semibold">
               {totalSelectedCount}
             </strong>{" "}
             dari {allStudents.length} siswa dipilih
@@ -114,15 +114,15 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
             <button
               type="button"
               onClick={handleSelectAll}
-              className="text-[var(--color-brand)] hover:underline cursor-pointer"
+              className="text-(--color-brand) hover:underline cursor-pointer"
             >
               Pilih semua
             </button>
-            <span className="text-[var(--color-border-strong)]">·</span>
+            <span className="text-(--color-border-strong)">·</span>
             <button
               type="button"
               onClick={handleClearAll}
-              className="text-[var(--color-brand)] hover:underline cursor-pointer"
+              className="text-(--color-brand) hover:underline cursor-pointer"
             >
               Bersihkan
             </button>
@@ -131,9 +131,9 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
       </div>
 
       {/* Grouped Checklist */}
-      <div className="overflow-y-auto divide-y divide-[var(--color-border-subtle)]" style={{ maxHeight }}>
+      <div className="overflow-y-auto divide-y divide-(--color-border-subtle)" style={{ maxHeight }}>
         {filteredGroups.length === 0 ? (
-          <div className="p-6 text-center text-[var(--color-text-muted)] text-[12px]">
+          <div className="p-6 text-center text-(--color-text-muted) text-[12px]">
             Tidak ada siswa yang cocok dengan &quot;{searchQuery}&quot;
           </div>
         ) : (
@@ -148,7 +148,7 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
             return (
               <div key={group.id} className="p-1.5">
                 {/* Group Header */}
-                <div className="flex items-center justify-between px-2 py-1 bg-[var(--color-surface-alt)] rounded-[var(--radius-sm)] mb-1">
+                <div className="flex items-center justify-between px-2 py-1 bg-(--color-surface-alt) rounded-sm mb-1">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       checked={isAllGroupSelected ? true : isSomeGroupSelected ? "indeterminate" : false}
@@ -157,12 +157,12 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
                     />
                     <label
                       htmlFor={`group-${group.id}`}
-                      className="font-semibold text-[11.5px] cursor-pointer text-[var(--color-text-secondary)]"
+                      className="font-semibold text-[11.5px] cursor-pointer text-(--color-text-secondary)"
                     >
                       {group.nama}
                     </label>
                   </div>
-                  <span className="text-[10.5px] font-mono text-[var(--color-text-muted)]">
+                  <span className="text-[10.5px] font-mono text-(--color-text-muted)">
                     {selectedInGroup.length}/{group.students.length}
                   </span>
                 </div>
@@ -175,8 +175,8 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
                       <div
                         key={student.id}
                         className={cn(
-                          "flex items-center gap-2 px-1.5 py-0.5 rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-alt)] transition-colors",
-                          isChecked && "bg-[var(--color-brand-subtle)]/40"
+                          "flex items-center gap-2 px-1.5 py-0.5 rounded-sm hover:bg-(--color-surface-alt) transition-colors",
+                          isChecked && "bg-(--color-brand-subtle)/40"
                         )}
                       >
                         <Checkbox
@@ -192,7 +192,7 @@ export const StudentChecklist: React.FC<StudentChecklistProps> = ({
                           {student.nama}
                         </label>
                         {student.jenjang && (
-                          <span className="text-[10px] text-[var(--color-text-muted)] font-mono">
+                          <span className="text-[10px] text-(--color-text-muted) font-mono">
                             {student.jenjang}
                           </span>
                         )}

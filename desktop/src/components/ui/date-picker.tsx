@@ -191,23 +191,23 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             type="button"
             disabled={disabled}
             className={cn(
-              "flex w-full items-center justify-between rounded-[var(--radius-md)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors duration-[var(--dur-fast)] cursor-pointer select-none",
+              "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
               "focus:outline-none",
               density === "compact"
-                ? "h-[var(--density-control-h)] px-2 text-[12.5px]"
-                : "h-[32px] px-3 text-[13.5px]",
+                ? "h-(--density-control-h) px-2 text-[12.5px]"
+                : "h-8 px-3 text-[13.5px]",
               error
-                ? "border border-[var(--color-danger)] shadow-[inset_0_-1px_0_0_var(--color-danger)] text-[var(--color-danger-ink)]"
-                : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-[var(--color-brand)] data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
+                ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
+                : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
               disabled &&
-                "cursor-not-allowed border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)]",
+                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
               className
             )}
           >
             <span
               className={cn(
                 "truncate text-left flex-1",
-                !displayLabel && "text-[var(--color-text-muted)]"
+                !displayLabel && "text-(--color-text-muted)"
               )}
             >
               {displayLabel ?? placeholder}
@@ -216,10 +216,10 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               className={cn(
                 "flex-none ml-1.5",
                 error
-                  ? "text-[var(--color-danger)]"
+                  ? "text-(--color-danger)"
                   : disabled
-                  ? "text-[var(--color-text-muted)]"
-                  : "text-[var(--color-icon-faint)]"
+                  ? "text-(--color-text-muted)"
+                  : "text-(--color-icon-faint)"
               )}
             />
           </button>
@@ -230,7 +230,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             align="start"
             sideOffset={3}
             className={cn(
-              "z-50 w-[260px] rounded-[var(--radius-lg)] border border-[var(--color-border-strong)] bg-white p-3 text-[var(--color-text)] shadow-[var(--shadow-overlay)] outline-none duration-75",
+              "z-50 w-65 rounded-lg border border-(--color-border-strong) bg-white p-3 text-(--color-text) shadow-(--shadow-overlay) outline-none duration-75",
               "animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1"
             )}
           >
@@ -243,10 +243,10 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                     type="button"
                     title="Pilih bulan"
                     onClick={() => setViewMode("months")}
-                    className="flex items-center gap-1 font-semibold text-[13px] text-[var(--color-text)] hover:text-[var(--color-brand)] hover:bg-[var(--color-surface-sunken)] px-1.5 py-0.5 rounded-[var(--radius-sm)] cursor-pointer transition-colors capitalize"
+                    className="flex items-center gap-1 font-semibold text-[13px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1.5 py-0.5 rounded-sm cursor-pointer transition-colors capitalize"
                   >
                     <span>{format(viewDate, "MMMM", { locale: id })}</span>
-                    <ChevronDown12Regular className="text-[var(--color-text-muted)] w-3 h-3" />
+                    <ChevronDown12Regular className="text-(--color-text-muted) w-3 h-3" />
                   </button>
                   <button
                     type="button"
@@ -255,17 +255,17 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       setYearRangeStart(Math.floor(getYear(viewDate) / 12) * 12);
                       setViewMode("years");
                     }}
-                    className="flex items-center gap-1 font-semibold text-[13px] text-[var(--color-text)] hover:text-[var(--color-brand)] hover:bg-[var(--color-surface-sunken)] px-1.5 py-0.5 rounded-[var(--radius-sm)] cursor-pointer transition-colors"
+                    className="flex items-center gap-1 font-semibold text-[13px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1.5 py-0.5 rounded-sm cursor-pointer transition-colors"
                   >
                     <span>{format(viewDate, "yyyy")}</span>
-                    <ChevronDown12Regular className="text-[var(--color-text-muted)] w-3 h-3" />
+                    <ChevronDown12Regular className="text-(--color-text-muted) w-3 h-3" />
                   </button>
                 </div>
               )}
 
               {viewMode === "months" && (
-                <div className="flex items-center gap-1 font-semibold text-[13px] text-[var(--color-text)]">
-                  <span className="text-[var(--color-text-muted)] font-normal text-[12px]">Bulan —</span>
+                <div className="flex items-center gap-1 font-semibold text-[13px] text-(--color-text)">
+                  <span className="text-(--color-text-muted) font-normal text-[12px]">Bulan —</span>
                   <button
                     type="button"
                     title="Pilih tahun"
@@ -273,16 +273,16 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       setYearRangeStart(Math.floor(getYear(viewDate) / 12) * 12);
                       setViewMode("years");
                     }}
-                    className="flex items-center gap-1 hover:text-[var(--color-brand)] hover:bg-[var(--color-surface-sunken)] px-1.5 py-0.5 rounded-[var(--radius-sm)] cursor-pointer transition-colors"
+                    className="flex items-center gap-1 hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1.5 py-0.5 rounded-sm cursor-pointer transition-colors"
                   >
                     <span>{getYear(viewDate)}</span>
-                    <ChevronDown12Regular className="text-[var(--color-text-muted)] w-3 h-3" />
+                    <ChevronDown12Regular className="text-(--color-text-muted) w-3 h-3" />
                   </button>
                 </div>
               )}
 
               {viewMode === "years" && (
-                <div className="font-semibold text-[13px] text-[var(--color-text)] px-1.5 py-0.5 select-none">
+                <div className="font-semibold text-[13px] text-(--color-text) px-1.5 py-0.5 select-none">
                   {yearRangeStart} – {yearRangeStart + 11}
                 </div>
               )}
@@ -299,7 +299,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       : "12 tahun sebelumnya"
                   }
                   onClick={handlePrev}
-                  className="h-[22px] w-[22px] flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-sunken)] cursor-pointer transition-colors"
+                  className="h-5.5 w-5.5 flex items-center justify-center rounded-sm text-(--color-text-secondary) hover:bg-(--color-surface-sunken) cursor-pointer transition-colors"
                 >
                   <ChevronLeft12Regular />
                 </button>
@@ -313,7 +313,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       : "12 tahun berikutnya"
                   }
                   onClick={handleNext}
-                  className="h-[22px] w-[22px] flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-sunken)] cursor-pointer transition-colors"
+                  className="h-5.5 w-5.5 flex items-center justify-center rounded-sm text-(--color-text-secondary) hover:bg-(--color-surface-sunken) cursor-pointer transition-colors"
                 >
                   <ChevronRight12Regular />
                 </button>
@@ -330,7 +330,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                   {weekDays.map((d) => (
                     <div
                       key={d}
-                      className="text-[10.5px] font-semibold text-[var(--color-text-muted)] py-0.5 select-none"
+                      className="text-[10.5px] font-semibold text-(--color-text-muted) py-0.5 select-none"
                     >
                       {d}
                     </div>
@@ -350,20 +350,20 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                         type="button"
                         onClick={() => handleSelectDay(day)}
                         className={cn(
-                          "h-[26px] w-[26px] mx-auto flex items-center justify-center rounded-full text-[12px] font-normal cursor-pointer select-none transition-colors",
+                          "h-6.5 w-6.5 mx-auto flex items-center justify-center rounded-full text-[12px] font-normal cursor-pointer select-none transition-colors",
                           selected &&
-                            "bg-[var(--color-brand)] text-white font-semibold hover:bg-[var(--color-brand)]",
+                            "bg-(--color-brand) text-white font-semibold hover:bg-(--color-brand)",
                           !selected &&
                             today &&
-                            "ring-1 ring-[var(--color-brand)] text-[var(--color-brand-ink)] font-semibold hover:bg-[var(--color-brand-subtle)]",
+                            "ring-1 ring-(--color-brand) text-(--color-brand-ink) font-semibold hover:bg-(--color-brand-subtle)",
                           !selected &&
                             !today &&
                             inCurrentMonth &&
-                            "text-[var(--color-text)] hover:bg-[var(--color-brand-subtle)]",
+                            "text-(--color-text) hover:bg-(--color-brand-subtle)",
                           !selected &&
                             !today &&
                             !inCurrentMonth &&
-                            "text-[var(--color-icon-faint)] hover:bg-[var(--color-surface-alt)]"
+                            "text-(--color-icon-faint) hover:bg-(--color-surface-alt)"
                         )}
                       >
                         {format(day, "d")}
@@ -396,12 +396,12 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                         setViewMode("days");
                       }}
                       className={cn(
-                        "h-[34px] rounded-[var(--radius-md)] text-[12px] font-medium transition-colors cursor-pointer select-none flex items-center justify-center",
+                        "h-8.5 rounded-md text-[12px] font-medium transition-colors cursor-pointer select-none flex items-center justify-center",
                         isSelected
-                          ? "bg-[var(--color-brand)] text-white font-semibold"
+                          ? "bg-(--color-brand) text-white font-semibold"
                           : isThisMonth
-                          ? "ring-1 ring-[var(--color-brand)] text-[var(--color-brand-ink)] font-semibold hover:bg-[var(--color-brand-subtle)]"
-                          : "text-[var(--color-text)] hover:bg-[var(--color-brand-subtle)]"
+                          ? "ring-1 ring-(--color-brand) text-(--color-brand-ink) font-semibold hover:bg-(--color-brand-subtle)"
+                          : "text-(--color-text) hover:bg-(--color-brand-subtle)"
                       )}
                     >
                       {m.full}
@@ -429,12 +429,12 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                         setViewMode("months");
                       }}
                       className={cn(
-                        "h-[34px] rounded-[var(--radius-md)] text-[12.5px] font-mono transition-colors cursor-pointer select-none flex items-center justify-center",
+                        "h-8.5 rounded-md text-[12.5px] font-mono transition-colors cursor-pointer select-none flex items-center justify-center",
                         isSelected
-                          ? "bg-[var(--color-brand)] text-white font-semibold"
+                          ? "bg-(--color-brand) text-white font-semibold"
                           : isThisYear
-                          ? "ring-1 ring-[var(--color-brand)] text-[var(--color-brand-ink)] font-semibold hover:bg-[var(--color-brand-subtle)]"
-                          : "text-[var(--color-text)] hover:bg-[var(--color-brand-subtle)]"
+                          ? "ring-1 ring-(--color-brand) text-(--color-brand-ink) font-semibold hover:bg-(--color-brand-subtle)"
+                          : "text-(--color-text) hover:bg-(--color-brand-subtle)"
                       )}
                     >
                       {yr}
@@ -445,20 +445,20 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             )}
 
             {/* Footer Clear & Today / Back Actions */}
-            <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] mt-2.5 pt-2 text-[12px]">
+            <div className="flex items-center justify-between border-t border-(--color-border-subtle) mt-2.5 pt-2 text-[12px]">
               {viewMode === "days" ? (
                 <>
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="text-[var(--color-brand)] hover:underline cursor-pointer select-none"
+                    className="text-(--color-brand) hover:underline cursor-pointer select-none"
                   >
                     Bersihkan
                   </button>
                   <button
                     type="button"
                     onClick={handleToday}
-                    className="text-[var(--color-brand)] font-medium hover:underline cursor-pointer select-none"
+                    className="text-(--color-brand) font-medium hover:underline cursor-pointer select-none"
                   >
                     Hari ini
                   </button>
@@ -468,14 +468,14 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                   <button
                     type="button"
                     onClick={() => setViewMode("days")}
-                    className="text-[var(--color-brand)] hover:underline cursor-pointer select-none"
+                    className="text-(--color-brand) hover:underline cursor-pointer select-none"
                   >
                     Kembali ke tanggal
                   </button>
                   <button
                     type="button"
                     onClick={handleToday}
-                    className="text-[var(--color-brand)] font-medium hover:underline cursor-pointer select-none"
+                    className="text-(--color-brand) font-medium hover:underline cursor-pointer select-none"
                   >
                     Hari ini
                   </button>

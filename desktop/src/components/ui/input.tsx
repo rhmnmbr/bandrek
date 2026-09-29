@@ -16,18 +16,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         disabled={disabled}
         ref={ref}
         className={cn(
-          "w-full rounded-[var(--radius-md)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors duration-[var(--dur-fast)]",
-          "placeholder:text-[var(--color-text-muted)] focus:outline-none",
+          "w-full rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast)",
+          "placeholder:text-(--color-text-muted) focus:outline-none",
           density === "compact"
-            ? "h-[var(--density-control-h)] px-2 text-[12.5px]"
-            : "h-[32px] px-3 text-[13.5px]",
+            ? "h-(--density-control-h) px-2 text-[12.5px]"
+            : "h-8 px-3 text-[13.5px]",
           mono && "font-mono",
           // States
           error
-            ? "border border-[var(--color-danger)] shadow-[inset_0_-1px_0_0_var(--color-danger)]"
+            ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)]"
             : disabled
-            ? "border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)] cursor-not-allowed"
-            : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
+            ? "border border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted) cursor-not-allowed"
+            : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
           className
         )}
         {...props}
@@ -68,7 +68,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <div className="relative flex items-center w-full">
-        <span className="absolute left-2.5 text-[var(--color-text-muted)] pointer-events-none select-none flex items-center justify-center">
+        <span className="absolute left-2.5 text-(--color-text-muted) pointer-events-none select-none flex items-center justify-center">
           <Search12Regular />
         </span>
         <Input
@@ -84,7 +84,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-2 text-[var(--color-text-muted)] hover:text-[var(--color-text)] p-0.5 rounded-[var(--radius-sm)] cursor-pointer flex items-center justify-center"
+            className="absolute right-2 text-(--color-text-muted) hover:text-(--color-text) p-0.5 rounded-sm cursor-pointer flex items-center justify-center"
             title="Hapus pencarian"
           >
             <Dismiss12Regular />
@@ -108,14 +108,14 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         disabled={disabled}
         ref={ref}
         className={cn(
-          "w-full rounded-[var(--radius-md)] bg-[var(--color-surface)] text-[var(--color-text)] p-2 text-[12.5px] transition-colors duration-[var(--dur-fast)]",
-          "placeholder:text-[var(--color-text-muted)] focus:outline-none resize-y min-h-[60px]",
+          "w-full rounded-md bg-(--color-surface) text-(--color-text) p-2 text-[12.5px] transition-colors duration-(--dur-fast)",
+          "placeholder:text-(--color-text-muted) focus:outline-none resize-y min-h-15",
           mono && "font-mono",
           error
-            ? "border border-[var(--color-danger)] border-b-2 border-b-[var(--color-danger)]"
+            ? "border border-(--color-danger) border-b-2 border-b-(--color-danger)"
             : disabled
-            ? "border border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)] cursor-not-allowed"
-            : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:border-b-2 focus:border-b-[var(--color-brand)]",
+            ? "border border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted) cursor-not-allowed"
+            : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:border-b-2 focus:border-b-(--color-brand)",
           className
         )}
         {...props}
@@ -141,13 +141,13 @@ export const FormLabel: React.FC<FormLabelProps> = ({
     <label
       className={cn(
         "block text-[11.5px] font-medium leading-none mb-1",
-        error ? "text-[var(--color-danger-ink)]" : "text-[var(--color-text-muted)]",
+        error ? "text-(--color-danger-ink)" : "text-(--color-text-muted)",
         className
       )}
       {...props}
     >
       {children}
-      {required && <span className="text-[var(--color-danger)] ml-0.5">*</span>}
+      {required && <span className="text-(--color-danger) ml-0.5">*</span>}
     </label>
   );
 };
@@ -162,12 +162,12 @@ export const InlineError: React.FC<InlineErrorProps> = ({ message, className }) 
   return (
     <div
       className={cn(
-        "mt-1 flex items-start gap-1 text-[11px] leading-4 text-[var(--color-danger-ink)]",
+        "mt-1 flex items-start gap-1 text-[11px] leading-4 text-(--color-danger-ink)",
         className
       )}
       role="alert"
     >
-      <span className="flex-none h-4 flex items-center justify-center text-[var(--color-danger)] translate-y-[0.5px]">
+      <span className="flex-none h-4 flex items-center justify-center text-(--color-danger) translate-y-[0.5px]">
         <Warning12Regular />
       </span>
       <span>{message}</span>

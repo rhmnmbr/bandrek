@@ -67,7 +67,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         defaultChecked={defaultChecked}
         onChange={handleChange}
         className={cn(
-          "w-[14px] h-[14px] accent-[var(--color-brand)] cursor-pointer m-0 flex-none",
+          "w-3.5 h-3.5 accent-(--color-brand) cursor-pointer m-0 flex-none",
           "disabled:cursor-not-allowed",
           className
         )}
@@ -86,7 +86,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           htmlFor={checkboxId}
           className={cn(
             "text-[12.5px] select-none cursor-pointer leading-none",
-            disabled ? "text-[var(--color-text-muted)] cursor-not-allowed" : "text-[var(--color-text)]"
+            disabled ? "text-(--color-text-muted) cursor-not-allowed" : "text-(--color-text)"
           )}
         >
           {label}

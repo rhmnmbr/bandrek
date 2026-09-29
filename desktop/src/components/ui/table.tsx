@@ -28,7 +28,7 @@ export const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "sticky top-0 z-10 bg-[var(--color-surface-alt)] border-b border-[var(--color-border)] uppercase text-[11px] font-semibold tracking-[0.09em] text-[var(--color-text-muted)]",
+      "sticky top-0 z-10 bg-(--color-surface-alt) border-b border-(--color-border) uppercase text-[11px] font-semibold tracking-[0.09em] text-(--color-text-muted)",
       className
     )}
     {...props}
@@ -59,13 +59,13 @@ export const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
       ref={ref}
       tabIndex={0}
       className={cn(
-        "h-[var(--row-h,32px)] border-b border-[var(--color-border-subtle)] transition-colors duration-[var(--dur-instant)] cursor-pointer select-none",
+        "h-8 border-b border-(--color-border-subtle) transition-colors duration-(--dur-instant) cursor-pointer select-none",
         "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_#000000]",
         warning
-          ? "bg-[var(--color-warning-bg)] text-[var(--color-warning-ink)] hover:bg-[#FFE8CC]"
+          ? "bg-(--color-warning-bg) text-(--color-warning-ink) hover:bg-[#FFE8CC]"
           : selected
-          ? "bg-[var(--color-brand-subtle)] text-[var(--color-brand-ink)] shadow-[inset_3px_0_0_var(--color-brand)] font-medium"
-          : "bg-white hover:bg-[var(--color-surface-alt)] text-[var(--color-text)]",
+          ? "bg-(--color-brand-subtle) text-(--color-brand-ink) shadow-[inset_3px_0_0_var(--color-brand)] font-medium"
+          : "bg-white hover:bg-(--color-surface-alt) text-(--color-text)",
         className
       )}
       {...props}
@@ -81,7 +81,7 @@ export const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-[28px] px-3 font-semibold text-[10.5px] tracking-[0.09em] text-[var(--color-text-muted)] align-middle uppercase",
+      "h-7 px-3 font-semibold text-[10.5px] tracking-[0.09em] text-(--color-text-muted) align-middle uppercase",
       className
     )}
     {...props}

@@ -100,9 +100,9 @@ export const CalendarEvent: React.FC<CalendarEventProps> = ({
   const renderStatusGlyph = () => {
     switch (status) {
       case "terealisasi":
-        return <Checkmark12Regular className="text-[var(--color-success-ink)]" />;
+        return <Checkmark12Regular className="text-(--color-success-ink)" />;
       case "belum":
-        return <Warning12Regular className="text-[var(--color-warning-ink)]" />;
+        return <Warning12Regular className="text-(--color-warning-ink)" />;
       case "dijadwal-ulang":
         return <ArrowClockwise12Regular className="text-[#5B4394]" />;
       default:
@@ -126,16 +126,16 @@ export const CalendarEvent: React.FC<CalendarEventProps> = ({
       tabIndex={0}
       role="button"
       className={cn(
-        "rounded-[3px] text-left transition-all duration-[var(--dur-fast)] cursor-pointer select-none overflow-hidden",
+        "rounded-[3px] text-left transition-all duration-(--dur-fast) cursor-pointer select-none overflow-hidden",
         "p-1.5 leading-[1.3] text-[12px]",
         // Status border & background overrides
         isBatal
-          ? "border border-[var(--color-border)] bg-[var(--color-canvas)] text-[var(--color-text-muted)]"
+          ? "border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted)"
           : isBelum
-          ? "border border-[var(--color-warning)] border-l-[4px] border-l-[var(--color-warning)] bg-[var(--color-warning-bg)] text-[var(--color-warning-ink)] shadow-[var(--shadow-raised)]"
+          ? "border border-(--color-warning) border-l-4 border-l-(--color-warning) bg-(--color-warning-bg) text-(--color-warning-ink) shadow-(--shadow-raised)"
           : isDijadwalUlang
-          ? "border border-dashed border-[#8764B8] border-l-[4px] border-l-solid border-l-[#8764B8] bg-[#F3EFFA] text-[#5B4394] shadow-[var(--shadow-raised)]"
-          : "border-l-[4px] shadow-[var(--shadow-raised)]",
+          ? "border border-dashed border-[#8764B8] border-l-4 border-l-solid border-l-[#8764B8] bg-[#F3EFFA] text-[#5B4394] shadow-(--shadow-raised)"
+          : "border-l-4 shadow-(--shadow-raised)",
         selected && "shadow-[inset_0_0_0_2px_#000000]",
         "focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_#000000]",
         className
@@ -186,8 +186,8 @@ export const MoreEventsGroup: React.FC<MoreEventsGroupProps> = ({ count, classNa
     <button
       type="button"
       className={cn(
-        "w-full h-[22px] px-2 rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface-alt)]",
-        "text-[11px] font-medium text-[var(--color-brand)] hover:bg-[var(--color-brand-subtle)] hover:border-[var(--color-brand)]",
+        "w-full h-5.5 px-2 rounded-sm border border-(--color-border) bg-(--color-surface-alt)",
+        "text-[11px] font-medium text-(--color-brand) hover:bg-(--color-brand-subtle) hover:border-(--color-brand)",
         "transition-colors flex items-center justify-center cursor-pointer select-none",
         "focus-visible:outline-none focus-visible:border-black focus-visible:shadow-[inset_0_0_0_1px_#000000]",
         className

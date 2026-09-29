@@ -59,6 +59,13 @@ DESIGN.md mentions `Bandrek Hi-Fi Batch A` and `Bandrek Wireframe Batch A`. Both
 - Never show status by color alone — add an icon or text.
 - Every scrollable table or list has a max height and a sticky header. Nothing grows without bound.
 
+## Tailwind CSS v4 conventions
+
+- Always use canonical Tailwind CSS v4 syntax:
+  - CSS variable bindings: `-(--variable)` instead of `-[var(--variable)]` (e.g. `bg-(--color-surface)`, `text-(--color-text-primary)`, `border-(--color-border)`, `rounded-(--radius-md)`).
+  - Use canonical spacing and sizing units: e.g. `w-3.5` / `h-3.5` instead of `w-[14px]` / `h-[14px]`, `h-8` instead of `h-[32px]`, `gap-1` instead of `gap-[4px]`, `w-2` / `h-2` instead of `w-[8px]` / `h-[8px]`.
+- Always run `npm run format:tailwind` in `desktop/` after generating or modifying UI components to maintain 100% canonical classes and prevent editor warnings.
+
 ## Domain terms that are easy to get wrong
 
 - **Subjek** — a person involved in a kegiatan other than the students (tutor, guardian, assistant). It is **not** a school subject. A school subject is **mata pelajaran (mapel)**; its topics are **materi**.

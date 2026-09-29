@@ -167,23 +167,23 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             disabled={disabled}
             onKeyDown={handleKeyDown}
             className={cn(
-              "flex w-full items-center justify-between rounded-[var(--radius-md)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors duration-[var(--dur-fast)] cursor-pointer select-none",
+              "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
               "focus:outline-none",
               density === "compact"
-                ? "h-[var(--density-control-h)] px-2 text-[13px]"
-                : "h-[32px] px-3 text-[13.5px]",
+                ? "h-(--density-control-h) px-2 text-[13px]"
+                : "h-8 px-3 text-[13.5px]",
               error
-                ? "border border-[var(--color-danger)] shadow-[inset_0_-1px_0_0_var(--color-danger)] text-[var(--color-danger-ink)]"
-                : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-[var(--color-brand)] data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
+                ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
+                : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
               disabled &&
-                "cursor-not-allowed border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)]",
+                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
               className
             )}
           >
             <span
               className={cn(
                 "truncate text-left flex-1",
-                !selectedOption && currentValue === "" && "text-[var(--color-text)]"
+                !selectedOption && currentValue === "" && "text-(--color-text)"
               )}
             >
               {displayLabel}
@@ -206,13 +206,13 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             onOpenAutoFocus={(e) => e.preventDefault()}
             onKeyDown={handleKeyDown}
             className={cn(
-              "z-50 w-[var(--radix-popover-trigger-width)] min-w-full max-h-[260px] overflow-y-auto rounded-[6px] border border-[#C8C6C4] bg-white p-1 text-[var(--color-text)] shadow-[0_8px_16px_rgba(0,0,0,0.14),0_0_2px_rgba(0,0,0,0.12)] outline-none duration-75",
+              "z-50 w-(--radix-popover-trigger-width) min-w-full max-h-65 overflow-y-auto rounded-[6px] border border-[#C8C6C4] bg-white p-1 text-(--color-text) shadow-[0_8px_16px_rgba(0,0,0,0.14),0_0_2px_rgba(0,0,0,0.12)] outline-none duration-75",
               "animate-in fade-in-0 zoom-in-95",
-              "flex flex-col gap-[1px]",
-              "[scrollbar-width:thin] [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
+              "flex flex-col gap-px",
+              "scrollbar-thin [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
             )}
           >
-            <div ref={optionsContainerRef} className="flex flex-col gap-[1px]">
+            <div ref={optionsContainerRef} className="flex flex-col gap-px">
               {parsedOptions.map((opt, idx) => {
                 const isSelected = opt.value === currentValue;
                 const isHighlighted = idx === highlightedIndex;
@@ -227,7 +227,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                     onClick={() => handleSelect(opt.value)}
                     onMouseEnter={() => setHighlightedIndex(idx)}
                     className={cn(
-                      "w-full text-left px-[9px] py-[6px] border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
+                      "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
                       isSelected
                         ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
                         : isHighlighted
@@ -412,16 +412,16 @@ export const GroupedRuanganSelect = React.forwardRef<
             disabled={disabled}
             onKeyDown={handleKeyDown}
             className={cn(
-              "flex w-full items-center justify-between rounded-[var(--radius-md)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors duration-[var(--dur-fast)] cursor-pointer select-none",
+              "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
               "focus:outline-none",
               density === "compact"
-                ? "h-[var(--density-control-h)] px-2 text-[13px]"
-                : "h-[32px] px-3 text-[13.5px]",
+                ? "h-(--density-control-h) px-2 text-[13px]"
+                : "h-8 px-3 text-[13.5px]",
               error
-                ? "border border-[var(--color-danger)] shadow-[inset_0_-1px_0_0_var(--color-danger)] text-[var(--color-danger-ink)]"
-                : "border border-[var(--color-border-strong)] hover:border-[#8A8886] focus:border-[var(--color-brand)] focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-[var(--color-brand)] data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
+                ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
+                : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
               disabled &&
-                "cursor-not-allowed border-[var(--color-border-subtle)] bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)]",
+                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
               className
             )}
           >
@@ -444,13 +444,13 @@ export const GroupedRuanganSelect = React.forwardRef<
             onOpenAutoFocus={(e) => e.preventDefault()}
             onKeyDown={handleKeyDown}
             className={cn(
-              "z-50 min-w-[max(220px,var(--radix-popover-trigger-width))] w-max max-w-[360px] max-h-[320px] overflow-y-auto rounded-[6px] border border-[#C8C6C4] bg-white p-1 text-[var(--color-text)] shadow-[0_8px_16px_rgba(0,0,0,0.14),0_0_2px_rgba(0,0,0,0.12)] outline-none duration-75",
+              "z-50 min-w-[max(220px,var(--radix-popover-trigger-width))] w-max max-w-90 max-h-80 overflow-y-auto rounded-[6px] border border-[#C8C6C4] bg-white p-1 text-(--color-text) shadow-[0_8px_16px_rgba(0,0,0,0.14),0_0_2px_rgba(0,0,0,0.12)] outline-none duration-75",
               "animate-in fade-in-0 zoom-in-95",
-              "flex flex-col gap-[1px]",
-              "[scrollbar-width:thin] [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
+              "flex flex-col gap-px",
+              "scrollbar-thin [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
             )}
           >
-            <div ref={listRef} className="flex flex-col gap-[1px]">
+            <div ref={listRef} className="flex flex-col gap-px">
               {/* Top Option: Tanpa Ruangan */}
               {allowNone && (() => {
                 const thisIdx = optionCounter++;
@@ -467,7 +467,7 @@ export const GroupedRuanganSelect = React.forwardRef<
                     onClick={() => handleSelect("")}
                     onMouseEnter={() => setHighlightedIndex(thisIdx)}
                     className={cn(
-                      "w-full text-left px-[9px] py-[6px] border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
+                      "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
                       isSelected
                         ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
                         : isHighlighted
@@ -482,7 +482,7 @@ export const GroupedRuanganSelect = React.forwardRef<
 
               {/* Grouped Ruangan per Tempat */}
               {groups.map((group) => (
-                <div key={group.id} className="flex flex-col gap-[1px]">
+                <div key={group.id} className="flex flex-col gap-px">
                   {group.nama && (
                     <div className="px-[9px] pt-1.5 pb-[3px] text-[10.5px] font-semibold tracking-wider text-[#5C5A58] select-none">
                       {group.nama}
@@ -504,7 +504,7 @@ export const GroupedRuanganSelect = React.forwardRef<
                         onClick={() => handleSelect(r.id)}
                         onMouseEnter={() => setHighlightedIndex(thisIdx)}
                         className={cn(
-                          "w-full text-left px-[9px] py-[6px] border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
+                          "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
                           isSelected
                             ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
                             : isHighlighted
