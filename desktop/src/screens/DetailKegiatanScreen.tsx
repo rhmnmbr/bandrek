@@ -379,18 +379,16 @@ export const DetailKegiatanScreen: React.FC = () => {
     if (bolehUbah) {
       setFormEditOpen(true);
     } else if (kegiatan.status === 'terealisasi') {
-      showToast({
-        message: `Membuka realisasi kegiatan: ${kegiatan.nama}`,
-        type: 'info',
+      navigate(`/kegiatan/${kegiatan.id}/realisasi`, {
+        state: { fromTitle: 'Kegiatan', fromPath: `/kegiatan/${kegiatan.id}` },
       });
     }
   };
 
   const handleIsiRealisasi = () => {
     if (!bolehRealisasi) return;
-    showToast({
-      message: `Membuka realisasi kegiatan: ${kegiatan.nama}`,
-      type: 'info',
+    navigate(`/kegiatan/${kegiatan.id}/realisasi`, {
+      state: { fromTitle: 'Kegiatan', fromPath: `/kegiatan/${kegiatan.id}` },
     });
   };
 

@@ -33,7 +33,7 @@ export class MockRealisasiRepository implements IRealisasiRepository {
         const realisasiData: Realisasi = {
           mulai: input.mulai,
           selesai: input.selesai,
-          materi: input.materi || existing.materi,
+          materi: input.materi !== undefined ? input.materi : (existing.materi || null),
           ketuntasan: input.ketuntasan,
           catatan: input.catatan || '',
           kehadiran: input.kehadiranSiswa,

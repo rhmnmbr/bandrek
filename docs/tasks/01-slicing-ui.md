@@ -243,6 +243,38 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Connected `···` menu actions in `DetailKegiatanScreen.tsx` ("Batalkan kegiatan" and "Jadwalkan ulang").
       - Chained flow: Batalkan with "Sekalian jadwalkan ulang" opens Jadwal Ulang modal with `dariBatal = true` (preserving dibatalkan status on origin per DOMAIN.md §8).
     - Passed all 5/5 automated Step 5 test suites (100%), 5 detail tests, 6 form tests, 14 popover tests (100%), with `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 6: A8 Realisasi kegiatan
+    - Implemented full-screen realization workflow `desktop/src/screens/RealisasiScreen.tsx` on route `/kegiatan/:id/realisasi` inside `AppShell`.
+    - Top Toolbar (H: 44px): Navigation breadcrumb with `[<]` button, source screen link (`Kalender` / `Kegiatan`), screen title (`Isi realisasi` / `Ubah realisasi`), official status badge pill with delay indicator (`⚠ Belum direalisasi · telat N hari`), pending realization counter link (`N kegiatan lain menunggu`), secondary `[Simpan draf]` button, and primary `[Simpan realisasi Ctrl S]` / `[Simpan perubahan Ctrl S]` button.
+    - Kartu Rencana (Read-Only): 3-column layout displaying Nama & Waktu with Cascadia Mono timestamps and place/room (`Rencana: Sab, 22 Agu 2026 · 07:00–09:00 · Cabang Utara › Lap. Utama`), `RENCANA MATERI`, and `SUBJEK` with roles.
+    - Actual Time Controls:
+      - `Jam mulai aktual *` and `Jam selesai aktual *` with Cascadia Mono formatting and 5-minute stepping.
+      - Duration indicator (`N mnt`) and delta pill (`mulai telat N mnt` / `mulai N mnt lebih awal`).
+      - Checkbox `[x] Sama dengan rencana`: synchronizes actual times to planned schedule and disables manual inputs.
+      - Time order validation (`selesai > mulai`).
+    - Actual Materi & Ketuntasan (for kinds with `materiWajib`):
+      - Dropdown `Materi yang benar-benar disampaikan *` filtered by mapel.
+      - Discrepancy warning box (`⚠ Berbeda dari rencana... Matriks belajar akan mencatat materi ini...`).
+      - Segmented control `Ketuntasan materi *`: `[Tuntas]`, `[Sebagian]`, `[Tidak]`.
+    - Combined Kehadiran Container:
+      - Kehadiran Siswa Section: Header count `KEHADIRAN · N SISWA`, `[Tandai semua hadir]` button, `[Kosongkan]` button, live status counts (`N hadir · N izin · N sakit · N alpa · N belum diisi`), sticky table header (`# | NAMA | JENJANG | KEHADIRAN * | CATATAN SISWA`), and scrollable body (`data-rel-scroll="siswa"`).
+      - **CRITICAL DOMAIN RULE**: Default presence starts completely empty (`{}`), **NEVER pre-filled with Hadir**.
+      - Row error highlights with inset red indicator and warning banner upon attempted submission.
+      - Kehadiran Subjek Section: Header count `KEHADIRAN SUBJEK · N ORANG`, `[Tandai semua hadir]` button, status counts, sticky header (`# | NAMA | PERAN | KEHADIRAN * | KETERANGAN`), and scrollable body (`max-h-46.5`).
+      - Descriptive empty states for events without students (e.g. meetings) or subjects.
+    - Right Sidebar (310px fixed width):
+      - `CATATAN KEGIATAN` textarea (`Apa yang benar-benar terjadi di sesi ini`).
+      - `TINDAK LANJUT` section: "Buat kegiatan lanjutan untuk materi yang belum tuntas" checkbox (available when ketuntasan is `sebagian` or `tidak`), chaining into `BANDREK_EVENTS.NEW_KEGIATAN` with prefilled follow-up context.
+      - Dynamic bottom status box: amber warning card (`⚠ Belum lengkap`) detailing missing items vs green success card (`✓ Siap disimpan`) when all requirements are met.
+    - Draft & Persistence:
+      - `Simpan draf`: stores state in `sessionStorage` (`bandrek:realisasi:draft:${id}`) with last saved timestamp, leaving activity in current status.
+      - `Simpan realisasi`: validates all fields, auto-focuses/scrolls to first error if incomplete, calls `useSimpanRealisasi()` mutation, updates activity to `terealisasi`, invalidates caches, and shows success toast with `Lihat detail` action.
+      - Unsaved discard protection: `<ConfirmDialog>` intercepts `Esc` and back navigation when form is dirty.
+    - Integration:
+      - Wired `handleOpenRealisasi` in `KalenderScreen.tsx` popover to `/kegiatan/:id/realisasi`.
+      - Wired `handleIsiRealisasi` and `handleUtamaClick` ("Ubah realisasi") in `DetailKegiatanScreen.tsx` to `/kegiatan/:id/realisasi`.
+      - Wired `handleGlobalNew` in `KalenderScreen.tsx` to accept custom event payload for automated follow-up activity creation.
+    - Verified with 6/6 automated realisasi tests, 5/5 batal & jadwal ulang tests, 5/5 detail tests, 6/6 form tests, 14/14 popover tests (100% pass), and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 

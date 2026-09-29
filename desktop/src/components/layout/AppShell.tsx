@@ -44,6 +44,7 @@ export const AppShell: React.FC = () => {
       const filter = new URLSearchParams(search).get('filter');
       return filter === 'perlu_realisasi' ? 'Kegiatan Perlu Realisasi' : 'Daftar kegiatan';
     }
+    if (pathname.startsWith('/kegiatan/')) return 'Kegiatan';
     if (pathname === '/matriks') return 'Matriks belajar';
     if (pathname === '/master/siswa') return 'Siswa';
     if (pathname === '/master/subjek') return 'Subjek';

@@ -3,6 +3,7 @@ import { ToastProvider } from '@/components/ui/toast';
 import { AppShell } from '@/components/layout/AppShell';
 import { KalenderScreen } from '@/screens/KalenderScreen';
 import { DetailKegiatanScreen } from '@/screens/DetailKegiatanScreen';
+import { RealisasiScreen } from '@/screens/RealisasiScreen';
 import { PlaceholderScreen } from '@/screens/PlaceholderScreen';
 import { KatalogScreen } from '@/screens/KatalogScreen';
 import { DataLayerScreen } from '@/screens/DataLayerScreen';
@@ -15,6 +16,7 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route path="/" element={<Navigate to="/kalender" replace />} />
           <Route path="/kalender" element={<KalenderScreen />} />
+          <Route path="/kegiatan/:id/realisasi" element={<RealisasiScreen />} />
           <Route path="/kegiatan/:id" element={<DetailKegiatanScreen />} />
           <Route path="/kegiatan" element={<PlaceholderScreen />} />
           <Route path="/matriks" element={<PlaceholderScreen />} />

@@ -233,11 +233,12 @@ export const KalenderScreen: React.FC = () => {
 
   // Listen to global BANDREK_EVENTS.NEW_KEGIATAN (Ctrl+N or TopBar button)
   React.useEffect(() => {
-    const handleGlobalNew = () => {
+    const handleGlobalNew = (e?: Event) => {
       setActivePopover(null);
+      const customDetail = (e as CustomEvent)?.detail;
       setFormState({
         open: true,
-        initialData: {
+        initialData: customDetail || {
           mode: 'create',
           tanggal: anchorDate || todayIso,
           mulai: '08:00',
@@ -298,12 +299,11 @@ export const KalenderScreen: React.FC = () => {
   const handleOpenRealisasi = React.useCallback(
     (kegiatan: Kegiatan) => {
       setActivePopover(null);
-      showToast({
-        message: `Membuka realisasi kegiatan: ${kegiatan.nama}`,
-        type: 'info',
+      navigate(`/kegiatan/${kegiatan.id}/realisasi`, {
+        state: { fromTitle: 'Kalender', fromPath: '/kalender' },
       });
     },
-    [showToast]
+    [navigate]
   );
 
   const handleOpenJadwalUlang = React.useCallback(
