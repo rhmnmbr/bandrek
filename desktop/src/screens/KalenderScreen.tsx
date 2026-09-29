@@ -7,6 +7,7 @@ import {
   useKelasList,
   useRuanganList,
   useTempatList,
+  useSiswaList,
   useSimulasi,
 } from '@/data/hooks';
 import { useKalenderState } from '@/components/kalender/useKalenderState';
@@ -15,6 +16,7 @@ import { KalenderToolbar } from '@/components/kalender/KalenderToolbar';
 import { KalenderGrid, type DayColumnData } from '@/components/kalender/KalenderGrid';
 import { KalenderMonthView } from '@/components/kalender/KalenderMonthView';
 import { KalenderEmptyState } from '@/components/kalender/KalenderEmptyState';
+import { KegiatanPopover } from '@/components/kalender/KegiatanPopover';
 import { susunLayoutKegiatan } from '@/components/kalender/kalenderLayout';
 import {
   toDate,
@@ -38,6 +40,13 @@ export const KalenderScreen: React.FC = () => {
   const { data: kelasList = [] } = useKelasList();
   const { data: ruanganList = [] } = useRuanganList();
   const { data: tempatList = [] } = useTempatList();
+  const { data: siswaList = [] } = useSiswaList();
+
+  // Active Popover State
+  const [activePopover, setActivePopover] = React.useState<{
+    kegiatan: Kegiatan;
+    anchorElement: HTMLElement;
+  } | null>(null);
 
   // Calendar State & Navigation Hook
   const {
@@ -150,19 +159,90 @@ export const KalenderScreen: React.FC = () => {
     });
   }, [tanggalTampil, filteredKegiatan, todayIso]);
 
-  // Handle Event Selection (Click on event card)
+  // Handle Event Selection (Click on event card -> opens Popover)
   const handleSelectEvent = React.useCallback(
     (kegiatan: Kegiatan, e: React.MouseEvent) => {
       e.stopPropagation();
+      setActivePopover({
+        kegiatan,
+        anchorElement: e.currentTarget as HTMLElement,
+      });
+    },
+    []
+  );
+
+  // Handle navigate to rescheduled kegiatan (two-way link)
+  const handleNavigateKegiatan = React.useCallback(
+    (targetId: string) => {
+      const target = semuaKegiatan.find((k) => k.id === targetId);
+      if (!target) return;
+      setAnchorDate(target.tanggal);
+      if (view === 'bulan') {
+        setView('minggu');
+      }
+      setTimeout(() => {
+        const el = document.querySelector(`[data-kegiatan-id="${targetId}"]`) as HTMLElement;
+        if (el) {
+          setActivePopover({ kegiatan: target, anchorElement: el });
+        } else {
+          setActivePopover(null);
+        }
+      }, 60);
+    },
+    [semuaKegiatan, setAnchorDate, setView, view]
+  );
+
+  // Popover Action Handlers
+  const handleOpenDetail = React.useCallback(
+    (kegiatan: Kegiatan) => {
+      setActivePopover(null);
       showToast({
-        message: `${kegiatan.nama} (${kegiatan.mulai}–${kegiatan.selesai}) · ${kegiatan.namaRuangan}`,
+        message: `Membuka detail kegiatan: ${kegiatan.nama}`,
         type: 'info',
-        action: {
-          label: 'Lihat Detail',
-          onClick: () => {
-            window.location.href = `/kegiatan?id=${kegiatan.id}`;
-          },
-        },
+      });
+    },
+    [showToast]
+  );
+
+  const handleOpenEdit = React.useCallback(
+    (kegiatan: Kegiatan) => {
+      setActivePopover(null);
+      showToast({
+        message: `Membuka form ubah kegiatan: ${kegiatan.nama}`,
+        type: 'info',
+      });
+    },
+    [showToast]
+  );
+
+  const handleOpenRealisasi = React.useCallback(
+    (kegiatan: Kegiatan) => {
+      setActivePopover(null);
+      showToast({
+        message: `Membuka realisasi kegiatan: ${kegiatan.nama}`,
+        type: 'info',
+      });
+    },
+    [showToast]
+  );
+
+  const handleOpenJadwalUlang = React.useCallback(
+    (kegiatan: Kegiatan) => {
+      setActivePopover(null);
+      showToast({
+        message: `Membuka dialog jadwal ulang: ${kegiatan.nama}`,
+        type: 'info',
+      });
+    },
+    [showToast]
+  );
+
+  const handleOpenBatal = React.useCallback(
+    (kegiatan: Kegiatan) => {
+      setActivePopover(null);
+      showToast({
+        message: `Membuka dialog pembatalan: ${kegiatan.nama}`,
+        type: 'warning',
       });
     },
     [showToast]
@@ -210,12 +290,28 @@ export const KalenderScreen: React.FC = () => {
         tempatList={tempatList}
         onSelectDate={(iso) => {
           setAnchorDate(iso);
+          setActivePopover(null);
         }}
-        onPrevMiniMonth={prevMiniMonth}
-        onNextMiniMonth={nextMiniMonth}
-        onFilterChange={setFilterField}
-        onToggleStatus={toggleStatus}
-        onResetFilters={resetFilters}
+        onPrevMiniMonth={() => {
+          prevMiniMonth();
+          setActivePopover(null);
+        }}
+        onNextMiniMonth={() => {
+          nextMiniMonth();
+          setActivePopover(null);
+        }}
+        onFilterChange={(f, v) => {
+          setFilterField(f, v);
+          setActivePopover(null);
+        }}
+        onToggleStatus={(s) => {
+          toggleStatus(s);
+          setActivePopover(null);
+        }}
+        onResetFilters={() => {
+          resetFilters();
+          setActivePopover(null);
+        }}
       />
 
       {/* 2. Main Calendar Content Area */}
@@ -225,10 +321,22 @@ export const KalenderScreen: React.FC = () => {
           view={view}
           rangeLabel={rangeLabel}
           countLabel={countLabel}
-          onViewChange={setView}
-          onGoToday={goToday}
-          onPrev={prev}
-          onNext={next}
+          onViewChange={(v) => {
+            setView(v);
+            setActivePopover(null);
+          }}
+          onGoToday={() => {
+            goToday();
+            setActivePopover(null);
+          }}
+          onPrev={() => {
+            prev();
+            setActivePopover(null);
+          }}
+          onNext={() => {
+            next();
+            setActivePopover(null);
+          }}
         />
 
         {/* Content Views */}
@@ -249,6 +357,7 @@ export const KalenderScreen: React.FC = () => {
             onSelectDay={(iso) => {
               setAnchorDate(iso);
               setView('hari');
+              setActivePopover(null);
             }}
           />
         ) : (
@@ -257,10 +366,35 @@ export const KalenderScreen: React.FC = () => {
             nowLine={nowLine}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelectSlot}
-            onMoreClick={handleMoreClick}
+            onMoreClick={(iso) => {
+              handleMoreClick(iso);
+              setActivePopover(null);
+            }}
           />
         )}
       </div>
+
+      {/* 3. Floating Kegiatan Popover */}
+      {activePopover && (
+        <KegiatanPopover
+          key={activePopover.kegiatan.id}
+          kegiatan={activePopover.kegiatan}
+          anchorElement={activePopover.anchorElement}
+          isOpen={true}
+          onClose={() => setActivePopover(null)}
+          subjekList={subjekList}
+          siswaList={siswaList}
+          kelasList={kelasList}
+          kegiatanList={semuaKegiatan}
+          onOpenDetail={handleOpenDetail}
+          onOpenEdit={handleOpenEdit}
+          onOpenRealisasi={handleOpenRealisasi}
+          onOpenJadwalUlang={handleOpenJadwalUlang}
+          onOpenBatal={handleOpenBatal}
+          onNavigateKegiatan={handleNavigateKegiatan}
+        />
+      )}
     </div>
   );
 };
+

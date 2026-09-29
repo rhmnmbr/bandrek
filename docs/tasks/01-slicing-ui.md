@@ -188,4 +188,14 @@ _Update this section at each approved checkpoint: what was done, and any decisio
     - Built `KalenderMonthView.tsx` with 7-column grid and event chips, plus `KalenderEmptyState.tsx` for zero-result filter states.
     - Verified against reference screenshot `docs/prototype/screenshots/Screenshot.png` (19 activities in week 14–20 Sep 2026, 8 activities at 08:00 on Rabu 16 Sep).
     - Passed all 26 automated calendar tests, 31 shell tests, and 27 data layer tests (84/84 tests passed, 0 TypeScript errors).
+  - [x] Step 2: A2 Popover kegiatan
+    - Exported `PopoverAnchor` and `PopoverClose` in `desktop/src/components/ui/popover.tsx`.
+    - Added `formatTanggalRingkas` in `desktop/src/lib/dateUtils.ts` (e.g. `Rab, 16 Sep 2026`).
+    - Implemented `desktop/src/components/kalender/KegiatanPopover.tsx` (340px width, tokens `--shadow-overlay`, `--dur-normal`, `--color-border-strong`).
+    - Supported title line-through for cancelled events, official status badge pills with glyphs (`·`, `⚠`, `✓`, `↻`, `✕`), close button (`Tutup · Esc`).
+    - Structured metadata rows: Cascadia Mono date/time, jenis label, materi (`Mapel › Materi`), tempat & ruangan, subjek with role chips, expandable student list (capped at 128px max height, scrollable, with jenjang and active/inactive badge).
+    - Added cancellation reasons, reschedule reasons, and bidirectional reschedule links (`Pindah ke` / `Pindahan dari`) with navigation.
+    - Wired allowed action button footers strictly per server rules (5 actions for `terjadwal`/`belum_direalisasi`, 2 for `terealisasi`, disabled `Isi realisasi` for `dibatalkan`/`dijadwal_ulang`).
+    - Integrated clean event-driven popover lifecycle in `KalenderScreen.tsx` with key-based unmount/remount (0 `useEffect` state sync loops).
+    - Verified with 14 automated popover tests (98/98 tests passed across test suite, 0 TypeScript errors).
 

@@ -203,6 +203,7 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                         <div
                           tabIndex={0}
                           role="button"
+                          data-kegiatan-id={k.id}
                           onClick={(e) => onSelectEvent(k, e)}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {

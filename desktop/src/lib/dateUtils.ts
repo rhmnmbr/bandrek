@@ -134,3 +134,14 @@ export function formatTanggalHari(d: Date): string {
 export function formatBulanTahun(d: Date): string {
   return `${NAMA_BULAN[d.getMonth()]} ${d.getFullYear()}`;
 }
+
+/**
+ * Format tampilan tanggal ringkas (misal: "Rab, 16 Sep 2026")
+ */
+export function formatTanggalRingkas(iso: string): string {
+  const d = toDate(iso);
+  const dow = (d.getDay() + 6) % 7;
+  const h = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'][dow];
+  return `${h}, ${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
+}
+

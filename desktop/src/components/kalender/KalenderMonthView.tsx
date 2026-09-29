@@ -119,6 +119,7 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
                       return (
                         <div
                           key={k.id}
+                          data-kegiatan-id={k.id}
                           onClick={(e) => {
                             e.stopPropagation();
                             onSelectEvent(k, e);
