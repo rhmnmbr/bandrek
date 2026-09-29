@@ -210,5 +210,19 @@ _Update this section at each approved checkpoint: what was done, and any decisio
     - Dynamic toast repositioning: Integrates with `ToastContext` shifting offset right to 514px when panel is open.
     - Verified against prototype screenshot `docs/prototype/screenshots/Screenshot_5.png` at 1366×768 and 1920×1080.
     - Passed all 6 automated form tests (100%), 14 popover tests, 31 shell tests, and 27 data layer tests (104/104 tests passed, 0 TypeScript errors, 0 lint warnings).
+  - [x] Step 4: A5 Detail kegiatan (read-only view)
+    - Implemented read-only detail view `desktop/src/screens/DetailKegiatanScreen.tsx` on route `/kegiatan/:id` inside `AppShell`.
+    - Top Toolbar (H: 44px): Navigation breadcrumb with `[<]` button, source screen link (`Kalender` / `Daftar kegiatan` via location state), `›`, activity title (with `line-through` and muted styling for cancelled events), official status badge pill (`●`, `⚠`, `✓`, `↻`, `✕`).
+    - Header Actions: Disabled "Cetak" button with "Cetak menyusul di tahap berikutnya" title tooltip, Primary action button ("Ubah kegiatan" opens `FormKegiatanPanel` in edit mode; "Ubah realisasi" triggers realisasi view; disabled with `cursor-not-allowed` for cancelled / rescheduled activities), and `···` extra actions dropdown menu ("Jadwalkan ulang", "Batalkan kegiatan" in red `#9B0C18`).
+    - Kartu 1 (RENCANA): Two-column layout displaying Waktu (Cascadia Mono), Tempat (`Tempat · Ruangan`), Subjek (`Nama (Peran)`), Catatan rencana, Jenis kegiatan, Materi (`Mapel › Materi`), Kelas, and cancellation/reschedule reason details when present.
+    - Kartu 2 (REALISASI):
+      - If realisasi exists: Green border (`#4CAF50`, bg `#F6FBF7`) with header `diisi <nama> · <waktu>`, actual time with Cascadia Mono timestamps and delay/early indicator (`(mulai telat N mnt)` / `(mulai lebih awal N mnt)` / `(sesuai rencana)`), actual topic with concordance indicator (`(sesuai rencana)` vs `(berbeda dari rencana)`), realisasi catatan, student presence summary (`N hadir · N izin · N sakit · N alpa` or `Tanpa siswa`), and ketuntasan status.
+      - If realisasi is empty: Amber warning box (`#FFF3E0`, border `#F0A82E`, icon `⚠`) with status-dependent explanation and action buttons (`[Isi realisasi]` and `[Ubah kegiatan]`).
+    - Kartu 3 (PESERTA): Header count `PESERTA · N SISWA` (or `TANPA SISWA`) and status subtitle; sticky table header (`NAMA`, `JENJANG`, `KEHADIRAN`, `CATATAN`), scrollable table body with max height 288px (`max-h-72`), presence badge pills with glyphs and colors matching DESIGN.md, and descriptive empty state message for activities without students (e.g. meetings/training).
+    - Right Sidebar (330px fixed width):
+      - RIWAYAT KEGIATAN: Vertical timeline with colored status dots (`Realisasi diisi` [green], `Kegiatan dibatalkan` [red], `Kegiatan dijadwalkan ulang` [purple], `Dibuat dari penjadwalan ulang` [blue], `Kegiatan dibuat` [gray]) and Cascadia Mono timestamps.
+      - KEGIATAN TERKAIT: Bidirectional links to reschedule source/destination and up to 3 activities sharing the same mapel & kelas, navigable directly to `/kegiatan/:id`.
+    - Full Integration: Direct launch of `FormKegiatanPanel` in edit mode when "Ubah kegiatan" is clicked, updating data seamlessly; wired `QuickSearchModal` and `KalenderScreen` to navigate to `/kegiatan/:id` with back-navigation state; Esc key shortcut handling.
+    - Passed all 5 automated detail kegiatan tests (100%), 6 form tests, 14 popover tests (100%), with `npm run build` passing with 0 errors and 0 lint warnings.
 
 

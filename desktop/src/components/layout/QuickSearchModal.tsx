@@ -113,7 +113,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
           data: k,
           label: k.nama,
           sub: `${k.mulai}–${k.selesai} · ${k.namaRuangan} · ${pengisi}`,
-          url: `/kegiatan?id=${k.id}`,
+          url: `/kegiatan/${k.id}`,
           tanggal: k.tanggal.slice(5), // e.g. "09-16"
           status: k.status,
         });

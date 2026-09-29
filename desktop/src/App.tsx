@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from '@/components/ui/toast';
 import { AppShell } from '@/components/layout/AppShell';
 import { KalenderScreen } from '@/screens/KalenderScreen';
+import { DetailKegiatanScreen } from '@/screens/DetailKegiatanScreen';
 import { PlaceholderScreen } from '@/screens/PlaceholderScreen';
 import { KatalogScreen } from '@/screens/KatalogScreen';
 import { DataLayerScreen } from '@/screens/DataLayerScreen';
@@ -14,6 +15,7 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route path="/" element={<Navigate to="/kalender" replace />} />
           <Route path="/kalender" element={<KalenderScreen />} />
+          <Route path="/kegiatan/:id" element={<DetailKegiatanScreen />} />
           <Route path="/kegiatan" element={<PlaceholderScreen />} />
           <Route path="/matriks" element={<PlaceholderScreen />} />
           <Route path="/master/siswa" element={<PlaceholderScreen />} />

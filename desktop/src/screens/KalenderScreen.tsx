@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/toast';
 import {
   useKegiatanKalender,
@@ -34,6 +35,7 @@ import { BANDREK_EVENTS } from '@/lib/keyboardShortcuts';
 import type { Kegiatan } from '@/data/types';
 
 export const KalenderScreen: React.FC = () => {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const { config } = useSimulasi();
   const todayIso = config.simulatedToday || '2026-09-16';
@@ -207,16 +209,12 @@ export const KalenderScreen: React.FC = () => {
   const handleOpenDetail = React.useCallback(
     (kegiatanOrId: Kegiatan | string) => {
       setActivePopover(null);
-      const nama =
-        typeof kegiatanOrId === 'string'
-          ? semuaKegiatan.find((k) => k.id === kegiatanOrId)?.nama || kegiatanOrId
-          : kegiatanOrId.nama;
-      showToast({
-        message: `Membuka detail kegiatan: ${nama}`,
-        type: 'info',
+      const id = typeof kegiatanOrId === 'string' ? kegiatanOrId : kegiatanOrId.id;
+      navigate(`/kegiatan/${id}`, {
+        state: { fromTitle: 'Kalender', fromPath: '/kalender' },
       });
     },
-    [semuaKegiatan, showToast]
+    [navigate]
   );
 
   // Listen to global BANDREK_EVENTS.NEW_KEGIATAN (Ctrl+N or TopBar button)
