@@ -476,6 +476,49 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Enriched deletion logic: direct import tag checks (`kegDirect === 0`).
       - Enriched `ubahAnggota(kelasId, siswaId, tambah)` and CRUD operations.
     - Verified with 6/6 automated tests in `desktop/scripts/test-kelas.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 10: B4 Mata Pelajaran & Materi — Master-Detail & Child Entity Reordering (P1)
+    - Implemented wide parent-child master pattern (`desktop/src/screens/MapelScreen.tsx`) on route `/master/mapel` and `/master/mapel/:id`.
+    - Toolbar & Filter Bar (`desktop/src/components/master/mapel/MapelToolbar.tsx`):
+      - Top Meta Bar (H: 44px): count e.g. `6 mata pelajaran · 6 aktif`, primary `+ Mapel baru` button with `title="Tambah mata pelajaran baru · Ctrl+N"`.
+      - Filter Bar (H: 48px, bg `#FAFAFA`, border-b `#E1DFDD`): search input `Cari mata pelajaran`, `Status` dropdown (`Semua`, `Aktif` [default], `Nonaktif`), `Reset filter` button.
+    - Master Table (`desktop/src/components/master/mapel/MapelTable.tsx`):
+      - Sticky header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `MATA PELAJARAN` (min-w 150px), `MATERI` (74px, mono, right).
+      - 32px row height with hover `#FAFAFA`, selected state `#EBF3FC` with `box-shadow: inset 3px 0 0 #0F6CBD`.
+      - 0-materi warning highlighted in bold amber `#8A5200` with `⚠` icon prefix.
+      - Nonaktif suffix ` · nonaktif` and muted text for inactive subjects.
+      - Bottom warning alert box when any subject has 0 topics: `⚠ <nama> belum punya materi, jadi belum muncul di matriks belajar.`.
+      - Row click navigates to `/master/mapel/:id`.
+      - Sticky footer (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): `Menampilkan X dari Y mata pelajaran` (+ ` · nonaktif disembunyikan`).
+    - Empty State (`desktop/src/components/master/mapel/MapelEmptyState.tsx`):
+      - Informative zero-state display with glyph `◇` and primary action (`[Reset filter]` or `[+ Mapel baru]`).
+    - Child Materi Table (`desktop/src/components/master/mapel/MateriTable.tsx`):
+      - Embedded in parent edit panel.
+      - Section header: `MATERI · N · URUTAN = KOLOM MATRIKS` + `+ Materi` button.
+      - Sticky header: Drag handle spacer, `NO` (mono right), `NAMA MATERI`, `JENJANG`, `DIPAKAI` (mono right), `STATUS` (pill), and action `[Ubah]`.
+      - HTML5 drag & drop reordering with dynamic drop indicator bar, plus keyboard `ArrowUp` / `ArrowDown` support.
+      - Explanatory note: `Urutan materi di sini menentukan urutan kolom di matriks belajar.`.
+    - Wide Form Panel (`desktop/src/components/master/mapel/MapelFormView.tsx`):
+      - Dual-mode panel supporting Parent Mapel view and Child Materi view with back navigation button `[<]`.
+      - Parent Mapel mode:
+        - `Nama mata pelajaran *` with duplicate check.
+        - Switch `aktif`: `Aktif — muncul di form kegiatan dan matriks belajar`.
+        - Child `MateriTable` list with live count and direct editing.
+        - `RINGKASAN` card: activity count summary + direct link `Lihat kegiatannya di daftar kegiatan` (`/kegiatan?mapel=<id>`).
+        - Footer: `Nonaktifkan` / `Aktifkan kembali`, `Hapus` (disabled if has children or activities), `Batal`, `Simpan mata pelajaran` / `Simpan` (`Ctrl+S`).
+      - Child Materi mode:
+        - Header with `[<]` back button to parent Mapel.
+        - `Nama materi *` with uniqueness check among siblings.
+        - `Berlaku untuk jenjang *`: multi-select segmented buttons `[SD]` `[SMP]` `[SMA]` (requires ≥ 1) with guidance note.
+        - Switch `aktif`: `Aktif — jadi kolom di matriks belajar`.
+        - `RINGKASAN` card: activity count summary.
+        - Footer: `Nonaktifkan` / `Aktifkan kembali`, `Hapus` (disabled if used in activities), `Batal` (returns to parent), `Simpan materi` / `Simpan` (`Ctrl+S`).
+    - Confirmation Modal Dialog (`desktop/src/components/master/mapel/MapelConfirmModal.tsx`):
+      - 460px modal dialog supporting deactivate and delete operations for both Mapel and Materi.
+    - Data Layer & Business Rules:
+      - Enriched `MataPelajaran` and `Materi` entities with server-computed usage statistics (`jumlahMateri`, `jumlahKegiatan`, `dapatDihapus`, `alasanTidakBisaHapus`, `rincianPenggunaan`, `ringkasanPenggunaan`).
+      - Deletion integrity: Mapel deletion restricted if child topics exist or activities reference it; Materi deletion restricted if activities reference it.
+      - Enriched `getAll(filter)`, `reorderMateri(mapelId, orderedIds)`, and CRUD operations.
+    - Verified with 6/6 automated tests in `desktop/scripts/test-mapel.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 

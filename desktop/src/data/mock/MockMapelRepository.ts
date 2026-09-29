@@ -1,6 +1,7 @@
 import type { IMapelRepository } from '../interfaces/IMapelRepository';
 import type {
   MataPelajaran,
+  MapelFilterParams,
   CreateMapelInput,
   UpdateMapelInput,
   Materi,
@@ -13,13 +14,75 @@ import { mockRunner } from './mockRunner';
 import { mockStore } from './mockStore';
 import { checkMasterUsage } from './businessRules';
 
+function enrichMateri(t: Materi): Materi {
+  const kegCount = mockStore.kegiatan.filter(
+    (k) => k.materi === t.id || k.realisasi?.materi === t.id
+  ).length;
+
+  const dapatDihapus = kegCount === 0;
+  const alasanTidakBisaHapus = dapatDihapus
+    ? undefined
+    : `Tidak bisa dihapus: ${kegCount} kegiatan menunjuk materi ini. Pakai Nonaktifkan.`;
+
+  return {
+    ...t,
+    jumlahKegiatan: kegCount,
+    dapatDihapus,
+    alasanTidakBisaHapus,
+    ringkasanPenggunaan:
+      kegCount > 0
+        ? `${kegCount} kegiatan tercatat memakai materi ini.`
+        : 'Belum pernah dipakai di kegiatan mana pun.',
+  };
+}
+
+function enrichMapel(m: MataPelajaran): MataPelajaran {
+  const materiList = mockStore.materi
+    .filter((t) => t.mapel === m.id)
+    .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0))
+    .map(enrichMateri);
+  const anakN = materiList.length;
+  const kegCount = mockStore.kegiatan.filter((k) => k.mapel === m.id).length;
+
+  const dapatDihapus = anakN === 0 && kegCount === 0;
+  let alasanTidakBisaHapus: string | undefined;
+  if (kegCount > 0) {
+    alasanTidakBisaHapus = `Tidak bisa dihapus: ${kegCount} kegiatan menunjuk mata pelajaran ini. Pakai Nonaktifkan.`;
+  } else if (anakN > 0) {
+    alasanTidakBisaHapus = `Kosongkan dulu ${anakN} materi di dalamnya.`;
+  }
+
+  return {
+    ...m,
+    jumlahMateri: anakN,
+    jumlahKegiatan: kegCount,
+    dapatDihapus,
+    alasanTidakBisaHapus,
+    rincianPenggunaan: kegCount > 0 ? [`${kegCount} kegiatan`] : [],
+    ringkasanPenggunaan:
+      kegCount > 0
+        ? `${kegCount} kegiatan tercatat memakai mata pelajaran ini.`
+        : 'Belum pernah dipakai di kegiatan mana pun.',
+    materi: materiList,
+  };
+}
+
 export class MockMapelRepository implements IMapelRepository {
-  public async getAll(): Promise<MataPelajaran[]> {
+  public async getAll(filter: MapelFilterParams = {}): Promise<MataPelajaran[]> {
     return mockRunner(() => {
-      return mockStore.mapel.map((m) => ({
-        ...m,
-        jumlahMateri: mockStore.materi.filter((t) => t.mapel === m.id).length,
-      }));
+      const { status = 'semua', q } = filter;
+      return mockStore.mapel
+        .filter((m) => {
+          if (status === 'aktif' && !m.aktif) return false;
+          if (status === 'nonaktif' && m.aktif) return false;
+          if (q && q.trim().length > 0) {
+            const qLower = q.trim().toLowerCase();
+            if (!m.nama.toLowerCase().includes(qLower)) return false;
+          }
+          return true;
+        })
+        .map(enrichMapel)
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
     });
   }
 
@@ -29,27 +92,28 @@ export class MockMapelRepository implements IMapelRepository {
       if (!m) {
         throw new BandrekApiError('unknown', `Mata Pelajaran dengan ID "${id}" tidak ditemukan.`, 404);
       }
-      return {
-        ...m,
-        jumlahMateri: mockStore.materi.filter((t) => t.mapel === m.id).length,
-      };
+      return enrichMapel(m);
     });
   }
 
   public async create(input: CreateMapelInput): Promise<MataPelajaran> {
     return mockRunner(
       () => {
-        const newId = `M${mockStore.mapel.length + 1}`;
+        let n = mockStore.mapel.length + 1;
+        while (mockStore.mapel.some((x) => x.id === `M${n}`)) {
+          n++;
+        }
+        const newId = `M${n}`;
         const newMapel: MataPelajaran = {
           id: newId,
-          nama: input.nama,
+          nama: input.nama.trim(),
           aktif: input.aktif !== undefined ? input.aktif : true,
           jumlahMateri: 0,
         };
 
         mockStore.mapel.push(newMapel);
         mockStore.persist();
-        return newMapel;
+        return enrichMapel(newMapel);
       },
       { isMutation: true }
     );
@@ -66,16 +130,13 @@ export class MockMapelRepository implements IMapelRepository {
         const existing = mockStore.mapel[idx];
         const updated: MataPelajaran = {
           ...existing,
-          nama: input.nama ?? existing.nama,
+          nama: input.nama !== undefined ? input.nama.trim() : existing.nama,
           aktif: input.aktif !== undefined ? input.aktif : existing.aktif,
         };
 
         mockStore.mapel[idx] = updated;
         mockStore.persist();
-        return {
-          ...updated,
-          jumlahMateri: mockStore.materi.filter((t) => t.mapel === updated.id).length,
-        };
+        return enrichMapel(updated);
       },
       { isMutation: true }
     );
@@ -114,28 +175,33 @@ export class MockMapelRepository implements IMapelRepository {
   // MATERI
   // --------------------------------------------------------------------------
   public async getAllMateri(): Promise<Materi[]> {
-    return mockRunner(() => [...mockStore.materi]);
+    return mockRunner(() => mockStore.materi.map(enrichMateri));
   }
 
   public async getMateriByMapel(mapelId: string): Promise<Materi[]> {
     return mockRunner(() => {
       return mockStore.materi
         .filter((t) => t.mapel === mapelId)
-        .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0));
+        .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0))
+        .map(enrichMateri);
     });
   }
 
   public async createMateri(input: CreateMateriInput): Promise<Materi> {
     return mockRunner(
       () => {
-        const newId = `T${mockStore.materi.length + 1}`;
+        let n = mockStore.materi.length + 1;
+        while (mockStore.materi.some((x) => x.id === `T${n}`)) {
+          n++;
+        }
+        const newId = `T${n}`;
         const mapelMateri = mockStore.materi.filter((t) => t.mapel === input.mapel);
         const nextUrutan = input.urutan ?? mapelMateri.length + 1;
 
         const newMateri: Materi = {
           id: newId,
           mapel: input.mapel,
-          nama: input.nama,
+          nama: input.nama.trim(),
           jenjang: input.jenjang,
           aktif: input.aktif !== undefined ? input.aktif : true,
           urutan: nextUrutan,
@@ -143,7 +209,7 @@ export class MockMapelRepository implements IMapelRepository {
 
         mockStore.materi.push(newMateri);
         mockStore.persist();
-        return newMateri;
+        return enrichMateri(newMateri);
       },
       { isMutation: true }
     );
@@ -161,7 +227,7 @@ export class MockMapelRepository implements IMapelRepository {
         const updated: Materi = {
           ...existing,
           mapel: input.mapel ?? existing.mapel,
-          nama: input.nama ?? existing.nama,
+          nama: input.nama !== undefined ? input.nama.trim() : existing.nama,
           jenjang: input.jenjang ?? existing.jenjang,
           aktif: input.aktif !== undefined ? input.aktif : existing.aktif,
           urutan: input.urutan ?? existing.urutan,
@@ -169,7 +235,7 @@ export class MockMapelRepository implements IMapelRepository {
 
         mockStore.materi[idx] = updated;
         mockStore.persist();
-        return updated;
+        return enrichMateri(updated);
       },
       { isMutation: true }
     );
@@ -217,7 +283,8 @@ export class MockMapelRepository implements IMapelRepository {
         mockStore.persist();
         return mockStore.materi
           .filter((t) => t.mapel === mapelId)
-          .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0));
+          .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0))
+          .map(enrichMateri);
       },
       { isMutation: true }
     );

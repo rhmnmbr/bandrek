@@ -1,5 +1,6 @@
 import type {
   MataPelajaran,
+  MapelFilterParams,
   CreateMapelInput,
   UpdateMapelInput,
   Materi,
@@ -9,7 +10,7 @@ import type {
 } from '../types/master';
 
 export interface IMapelRepository {
-  getAll(): Promise<MataPelajaran[]>;
+  getAll(filter?: MapelFilterParams): Promise<MataPelajaran[]>;
   getById(id: string): Promise<MataPelajaran>;
   create(input: CreateMapelInput): Promise<MataPelajaran>;
   update(id: string, input: UpdateMapelInput): Promise<MataPelajaran>;

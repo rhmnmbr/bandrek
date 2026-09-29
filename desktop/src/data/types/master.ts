@@ -263,6 +263,17 @@ export interface MataPelajaran {
   aktif: boolean;
   // Server-computed
   jumlahMateri?: number;
+  jumlahKegiatan?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  rincianPenggunaan?: string[];
+  ringkasanPenggunaan?: string;
+  materi?: Materi[];
+}
+
+export interface MapelFilterParams {
+  status?: 'aktif' | 'nonaktif' | 'semua';
+  q?: string;
 }
 
 export interface CreateMapelInput {
@@ -279,6 +290,11 @@ export interface Materi {
   jenjang: JenjangPendidikan[]; // Wajib minimal 1
   aktif: boolean;
   urutan?: number;
+  // Server-computed
+  jumlahKegiatan?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  ringkasanPenggunaan?: string;
 }
 
 export interface CreateMateriInput {

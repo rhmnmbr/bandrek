@@ -11,6 +11,7 @@ import type {
   KelasFilterParams,
   CreateKelasInput,
   UpdateKelasInput,
+  MapelFilterParams,
   CreateMapelInput,
   UpdateMapelInput,
   CreateMateriInput,
@@ -287,16 +288,16 @@ export function useDeleteKelas() {
 // ==========================================
 export const mapelKeys = {
   all: ['mapel'] as const,
-  list: ['mapel', 'list'] as const,
+  list: (filter?: MapelFilterParams) => ['mapel', 'list', filter] as const,
   detail: (id: string) => ['mapel', 'detail', id] as const,
   materiByMapel: (mapelId: string) => ['mapel', 'materi', mapelId] as const,
   allMateri: ['mapel', 'materi', 'all'] as const,
 };
 
-export function useMapelList() {
+export function useMapelList(filter?: MapelFilterParams) {
   return useQuery({
-    queryKey: mapelKeys.list,
-    queryFn: () => repositories.mapel.getAll(),
+    queryKey: mapelKeys.list(filter),
+    queryFn: () => repositories.mapel.getAll(filter),
   });
 }
 
