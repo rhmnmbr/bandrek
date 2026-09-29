@@ -156,3 +156,13 @@ export function formatTanggalPendek(iso: string): string {
   return `${h}, ${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]}`;
 }
 
+/**
+ * Format tanggal format slash DD/MM/YYYY
+ */
+export function formatTanggalSlash(iso: string): string {
+  if (!iso) return '';
+  const parts = iso.split('-');
+  if (parts.length !== 3) return iso;
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+

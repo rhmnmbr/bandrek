@@ -254,8 +254,8 @@ export function computeMatriksBelajar(
   allMapel: MataPelajaran[],
   allKegiatan: RawKegiatanSeed[],
   allCeklisManual: CeklisManual[],
-  today: string,
-  now: string
+  _today: string,
+  _now: string
 ): MatriksBelajarResult {
   const mapel = allMapel.find((m) => m.id === mapelId);
   const namaMapel = mapel ? mapel.nama : 'Mata Pelajaran';
@@ -337,8 +337,10 @@ export function computeMatriksBelajar(
 
     // Kegiatan yang terealisasi
     if (k.realisasi && k.status === 'terealisasi') {
-      for (const [siswaId, kehadiranStatus] of Object.entries(k.realisasi.kehadiran)) {
+      const pesertaSet = new Set([...(k.siswa || []), ...Object.keys(k.realisasi.kehadiran || {})]);
+      for (const siswaId of pesertaSet) {
         if (!siswaIdsSet.has(siswaId)) continue;
+        const kehadiranStatus = k.realisasi.kehadiran?.[siswaId] || null;
 
         if (isColumnMateri) {
           const targetCell = sel[siswaId][effectiveMateriId];
@@ -348,10 +350,11 @@ export function computeMatriksBelajar(
             tanggal: k.tanggal,
             kehadiran: kehadiranStatus,
             ketuntasan: k.realisasi.ketuntasan,
+            realisasiAda: true,
           });
 
           // Update cell state using priorities
-          // Prioritas: tersampaikan > terjadwal > alpa > izin > sakit > kosong
+          // Prioritas: tersampaikan / selesai_manual > terjadwal > alpa > izin > sakit > kosong
           if (kehadiranStatus === 'hadir') {
             targetCell.keadaan = 'tersampaikan';
             targetCell.kegiatanId = k.id;
@@ -383,12 +386,20 @@ export function computeMatriksBelajar(
         }
       }
     } else {
-      // Kegiatan Terjadwal di masa mendatang
-      const computedStatus = computeStatusKegiatan(k.status, k.realisasi, k.tanggal, k.selesai, today, now);
-      if (computedStatus === 'terjadwal' && isColumnMateri) {
+      // Kegiatan Terjadwal / Belum direalisasi
+      if (isColumnMateri) {
         for (const siswaId of k.siswa) {
           if (!siswaIdsSet.has(siswaId)) continue;
           const targetCell = sel[siswaId][effectiveMateriId];
+          targetCell.riwayat.push({
+            kegiatanId: k.id,
+            namaKegiatan: k.nama,
+            tanggal: k.tanggal,
+            kehadiran: null,
+            ketuntasan: null,
+            realisasiAda: false,
+          });
+
           // Terjadwal hanya menimpa alpa/izin/sakit/kosong; TIDAK menimpa tersampaikan/selesai_manual
           if (targetCell.keadaan !== 'tersampaikan' && targetCell.keadaan !== 'selesai_manual') {
             targetCell.keadaan = 'terjadwal';
@@ -400,8 +411,15 @@ export function computeMatriksBelajar(
     }
   }
 
+  // Sort riwayat per cell descending by date
+  for (const s of baris) {
+    for (const m of kolom) {
+      sel[s.id][m.id].riwayat.sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+    }
+  }
+
   // 5. Isi sel dari Ceklis Manual
-  // DOMAIN.md §10: selesai_manual prioritas sejajar dengan tersampaikan
+  // DOMAIN.md §10: selesai_manual prioritas sejajar dengan tersampaikan, tapi jika sudah tersampaikan lewat kehadiran, tidak ditimpa
   for (const cm of allCeklisManual) {
     if (siswaIdsSet.has(cm.siswa) && materiIdsSet.has(cm.materi)) {
       const targetCell = sel[cm.siswa][cm.materi];
@@ -478,7 +496,12 @@ export function computeMatriksBelajar(
 
       // Cari kegiatan terakhir dijadwalkan untuk materi ini
       const matchingKegiatan = allKegiatan
-        .filter((k) => (k.materi === m.id || k.realisasi?.materi === m.id) && k.status !== 'dibatalkan')
+        .filter(
+          (k) =>
+            (k.materi === m.id || k.realisasi?.materi === m.id) &&
+            k.status !== 'dibatalkan' &&
+            k.status !== 'dijadwal-ulang'
+        )
         .sort((a, b) => b.tanggal.localeCompare(a.tanggal));
       const latestDate = matchingKegiatan.length > 0 ? matchingKegiatan[0].tanggal : null;
 
@@ -491,6 +514,8 @@ export function computeMatriksBelajar(
       };
     });
 
+    const merata = list.every((item) => item.belumCount === list[0].belumCount);
+
     list.sort((a, b) => {
       if (b.belumCount !== a.belumCount) return b.belumCount - a.belumCount;
       if (a.latestDate !== b.latestDate) {
@@ -502,38 +527,88 @@ export function computeMatriksBelajar(
     });
 
     const top = list[0];
-    if (top && top.belumCount > 0) {
-      materiPalingTertinggal = {
-        materiId: top.materiId,
-        nama: top.nama,
-        belumMenerimaCount: top.belumCount,
-        terakhirDijadwalkan: top.latestDate,
-        alasan: `Paling banyak belum menerima (${top.belumCount} dari ${totalSiswaTampil} siswa)`,
-      };
+    if (top) {
+      if (merata && top.belumCount === 0) {
+        materiPalingTertinggal = {
+          materiId: '',
+          nama: 'Semua tuntas',
+          belumMenerimaCount: 0,
+          terakhirDijadwalkan: null,
+          alasan: 'Semua materi telah tersampaikan ke seluruh siswa',
+        };
+      } else if (merata) {
+        materiPalingTertinggal = {
+          materiId: '',
+          nama: 'Semua merata',
+          belumMenerimaCount: top.belumCount,
+          terakhirDijadwalkan: null,
+          alasan: `tiap materi belum diterima ${top.belumCount} siswa`,
+        };
+      } else if (top.belumCount > 0) {
+        materiPalingTertinggal = {
+          materiId: top.materiId,
+          nama: top.nama,
+          belumMenerimaCount: top.belumCount,
+          terakhirDijadwalkan: top.latestDate,
+          alasan: `belum diterima ${top.belumCount} dari ${totalSiswaTampil} siswa`,
+        };
+      }
     }
   }
 
-  // 9. Catatan di Luar Jenjang
-  // DOMAIN.md §10: kalau ada siswa yang tampil punya kehadiran atau ceklis di materi yang jenjangnya tidak cocok
+  // 9. Catatan di Luar Jenjang (DOMAIN.md §10)
+  // Kalau ada siswa yang tampil punya kehadiran atau ceklis di materi yang jenjangnya tidak cocok
   const catatanDiLuarJenjang: CatatanDiLuarJenjang[] = [];
-  const candidateSiswaSet = new Set(candidateSiswa.map((s) => s.id));
+  const materiLuar = allMateri.filter((t) => t.mapel === mapelId && !t.jenjang.includes(jenjang));
 
-  // Cek ceklis manual di mapel ini tapi materi jenjangnya tidak mencakup jenjang saat ini
-  for (const cm of allCeklisManual) {
-    if (!candidateSiswaSet.has(cm.siswa)) continue;
-    const topic = allMateri.find((t) => t.id === cm.materi);
-    if (topic && topic.mapel === mapelId && !topic.jenjang.includes(jenjang)) {
-      const siswaObj = candidateSiswa.find((s) => s.id === cm.siswa);
-      catatanDiLuarJenjang.push({
-        siswaId: cm.siswa,
-        siswaNama: siswaObj ? siswaObj.nama : 'Siswa',
-        materiId: topic.id,
-        materiNama: topic.nama,
-        tipe: 'ceklis_manual',
-        tanggal: cm.tanggal,
-      });
+  for (const sw of candidateSiswa) {
+    for (const t of materiLuar) {
+      // 1. Cek kehadiran di kegiatan terealisasi
+      const hadirKeg = allKegiatan.find(
+        (k) =>
+          k.status !== 'dibatalkan' &&
+          k.status !== 'dijadwal-ulang' &&
+          (k.realisasi?.materi === t.id || (!k.realisasi?.materi && k.materi === t.id)) &&
+          k.realisasi?.kehadiran?.[sw.id] === 'hadir'
+      );
+
+      // 2. Cek ceklis manual
+      const manualCheck = allCeklisManual.find(
+        (cm) => cm.siswa === sw.id && cm.materi === t.id
+      );
+
+      if (hadirKeg) {
+        catatanDiLuarJenjang.push({
+          siswaId: sw.id,
+          siswaNama: sw.nama,
+          siswaJenjang: sw.jenjang,
+          materiId: t.id,
+          materiNama: t.nama,
+          materiJenjang: t.jenjang,
+          tipe: 'realisasi',
+          sumber: `Hadir di “${hadirKeg.nama}” · ${hadirKeg.tanggal}`,
+          kegiatanId: hadirKeg.id,
+          tanggal: hadirKeg.tanggal,
+        });
+      } else if (manualCheck) {
+        catatanDiLuarJenjang.push({
+          siswaId: sw.id,
+          siswaNama: sw.nama,
+          siswaJenjang: sw.jenjang,
+          materiId: t.id,
+          materiNama: t.nama,
+          materiJenjang: t.jenjang,
+          tipe: 'ceklis_manual',
+          sumber: `Ceklis manual oleh ${manualCheck.oleh} · ${manualCheck.dicatat}`,
+          kegiatanId: null,
+          tanggal: manualCheck.tanggal,
+        });
+      }
     }
   }
+
+  // 10. Menunggu Realisasi (kegiatan dengan status 'belum')
+  const menungguRealisasiCount = allKegiatan.filter((k) => k.status === 'belum').length;
 
   return {
     mapelId,
@@ -547,6 +622,7 @@ export function computeMatriksBelajar(
     ambangTertinggal,
     materiPalingTertinggal,
     catatanDiLuarJenjang,
+    menungguRealisasiCount,
   };
 }
 

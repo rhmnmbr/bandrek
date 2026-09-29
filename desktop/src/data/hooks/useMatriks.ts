@@ -54,3 +54,15 @@ export function useTandaiManualMassal() {
     },
   });
 }
+
+export function useHapusManualMassal() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (keys: Array<{ siswaId: string; materiId: string }>) =>
+      repositories.matriks.hapusManualMassal(keys),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: matriksKeys.all });
+    },
+  });
+}

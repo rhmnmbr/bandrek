@@ -275,6 +275,41 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Wired `handleIsiRealisasi` and `handleUtamaClick` ("Ubah realisasi") in `DetailKegiatanScreen.tsx` to `/kegiatan/:id/realisasi`.
       - Wired `handleGlobalNew` in `KalenderScreen.tsx` to accept custom event payload for automated follow-up activity creation.
     - Verified with 6/6 automated realisasi tests, 5/5 batal & jadwal ulang tests, 5/5 detail tests, 6/6 form tests, 14/14 popover tests (100% pass), and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 7: A9 Matriks belajar
+    - Implemented full matrix view `desktop/src/screens/MatriksScreen.tsx` on route `/matriks` inside `AppShell`.
+    - Top Subheader (H: 44px): caption "apa yang sudah dan belum diterima tiap siswa", "Ceklis massal" mode toggle button, disabled "Cetak" and "Ekspor CSV" buttons with tooltips per `DOMAIN.md §10` and `DESIGN.md`.
+    - Filter Toolbar (H: 48px, bg `#FAFAFA`, border-b `#E1DFDD`):
+      - Mandatory single-select Mapel and Jenjang dropdown selectors on far left, persisted across session via `sessionStorage` (`bandrek:matriks:mapel`, `bandrek:matriks:jenjang`).
+      - Default mapel: first active mapel (Matematika); default jenjang: jenjang with most active students (SD with 31 active students).
+      - Additional filters: Kelas (filtered by active jenjang), search student input, "Reset filter" button, "Tampilkan siswa nonaktif" checkbox (default unchecked), "Tandai siswa tertinggal" checkbox (default checked).
+    - 4 Summary Cards (`desktop/src/components/matriks/MatriksSummaryCards.tsx`):
+      1. CAKUPAN MATERI: percentage and ratio (e.g. `17%`, `31 dari 186 sel tersampaikan`).
+      2. SISWA TERTINGGAL: count and threshold (`31 dari 31`, `≥ 3 dari 6 materi belum diterima` with amber background `#FFF3E0`, border `#F0A82E`, text `#8A5200`).
+      3. MATERI PALING TERTINGGAL: dynamic tiebreaker (paling banyak belum -> paling lama tidak dijadwalkan -> urutan materi, e.g. `Perkalian · belum diterima 31 dari 31 siswa`).
+      4. MENUNGGU REALISASI: un-realized activity count (`8 kegiatan · angka di atas bisa berubah`).
+    - Anomaly Banner & Modal (`MatriksAnomalyBanner.tsx` and `MatriksAnomalyModal.tsx`):
+      - Amber banner when students have records (presence in kegiatan or manual checklist) for topics outside their jenjang (`7 siswa punya catatan Matematika di luar jenjang SD — biasanya salah input saat memilih materi.`).
+      - 620px modal dialog detailing the 7 anomaly records with direct navigation to the activity on click.
+    - Matrix Grid Table (`desktop/src/components/matriks/MatriksGrid.tsx`):
+      - Sticky student column on left (width 260px) with warning glyph `⚠` and amber highlight for tertinggal students, line-through and "nonaktif" chip for inactive students.
+      - Sticky top header (H: 34px) with material titles.
+      - Sticky right column (W: 62px) displaying completed ratio per student (`1/6`, `2/6`).
+      - Sticky bottom summary row (H: 26px) displaying "MENERIMA" metric with Cascadia Mono ratio per material (`14/31`, `0/31` in red `#9B0C18`).
+      - 7 canonical cell states with full priority resolution per DOMAIN.md §10 (`tersampaikan / selesai_manual > terjadwal > alpa > izin > sakit > kosong`).
+    - Cell Popover (`desktop/src/components/matriks/MatriksCellPopover.tsx`):
+      - 360px popover anchored to clicked cell.
+      - Header: student name, jenjang, mapel › materi, status pill badge.
+      - Section "KEGIATAN TERKAIT": list of related activities with presence and ketuntasan pills, clickable to navigate to activity.
+      - Section "Tandai sudah dipelajari": explanatory note if already tersampaikan, or checkbox with optional date picker and notes for manual checklist with audit trail.
+    - Bulk Checklist Mode (`desktop/src/components/matriks/MatriksBulkToolbar.tsx`):
+      - Interactive multi-cell, full-row (via student name), and full-column (via column header) selection.
+      - Bulk action toolbar with date picker, shared notes input, "Lepas ceklis", "Tandai sudah dipelajari" (skipping cells already tersampaikan), and "Selesai".
+    - Legend Bar (`desktop/src/components/matriks/MatriksLegendBar.tsx`):
+      - 7 canonical state badges with exact styling from DESIGN.md §3.5 and prototype.
+    - Prerequisite Empty State (`desktop/src/components/matriks/MatriksEmptyState.tsx`):
+      - Informative zero-states when no topics exist for jenjang or when filters match zero students.
+    - Verified with 7/7 automated tests in `desktop/scripts/test-matriks.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+
 
 
 

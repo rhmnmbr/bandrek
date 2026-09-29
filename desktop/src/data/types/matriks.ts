@@ -54,8 +54,9 @@ export interface RiwayatKegiatanMateri {
   kegiatanId: string;
   namaKegiatan: string;
   tanggal: string;
-  kehadiran: StatusKehadiran;
+  kehadiran?: StatusKehadiran | null;
   ketuntasan?: KetuntasanMateri | null;
+  realisasiAda?: boolean;
 }
 
 export interface SelMatriks {
@@ -114,9 +115,13 @@ export interface MateriPalingTertinggal {
 export interface CatatanDiLuarJenjang {
   siswaId: string;
   siswaNama: string;
+  siswaJenjang?: JenjangPendidikan;
   materiId: string;
   materiNama: string;
+  materiJenjang?: JenjangPendidikan[];
   tipe: 'realisasi' | 'ceklis_manual';
+  sumber?: string;
+  kegiatanId?: string | null;
   tanggal?: string | null;
 }
 
@@ -142,4 +147,5 @@ export interface MatriksBelajarResult {
   };
   materiPalingTertinggal: MateriPalingTertinggal | null;
   catatanDiLuarJenjang: CatatanDiLuarJenjang[];
+  menungguRealisasiCount?: number;
 }

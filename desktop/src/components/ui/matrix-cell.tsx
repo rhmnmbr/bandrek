@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Checkmark16Regular,
   CircleHalfFill16Regular,
   Mail16Regular,
   Dismiss16Regular,
@@ -10,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 export type MatrixCellState =
   | "tersampaikan"
+  | "selesai_manual"
   | "sakit"
   | "izin"
   | "alpa"
@@ -21,48 +21,57 @@ export interface MatrixCellProps extends React.ButtonHTMLAttributes<HTMLButtonEl
   state: MatrixCellState;
   size?: "compact";
   count?: number; // Optional number of activities or count
+  isSelected?: boolean;
 }
 
 export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
-  ({ state, size = "compact", count, className, ...props }, ref) => {
+  ({ state, size = "compact", count, isSelected, className, ...props }, ref) => {
 
     const renderContent = () => {
       switch (state) {
         case "tersampaikan":
-          return <Checkmark16Regular className="text-current" />;
+          return <span className="font-semibold text-[12.5px] leading-none">✓</span>;
+        case "selesai_manual":
+          return <span className="font-semibold italic text-[12.5px] leading-none">✓</span>;
         case "sakit":
-          return <CircleHalfFill16Regular className="text-current" />;
+          return <CircleHalfFill16Regular className="text-current text-[11px]" />;
         case "izin":
-          return <Mail16Regular className="text-current" />;
+          return <Mail16Regular className="text-current text-[11px]" />;
         case "alpa":
-          return <Dismiss16Regular className="text-current" />;
+          return <Dismiss16Regular className="text-current text-[11px]" />;
         case "batal":
-          return <Dismiss16Regular className="text-current opacity-60" />;
+          return <Dismiss16Regular className="text-current opacity-60 text-[11px]" />;
         case "terjadwal":
           return <Circle12Filled className="text-current text-[10px]" />;
         case "kosong":
         default:
-          return <span className="text-[14px] leading-none opacity-60">·</span>;
+          return <span className="text-[12.5px] leading-none opacity-60">·</span>;
       }
     };
 
     const getStateClasses = () => {
+      if (isSelected) {
+        return "bg-[#EBF3FC] text-[#0C548F] outline-2 outline-[#0F6CBD] -outline-offset-2 z-10";
+      }
+
       switch (state) {
         case "tersampaikan":
-          return "bg-(--color-success-bg) text-(--color-success-ink) border-r border-b border-(--color-border-subtle)";
+          return "bg-[#E8F5E9] text-[#2E7D32] border-r border-[#EDEBE9]";
+        case "selesai_manual":
+          return "bg-[#F2FAF3] text-[#2E7D32] shadow-[inset_0_0_0_1px_#9CCBA0] border-r border-[#EDEBE9]";
         case "sakit":
-          return "bg-(--color-warning-bg) text-(--color-warning-ink) shadow-[inset_0_0_0_1px_var(--color-warning)] border-r border-b border-(--color-border-subtle)";
+          return "bg-[#FFF3E0] text-[#8A5200] shadow-[inset_0_0_0_1px_#F0A82E] border-r border-[#EDEBE9]";
         case "izin":
-          return "bg-(--color-info-bg) text-(--color-info-ink) shadow-[inset_0_0_0_1px_var(--color-info)] border-r border-b border-(--color-border-subtle)";
+          return "bg-[#EBF3FC] text-[#0C548F] shadow-[inset_0_0_0_1px_#0F6CBD] border-r border-[#EDEBE9]";
         case "alpa":
-          return "bg-(--color-danger-bg) text-(--color-danger-ink) shadow-[inset_0_0_0_1px_var(--color-danger)] border-r border-b border-(--color-border-subtle)";
+          return "bg-[#FDE7E9] text-[#9B0C18] shadow-[inset_0_0_0_1px_#C50F1F] border-r border-[#EDEBE9]";
         case "batal":
-          return "bg-(--color-canvas) text-(--color-text-muted) border-r border-b border-(--color-border-subtle)";
+          return "bg-(--color-canvas) text-(--color-text-muted) border-r border-[#EDEBE9]";
         case "terjadwal":
-          return "bg-(--color-brand-subtle) text-(--color-brand-ink) border-r border-b border-(--color-border-subtle)";
+          return "bg-[#FAFAFA] text-[#5C5A58] shadow-[inset_0_0_0_1px_#C8C6C4] border-r border-[#EDEBE9]";
         case "kosong":
         default:
-          return "bg-white text-(--color-icon-faint) border-r border-b border-(--color-border-subtle) hover:bg-(--color-surface-alt)";
+          return "bg-transparent text-[#8A8886] border-r border-[#EDEBE9] hover:bg-[#FAFAFA]";
       }
     };
 

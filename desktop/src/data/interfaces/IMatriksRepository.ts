@@ -15,4 +15,5 @@ export interface IMatriksRepository {
   tandaiManual(input: TandaiManualInput): Promise<CeklisManual>;
   hapusManual(id: string): Promise<void>;
   tandaiManualMassal(items: TandaiManualInput[]): Promise<CeklisManual[]>;
+  hapusManualMassal(keys: Array<{ siswaId: string; materiId: string }>): Promise<number>;
 }

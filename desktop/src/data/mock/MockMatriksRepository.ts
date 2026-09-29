@@ -116,4 +116,22 @@ export class MockMatriksRepository implements IMatriksRepository {
       { isMutation: true }
     );
   }
+
+  public async hapusManualMassal(keys: Array<{ siswaId: string; materiId: string }>): Promise<number> {
+    return mockRunner(
+      () => {
+        const keySet = new Set(keys.map((k) => `${k.siswaId}|${k.materiId}`));
+        const beforeCount = mockStore.ceklisManual.length;
+        mockStore.ceklisManual = mockStore.ceklisManual.filter(
+          (cm) => !keySet.has(`${cm.siswa}|${cm.materi}`)
+        );
+        const removed = beforeCount - mockStore.ceklisManual.length;
+        if (removed > 0) {
+          mockStore.persist();
+        }
+        return removed;
+      },
+      { isMutation: true }
+    );
+  }
 }
