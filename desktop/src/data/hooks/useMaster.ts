@@ -7,6 +7,7 @@ import type {
   SubjekFilterParams,
   CreateSubjekInput,
   UpdateSubjekInput,
+  KetersediaanRutinItem,
   KelasFilterParams,
   CreateKelasInput,
   UpdateKelasInput,
@@ -97,6 +98,7 @@ export const subjekKeys = {
   all: ['subjek'] as const,
   list: (filter?: SubjekFilterParams) => ['subjek', 'list', filter] as const,
   detail: (id: string) => ['subjek', 'detail', id] as const,
+  profil: (id: string) => ['subjek', 'profil', id] as const,
 };
 
 export function useSubjekList(filter?: SubjekFilterParams) {
@@ -110,6 +112,14 @@ export function useSubjekDetail(id: string, enabled: boolean = true) {
   return useQuery({
     queryKey: subjekKeys.detail(id),
     queryFn: () => repositories.subjek.getById(id),
+    enabled: enabled && Boolean(id),
+  });
+}
+
+export function useSubjekProfil(id: string, enabled: boolean = true) {
+  return useQuery({
+    queryKey: subjekKeys.profil(id),
+    queryFn: () => repositories.subjek.getProfil(id),
     enabled: enabled && Boolean(id),
   });
 }
@@ -132,6 +142,7 @@ export function useUpdateSubjek() {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: subjekKeys.all });
       queryClient.invalidateQueries({ queryKey: subjekKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: subjekKeys.profil(id) });
       queryClient.invalidateQueries({ queryKey: ['kegiatan'] });
     },
   });
@@ -143,6 +154,49 @@ export function useDeleteSubjek() {
     mutationFn: (id: string) => repositories.subjek.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subjekKeys.all });
+    },
+  });
+}
+
+export function useTambahKetersediaanSubjek() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, item }: { id: string; item: KetersediaanRutinItem }) =>
+      repositories.subjek.tambahKetersediaan(id, item),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: subjekKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: subjekKeys.profil(id) });
+    },
+  });
+}
+
+export function useUbahKetersediaanSubjek() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      index,
+      patch,
+    }: {
+      id: string;
+      index: number;
+      patch: Partial<KetersediaanRutinItem>;
+    }) => repositories.subjek.ubahKetersediaan(id, index, patch),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: subjekKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: subjekKeys.profil(id) });
+    },
+  });
+}
+
+export function useHapusKetersediaanSubjek() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, index }: { id: string; index: number }) =>
+      repositories.subjek.hapusKetersediaan(id, index),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: subjekKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: subjekKeys.profil(id) });
     },
   });
 }

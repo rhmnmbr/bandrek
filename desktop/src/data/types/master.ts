@@ -124,6 +124,12 @@ export interface SiswaProfil {
 // ==========================================
 export type PeranSubjek = 'Pengisi' | 'Wali' | 'Support' | 'Pendamping';
 
+export interface KetersediaanRutinItem {
+  hari: string; // 'Senin' | 'Selasa' | 'Rabu' | 'Kamis' | 'Jumat' | 'Sabtu' | 'Minggu'
+  dari: string; // 'HH:mm'
+  sampai: string; // 'HH:mm'
+}
+
 export interface Subjek {
   id: string;
   nama: string;
@@ -132,11 +138,17 @@ export interface Subjek {
   aktif: boolean;
   mapel?: string[]; // IDs of MataPelajaran
   kontak?: string;
+  ketersediaan?: KetersediaanRutinItem[];
   // Server-computed
   jumlahKegiatan?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  rincianPenggunaan?: string[];
+  ringkasanPenggunaan?: string;
 }
 
 export interface SubjekFilterParams {
+  status?: 'aktif' | 'nonaktif' | 'semua';
   aktifOnly?: boolean;
   peran?: PeranSubjek | 'semua';
   q?: string;
@@ -149,10 +161,64 @@ export interface CreateSubjekInput {
   aktif?: boolean;
   mapel?: string[];
   kontak?: string;
+  ketersediaan?: KetersediaanRutinItem[];
 }
 
 export interface UpdateSubjekInput extends Partial<CreateSubjekInput> {
   aktif?: boolean;
+}
+
+export interface SubjekKPI {
+  label: string;
+  val: string;
+  valFg: string;
+  brd: string;
+  bg: string;
+  lblFg: string;
+  sub: string;
+  subFg: string;
+  subLink?: boolean;
+  subPlain?: boolean;
+  subKlikAction?: 'realisasi';
+  subKlikParam?: string;
+  subKlikTitle?: string;
+}
+
+export interface SubjekBebanItem {
+  label: string;
+  jam: string;
+  n: number;
+  barW: string;
+  barBg: string;
+  warn: boolean;
+  warnTeks?: string;
+}
+
+export interface SubjekTerdekatItem {
+  id: string;
+  waktu: string;
+  nama: string;
+  peran: string;
+  stLabel: string;
+  stBrd: string;
+  stBg: string;
+  stInk: string;
+  lewat: boolean;
+}
+
+export interface SubjekProfil {
+  subjek: Subjek;
+  inisial: string;
+  mapelTeks: string;
+  kpi: SubjekKPI[];
+  bebanJudul: string;
+  batasNyaman: number;
+  beban: SubjekBebanItem[];
+  terdekat: SubjekTerdekatItem[];
+  tertundaId?: string;
+  tertundaCount: number;
+  tertundaJudul: string;
+  tertundaTeks: string;
 }
 
 // ==========================================

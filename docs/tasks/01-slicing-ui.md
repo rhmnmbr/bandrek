@@ -392,6 +392,51 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Added `getProfil(id)` in `MockSiswaRepository` computing KPIs, attendance ratios, topic coverage %, and missed topics so UI components never compute business rules.
       - Added `ubahAnggota(kelasId, siswaId, tambah)` in `MockKelasRepository` and `useUbahAnggotaKelas()` hook.
     - Verified with 6/6 automated tests in `desktop/scripts/test-siswa.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 10: B2 Subjek — Master Subjek & Profil Subjek (P1 CRUD Pattern)
+    - Implemented Master Subjek table view, 380px edit panel, confirmation modal, and Profil Subjek view (`desktop/src/screens/SubjekScreen.tsx`) on route `/master/subjek` and `/master/subjek/:id`.
+    - Toolbar & Filter Bar (`desktop/src/components/master/subjek/SubjekToolbar.tsx`):
+      - Top Meta Bar (H: 44px): count e.g. `11 aktif · 1 nonaktif`, primary `+ Subjek baru` button with `title="Tambah subjek baru · Ctrl+N"`.
+      - Filter Bar (H: 48px, bg `#FAFAFA`, border-b `#E1DFDD`): search input `Cari nama subjek` (by name, contact), `Peran` dropdown (`Semua`, `Pengisi`, `Pendamping`, `Wali`, `Support`), `Status` dropdown (`Aktif` [default], `Nonaktif`, `Semua`), `Reset filter` button.
+    - Master Table (`desktop/src/components/master/subjek/SubjekTable.tsx`):
+      - Sticky header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `NAMA LENGKAP` (210px), `KELAMIN` (92px), `PERAN` (104px), `MATA PELAJARAN` (flex-1 min 110px), `KONTAK` (126px, mono), `KEGIATAN` (74px, mono, right), `STATUS` (78px).
+      - 32px row height with hover `#FAFAFA`, selected state `#EBF3FC` with `box-shadow: inset 3px 0 0 #0F6CBD`.
+      - Inactive subjects styled with muted text `#5C5A58` and `line-through`.
+      - Row click selects subject and opens side panel in edit mode; clicking name text navigates directly to Profil Subjek (`/master/subjek/:id`).
+      - Sticky footer (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): `Menampilkan X dari Y subjek` (+ ` · subjek nonaktif disembunyikan`).
+    - Empty State (`desktop/src/components/master/subjek/SubjekEmptyState.tsx`):
+      - Informative empty display with glyph `◇`, clear cause explanation, and primary action (`[Tampilkan semua status]` and `[Reset filter]` or `[+ Subjek baru]`).
+    - Side Panel Form (`desktop/src/components/master/subjek/SubjekFormPanel.tsx`):
+      - 380px fixed width, background `#FAFAFA`, sticky header and footer.
+      - Header: dynamic initials avatar circle in purple `#F3EFFA` text `#5B4394`, title (`Subjek baru` / subject name), subtitle (`Isi nama dan perannya, lalu simpan` / `<peran> · <kelamin> · <kegiatan> kegiatan`), status pill (`Belum disimpan`, `Aktif`, `Nonaktif`).
+      - Soft validation (DOMAIN.md §12 & prototype): ErrorSummary box and inline errors only display after first save attempt (`dicoba = true`).
+      - Fields:
+        - `Nama lengkap *` with duplicate check across other subjects.
+        - Two-column row: `Jenis kelamin` segmented toggle (`[Laki-laki]` `[Perempuan]`, click again to clear) and `Peran bawaan` select (`Pengisi`, `Pendamping`, `Wali`, `Support`).
+        - `Kontak` text input with Cascadia Mono.
+        - `Mata pelajaran yang diampu`: removable chips + `+ tambah` popover with available subjects not yet selected, plus guidance note.
+        - `RINGKASAN` card in edit mode: activity count summary + direct link `Lihat kegiatannya di daftar kegiatan` (`/kegiatan?subjek=<id>`).
+      - Footer:
+        - `Nonaktifkan` / `Aktifkan kembali` button with toast and `Urungkan` action.
+        - `Hapus` button: strictly follows DOMAIN.md §12 rule (disabled if subject is involved in any activities, with tooltip explaining usage and directing to `Nonaktifkan`; active only when 0 activities).
+        - `Batal` and `Simpan subjek` / `Simpan` primary button (`Ctrl+S`).
+    - Confirmation Modal Dialog (`desktop/src/components/master/subjek/SubjekConfirmModal.tsx`):
+      - 460px modal dialog for deactivate and delete actions with consequence explanation and numeric impact bullets.
+    - Full Subject Profile View (`desktop/src/components/master/subjek/ProfilSubjekView.tsx`):
+      - Top Bar: breadcrumb `< Subjek › [Inisial] Nama [Status] Peran · Mapel`, `Lihat di kalender` (`/kalender?subjek=<id>`), `Ubah data` (switches to table edit panel).
+      - 4 KPI cards: `KEGIATAN BULAN INI`, `JAM MENGAJAR`, `REALISASI TERTUNDA` (amber highlight + direct link to oldest pending realization), `KETEPATAN JADWAL` (on-time % or `—`).
+      - Left column:
+        - `BEBAN PER MINGGU · BULAN TAHUN` with comfort limit note `batas nyaman 10 jam/minggu`, weekly progress bars, warning badge `⚠` and note if > 10 hours.
+        - `KEGIATAN TERDEKAT` table: sticky header `WAKTU`, `KEGIATAN`, `PERAN`, `STATUS` with delay badges for overdue realizations.
+      - Right column:
+        - `DATA SUBJEK` card: `Peran bawaan`, `Jenis kelamin`, `Kontak` (mono), `Mata pelajaran`.
+        - `KETERSEDIAAN RUTIN` card: daily schedule manager with Hari (`Senin`..`Minggu`), Dari (`HH:mm`), Sampai (`HH:mm`), and Hapus button. `Tambah jadwal` button. Explanatory text if empty.
+        - Overdue warning box (amber `#FFF3E0`) if pending realizations exist: `N realisasi menunggu diisi` with `Isi realisasi sekarang` button.
+        - `Nonaktifkan subjek` / `Aktifkan kembali subjek` toggle link.
+    - Data Layer & Business Rules:
+      - Enriched `Subjek` entity in `MockSubjekRepository` with server-computed usage statistics (`jumlahKegiatan`, `dapatDihapus`, `alasanTidakBisaHapus`, `rincianPenggunaan`, `ringkasanPenggunaan`).
+      - Added `getProfil(id)` in `MockSubjekRepository` computing 4 KPIs, weekly workload buckets with comfort limits, nearby activities, and routine availability.
+      - Added `tambahKetersediaan`, `ubahKetersediaan`, and `hapusKetersediaan` in `MockSubjekRepository` and mutation hooks in `useMaster.ts`.
+    - Verified with 6/6 automated tests in `desktop/scripts/test-subjek.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 
