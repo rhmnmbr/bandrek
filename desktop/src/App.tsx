@@ -14,6 +14,10 @@ import { TempatScreen } from '@/screens/TempatScreen';
 import { JenisKegiatanScreen } from '@/screens/JenisKegiatanScreen';
 import { KatalogScreen } from '@/screens/KatalogScreen';
 import { DataLayerScreen } from '@/screens/DataLayerScreen';
+import { SetupServerScreen } from '@/screens/SetupServerScreen';
+import { LoginScreen } from '@/screens/LoginScreen';
+import { UserManagementScreen } from '@/screens/UserManagementScreen';
+import { UpdateRequiredScreen } from '@/screens/UpdateRequiredScreen';
 
 export default function App() {
   return (
@@ -39,7 +43,13 @@ export default function App() {
           <Route path="/master/tempat/:id" element={<TempatScreen />} />
           <Route path="/master/jenis" element={<JenisKegiatanScreen />} />
           <Route path="/master/jenis/:id" element={<JenisKegiatanScreen />} />
+          <Route path="/pengaturan/pengguna" element={<UserManagementScreen />} />
         </Route>
+
+        {/* Client-Server Standalone Screens */}
+        <Route path="/setup-server" element={<SetupServerScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/update-required" element={<UpdateRequiredScreen />} />
 
         {/* Development & Inspection Screens */}
         <Route path="/katalog" element={<KatalogScreen />} />

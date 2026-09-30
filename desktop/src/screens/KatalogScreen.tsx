@@ -29,6 +29,7 @@ import { StudentChecklist, type StudentGroup } from "@/components/ui/student-che
 import { ConflictWarning } from "@/components/ui/conflict-warning";
 import { ErrorSummary } from "@/components/ui/error-summary";
 import { ConfirmDialog } from "@/components/ui/dialog";
+import { SaveConflictModal } from "@/components/kegiatan/SaveConflictModal";
 import { SidePanel } from "@/components/ui/side-panel";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/toast";
@@ -83,6 +84,7 @@ export function KatalogScreen() {
   // Dialogs interactive state
   const [dialogNonaktifOpen, setDialogNonaktifOpen] = React.useState(false);
   const [dialogBatalOpen, setDialogBatalOpen] = React.useState(false);
+  const [conflictModalOpen, setConflictModalOpen] = React.useState(false);
 
   // Side panel interactive state
   const [panelOpen, setPanelOpen] = React.useState(false);
@@ -1315,6 +1317,13 @@ export function KatalogScreen() {
             >
               Buka Dialog Batalkan Kegiatan (Danger Action)
             </Button>
+
+            <Button
+              variant="secondary"
+              onClick={() => setConflictModalOpen(true)}
+            >
+              Buka Modal Konflik Suntingan (B6-konflik)
+            </Button>
           </div>
 
           {/* Dialog 1: Nonaktifkan Siswa */}
@@ -1381,6 +1390,32 @@ export function KatalogScreen() {
                     showToast({ type: "info", message: "Pembatalan diurungkan" });
                   },
                 },
+              });
+            }}
+          />
+
+          {/* Dialog 3: Konflik Suntingan (B6-konflik) */}
+          <SaveConflictModal
+            open={conflictModalOpen}
+            onClose={() => setConflictModalOpen(false)}
+            onUseMine={() => {
+              setConflictModalOpen(false);
+              showToast({
+                type: 'info',
+                message: 'Suntingan Anda berhasil disimpan (menimpa versi server).',
+              });
+            }}
+            onUseServer={() => {
+              setConflictModalOpen(false);
+              showToast({
+                type: 'info',
+                message: 'Versi tersimpan dari server berhasil dimuat ulang.',
+              });
+            }}
+            onCompare={() => {
+              showToast({
+                type: 'info',
+                message: 'Membuka perbandingan detail versi...',
               });
             }}
           />

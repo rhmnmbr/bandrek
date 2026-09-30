@@ -7,8 +7,10 @@ import {
   PlugDisconnected16Regular,
   Database16Regular,
   Color16Regular,
+  ArrowExit16Regular,
 } from '@fluentui/react-icons';
 import { Link } from 'react-router-dom';
+import { useAuthSession, useLogout } from '@/data/hooks/useAuth';
 
 export interface TopBarProps {
   title: string;
@@ -27,6 +29,9 @@ export const TopBar: React.FC<TopBarProps> = ({
   isOffline = false,
   className,
 }) => {
+  const { data: session } = useAuthSession();
+  const logoutMutation = useLogout();
+
   return (
     <header
       className={cn(
@@ -98,6 +103,53 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span>Katalog</span>
         </Link>
       </div>
+
+      {/* User Session & Role */}
+      {session?.user && (
+        <div className="flex items-center gap-1.5 border-r border-(--color-border-subtle) pr-2 mr-1">
+          {session.user.peran === 'admin' ? (
+            <Link
+              to="/pengaturan/pengguna"
+              title={`Akun: ${session.user.nama} (${session.user.peran}) · Klik untuk buka Manajemen Pengguna`}
+              className="flex h-7 items-center gap-1.5 rounded px-1.5 text-[12px] hover:bg-(--color-surface-alt) text-(--color-text-primary) transition-colors"
+            >
+              <span className="flex h-5.5 w-5.5 items-center justify-center rounded-full bg-[#F3EFFA] text-[10px] font-bold text-[#5B4394] border border-[#D3C8E8]">
+                {session.user.nama.slice(0, 2).toUpperCase()}
+              </span>
+              <span className="hidden sm:inline font-medium max-w-[100px] truncate text-[12px]">
+                {session.user.nama.split(' ')[0]}
+              </span>
+              <span className="rounded bg-[#F3EFFA] px-1 py-0.2 text-[9.5px] font-bold text-[#5B4394] uppercase tracking-wider">
+                Admin
+              </span>
+            </Link>
+          ) : (
+            <div
+              title={`Akun: ${session.user.nama} (${session.user.peran})`}
+              className="flex h-7 items-center gap-1.5 rounded px-1.5 text-[12px] text-(--color-text-primary)"
+            >
+              <span className="flex h-5.5 w-5.5 items-center justify-center rounded-full bg-[#EBF3FC] text-[10px] font-bold text-[#0C548F] border border-[#C5DCFA]">
+                {session.user.nama.slice(0, 2).toUpperCase()}
+              </span>
+              <span className="hidden sm:inline font-medium max-w-[100px] truncate text-[12px]">
+                {session.user.nama.split(' ')[0]}
+              </span>
+              <span className="rounded bg-[#EBF3FC] px-1 py-0.2 text-[9.5px] font-bold text-[#0C548F] uppercase tracking-wider">
+                Operator
+              </span>
+            </div>
+          )}
+
+          <Link
+            to="/login"
+            onClick={() => logoutMutation.mutate()}
+            title="Keluar / Ganti Akun"
+            className="flex h-6 w-6 items-center justify-center rounded text-(--color-text-muted) hover:text-[#C50F1F] hover:bg-[#FDE7E9] transition-colors cursor-pointer"
+          >
+            <ArrowExit16Regular className="text-[13px]" />
+          </Link>
+        </div>
+      )}
 
       {/* Primary Action Button: + Kegiatan baru (Ctrl+N) */}
       <button

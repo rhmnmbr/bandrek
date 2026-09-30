@@ -177,7 +177,7 @@ _Update this section at each approved checkpoint: what was done, and any decisio
   - Integrated sticky `OfflineBanner` infrastructure responding to simulator / connection state with retry button.
   - Set up routing in `App.tsx` nesting all core routes (`/kalender`, `/kegiatan`, `/matriks`, and `/master/*`) within `AppShell` with `PlaceholderScreen` displaying live entity counts from TanStack Query.
   - Verified with 31 automated shell tests (100% pass), 27 data layer tests (100% pass), and clean production build (`tsc && vite build`).
-- [ ] Phase 5 — Screens
+- [x] Phase 5 — Screens
   - [x] Step 1: A2 Kalender (week, day, month views, filters, "+N lainnya")
     - Built pure date math utilities (`desktop/src/lib/dateUtils.ts`) with Monday-based weeks, Cascadia Mono formatting, and Indonesian locale strings.
     - Implemented overlapping cluster layout algorithm (`desktop/src/components/kalender/kalenderLayout.ts`) with min 84px track width and condensation into `+N lainnya` button card when overlapping density exceeds screen width.
@@ -593,6 +593,37 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Deletion integrity (DOMAIN.md §12): restricted if activities reference it.
       - Enriched `getAll(filter)` and CRUD operations in `MockJenisKegiatanRepository`.
     - Verified with 6/6 automated tests in `desktop/scripts/test-jenis.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 11: Client-Server screens (DOMAIN.md §13 & ARCHITECTURE.md)
+    - Implemented setup server address screen (`desktop/src/screens/SetupServerScreen.tsx`) on route `/setup-server`:
+      - Centered 440px card with Bandrek brand header.
+      - Protocol validation (`http://` or `https://`), live connection latency test simulator with simulated ms latency.
+      - Persistence in `localStorage['bandrek:server-url']` and primary "Simpan & Lanjutkan" button.
+    - Implemented login screen (`desktop/src/screens/LoginScreen.tsx`) on route `/login`:
+      - Centered 400px card with brand icon, sentence case inputs, and soft error banner.
+      - Quick-fill demo credentials (`[Isi Admin]` and `[Isi Operator]`) for rapid inspection and role switching.
+      - Current server indicator with direct link to "Ganti server" (`/setup-server`).
+    - Implemented operator account management screen (`desktop/src/screens/UserManagementScreen.tsx`) on route `/pengaturan/pengguna` (inside AppShell):
+      - Master-detail CRUD pattern (P1) for managing operator accounts.
+      - Left table with user initials avatar, full name, username (Cascadia Mono), role badge (Admin in purple `#F3EFFA` / Operator in blue `#EBF3FC`), and status badge (Aktif in green / Nonaktif in gray).
+      - 352px form sidebar panel with name, username (disabled when editing), password, role toggle, active switch.
+      - Guards against deactivating currently active user or the last remaining admin in the system.
+    - Implemented save conflict modal (`desktop/src/components/kegiatan/SaveConflictModal.tsx`):
+      - 520px modal dialog strictly adhering to `Bandrek Hi-Fi Batch B.dc.html` label `B6-konflik`.
+      - Header "Data berubah di jendela lain" with uppercase badge "KONFLIK SUNTINGAN".
+      - Amber warning box: `⚠ Kegiatan ini baru saja diubah. Jam mulai diubah menjadi 08:30 dari jendela lain. Suntingan Anda belum disimpan.`
+      - Side-by-side comparison: `VERSI TERSIMPAN` vs `MILIK ANDA` with Cascadia Mono timestamps.
+      - Explicit choice buttons: `[Pakai punya saya]` (timpa), `[Pakai versi tersimpan]` (reload), `[Bandingkan]`, `[Batal]`.
+    - Implemented update required screen (`desktop/src/screens/UpdateRequiredScreen.tsx`) on route `/update-required`:
+      - Blocker screen with Bandrek icon and "Pembaruan Wajib" warning badge.
+      - 3-way version comparison grid: Versi Anda (red), Min. Server, Tersedia (green).
+      - Release highlights card detailing synchronization and performance improvements.
+      - Interactive updater simulator with real-time download and install progress bar, byte counter (`14.2 MB dari 18.5 MB`), and completion state.
+      - Retry check connection button and navigation links.
+    - Integrated user session & role indicator in `TopBar.tsx`:
+      - Displays logged-in user initials avatar, role pill, direct link to `/pengaturan/pengguna` for admin accounts, and logout action.
+    - Offline read-only banner (`desktop/src/components/ui/offline-banner.tsx`):
+      - Sticky offline banner active in `AppShell` with cached state timestamp and retry button when disconnected (ARCHITECTURE.md D5).
+    - Verified with 8/8 automated tests in `desktop/scripts/test-client-server.mjs`, all 17 test suites (100% pass), and clean production build (`tsc && vite build`).
 
 
 
