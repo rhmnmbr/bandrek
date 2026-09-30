@@ -1,6 +1,7 @@
 import type { IJenisKegiatanRepository } from '../interfaces/IJenisKegiatanRepository';
 import type {
   JenisKegiatan,
+  JenisKegiatanFilterParams,
   CreateJenisKegiatanInput,
   UpdateJenisKegiatanInput,
   DeleteMasterResult,
@@ -11,17 +12,54 @@ import { mockStore } from './mockStore';
 import { checkMasterUsage } from './businessRules';
 
 export class MockJenisKegiatanRepository implements IJenisKegiatanRepository {
-  public async getAll(): Promise<JenisKegiatan[]> {
-    return mockRunner(() => [...mockStore.jenis]);
+  private enrichJenisKegiatan(j: JenisKegiatan): JenisKegiatan {
+    const matchingKegiatan = mockStore.kegiatan.filter((k) => k.jenis === j.id);
+    const nKegiatan = matchingKegiatan.length;
+    const dapatDihapus = nKegiatan === 0;
+    const alasanTidakBisaHapus = dapatDihapus
+      ? undefined
+      : `Tidak bisa dihapus: ${nKegiatan} kegiatan menunjuk jenis kegiatan ini. Ubah dulu kegiatan itu.`;
+
+    const rincianPenggunaan = matchingKegiatan.slice(0, 10).map((k) => k.nama);
+    const ringkasanPenggunaan =
+      nKegiatan > 0
+        ? `${nKegiatan} kegiatan tercatat memakai jenis kegiatan ini.`
+        : 'Belum pernah dipakai di kegiatan mana pun.';
+
+    return {
+      ...j,
+      jumlahKegiatan: nKegiatan,
+      dapatDihapus,
+      alasanTidakBisaHapus,
+      rincianPenggunaan,
+      ringkasanPenggunaan,
+    };
+  }
+
+  public async getAll(filter?: JenisKegiatanFilterParams): Promise<JenisKegiatan[]> {
+    return mockRunner(() => {
+      let list = mockStore.jenis.map((j) => this.enrichJenisKegiatan(j));
+
+      if (filter?.q && filter.q.trim().length > 0) {
+        const qLower = filter.q.trim().toLowerCase();
+        list = list.filter((j) => j.nama.toLowerCase().includes(qLower));
+      }
+
+      return list.sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    });
   }
 
   public async getById(id: string): Promise<JenisKegiatan> {
     return mockRunner(() => {
       const j = mockStore.jenis.find((item) => item.id === id);
       if (!j) {
-        throw new BandrekApiError('unknown', `Jenis kegiatan dengan ID "${id}" tidak ditemukan.`, 404);
+        throw new BandrekApiError(
+          'unknown',
+          `Jenis kegiatan dengan ID "${id}" tidak ditemukan.`,
+          404
+        );
       }
-      return j;
+      return this.enrichJenisKegiatan(j);
     });
   }
 
@@ -39,7 +77,7 @@ export class MockJenisKegiatanRepository implements IJenisKegiatanRepository {
 
         mockStore.jenis.push(newJenis);
         mockStore.persist();
-        return newJenis;
+        return this.enrichJenisKegiatan(newJenis);
       },
       { isMutation: true }
     );
@@ -50,7 +88,11 @@ export class MockJenisKegiatanRepository implements IJenisKegiatanRepository {
       () => {
         const idx = mockStore.jenis.findIndex((item) => item.id === id);
         if (idx === -1) {
-          throw new BandrekApiError('unknown', `Jenis kegiatan dengan ID "${id}" tidak ditemukan.`, 404);
+          throw new BandrekApiError(
+            'unknown',
+            `Jenis kegiatan dengan ID "${id}" tidak ditemukan.`,
+            404
+          );
         }
 
         const existing = mockStore.jenis[idx];
@@ -58,13 +100,15 @@ export class MockJenisKegiatanRepository implements IJenisKegiatanRepository {
           ...existing,
           nama: input.nama ?? existing.nama,
           warna: input.warna ?? existing.warna,
-          materiWajib: input.materiWajib !== undefined ? input.materiWajib : existing.materiWajib,
-          siswaWajib: input.siswaWajib !== undefined ? input.siswaWajib : existing.siswaWajib,
+          materiWajib:
+            input.materiWajib !== undefined ? input.materiWajib : existing.materiWajib,
+          siswaWajib:
+            input.siswaWajib !== undefined ? input.siswaWajib : existing.siswaWajib,
         };
 
         mockStore.jenis[idx] = updated;
         mockStore.persist();
-        return updated;
+        return this.enrichJenisKegiatan(updated);
       },
       { isMutation: true }
     );

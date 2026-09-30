@@ -558,6 +558,41 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Deletion integrity (DOMAIN.md §12): Tempat deletion restricted if child rooms exist or activities reference it; Ruangan deletion restricted if activities reference it.
       - Enriched `getAll(filter)` and CRUD operations in `MockTempatRepository`.
     - Verified with 5/5 automated tests in `desktop/scripts/test-tempat.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 10: B6 Jenis Kegiatan — Color Picker & Required Flags (P1 Master Pattern)
+    - Implemented master pattern with flexible left table (`flex: 1`) and 352px right form sidebar (`desktop/src/screens/JenisKegiatanScreen.tsx`) on route `/master/jenis` and `/master/jenis/:id`.
+    - Toolbar & Filter Bar (`desktop/src/components/master/jenis/JenisToolbar.tsx`):
+      - Top Meta Bar (H: 44px): count e.g. `5 jenis kegiatan`, primary `+ Jenis baru` button with `title="Tambah jenis kegiatan baru · Ctrl+N"`.
+      - Filter Bar (H: 48px, bg `#FAFAFA`, border-b `#E1DFDD`): search input `Cari nama jenis kegiatan`, `Reset filter` button.
+    - Master Table (`desktop/src/components/master/jenis/JenisTable.tsx`):
+      - Sticky header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `JENIS KEGIATAN` (min-w 140px, flex 1), `MATERI` (104px), `SISWA` (100px), `KEGIATAN` (84px, mono, right).
+      - 32px row height with hover `#FAFAFA`, selected state `#EBF3FC` with `box-shadow: inset 3px 0 0 #0F6CBD`.
+      - Color dot swatch (9x9 rounded-xs) corresponding to the calendar block color token.
+      - Inline interactive toggle pills for `MATERI` (`wajib` / `opsional`) and `SISWA` (`wajib` / `opsional`) with toast and `Urungkan` support.
+      - Activity count in monospace right-aligned.
+      - Row click navigates to `/master/jenis/:id`.
+      - Sticky footer (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): `Menampilkan X dari Y jenis kegiatan`.
+    - Empty State (`desktop/src/components/master/jenis/JenisEmptyState.tsx`):
+      - Informative zero-state display with glyph `◇` and primary action (`[Reset filter]` or `[+ Jenis baru]`).
+    - Form Sidebar Panel (`desktop/src/components/master/jenis/JenisFormView.tsx`):
+      - Fixed 352px width right sidebar with sticky header and footer.
+      - Header: dynamic initials avatar square with color token bg & ink, title (`Jenis kegiatan baru` / type name), subtitle (`Isi datanya, lalu simpan` / `${labelWarna} · ${nKegiatan} kegiatan`).
+      - Soft validation (DOMAIN.md §12 & prototype): ErrorSummary box and inline errors only display after first save attempt (`dicoba = true`).
+      - Fields:
+        - `Nama jenis *` with duplicate check across other types.
+        - `Warna di kalender`: 5-color palette pills (`Biru` [pembelajaran], `Ungu` [rapat], `Hijau` [olahraga], `Merah` [ujian], `Abu` [lainnya]) with color swatches and explanation note.
+        - `Wajib pilih mata pelajaran & materi` toggle card with guidance: `Kalau dimatikan, kegiatan jenis ini tidak masuk hitungan matriks belajar.`.
+        - `Wajib pilih siswa peserta` toggle card with guidance: `Rapat dan sejenisnya biasanya dimatikan — cukup subjek saja.`.
+        - `RINGKASAN` card in edit mode: activity count summary + direct link `Lihat kegiatannya di daftar kegiatan` (`/kegiatan?jenis=<id>`).
+      - Footer:
+        - `Hapus` button: strictly follows DOMAIN.md §12 rule (disabled if activity type has any usage in activities, with tooltip `Tidak bisa dihapus: N kegiatan menunjuk jenis kegiatan ini. Ubah dulu kegiatan itu.`; enabled when 0 activities).
+        - `Batal` and `Simpan jenis kegiatan` / `Simpan` primary button (`Ctrl+S`).
+    - Confirmation Modal Dialog (`desktop/src/components/master/jenis/JenisConfirmModal.tsx`):
+      - 460px modal dialog for delete action with consequence explanation and numeric impact bullets.
+    - Data Layer & Business Rules:
+      - Enriched `JenisKegiatan` entity in `MockJenisKegiatanRepository` with server-computed usage statistics (`jumlahKegiatan`, `dapatDihapus`, `alasanTidakBisaHapus`, `rincianPenggunaan`, `ringkasanPenggunaan`).
+      - Deletion integrity (DOMAIN.md §12): restricted if activities reference it.
+      - Enriched `getAll(filter)` and CRUD operations in `MockJenisKegiatanRepository`.
+    - Verified with 6/6 automated tests in `desktop/scripts/test-jenis.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 

@@ -11,7 +11,7 @@ import { SubjekScreen } from '@/screens/SubjekScreen';
 import { KelasScreen } from '@/screens/KelasScreen';
 import { MapelScreen } from '@/screens/MapelScreen';
 import { TempatScreen } from '@/screens/TempatScreen';
-import { PlaceholderScreen } from '@/screens/PlaceholderScreen';
+import { JenisKegiatanScreen } from '@/screens/JenisKegiatanScreen';
 import { KatalogScreen } from '@/screens/KatalogScreen';
 import { DataLayerScreen } from '@/screens/DataLayerScreen';
 
@@ -37,7 +37,8 @@ export default function App() {
           <Route path="/master/kelas/:id" element={<KelasScreen />} />
           <Route path="/master/tempat" element={<TempatScreen />} />
           <Route path="/master/tempat/:id" element={<TempatScreen />} />
-          <Route path="/master/jenis" element={<PlaceholderScreen />} />
+          <Route path="/master/jenis" element={<JenisKegiatanScreen />} />
+          <Route path="/master/jenis/:id" element={<JenisKegiatanScreen />} />
         </Route>
 
         {/* Development & Inspection Screens */}

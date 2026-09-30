@@ -367,6 +367,16 @@ export interface JenisKegiatan {
   warna: JenisKegiatanWarna;
   materiWajib: boolean;
   siswaWajib: boolean;
+  // Server-computed
+  jumlahKegiatan?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  rincianPenggunaan?: string[];
+  ringkasanPenggunaan?: string;
+}
+
+export interface JenisKegiatanFilterParams {
+  q?: string;
 }
 
 export interface CreateJenisKegiatanInput {

@@ -23,6 +23,7 @@ import type {
   UpdateRuanganInput,
   CreateJenisKegiatanInput,
   UpdateJenisKegiatanInput,
+  JenisKegiatanFilterParams,
 } from '../types/master';
 
 // ==========================================
@@ -519,14 +520,14 @@ export function useDeleteRuangan() {
 // ==========================================
 export const jenisKegiatanKeys = {
   all: ['jenis-kegiatan'] as const,
-  list: ['jenis-kegiatan', 'list'] as const,
+  list: (filter?: JenisKegiatanFilterParams) => ['jenis-kegiatan', 'list', filter] as const,
   detail: (id: string) => ['jenis-kegiatan', 'detail', id] as const,
 };
 
-export function useJenisKegiatanList() {
+export function useJenisKegiatanList(filter?: JenisKegiatanFilterParams) {
   return useQuery({
-    queryKey: jenisKegiatanKeys.list,
-    queryFn: () => repositories.jenisKegiatan.getAll(),
+    queryKey: jenisKegiatanKeys.list(filter),
+    queryFn: () => repositories.jenisKegiatan.getAll(filter),
   });
 }
 
