@@ -16,6 +16,7 @@ import type {
   UpdateMapelInput,
   CreateMateriInput,
   UpdateMateriInput,
+  TempatFilterParams,
   CreateTempatInput,
   UpdateTempatInput,
   CreateRuanganInput,
@@ -411,16 +412,16 @@ export function useReorderMateri() {
 // ==========================================
 export const tempatKeys = {
   all: ['tempat'] as const,
-  list: ['tempat', 'list'] as const,
+  list: (filter?: TempatFilterParams) => ['tempat', 'list', filter] as const,
   detail: (id: string) => ['tempat', 'detail', id] as const,
   ruanganAll: ['tempat', 'ruangan', 'all'] as const,
   ruanganByTempat: (tempatId: string) => ['tempat', 'ruangan', tempatId] as const,
 };
 
-export function useTempatList() {
+export function useTempatList(filter?: TempatFilterParams) {
   return useQuery({
-    queryKey: tempatKeys.list,
-    queryFn: () => repositories.tempat.getAll(),
+    queryKey: tempatKeys.list(filter),
+    queryFn: () => repositories.tempat.getAll(filter),
   });
 }
 

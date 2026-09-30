@@ -1,6 +1,7 @@
 import type { ITempatRepository } from '../interfaces/ITempatRepository';
 import type {
   Tempat,
+  TempatFilterParams,
   CreateTempatInput,
   UpdateTempatInput,
   Ruangan,
@@ -13,17 +14,72 @@ import { mockRunner } from './mockRunner';
 import { mockStore } from './mockStore';
 import { checkMasterUsage } from './businessRules';
 
+function enrichRuangan(r: Ruangan): Ruangan {
+  const kegCount = mockStore.kegiatan.filter((k) => k.ruangan === r.id).length;
+  const tempatObj = mockStore.tempat.find((t) => t.id === r.tempat);
+
+  const dapatDihapus = kegCount === 0;
+  const alasanTidakBisaHapus = dapatDihapus
+    ? undefined
+    : `Tidak bisa dihapus: ${kegCount} kegiatan menunjuk ruangan ini. Ubah dulu kegiatan itu.`;
+
+  return {
+    ...r,
+    kapasitas: r.kapasitas || 12,
+    namaTempat: tempatObj?.nama,
+    jumlahKegiatan: kegCount,
+    dapatDihapus,
+    alasanTidakBisaHapus,
+    ringkasanPenggunaan:
+      kegCount > 0
+        ? `${kegCount} kegiatan tercatat memakai ruangan ini.`
+        : 'Belum pernah dipakai di kegiatan mana pun.',
+  };
+}
+
+function enrichTempat(t: Tempat): Tempat {
+  const rooms = mockStore.ruangan.filter((r) => r.tempat === t.id).map(enrichRuangan);
+  const roomIds = rooms.map((r) => r.id);
+  const kegCount = mockStore.kegiatan.filter((k) => roomIds.includes(k.ruangan)).length;
+  const anakN = rooms.length;
+
+  const dapatDihapus = anakN === 0 && kegCount === 0;
+  let alasanTidakBisaHapus: string | undefined;
+  if (kegCount > 0) {
+    alasanTidakBisaHapus = `Tidak bisa dihapus: ${kegCount} kegiatan menunjuk tempat ini. Ubah dulu kegiatan itu.`;
+  } else if (anakN > 0) {
+    alasanTidakBisaHapus = `Kosongkan dulu ${anakN} ruangan di dalamnya.`;
+  }
+
+  return {
+    ...t,
+    jumlahRuangan: anakN,
+    jumlahKegiatan: kegCount,
+    dapatDihapus,
+    alasanTidakBisaHapus,
+    rincianPenggunaan: kegCount > 0 ? [`${kegCount} kegiatan`] : [],
+    ringkasanPenggunaan:
+      kegCount > 0
+        ? `${kegCount} kegiatan tercatat memakai tempat ini.`
+        : 'Belum pernah dipakai di kegiatan mana pun.',
+    ruangan: rooms,
+  };
+}
+
 export class MockTempatRepository implements ITempatRepository {
-  public async getAll(): Promise<Tempat[]> {
+  public async getAll(filter: TempatFilterParams = {}): Promise<Tempat[]> {
     return mockRunner(() => {
-      return mockStore.tempat.map((t) => {
-        const rooms = mockStore.ruangan.filter((r) => r.tempat === t.id);
-        return {
-          ...t,
-          jumlahRuangan: rooms.length,
-          ruangan: rooms.map((r) => ({ ...r, namaTempat: t.nama })),
-        };
-      });
+      const { q } = filter;
+      return mockStore.tempat
+        .filter((t) => {
+          if (q && q.trim().length > 0) {
+            const qLower = q.trim().toLowerCase();
+            if (!t.nama.toLowerCase().includes(qLower)) return false;
+          }
+          return true;
+        })
+        .map(enrichTempat)
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
     });
   }
 
@@ -33,29 +89,28 @@ export class MockTempatRepository implements ITempatRepository {
       if (!t) {
         throw new BandrekApiError('unknown', `Tempat dengan ID "${id}" tidak ditemukan.`, 404);
       }
-      const rooms = mockStore.ruangan.filter((r) => r.tempat === t.id);
-      return {
-        ...t,
-        jumlahRuangan: rooms.length,
-        ruangan: rooms.map((r) => ({ ...r, namaTempat: t.nama })),
-      };
+      return enrichTempat(t);
     });
   }
 
   public async create(input: CreateTempatInput): Promise<Tempat> {
     return mockRunner(
       () => {
-        const newId = `P${mockStore.tempat.length + 1}`;
+        let n = mockStore.tempat.length + 1;
+        while (mockStore.tempat.some((x) => x.id === `P${n}`)) {
+          n++;
+        }
+        const newId = `P${n}`;
         const newTempat: Tempat = {
           id: newId,
-          nama: input.nama,
+          nama: input.nama.trim(),
           jumlahRuangan: 0,
           ruangan: [],
         };
 
         mockStore.tempat.push(newTempat);
         mockStore.persist();
-        return newTempat;
+        return enrichTempat(newTempat);
       },
       { isMutation: true }
     );
@@ -72,18 +127,12 @@ export class MockTempatRepository implements ITempatRepository {
         const existing = mockStore.tempat[idx];
         const updated: Tempat = {
           ...existing,
-          nama: input.nama,
+          nama: input.nama !== undefined ? input.nama.trim() : existing.nama,
         };
 
         mockStore.tempat[idx] = updated;
         mockStore.persist();
-
-        const rooms = mockStore.ruangan.filter((r) => r.tempat === updated.id);
-        return {
-          ...updated,
-          jumlahRuangan: rooms.length,
-          ruangan: rooms.map((r) => ({ ...r, namaTempat: updated.nama })),
-        };
+        return enrichTempat(updated);
       },
       { isMutation: true }
     );
@@ -122,45 +171,36 @@ export class MockTempatRepository implements ITempatRepository {
   // RUANGAN
   // --------------------------------------------------------------------------
   public async getAllRuangan(): Promise<Ruangan[]> {
-    return mockRunner(() => {
-      return mockStore.ruangan.map((r) => {
-        const place = mockStore.tempat.find((p) => p.id === r.tempat);
-        return {
-          ...r,
-          namaTempat: place ? place.nama : 'Tempat',
-        };
-      });
-    });
+    return mockRunner(() => mockStore.ruangan.map(enrichRuangan));
   }
 
   public async getRuanganByTempat(tempatId: string): Promise<Ruangan[]> {
     return mockRunner(() => {
-      const place = mockStore.tempat.find((p) => p.id === tempatId);
       return mockStore.ruangan
         .filter((r) => r.tempat === tempatId)
-        .map((r) => ({
-          ...r,
-          namaTempat: place ? place.nama : 'Tempat',
-        }));
+        .map(enrichRuangan)
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
     });
   }
 
   public async createRuangan(input: CreateRuanganInput): Promise<Ruangan> {
     return mockRunner(
       () => {
-        const newId = `R${mockStore.ruangan.length + 1}`;
-        const place = mockStore.tempat.find((p) => p.id === input.tempat);
+        let n = mockStore.ruangan.length + 1;
+        while (mockStore.ruangan.some((x) => x.id === `R${n}`)) {
+          n++;
+        }
+        const newId = `R${n}`;
         const newRuangan: Ruangan = {
           id: newId,
           tempat: input.tempat,
-          nama: input.nama,
-          kapasitas: input.kapasitas,
-          namaTempat: place ? place.nama : 'Tempat',
+          nama: input.nama.trim(),
+          kapasitas: input.kapasitas != null ? input.kapasitas : 12,
         };
 
         mockStore.ruangan.push(newRuangan);
         mockStore.persist();
-        return newRuangan;
+        return enrichRuangan(newRuangan);
       },
       { isMutation: true }
     );
@@ -175,20 +215,16 @@ export class MockTempatRepository implements ITempatRepository {
         }
 
         const existing = mockStore.ruangan[idx];
-        const targetTempatId = input.tempat ?? existing.tempat;
-        const place = mockStore.tempat.find((p) => p.id === targetTempatId);
-
         const updated: Ruangan = {
           ...existing,
-          tempat: targetTempatId,
-          nama: input.nama ?? existing.nama,
+          tempat: input.tempat ?? existing.tempat,
+          nama: input.nama !== undefined ? input.nama.trim() : existing.nama,
           kapasitas: input.kapasitas !== undefined ? input.kapasitas : existing.kapasitas,
-          namaTempat: place ? place.nama : 'Tempat',
         };
 
         mockStore.ruangan[idx] = updated;
         mockStore.persist();
-        return updated;
+        return enrichRuangan(updated);
       },
       { isMutation: true }
     );

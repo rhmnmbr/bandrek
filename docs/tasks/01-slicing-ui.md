@@ -519,6 +519,45 @@ _Update this section at each approved checkpoint: what was done, and any decisio
       - Deletion integrity: Mapel deletion restricted if child topics exist or activities reference it; Materi deletion restricted if activities reference it.
       - Enriched `getAll(filter)`, `reorderMateri(mapelId, orderedIds)`, and CRUD operations.
     - Verified with 6/6 automated tests in `desktop/scripts/test-mapel.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
+  - [x] Step 10: B5 Tempat & Ruangan — Wide Master-Detail & Child Entity Capacity (P1)
+    - Implemented wide parent-child master pattern (`desktop/src/screens/TempatScreen.tsx`) on route `/master/tempat` and `/master/tempat/:id`.
+    - Toolbar & Filter Bar (`desktop/src/components/master/tempat/TempatToolbar.tsx`):
+      - Top Meta Bar (H: 44px): count e.g. `3 tempat · 9 ruangan`, primary `+ Tempat baru` button with `title="Tambah tempat baru · Ctrl+N"`.
+      - Filter Bar (H: 48px, bg `#FAFAFA`, border-b `#E1DFDD`): search input `Cari tempat`, `Reset filter` button.
+    - Master Table (`desktop/src/components/master/tempat/TempatTable.tsx`):
+      - Sticky header (H: 26px, bg `#FAFAFA`, border-b `#E1DFDD`, font 10.5px bold): `TEMPAT` (min-w 140px), `RUANGAN` (74px, mono, right).
+      - 32px row height with hover `#FAFAFA`, selected state `#EBF3FC` with `box-shadow: inset 3px 0 0 #0F6CBD`.
+      - 0-ruangan warning highlighted in bold amber `#8A5200` with `⚠` icon prefix.
+      - Bottom warning alert box when any tempat has 0 rooms: `⚠ <nama> belum punya ruangan, jadi belum bisa dipilih di form kegiatan.`.
+      - Row click navigates to `/master/tempat/:id`.
+      - Sticky footer (H: 30px, bg `#FAFAFA`, border-t `#E1DFDD`): `Menampilkan X dari Y tempat`.
+    - Empty State (`desktop/src/components/master/tempat/TempatEmptyState.tsx`):
+      - Informative zero-state display with glyph `◇` and primary action (`[Reset filter]` or `[+ Tempat baru]`).
+    - Child Ruangan Table (`desktop/src/components/master/tempat/RuanganTable.tsx`):
+      - Embedded in parent edit panel.
+      - Section header: `RUANGAN · N` + `+ Ruangan` button.
+      - Compact room row with room name, capacity (`kapasitas N orang`), activity count (`N kegiatan`), and edit button `[Ubah]`.
+      - Guidance note: `Ruangan muncul dikelompokkan per tempat di form kegiatan.`.
+    - Wide Form Panel (`desktop/src/components/master/tempat/TempatFormView.tsx`):
+      - Dual-mode panel supporting Parent Tempat view and Child Ruangan view with back navigation button `[<]`.
+      - Parent Tempat mode:
+        - `Nama tempat *` with duplicate check across other places.
+        - Child `RuanganTable` list with live count and direct editing.
+        - `RINGKASAN` card: activity count summary + direct link `Lihat kegiatannya di daftar kegiatan` (`/kegiatan?tempat=<id>`).
+        - Footer: `Hapus` (disabled if has children or activities), `Batal`, `Simpan tempat` / `Simpan` (`Ctrl+S`).
+      - Child Ruangan mode:
+        - Header with `[<]` back button to parent Tempat.
+        - `Nama ruangan *` with uniqueness check among sibling rooms.
+        - `Kapasitas` number input (Cascadia Mono, default 12, min 1) with guidance: `Dipakai sebagai peringatan lembut saat peserta kegiatan melebihi daya tampung.`.
+        - `RINGKASAN` card: activity count summary.
+        - Footer: `Hapus` (disabled if used in activities), `Batal` (returns to parent), `Simpan ruangan` / `Simpan` (`Ctrl+S`).
+    - Confirmation Modal Dialog (`desktop/src/components/master/tempat/TempatConfirmModal.tsx`):
+      - 460px modal dialog supporting delete operations for both Tempat and Ruangan with impact bullets.
+    - Data Layer & Business Rules:
+      - Enriched `Tempat` and `Ruangan` entities with server-computed usage statistics (`jumlahRuangan`, `jumlahKegiatan`, `dapatDihapus`, `alasanTidakBisaHapus`, `rincianPenggunaan`, `ringkasanPenggunaan`).
+      - Deletion integrity (DOMAIN.md §12): Tempat deletion restricted if child rooms exist or activities reference it; Ruangan deletion restricted if activities reference it.
+      - Enriched `getAll(filter)` and CRUD operations in `MockTempatRepository`.
+    - Verified with 5/5 automated tests in `desktop/scripts/test-tempat.mjs` and `npm run build` passing with 0 errors and 0 lint warnings.
 
 
 

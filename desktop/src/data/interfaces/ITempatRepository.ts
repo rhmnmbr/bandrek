@@ -1,5 +1,6 @@
 import type {
   Tempat,
+  TempatFilterParams,
   CreateTempatInput,
   UpdateTempatInput,
   Ruangan,
@@ -9,7 +10,7 @@ import type {
 } from '../types/master';
 
 export interface ITempatRepository {
-  getAll(): Promise<Tempat[]>;
+  getAll(filter?: TempatFilterParams): Promise<Tempat[]>;
   getById(id: string): Promise<Tempat>;
   create(input: CreateTempatInput): Promise<Tempat>;
   update(id: string, input: UpdateTempatInput): Promise<Tempat>;

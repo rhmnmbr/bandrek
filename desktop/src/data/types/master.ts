@@ -315,7 +315,16 @@ export interface Tempat {
   nama: string;
   // Server-computed
   jumlahRuangan?: number;
+  jumlahKegiatan?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  rincianPenggunaan?: string[];
+  ringkasanPenggunaan?: string;
   ruangan?: Ruangan[];
+}
+
+export interface TempatFilterParams {
+  q?: string;
 }
 
 export interface CreateTempatInput {
@@ -332,6 +341,10 @@ export interface Ruangan {
   nama: string;
   kapasitas?: number;
   // Server-computed
+  jumlahKegiatan?: number;
+  dapatDihapus?: boolean;
+  alasanTidakBisaHapus?: string;
+  ringkasanPenggunaan?: string;
   namaTempat?: string;
 }
 
