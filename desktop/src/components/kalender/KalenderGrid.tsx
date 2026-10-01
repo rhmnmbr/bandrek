@@ -175,7 +175,7 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                         type="button"
                         onClick={() => onSelectSlot(d.iso, hour)}
                         title={`Klik untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
-                        className="absolute inset-[1px_2px] rounded border border-dashed border-transparent group-hover:border-[#8CC3F0] group-hover:bg-[#EBF3FC] text-transparent group-hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
+                        className="absolute inset-[2px] rounded border border-dashed border-transparent group-hover:border-[#8CC3F0] group-hover:bg-[#EBF3FC] text-transparent group-hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
                       >
                         <Add12Regular className="text-[13px]" />
                       </button>

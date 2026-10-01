@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft16Regular, Warning16Regular } from '@fluentui/react-icons';
+import { ChevronLeft16Regular, Warning16Regular, Clock16Regular } from '@fluentui/react-icons';
 import { KegiatanBadge, KehadiranBadge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast';
 import {
@@ -132,8 +132,9 @@ export const DetailKegiatanScreen: React.FC = () => {
   }
 
   const bolehUbah = kegiatan.status === 'terjadwal' || kegiatan.status === 'belum_direalisasi';
-  const bolehRealisasi = bolehUbah || kegiatan.status === 'terealisasi';
+  const bolehRealisasi = Boolean(kegiatan.aksiDiizinkan?.includes('isi_realisasi'));
   const isDibatalkan = kegiatan.status === 'dibatalkan';
+  const isMasaMendatang = kegiatan.status === 'terjadwal' && !bolehRealisasi;
 
   const alasanTeks = (o?: { alasan?: string; keterangan?: string } | null) => {
     if (!o) return 'Tanpa alasan tercatat';
@@ -344,14 +345,18 @@ export const DetailKegiatanScreen: React.FC = () => {
       ? 'Kegiatan dibatalkan, tidak ada realisasi'
       : kegiatan.status === 'dijadwal_ulang'
         ? 'Kegiatan dijadwalkan ulang, tidak ada realisasi'
-        : 'Realisasi belum diisi';
+        : isMasaMendatang
+          ? 'Kegiatan belum berlangsung'
+          : 'Realisasi belum diisi';
 
   const kosongTeks =
     kegiatan.status === 'dibatalkan'
       ? 'Karena dibatalkan, materi kegiatan ini tetap belum tersampaikan di matriks belajar.'
       : kegiatan.status === 'dijadwal_ulang'
         ? 'Realisasi akan diisi pada jadwal barunya, bukan di sini.'
-        : 'Kehadiran dan ketuntasan belum tercatat, jadi materi ini belum masuk matriks belajar.';
+        : isMasaMendatang
+          ? 'Realisasi kehadiran dan materi dapat dicatat setelah kegiatan dimulai.'
+          : 'Kehadiran dan ketuntasan belum tercatat, jadi materi ini belum masuk matriks belajar.';
 
   const breadcrumbAsal = location.state?.fromTitle || 'Kalender';
 
@@ -583,37 +588,57 @@ export const DetailKegiatanScreen: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="rounded-lg border border-[#F0A82E] bg-[#FFF3E0] p-3 flex gap-2.5 items-start">
-              <Warning16Regular className="text-[#8A5200] w-4 h-4 flex-none mt-0.5" />
+            <div
+              className={cn(
+                'rounded-lg p-3 flex gap-2.5 items-start',
+                isMasaMendatang
+                  ? 'border border-(--color-border) bg-(--color-surface-alt)'
+                  : 'border border-[#F0A82E] bg-[#FFF3E0]'
+              )}
+            >
+              {isMasaMendatang ? (
+                <Clock16Regular className="text-(--color-text-muted) w-4 h-4 flex-none mt-0.5" />
+              ) : (
+                <Warning16Regular className="text-[#8A5200] w-4 h-4 flex-none mt-0.5" />
+              )}
               <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-semibold text-[#8A5200]">{kosongJudul}</div>
-                <div className="text-[12.5px] text-[#8A5200] leading-relaxed mt-0.75">
+                <div
+                  className={cn(
+                    'text-[13px] font-semibold',
+                    isMasaMendatang ? 'text-(--color-text)' : 'text-[#8A5200]'
+                  )}
+                >
+                  {kosongJudul}
+                </div>
+                <div
+                  className={cn(
+                    'text-[12.5px] leading-relaxed mt-0.75',
+                    isMasaMendatang ? 'text-(--color-text-secondary)' : 'text-[#8A5200]'
+                  )}
+                >
                   {kosongTeks}
                 </div>
                 <div className="mt-2 flex gap-1.5">
-                  <button
-                    type="button"
-                    onClick={handleIsiRealisasi}
-                    disabled={!bolehRealisasi}
-                    title={
-                      bolehRealisasi
-                        ? 'Catat kehadiran dan hasil sesi ini'
-                        : 'Kegiatan yang dibatalkan atau dijadwalkan ulang tidak bisa direalisasi'
-                    }
-                    className={cn(
-                      'h-6.5 px-2.75 rounded text-xs font-semibold transition-all whitespace-nowrap',
-                      bolehRealisasi
-                        ? 'bg-(--color-brand) text-white hover:bg-(--color-brand-hover) active:translate-y-px cursor-pointer'
-                        : 'bg-[#F5F5F5] text-[#A19F9D] cursor-not-allowed'
-                    )}
-                  >
-                    Isi realisasi
-                  </button>
+                  {bolehRealisasi && (
+                    <button
+                      type="button"
+                      onClick={handleIsiRealisasi}
+                      title="Catat kehadiran dan hasil sesi ini"
+                      className="h-6.5 px-2.75 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-hover) active:translate-y-px cursor-pointer whitespace-nowrap"
+                    >
+                      Isi realisasi
+                    </button>
+                  )}
                   {bolehUbah && (
                     <button
                       type="button"
                       onClick={() => setFormEditOpen(true)}
-                      className="h-6.5 px-2.75 rounded text-xs font-normal border border-[#8A5200] bg-white text-[#8A5200] hover:bg-[#FFF8EE] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                      className={cn(
+                        'h-6.5 px-2.75 rounded text-xs font-normal transition-all cursor-pointer whitespace-nowrap active:translate-y-px',
+                        isMasaMendatang
+                          ? 'border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-sunken)'
+                          : 'border border-[#8A5200] bg-white text-[#8A5200] hover:bg-[#FFF8EE]'
+                      )}
                     >
                       Ubah kegiatan
                     </button>

@@ -352,6 +352,24 @@ export const KalenderScreen: React.FC = () => {
     [filters.ruangan]
   );
 
+  // Handle Tambah Kegiatan di Jam Ini (prefills date & time range from existing session)
+  const handleTambahDiJamIni = React.useCallback(
+    (kegiatan: Kegiatan) => {
+      setActivePopover(null);
+      setFormState({
+        open: true,
+        initialData: {
+          mode: 'create',
+          tanggal: kegiatan.tanggal,
+          mulai: kegiatan.mulai,
+          selesai: kegiatan.selesai,
+          ruangan: '', // Leave room unselected so operator can pick an available room
+        },
+      });
+    },
+    []
+  );
+
   // Handle Highlight Conflict on calendar
   const handleHighlightConflict = React.useCallback(
     (conflictId: string, conflictDate: string) => {
@@ -516,6 +534,7 @@ export const KalenderScreen: React.FC = () => {
           onOpenJadwalUlang={handleOpenJadwalUlang}
           onOpenBatal={handleOpenBatal}
           onNavigateKegiatan={handleNavigateKegiatan}
+          onTambahDiJamIni={handleTambahDiJamIni}
         />
       )}
 

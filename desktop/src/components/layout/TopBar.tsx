@@ -86,7 +86,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <Link
           to="/data"
           title="Buka panel simulasi data layer (/data)"
-          className="flex h-7 items-center gap-1 rounded px-2 text-[12px] text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
+          className="flex h-7 items-center gap-1 rounded px-2 text-[12px] font-medium text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
         >
           <Database16Regular className="text-[13px]" />
           <span>Data Mock</span>
@@ -94,7 +94,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <Link
           to="/katalog"
           title="Buka katalog komponen UI (/katalog)"
-          className="flex h-7 items-center gap-1 rounded px-2 text-[12px] text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
+          className="flex h-7 items-center gap-1 rounded px-2 text-[12px] font-medium text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
         >
           <Color16Regular className="text-[13px]" />
           <span>Katalog</span>

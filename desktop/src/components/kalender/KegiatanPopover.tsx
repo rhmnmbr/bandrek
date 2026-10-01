@@ -11,6 +11,7 @@ import type { Subjek, Siswa, Kelas } from '@/data/types/master';
 import {
   Dismiss16Regular,
   ChevronDown12Regular,
+  Add12Regular,
 } from '@fluentui/react-icons';
 import { KegiatanBadge } from '@/components/ui/badge';
 
@@ -29,6 +30,7 @@ export interface KegiatanPopoverProps {
   onOpenJadwalUlang?: (kegiatan: Kegiatan) => void;
   onOpenBatal?: (kegiatan: Kegiatan) => void;
   onNavigateKegiatan?: (kegiatanId: string) => void;
+  onTambahDiJamIni?: (kegiatan: Kegiatan) => void;
 }
 
 export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
@@ -46,6 +48,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
   onOpenJadwalUlang,
   onOpenBatal,
   onNavigateKegiatan,
+  onTambahDiJamIni,
 }) => {
   const [isSiswaOpen, setIsSiswaOpen] = React.useState(false);
 
@@ -295,14 +298,16 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Action Set 1: Terjadwal & Belum direalisasi */}
           {(kegiatan.status === 'terjadwal' || kegiatan.status === 'belum_direalisasi') && (
             <>
-              <button
-                type="button"
-                onClick={() => onOpenRealisasi?.(kegiatan)}
-                title="Catat kehadiran dan hasil sesi ini"
-                className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#0F6CBD] text-white hover:bg-[#115EA3] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
-              >
-                Isi realisasi
-              </button>
+              {kegiatan.aksiDiizinkan?.includes('isi_realisasi') && (
+                <button
+                  type="button"
+                  onClick={() => onOpenRealisasi?.(kegiatan)}
+                  title="Catat kehadiran dan hasil sesi ini"
+                  className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#0F6CBD] text-white hover:bg-[#115EA3] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                >
+                  Isi realisasi
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => onOpenDetail?.(kegiatan)}
@@ -326,6 +331,15 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
               </button>
               <button
                 type="button"
+                onClick={() => onTambahDiJamIni?.(kegiatan)}
+                title={`Tambah kegiatan baru di jam ${kegiatan.mulai}–${kegiatan.selesai}`}
+                className="h-[26px] px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
+              >
+                <Add12Regular className="w-3.5 h-3.5" />
+                <span>Tambah di jam ini</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => onOpenBatal?.(kegiatan)}
                 className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#C50F1F] text-white hover:bg-[#A80816] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
@@ -337,6 +351,15 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Action Set 2: Terealisasi */}
           {kegiatan.status === 'terealisasi' && (
             <>
+              <button
+                type="button"
+                onClick={() => onTambahDiJamIni?.(kegiatan)}
+                title={`Tambah kegiatan baru di jam ${kegiatan.mulai}–${kegiatan.selesai}`}
+                className="h-[26px] px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
+              >
+                <Add12Regular className="w-3.5 h-3.5" />
+                <span>Tambah di jam ini</span>
+              </button>
               <button
                 type="button"
                 onClick={() => onOpenRealisasi?.(kegiatan)}
@@ -358,6 +381,15 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Action Set 3: Dibatalkan & Dijadwal ulang */}
           {(kegiatan.status === 'dibatalkan' || kegiatan.status === 'dijadwal_ulang') && (
             <>
+              <button
+                type="button"
+                onClick={() => onTambahDiJamIni?.(kegiatan)}
+                title={`Tambah kegiatan baru di jam ${kegiatan.mulai}–${kegiatan.selesai}`}
+                className="h-[26px] px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
+              >
+                <Add12Regular className="w-3.5 h-3.5" />
+                <span>Tambah di jam ini</span>
+              </button>
               <button
                 type="button"
                 disabled

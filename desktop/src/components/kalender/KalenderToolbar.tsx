@@ -104,6 +104,19 @@ export const KalenderToolbar: React.FC<KalenderToolbarProps> = ({
         </button>
         <button
           type="button"
+          onClick={() => onViewChange('weekend')}
+          title="Tampilan Weekend (E)"
+          className={cn(
+            'h-6 px-3 text-[12.5px] cursor-pointer transition-colors font-medium border-r border-(--color-border-subtle)',
+            view === 'weekend'
+              ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
+              : 'text-(--color-text) hover:bg-(--color-surface-alt)'
+          )}
+        >
+          Weekend
+        </button>
+        <button
+          type="button"
           onClick={() => onViewChange('bulan')}
           title="Tampilan Bulan (M)"
           className={cn(

@@ -75,11 +75,29 @@ export function computeStatusKegiatan(
   return 'terjadwal';
 }
 
-export function computeAksiKegiatan(status: StatusKegiatan): AksiKegiatan[] {
+export function computeAksiKegiatan(
+  status: StatusKegiatan,
+  tanggal?: string,
+  mulai?: string,
+  today?: string,
+  now?: string
+): AksiKegiatan[] {
   switch (status) {
-    case 'terjadwal':
     case 'belum_direalisasi':
       return ['lihat_detail', 'edit', 'isi_realisasi', 'jadwal_ulang', 'batalkan'];
+    case 'terjadwal': {
+      // Kegiatan di masa mendatang belum bisa diisi realisasinya.
+      // Realisasi baru bisa diisi sejak jam mulai kegiatan tiba pada hari H.
+      const isPastDate = Boolean(tanggal && today && tanggal < today);
+      const isStartedToday = Boolean(
+        tanggal && today && mulai && now && tanggal === today && mulai <= now
+      );
+      const bolehRealisasi = isPastDate || isStartedToday;
+
+      return bolehRealisasi
+        ? ['lihat_detail', 'edit', 'isi_realisasi', 'jadwal_ulang', 'batalkan']
+        : ['lihat_detail', 'edit', 'jadwal_ulang', 'batalkan'];
+    }
     case 'terealisasi':
       return ['lihat_detail', 'ubah_realisasi'];
     case 'dibatalkan':
@@ -112,7 +130,7 @@ export function enrichKegiatan(
   const topic = topics.find((t) => t.id === raw.materi);
 
   const status = computeStatusKegiatan(raw.status, raw.realisasi, raw.tanggal, raw.selesai, today, now);
-  const aksiDiizinkan = computeAksiKegiatan(status);
+  const aksiDiizinkan = computeAksiKegiatan(status, raw.tanggal, raw.mulai, today, now);
 
   // Cari pengisi utama (subjek pertama dengan peran Pengisi)
   let pengisiUtama: { id: string; nama: string } | undefined;

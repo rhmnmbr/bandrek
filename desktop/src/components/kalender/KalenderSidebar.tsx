@@ -10,7 +10,7 @@ import {
   Dismiss12Regular,
 } from '@fluentui/react-icons';
 import type { StatusKegiatan } from '@/data/types';
-import type { KalenderStateFilters } from './useKalenderState';
+import type { KalenderStateFilters, KalenderViewMode } from './useKalenderState';
 import {
   toDate,
   toIso,
@@ -23,7 +23,7 @@ import type { JenisKegiatan, Subjek, Siswa, Kelas, Ruangan, Tempat } from '@/dat
 export interface KalenderSidebarProps {
   anchorDate: string;
   miniAnchor: string;
-  view: 'hari' | 'minggu' | 'bulan';
+  view: KalenderViewMode;
   todayIso: string;
   filters: KalenderStateFilters;
   jenisList: JenisKegiatan[];
@@ -84,16 +84,19 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
       const iso = toIso(d);
       const inMonth = d.getMonth() === ma.getMonth();
       const isToday = iso === todayIso;
-      const isSelected = iso === anchorDate;
-      const inWeek = view === 'minggu' && toIso(getMonday(d)) === weekOfAnchor;
+      const isSingleDaySelected = view === 'hari' && iso === anchorDate;
+      const inSelection =
+        (view === 'minggu' && toIso(getMonday(d)) === weekOfAnchor) ||
+        (view === 'weekend' && (d.getDay() === 0 || d.getDay() === 6) && toIso(getMonday(d)) === weekOfAnchor) ||
+        (view === 'bulan' && d.getFullYear() === anchorD.getFullYear() && d.getMonth() === anchorD.getMonth());
 
       days.push({
         num: d.getDate(),
         iso,
         inMonth,
         isToday,
-        isSelected,
-        inWeek,
+        isSingleDaySelected,
+        inSelection,
       });
     }
     return days;
@@ -195,12 +198,16 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
       <div className="grid grid-cols-7 gap-px mb-4">
         {miniDays.map((d) => {
           let btnClass = 'text-(--color-text) hover:bg-(--color-surface-sunken)';
-          if (d.isSelected) {
+          if (d.isSingleDaySelected) {
             btnClass = 'bg-(--color-brand) text-white font-semibold shadow-xs hover:bg-(--color-brand-pressed)';
+          } else if (d.inSelection) {
+            if (d.isToday) {
+              btnClass = 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-bold ring-1 ring-(--color-brand) ring-inset hover:bg-[#DCEBFB]';
+            } else {
+              btnClass = 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-medium hover:bg-[#DCEBFB]';
+            }
           } else if (d.isToday) {
-            btnClass = 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold hover:bg-[#DCEBFB]';
-          } else if (d.inWeek) {
-            btnClass = 'bg-(--color-surface-sunken) text-(--color-text) hover:bg-(--color-border)';
+            btnClass = 'text-(--color-brand) font-bold hover:bg-(--color-surface-sunken)';
           } else if (!d.inMonth) {
             btnClass = 'text-(--color-text-muted) hover:bg-(--color-surface-sunken)';
           }

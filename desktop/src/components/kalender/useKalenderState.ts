@@ -7,11 +7,12 @@ import {
   addMonths,
   getMonday,
   formatRentangMinggu,
+  formatRentangWeekend,
   formatTanggalHari,
   formatBulanTahun,
 } from '@/lib/dateUtils';
 
-export type KalenderViewMode = 'hari' | 'minggu' | 'bulan';
+export type KalenderViewMode = 'hari' | 'minggu' | 'weekend' | 'bulan';
 
 export const STATUS_DEFAULT: StatusKegiatan[] = [
   'terjadwal',
@@ -56,7 +57,7 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
       const prevDay = toIso(addDays(d, -1));
       setAnchorDate(prevDay);
       setMiniAnchor(prevDay);
-    } else if (view === 'minggu') {
+    } else if (view === 'minggu' || view === 'weekend') {
       const prevWeek = toIso(addDays(d, -7));
       setAnchorDate(prevWeek);
       setMiniAnchor(prevWeek);
@@ -73,7 +74,7 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
       const nextDay = toIso(addDays(d, 1));
       setAnchorDate(nextDay);
       setMiniAnchor(nextDay);
-    } else if (view === 'minggu') {
+    } else if (view === 'minggu' || view === 'weekend') {
       const nextWeek = toIso(addDays(d, 7));
       setAnchorDate(nextWeek);
       setMiniAnchor(nextWeek);
@@ -146,6 +147,9 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
       } else if (k === 'W') {
         e.preventDefault();
         setView('minggu');
+      } else if (k === 'E') {
+        e.preventDefault();
+        setView('weekend');
       } else if (k === 'M') {
         e.preventDefault();
         setView('bulan');
@@ -166,6 +170,9 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
     if (view === 'minggu') {
       return formatRentangMinggu(getMonday(anchorD));
     }
+    if (view === 'weekend') {
+      return formatRentangWeekend(getMonday(anchorD));
+    }
     return formatBulanTahun(anchorD);
   }, [anchorD, view]);
 
@@ -181,6 +188,10 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
         res.push(toIso(addDays(mon, i)));
       }
       return res;
+    }
+    if (view === 'weekend') {
+      const mon = getMonday(anchorD);
+      return [toIso(addDays(mon, 5)), toIso(addDays(mon, 6))];
     }
     // Bulan view: generate weeks starting from Monday before the 1st of month
     const firstOfMonth = new Date(anchorD.getFullYear(), anchorD.getMonth(), 1);

@@ -222,21 +222,43 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
                 {/* AKSI BUTTONS */}
                 <div className="w-37.5 flex-none flex items-center justify-end gap-1.25">
                   {/* Primary Action Button */}
-                  {(isTerjadwal || isBelum || isTerealisasi) && (
+                  {ev.aksiDiizinkan?.includes('isi_realisasi') && (
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         onIsiRealisasi(ev);
                       }}
-                      title={
-                        isTerealisasi
-                          ? 'Perbaiki kehadiran atau catatan realisasi'
-                          : 'Catat kehadiran dan hasil sesi ini'
-                      }
+                      title="Catat kehadiran dan hasil sesi ini"
                       className="flex-none h-6 px-2.25 border-none rounded bg-(--color-brand) text-white text-[11.5px] font-semibold cursor-pointer whitespace-nowrap hover:bg-(--color-brand-pressed) transition-colors"
                     >
-                      {isTerealisasi ? 'Ubah realisasi' : 'Isi realisasi'}
+                      Isi realisasi
+                    </button>
+                  )}
+                  {isTerealisasi && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onIsiRealisasi(ev);
+                      }}
+                      title="Perbaiki kehadiran atau catatan realisasi"
+                      className="flex-none h-6 px-2.25 border-none rounded bg-(--color-brand) text-white text-[11.5px] font-semibold cursor-pointer whitespace-nowrap hover:bg-(--color-brand-pressed) transition-colors"
+                    >
+                      Ubah realisasi
+                    </button>
+                  )}
+                  {isTerjadwal && !ev.aksiDiizinkan?.includes('isi_realisasi') && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpenDetail(ev);
+                      }}
+                      title="Buka detail kegiatan"
+                      className="flex-none h-6 px-2 border-none bg-transparent text-(--color-brand) text-[11.5px] cursor-pointer rounded whitespace-nowrap hover:bg-(--color-brand-subtle) transition-colors"
+                    >
+                      Lihat detail
                     </button>
                   )}
 

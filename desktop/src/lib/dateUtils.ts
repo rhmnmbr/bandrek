@@ -121,6 +121,18 @@ export function formatRentangMinggu(mon: Date): string {
 }
 
 /**
+ * Format rentang akhir pekan Sabtu–Minggu (misal: "19 – 20 Sep 2026")
+ */
+export function formatRentangWeekend(mon: Date): string {
+  const sat = addDays(mon, 5);
+  const sun = addDays(mon, 6);
+  if (sat.getMonth() === sun.getMonth()) {
+    return `${sat.getDate()} – ${sun.getDate()} ${NAMA_BULAN_PENDEK[sun.getMonth()]} ${sun.getFullYear()}`;
+  }
+  return `${sat.getDate()} ${NAMA_BULAN_PENDEK[sat.getMonth()]} – ${sun.getDate()} ${NAMA_BULAN_PENDEK[sun.getMonth()]} ${sun.getFullYear()}`;
+}
+
+/**
  * Format tampilan tanggal harian (misal: "Rabu, 16 September 2026")
  */
 export function formatTanggalHari(d: Date): string {
