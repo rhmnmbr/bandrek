@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Select } from '@/components/ui/select';
 import type { JenjangPendidikan, JenisKelamin } from '@/data/types/common';
 import type { Siswa, Kelas } from '@/data/types/master';
 import { formatTanggalSlash, formatTanggalTahun, hitungUmur, toIso, NAMA_BULAN } from '@/lib/dateUtils';
@@ -551,25 +552,22 @@ export function SiswaFormPanel({
             >
               Jenjang <span className="text-(--color-danger)">*</span>
             </label>
-            <select
+            <Select
               value={form.jenjang}
-              onChange={(e) =>
+              onValueChange={(val) =>
                 setForm((prev) => ({
                   ...prev,
-                  jenjang: e.target.value as JenjangPendidikan | '',
+                  jenjang: val as JenjangPendidikan | '',
                 }))
               }
-              className={`h-7 rounded border bg-(--color-surface) px-1.5 text-[13.5px] text-(--color-text-primary) focus:border-(--color-brand) focus:outline-none ${
-                dicoba && errors.jenjang
-                  ? 'border-(--color-danger) border-b-2'
-                  : 'border-(--color-border-strong)'
-              }`}
+              placeholder="Pilih"
+              error={Boolean(dicoba && errors.jenjang)}
             >
               <option value="">Pilih</option>
               <option value="SD">SD</option>
               <option value="SMP">SMP</option>
               <option value="SMA">SMA</option>
-            </select>
+            </Select>
             {dicoba && errors.jenjang && (
               <div className="flex items-center gap-1 text-[11px] text-(--color-danger-ink)">
                 <span>⚠</span>

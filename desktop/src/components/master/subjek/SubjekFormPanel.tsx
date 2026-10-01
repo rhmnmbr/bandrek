@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Warning16Regular } from '@fluentui/react-icons';
+import { Select } from '@/components/ui/select';
 import type { JenisKelamin } from '@/data/types/common';
 import type { Subjek, PeranSubjek, MataPelajaran } from '@/data/types/master';
 
@@ -297,17 +298,17 @@ export function SubjekFormPanel({
           {/* Peran Bawaan */}
           <div className="flex-1 min-w-0 flex flex-col gap-1">
             <label className="text-[11.5px] text-(--color-text-secondary)">Peran bawaan</label>
-            <select
+            <Select
               value={form.peran}
-              onChange={(e) => setForm((prev) => ({ ...prev, peran: e.target.value as PeranSubjek }))}
-              className="h-7 rounded border border-(--color-border-strong) bg-(--color-surface) px-1.5 text-[13.5px] text-(--color-text-primary) focus:outline-none focus:border-(--color-brand)"
+              onValueChange={(val) => setForm((prev) => ({ ...prev, peran: val as PeranSubjek }))}
+              placeholder="Pilih peran"
             >
               {PERAN_OPTIONS.map((p) => (
                 <option key={p} value={p}>
                   {p}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 

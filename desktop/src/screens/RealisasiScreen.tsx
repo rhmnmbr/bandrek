@@ -27,6 +27,7 @@ import {
   type KetuntasanValue,
 } from '@/components/ui/segmented-control';
 import { ConfirmDialog } from '@/components/ui/dialog';
+import { Select } from '@/components/ui/select';
 import { useToast } from '@/components/ui/toast';
 import {
   menit,
@@ -100,7 +101,7 @@ export const RealisasiScreen: React.FC = () => {
 
   // Field refs for auto-focus/scrolling
   const mulaiRef = React.useRef<HTMLInputElement>(null);
-  const materiRef = React.useRef<HTMLSelectElement>(null);
+  const materiRef = React.useRef<HTMLButtonElement>(null);
   const siswaScrollRef = React.useRef<HTMLDivElement>(null);
   const subjekScrollRef = React.useRef<HTMLDivElement>(null);
 
@@ -888,20 +889,16 @@ export const RealisasiScreen: React.FC = () => {
                 >
                   Materi yang benar-benar disampaikan <span className="text-(--color-danger)">*</span>
                 </label>
-                <select
-                  id="rel-materi-select"
+                <Select
                   ref={materiRef}
                   value={materi}
-                  onChange={(e) => {
-                    setMateri(e.target.value);
+                  onValueChange={(val) => {
+                    setMateri(val);
                     setIsDirty(true);
                   }}
-                  className={cn(
-                    'h-6.5 rounded border px-1.5 text-[13.5px] bg-white transition-colors outline-none',
-                    dicoba && materiError
-                      ? 'border-(--color-danger) text-(--color-danger-ink)'
-                      : 'border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand)'
-                  )}
+                  placeholder="Pilih materi yang disampaikan"
+                  error={Boolean(dicoba && materiError)}
+                  density="compact"
                 >
                   <option value="">Pilih materi yang disampaikan</option>
                   {opsiMateri.map((opt) => (
@@ -909,7 +906,7 @@ export const RealisasiScreen: React.FC = () => {
                       {opt.nama}
                     </option>
                   ))}
-                </select>
+                </Select>
 
                 {/* Materi Inline Error */}
                 {dicoba && materiError && (

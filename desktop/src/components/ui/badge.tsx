@@ -55,13 +55,13 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
       className: "border-(--color-event-terjadwal) text-(--color-brand-ink) bg-white",
     },
     belum: {
-      icon: <Warning12Regular className="text-[10px] flex-none translate-y-px" />,
+      icon: <Warning12Regular className="text-[10px] flex-none" />,
       defaultLabel: "Belum direalisasi",
       className:
         "border-(--color-event-belum) text-(--color-warning-ink) bg-(--color-warning-bg)",
     },
     terealisasi: {
-      icon: <Checkmark12Regular className="text-[11.5px] flex-none translate-y-[0.75px]" />,
+      icon: <Checkmark12Regular className="text-[11.5px] flex-none" />,
       defaultLabel: "Terealisasi",
       className: "border-(--color-event-terealisasi) text-(--color-success-ink) bg-white",
     },
@@ -91,7 +91,7 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
       <span className="w-5 h-full flex-none flex items-center justify-center">
         {config.icon}
       </span>
-      <span className="leading-none">{label || config.defaultLabel}</span>
+      <span className="leading-none translate-y-[-1.5px]">{label || config.defaultLabel}</span>
     </span>
   );
 };
@@ -108,7 +108,7 @@ export const KehadiranBadge: React.FC<KehadiranBadgeProps> = ({ status, label, c
     { icon: React.ReactNode; defaultLabel: string; className: string }
   > = {
     hadir: {
-      icon: <Checkmark12Regular className="text-[11.5px] flex-none translate-y-[0.75px]" />,
+      icon: <Checkmark12Regular className="text-[11.5px] flex-none" />,
       defaultLabel: "Hadir",
       className:
         "border-(--color-status-hadir) bg-(--color-status-hadir-bg) text-(--color-status-hadir-ink)",
@@ -145,7 +145,7 @@ export const KehadiranBadge: React.FC<KehadiranBadgeProps> = ({ status, label, c
       <span className="w-5 h-full flex-none flex items-center justify-center">
         {config.icon}
       </span>
-      <span className="leading-none">{label || config.defaultLabel}</span>
+      <span className="leading-none translate-y-[-1.5px]">{label || config.defaultLabel}</span>
     </span>
   );
 };
@@ -172,7 +172,7 @@ export const MasterStatusBadge: React.FC<MasterStatusBadgeProps> = ({
         className
       )}
     >
-      <span className="leading-none">
+      <span className="leading-none translate-y-[-1.5px]">
         {label || (isAktif ? "Aktif" : "Nonaktif")}
       </span>
     </span>

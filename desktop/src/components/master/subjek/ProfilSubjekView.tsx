@@ -1,4 +1,5 @@
 import { KegiatanBadge } from '@/components/ui/badge';
+import { Select } from '@/components/ui/select';
 import type { SubjekProfil, KetersediaanRutinItem } from '@/data/types/master';
 
 interface ProfilSubjekViewProps {
@@ -307,17 +308,18 @@ export function ProfilSubjekView({
               <div className="flex flex-col gap-1.5">
                 {subjek.ketersediaan.map((k, idx) => (
                   <div key={idx} className="flex items-center gap-1.5">
-                    <select
+                    <Select
                       value={k.hari}
-                      onChange={(e) => onUbahKetersediaan(idx, { hari: e.target.value })}
-                      className="w-[92px] shrink-0 h-6.5 rounded border border-(--color-border-strong) bg-(--color-surface) px-1 text-xs text-(--color-text-primary) focus:outline-none focus:border-(--color-brand)"
+                      onValueChange={(val) => onUbahKetersediaan(idx, { hari: val })}
+                      className="w-23 shrink-0"
+                      density="compact"
                     >
                       {HARI_LIST.map((h) => (
                         <option key={h} value={h}>
                           {h}
                         </option>
                       ))}
-                    </select>
+                    </Select>
 
                     <input
                       type="text"

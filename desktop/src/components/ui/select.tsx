@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { ChevronDown12Regular } from "@fluentui/react-icons";
+import { ChevronDown12Regular, Search16Regular, Dismiss12Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -25,6 +25,8 @@ export interface SelectProps {
   className?: string;
   name?: string;
   children?: React.ReactNode;
+  searchable?: boolean;
+  searchPlaceholder?: string;
 }
 
 // ============================================================================
@@ -45,6 +47,8 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       className,
       name,
       children,
+      searchable = false,
+      searchPlaceholder,
     },
     ref
   ) => {
@@ -76,6 +80,30 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
     const [open, setOpen] = React.useState(false);
     const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
     const optionsContainerRef = React.useRef<HTMLDivElement>(null);
+    const searchInputRef = React.useRef<HTMLInputElement>(null);
+    const [searchQuery, setSearchQuery] = React.useState("");
+
+    // Clear search and focus search input when opening
+    React.useEffect(() => {
+      if (open) {
+        setSearchQuery("");
+        if (searchable) {
+          const timer = setTimeout(() => searchInputRef.current?.focus(), 40);
+          return () => clearTimeout(timer);
+        }
+      }
+    }, [open, searchable]);
+
+    // Filter options by search query
+    const filteredOptions: SelectOption[] = React.useMemo(() => {
+      if (!searchable || !searchQuery.trim()) return parsedOptions;
+      const q = searchQuery.toLowerCase().trim();
+      return parsedOptions.filter((opt) => {
+        if (opt.value === "") return true; // keep placeholder
+        const text = typeof opt.label === "string" ? opt.label : String(opt.value);
+        return text.toLowerCase().includes(q);
+      });
+    }, [parsedOptions, searchQuery, searchable]);
 
     // Selected option label
     const selectedOption = parsedOptions.find((opt) => opt.value === currentValue);
@@ -85,14 +113,14 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       ? parsedOptions.find((o) => o.value === "")?.label
       : placeholder;
 
-    // Reset or initialize highlighted index when opening
+    // Reset or initialize highlighted index when opening or filtering
     React.useEffect(() => {
       if (open) {
-        const idx = parsedOptions.findIndex((o) => o.value === currentValue);
+        const idx = filteredOptions.findIndex((o) => o.value === currentValue);
         const target = idx >= 0 ? idx : 0;
         setHighlightedIndex((prev) => (prev === target ? prev : target));
       }
-    }, [open, currentValue]);
+    }, [open, currentValue, filteredOptions]);
 
     const handleSelect = (val: string) => {
       if (!isControlled) {
@@ -118,25 +146,25 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         e.preventDefault();
         setHighlightedIndex((prev) => {
           let next = prev + 1;
-          while (next < parsedOptions.length && parsedOptions[next]?.disabled) {
+          while (next < filteredOptions.length && filteredOptions[next]?.disabled) {
             next++;
           }
-          if (next >= parsedOptions.length) next = 0;
+          if (next >= filteredOptions.length) next = 0;
           return next;
         });
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setHighlightedIndex((prev) => {
           let next = prev - 1;
-          while (next >= 0 && parsedOptions[next]?.disabled) {
+          while (next >= 0 && filteredOptions[next]?.disabled) {
             next--;
           }
-          if (next < 0) next = parsedOptions.length - 1;
+          if (next < 0) next = filteredOptions.length - 1;
           return next;
         });
-      } else if (e.key === "Enter" || e.key === " ") {
+      } else if (e.key === "Enter" || (!searchable && e.key === " ")) {
         e.preventDefault();
-        const target = parsedOptions[highlightedIndex];
+        const target = filteredOptions[highlightedIndex];
         if (target && !target.disabled) {
           handleSelect(target.value);
         }
@@ -171,8 +199,8 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
               "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
               "focus:outline-none",
               density === "compact"
-                ? "h-(--density-control-h) px-2 text-[13px]"
-                : "h-8 px-3 text-[13.5px]",
+                ? "h-(--density-control-h) pl-2 pr-1.5 text-[12.5px]"
+                : "h-8 pl-3 pr-2 text-[13.5px]",
               error
                 ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
                 : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
@@ -204,7 +232,14 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
             align="start"
             sideOffset={3}
             avoidCollisions={false}
-            onOpenAutoFocus={(e) => e.preventDefault()}
+            onOpenAutoFocus={(e) => {
+              if (searchable) {
+                // Let search input focus smoothly
+                e.preventDefault();
+              } else {
+                e.preventDefault();
+              }
+            }}
             onKeyDown={handleKeyDown}
             className={cn(
               "z-50 w-(--radix-popover-trigger-width) min-w-full max-h-65 overflow-y-auto rounded-[6px] border border-[#C8C6C4] bg-white p-1 text-(--color-text) shadow-[0_8px_16px_rgba(0,0,0,0.14),0_0_2px_rgba(0,0,0,0.12)] outline-none duration-75",
@@ -213,34 +248,84 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
               "scrollbar-thin [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
             )}
           >
-            <div ref={optionsContainerRef} className="flex flex-col gap-px">
-              {parsedOptions.map((opt, idx) => {
-                const isSelected = opt.value === currentValue;
-                const isHighlighted = idx === highlightedIndex;
+            {/* Search Input Bar when searchable is enabled */}
+            {searchable && (
+              <div className="sticky top-0 bg-white pt-0.5 pb-1.5 px-0.5 border-b border-(--color-border) mb-1 z-10">
+                <div className="relative flex items-center">
+                  <Search16Regular className="absolute left-1.5 text-(--color-text-muted) w-3.5 h-3.5 pointer-events-none" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={searchPlaceholder || "Cari..."}
+                    className="w-full h-6 pl-6 pr-5 text-[12px] rounded border border-(--color-border-strong) bg-(--color-surface-sunken) focus:bg-white focus:border-(--color-brand) focus:outline-none transition-colors"
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                        handleKeyDown(e);
+                      } else if (e.key === "Enter") {
+                        e.preventDefault();
+                        const target = filteredOptions[highlightedIndex >= 0 ? highlightedIndex : 0];
+                        if (target && !target.disabled) {
+                          handleSelect(target.value);
+                        }
+                      } else if (e.key === "Escape") {
+                        e.preventDefault();
+                        setOpen(false);
+                      }
+                    }}
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("");
+                        searchInputRef.current?.focus();
+                      }}
+                      className="absolute right-1 text-(--color-text-muted) hover:text-(--color-text) cursor-pointer p-0.5"
+                    >
+                      <Dismiss12Regular className="w-2.5 h-2.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
-                return (
-                  <button
-                    key={`${opt.value}-${idx}`}
-                    type="button"
-                    role="option"
-                    aria-selected={isSelected}
-                    disabled={opt.disabled}
-                    onClick={() => handleSelect(opt.value)}
-                    onMouseEnter={() => setHighlightedIndex(idx)}
-                    className={cn(
-                      "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
-                      isSelected
-                        ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
-                        : isHighlighted
-                        ? "bg-[#EBF3FC] text-[#242424] font-normal"
-                        : "bg-transparent text-[#242424] font-normal hover:bg-[#EBF3FC]",
-                      opt.disabled && "opacity-50 cursor-not-allowed pointer-events-none"
-                    )}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
+            <div ref={optionsContainerRef} className="flex flex-col gap-px">
+              {filteredOptions.length === 0 ? (
+                <div className="py-2.5 px-2 text-center text-[12px] text-(--color-text-muted)">
+                  Tidak ditemukan
+                </div>
+              ) : (
+                filteredOptions.map((opt, idx) => {
+                  const isSelected = opt.value === currentValue;
+                  const isHighlighted = idx === highlightedIndex;
+
+                  return (
+                    <button
+                      key={`${opt.value}-${idx}`}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      disabled={opt.disabled}
+                      onClick={() => handleSelect(opt.value)}
+                      onMouseEnter={() => setHighlightedIndex(idx)}
+                      title={typeof opt.label === "string" ? opt.label : undefined}
+                      className={cn(
+                        "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] truncate transition-colors select-none outline-none",
+                        isSelected
+                          ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
+                          : isHighlighted
+                          ? "bg-[#EBF3FC] text-[#242424] font-normal"
+                          : "bg-transparent text-[#242424] font-normal hover:bg-[#EBF3FC]",
+                        opt.disabled && "opacity-50 cursor-not-allowed pointer-events-none"
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })
+              )}
             </div>
           </PopoverPrimitive.Content>
         </PopoverPrimitive.Portal>
@@ -417,8 +502,8 @@ export const GroupedRuanganSelect = React.forwardRef<
               "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
               "focus:outline-none",
               density === "compact"
-                ? "h-(--density-control-h) px-2 text-[13px]"
-                : "h-8 px-3 text-[13.5px]",
+                ? "h-(--density-control-h) pl-2 pr-1.5 text-[12.5px]"
+                : "h-8 pl-3 pr-2 text-[13.5px]",
               error
                 ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
                 : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",

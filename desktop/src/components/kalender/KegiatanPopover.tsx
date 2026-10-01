@@ -327,7 +327,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenBatal?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-normal bg-white border border-[#C50F1F] text-[#9B0C18] hover:bg-[#FDF3F4] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#C50F1F] text-white hover:bg-[#A80816] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Batalkan kegiatan
               </button>

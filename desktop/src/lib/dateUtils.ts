@@ -53,8 +53,8 @@ export const NAMA_HARI_PENDEK = [
   'MIN',
 ];
 
-export const JAM_AWAL = 7; // 07:00
-export const JAM_AKHIR = 18; // 18:00
+export const JAM_AWAL = 6; // 06:00
+export const JAM_AKHIR = 23; // 23:00
 export const SLOT_PX = 36; // 36px per jam per DESIGN.md §3.4
 
 /**

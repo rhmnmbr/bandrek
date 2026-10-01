@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Select } from '@/components/ui/select';
 import {
   ChevronLeft12Regular,
   ChevronRight12Regular,
@@ -17,7 +18,7 @@ import {
   getMonday,
   NAMA_BULAN,
 } from '@/lib/dateUtils';
-import type { JenisKegiatan, Subjek, Kelas, Ruangan, Tempat } from '@/data/types';
+import type { JenisKegiatan, Subjek, Siswa, Kelas, Ruangan, Tempat } from '@/data/types';
 
 export interface KalenderSidebarProps {
   anchorDate: string;
@@ -27,6 +28,7 @@ export interface KalenderSidebarProps {
   filters: KalenderStateFilters;
   jenisList: JenisKegiatan[];
   subjekList: Subjek[];
+  siswaList?: Siswa[];
   kelasList: Kelas[];
   ruanganList: Ruangan[];
   tempatList: Tempat[];
@@ -47,6 +49,7 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
   filters,
   jenisList,
   subjekList,
+  siswaList = [],
   kelasList,
   ruanganList,
   tempatList,
@@ -99,6 +102,14 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
   const ma = toDate(miniAnchor);
   const miniMonthLabel = `${NAMA_BULAN[ma.getMonth()]} ${ma.getFullYear()}`;
 
+  const sortedSubjekList = React.useMemo(() => {
+    return [...subjekList].sort((a, b) => a.nama.localeCompare(b.nama));
+  }, [subjekList]);
+
+  const sortedSiswaList = React.useMemo(() => {
+    return [...siswaList].sort((a, b) => a.nama.localeCompare(b.nama));
+  }, [siswaList]);
+
   // Status definition list with DS tokens
   const STATUS_ITEMS: {
     key: StatusKegiatan;
@@ -141,7 +152,7 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
   return (
     <aside
       className={cn(
-        'w-53 flex-none flex flex-col border-r border-(--color-border) bg-[#FAFAFA] p-2.5 overflow-y-auto select-none',
+        'w-53 flex-none flex flex-col border-r border-(--color-border) bg-(--color-surface-alt) p-2.5 overflow-y-auto select-none',
         className
       )}
     >
@@ -151,7 +162,7 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
           type="button"
           onClick={onPrevMiniMonth}
           title="Bulan sebelumnya"
-          className="flex h-5.5 w-5.5 items-center justify-center rounded text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) cursor-pointer"
+          className="flex h-5.5 w-5.5 items-center justify-center rounded text-(--color-text-secondary) hover:bg-(--color-surface-sunken) hover:text-(--color-text) cursor-pointer transition-colors"
         >
           <ChevronLeft12Regular />
         </button>
@@ -162,7 +173,7 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
           type="button"
           onClick={onNextMiniMonth}
           title="Bulan berikutnya"
-          className="flex h-5.5 w-5.5 items-center justify-center rounded text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) cursor-pointer"
+          className="flex h-5.5 w-5.5 items-center justify-center rounded text-(--color-text-secondary) hover:bg-(--color-surface-sunken) hover:text-(--color-text) cursor-pointer transition-colors"
         >
           <ChevronRight12Regular />
         </button>
@@ -183,17 +194,15 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
       {/* 42-day Grid */}
       <div className="grid grid-cols-7 gap-px mb-4">
         {miniDays.map((d) => {
-          let btnClass = 'text-(--color-text)';
+          let btnClass = 'text-(--color-text) hover:bg-(--color-surface-sunken)';
           if (d.isSelected) {
-            btnClass = 'bg-(--color-brand) text-white font-semibold shadow-xs';
+            btnClass = 'bg-(--color-brand) text-white font-semibold shadow-xs hover:bg-(--color-brand-pressed)';
           } else if (d.isToday) {
-            btnClass = 'bg-[#EBF3FC] text-[#0C548F] font-semibold';
+            btnClass = 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold hover:bg-[#DCEBFB]';
           } else if (d.inWeek) {
-            btnClass = 'bg-[#EDEBE9] text-(--color-text)';
+            btnClass = 'bg-(--color-surface-sunken) text-(--color-text) hover:bg-(--color-border)';
           } else if (!d.inMonth) {
-            btnClass = 'text-(--color-text-muted) hover:bg-(--color-surface-alt)';
-          } else {
-            btnClass = 'hover:bg-(--color-surface-alt)';
+            btnClass = 'text-(--color-text-muted) hover:bg-(--color-surface-sunken)';
           }
 
           return (
@@ -202,7 +211,7 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
               type="button"
               onClick={() => onSelectDate(d.iso)}
               className={cn(
-                'h-5.5 w-full rounded-[3px] font-mono text-[11.5px] flex items-center justify-center transition-colors cursor-pointer',
+                'h-5.5 w-full rounded-[3px] font-mono text-[11.5px] flex items-center justify-center transition-colors duration-100 cursor-pointer',
                 btnClass
               )}
             >
@@ -218,10 +227,11 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
       </div>
       <div className="flex flex-col gap-1.5 mb-4">
         {/* Filter Jenis */}
-        <select
+        <Select
           value={filters.jenis}
-          onChange={(e) => onFilterChange('jenis', e.target.value)}
-          className="h-6.5 w-full rounded border border-(--color-border-strong) bg-white px-1.5 text-[12.5px] text-(--color-text) focus:border-(--color-brand) focus:outline-none cursor-pointer"
+          onValueChange={(val) => onFilterChange('jenis', val)}
+          placeholder="Jenis kegiatan"
+          density="compact"
         >
           <option value="">Jenis kegiatan</option>
           {jenisList.map((j) => (
@@ -229,27 +239,48 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
               {j.nama}
             </option>
           ))}
-        </select>
+        </Select>
 
-        {/* Filter Subjek */}
-        <select
+        {/* Filter Subjek (Searchable) */}
+        <Select
+          searchable
+          searchPlaceholder="Cari subjek..."
           value={filters.subjek}
-          onChange={(e) => onFilterChange('subjek', e.target.value)}
-          className="h-6.5 w-full rounded border border-(--color-border-strong) bg-white px-1.5 text-[12.5px] text-(--color-text) focus:border-(--color-brand) focus:outline-none cursor-pointer"
+          onValueChange={(val) => onFilterChange('subjek', val)}
+          placeholder="Subjek"
+          density="compact"
         >
           <option value="">Subjek</option>
-          {subjekList.map((s) => (
+          {sortedSubjekList.map((s) => (
             <option key={s.id} value={s.id}>
               {s.nama}
             </option>
           ))}
-        </select>
+        </Select>
+
+        {/* Filter Siswa (Searchable) */}
+        <Select
+          searchable
+          searchPlaceholder="Cari siswa..."
+          value={filters.siswa}
+          onValueChange={(val) => onFilterChange('siswa', val)}
+          placeholder="Siswa"
+          density="compact"
+        >
+          <option value="">Siswa</option>
+          {sortedSiswaList.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.nama}
+            </option>
+          ))}
+        </Select>
 
         {/* Filter Kelas */}
-        <select
+        <Select
           value={filters.kelas}
-          onChange={(e) => onFilterChange('kelas', e.target.value)}
-          className="h-6.5 w-full rounded border border-(--color-border-strong) bg-white px-1.5 text-[12.5px] text-(--color-text) focus:border-(--color-brand) focus:outline-none cursor-pointer"
+          onValueChange={(val) => onFilterChange('kelas', val)}
+          placeholder="Kelas"
+          density="compact"
         >
           <option value="">Kelas</option>
           {kelasList.map((k) => (
@@ -257,13 +288,14 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
               {k.nama}
             </option>
           ))}
-        </select>
+        </Select>
 
         {/* Filter Ruangan */}
-        <select
+        <Select
           value={filters.ruangan}
-          onChange={(e) => onFilterChange('ruangan', e.target.value)}
-          className="h-6.5 w-full rounded border border-(--color-border-strong) bg-white px-1.5 text-[12.5px] text-(--color-text) focus:border-(--color-brand) focus:outline-none cursor-pointer"
+          onValueChange={(val) => onFilterChange('ruangan', val)}
+          placeholder="Ruangan"
+          density="compact"
         >
           <option value="">Ruangan</option>
           {ruanganList.map((r) => {
@@ -274,20 +306,20 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
               </option>
             );
           })}
-        </select>
+        </Select>
       </div>
 
       {/* 3. Status Kegiatan Checkboxes */}
       <div className="text-[11px] font-semibold tracking-wider text-(--color-text-secondary) uppercase mb-1.5">
         Status kegiatan
       </div>
-      <div className="flex flex-col gap-1 mb-4">
+      <div className="flex flex-col gap-0.5">
         {STATUS_ITEMS.map((item) => {
           const isChecked = filters.status.includes(item.key);
           return (
             <label
               key={item.key}
-              className="flex items-center gap-2 rounded px-1.5 py-1 text-[12.5px] text-(--color-text) hover:bg-(--color-surface-alt) cursor-pointer transition-colors"
+              className="flex items-center gap-1.75 rounded px-1 py-0.5 text-[12.5px] text-(--color-text) hover:bg-(--color-surface-sunken) cursor-pointer transition-colors"
             >
               <input
                 type="checkbox"
@@ -310,13 +342,15 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
       </div>
 
       {/* 4. Reset Filters Action Button */}
-      <button
-        type="button"
-        onClick={onResetFilters}
-        className="self-start text-[12.5px] font-medium text-(--color-brand) hover:bg-(--color-brand-subtle) px-1.5 py-1 rounded cursor-pointer transition-colors"
-      >
-        Reset filter
-      </button>
+      <div className="pt-2.5 mt-2.5 border-t border-(--color-border)">
+        <button
+          type="button"
+          onClick={onResetFilters}
+          className="w-full h-6.5 rounded border border-(--color-border-strong) bg-white hover:bg-(--color-surface-sunken) text-[12px] font-medium text-(--color-text) cursor-pointer transition-colors flex items-center justify-center"
+        >
+          Reset filter
+        </button>
+      </div>
     </aside>
   );
 };

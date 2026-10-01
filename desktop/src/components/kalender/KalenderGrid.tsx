@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Add12Regular, Checkmark12Regular, Warning12Regular, ArrowClockwise12Regular } from '@fluentui/react-icons';
 import type { Kegiatan } from '@/data/types';
 import type { LayoutEventItem } from './kalenderLayout';
-import { JAM_AWAL, JAM_AKHIR, SLOT_PX } from '@/lib/dateUtils';
+import { JAM_AWAL, JAM_AKHIR, SLOT_PX, menit } from '@/lib/dateUtils';
 import { jenisColorMap, type JenisKegiatanKey } from '@/components/ui/calendar-event';
 
 export interface DayColumnData {
@@ -37,18 +37,53 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
   onMoreClick,
   className,
 }) => {
-  // Generate 07:00 .. 18:00 hour marks
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const [slotPx, setSlotPx] = React.useState<number>(SLOT_PX);
+
+  // Dynamically calculate slot height based on viewport height
+  React.useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const updateSlotHeight = () => {
+      const h = el.clientHeight;
+      const totalHours = JAM_AKHIR - JAM_AWAL; // 17 hours (06:00 - 23:00)
+      const pad = 16; // pt-2 (8px) + pb-2 (8px)
+      const available = h - pad;
+      if (available > 0) {
+        const calculated = Math.floor(available / totalHours);
+        setSlotPx(Math.max(SLOT_PX, calculated));
+      }
+    };
+
+    updateSlotHeight();
+    const ro = new ResizeObserver(updateSlotHeight);
+    ro.observe(el);
+    window.addEventListener('resize', updateSlotHeight);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateSlotHeight);
+    };
+  }, []);
+
+  // Generate 06:00 .. 23:00 hour marks
   const hourMarks = React.useMemo(() => {
     const list = [];
     for (let h = JAM_AWAL; h <= JAM_AKHIR; h++) {
       list.push({
         hour: h,
         label: `${String(h).padStart(2, '0')}:00`,
-        top: (h - JAM_AWAL) * SLOT_PX - 6,
+        top: (h - JAM_AWAL) * slotPx - 6,
       });
     }
     return list;
-  }, []);
+  }, [slotPx]);
+
+  const minStart = JAM_AWAL * 60;
+  const nowTop = nowLine?.show
+    ? Math.round(((menit(nowLine.label) - minStart) / 60) * slotPx)
+    : 0;
+  const nowBadgeTop = nowTop - 8;
 
   return (
     <div className={cn('flex flex-1 flex-col min-h-0 bg-white select-none', className)}>
@@ -84,8 +119,11 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
       </div>
 
       {/* 2. Scrollable Time Grid Body */}
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
-        <div className="flex relative pt-2 pb-6 min-h-[420px]">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative"
+      >
+        <div className="flex relative pt-2 pb-2 min-h-full">
           {/* Left Hour Scale (56px) */}
           <div className="w-14 flex-none relative bg-white">
             {hourMarks.map((hm) => (
@@ -101,7 +139,7 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
             {/* Current Time Badge */}
             {nowLine?.show && (
               <div
-                style={{ top: `${nowLine.badgeTop}px` }}
+                style={{ top: `${nowBadgeTop}px` }}
                 className="absolute right-1 z-10 font-mono text-[10px] bg-[#C50F1F] text-white px-1 py-0.5 rounded leading-none shadow-xs"
               >
                 {nowLine.label}
@@ -123,13 +161,13 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                     : 'bg-white'
                 )}
               >
-                {/* 11 Hourly Slot Cells */}
+                {/* Hourly Slot Cells */}
                 {Array.from({ length: JAM_AKHIR - JAM_AWAL }).map((_, slotIdx) => {
                   const hour = JAM_AWAL + slotIdx;
                   return (
                     <div
                       key={`slot-${d.iso}-${hour}`}
-                      style={{ height: `${SLOT_PX}px` }}
+                      style={{ height: `${slotPx}px` }}
                       className="border-b border-[#EDEBE9] relative group"
                     >
                       {/* Clickable slot area with hover + indicator */}
@@ -137,7 +175,7 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                         type="button"
                         onClick={() => onSelectSlot(d.iso, hour)}
                         title={`Klik untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
-                        className="absolute inset-[1px_2px] rounded-[3px] border border-transparent group-hover:border-[#8CC3F0] group-hover:bg-[#EBF3FC] text-transparent group-hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
+                        className="absolute inset-[1px_2px] rounded border border-dashed border-transparent group-hover:border-[#8CC3F0] group-hover:bg-[#EBF3FC] text-transparent group-hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
                       >
                         <Add12Regular className="text-[13px]" />
                       </button>
@@ -148,14 +186,21 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                 {/* Overlaid Events Layer */}
                 <div className="absolute inset-0 pointer-events-none">
                   {d.events.map((ev) => {
+                    const evTop = ev.startMin != null
+                      ? Math.round(((ev.startMin - minStart) / 60) * slotPx)
+                      : ev.top;
+                    const evHeight = ev.startMin != null && ev.endMin != null
+                      ? Math.max(30, Math.round(((ev.endMin - ev.startMin) / 60) * slotPx) - 2)
+                      : ev.height;
+
                     // Render "+N lainnya" group button
                     if (ev.lebih) {
                       return (
                         <div
                           key={ev.id}
                           style={{
-                            top: `${ev.top}px`,
-                            height: `${ev.height}px`,
+                            top: `${evTop}px`,
+                            height: `${evHeight}px`,
                             left: `${ev.left}%`,
                             width: `${ev.width}%`,
                           }}
@@ -193,8 +238,8 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                       <div
                         key={ev.id}
                         style={{
-                          top: `${ev.top}px`,
-                          height: `${ev.height}px`,
+                          top: `${evTop}px`,
+                          height: `${evHeight}px`,
                           left: `${ev.left}%`,
                           width: `${ev.width}%`,
                         }}
@@ -255,8 +300,8 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                             {k.nama}
                           </div>
 
-                          {/* Row 3: Metadata (hidden if block height < 48px per prototype) */}
-                          {ev.meta && (
+                          {/* Row 3: Metadata (hidden if block height < 44px) */}
+                          {ev.meta && (evHeight >= 44 || ev.height >= 44) && (
                             <div className="text-[10.5px] leading-tight truncate opacity-85">
                               {ev.meta}
                             </div>
@@ -272,7 +317,7 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
             {/* Red Current Time Line across grid */}
             {nowLine?.show && (
               <div
-                style={{ top: `${nowLine.top}px` }}
+                style={{ top: `${nowTop}px` }}
                 className="absolute left-0 right-0 h-0 border-t border-[#C50F1F] pointer-events-none z-10"
               />
             )}

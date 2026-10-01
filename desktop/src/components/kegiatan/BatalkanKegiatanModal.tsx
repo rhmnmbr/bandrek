@@ -3,6 +3,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useNavigate } from 'react-router-dom';
 import { useAlasanBatal, useBatalkanKegiatan, useSubjekList } from '@/data/hooks';
 import { useToast } from '@/components/ui/toast';
+import { Select } from '@/components/ui/select';
 import { formatTanggalRingkas } from '@/lib/dateUtils';
 import type { Kegiatan } from '@/data/types';
 import { cn } from '@/lib/utils';
@@ -34,7 +35,7 @@ export const BatalkanKegiatanModal: React.FC<BatalkanKegiatanModalProps> = ({
   const [dicoba, setDicoba] = React.useState(false);
 
   const cancelBtnRef = React.useRef<HTMLButtonElement>(null);
-  const alasanSelectRef = React.useRef<HTMLSelectElement>(null);
+  const alasanSelectRef = React.useRef<HTMLButtonElement>(null);
 
   // Reset form when modal opens with a new kegiatan
   React.useEffect(() => {
@@ -154,20 +155,16 @@ export const BatalkanKegiatanModal: React.FC<BatalkanKegiatanModalProps> = ({
             >
               Alasan pembatalan <span className="text-(--color-danger)">*</span>
             </label>
-            <select
-              id="alasan-batal-select"
+            <Select
               ref={alasanSelectRef}
               value={alasan}
-              onChange={(e) => {
-                setAlasan(e.target.value);
-                if (e.target.value) setDicoba(false);
+              onValueChange={(val) => {
+                setAlasan(val);
+                if (val) setDicoba(false);
               }}
-              className={cn(
-                'h-6.5 px-1.5 text-[13px] bg-white rounded border cursor-pointer outline-none transition-colors',
-                errAda
-                  ? 'border-(--color-danger) border-b-2'
-                  : 'border-(--color-border-strong) hover:border-(--color-text-secondary) focus:border-(--color-brand)'
-              )}
+              placeholder="Pilih alasan pembatalan"
+              density="compact"
+              error={errAda}
             >
               <option value="">Pilih alasan pembatalan</option>
               {daftarAlasan.map((opt) => (
@@ -175,7 +172,7 @@ export const BatalkanKegiatanModal: React.FC<BatalkanKegiatanModalProps> = ({
                   {opt}
                 </option>
               ))}
-            </select>
+            </Select>
 
             {errAda && (
               <div className="text-[11px] text-(--color-danger) leading-relaxed flex items-center gap-1.25">

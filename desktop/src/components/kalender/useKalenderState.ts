@@ -23,6 +23,7 @@ export const STATUS_DEFAULT: StatusKegiatan[] = [
 export interface KalenderStateFilters {
   jenis: string;
   subjek: string;
+  siswa: string;
   kelas: string;
   ruangan: string;
   status: StatusKegiatan[];
@@ -37,6 +38,7 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
   const [filters, setFilters] = React.useState<KalenderStateFilters>({
     jenis: '',
     subjek: '',
+    siswa: '',
     kelas: '',
     ruangan: '',
     status: [...STATUS_DEFAULT],
@@ -111,6 +113,7 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
     setFilters({
       jenis: '',
       subjek: '',
+      siswa: '',
       kelas: '',
       ruangan: '',
       status: [...STATUS_DEFAULT],

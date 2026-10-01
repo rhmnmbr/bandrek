@@ -113,6 +113,7 @@ export const KalenderScreen: React.FC = () => {
     let activeCount = 0;
     if (filters.jenis) activeCount++;
     if (filters.subjek) activeCount++;
+    if (filters.siswa) activeCount++;
     if (filters.kelas) activeCount++;
     if (filters.ruangan) activeCount++;
     if (filters.status.length < 5) activeCount++;
@@ -122,11 +123,13 @@ export const KalenderScreen: React.FC = () => {
       if (filters.jenis && k.jenis !== filters.jenis) return false;
       // 2. Subjek filter
       if (filters.subjek && !k.subjek.some((s) => s.id === filters.subjek)) return false;
-      // 3. Kelas filter
+      // 3. Siswa filter
+      if (filters.siswa && !k.siswa.includes(filters.siswa)) return false;
+      // 4. Kelas filter
       if (filters.kelas && k.kelas !== filters.kelas) return false;
-      // 4. Ruangan filter
+      // 5. Ruangan filter
       if (filters.ruangan && k.ruangan !== filters.ruangan) return false;
-      // 5. Status filter
+      // 6. Status filter
       if (!filters.status.includes(k.status)) return false;
       return true;
     });
@@ -405,6 +408,7 @@ export const KalenderScreen: React.FC = () => {
         filters={filters}
         jenisList={jenisList}
         subjekList={subjekList}
+        siswaList={siswaList}
         kelasList={kelasList}
         ruanganList={ruanganList}
         tempatList={tempatList}

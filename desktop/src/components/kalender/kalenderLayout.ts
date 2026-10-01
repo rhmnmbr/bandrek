@@ -4,6 +4,8 @@ import { menit, JAM_AWAL, JAM_AKHIR, SLOT_PX } from '../../lib/dateUtils';
 export interface LayoutEventItem {
   id: string;
   kegiatan?: Kegiatan;
+  startMin?: number;
+  endMin?: number;
   top: number;
   height: number;
   left: number; // in percent (0 - 100)
@@ -209,6 +211,8 @@ export function susunLayoutKegiatan(
     return {
       id: x.id,
       kegiatan: x.kegiatan,
+      startMin: s,
+      endMin: e,
       top,
       height: h,
       left: x.left,

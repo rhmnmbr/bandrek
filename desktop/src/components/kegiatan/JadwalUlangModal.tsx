@@ -9,6 +9,7 @@ import {
   useSubjekList,
 } from '@/data/hooks';
 import { useToast } from '@/components/ui/toast';
+import { Select, GroupedRuanganSelect, type TempatRuanganGroup } from '@/components/ui/select';
 import { formatTanggalRingkas, menit, toDate, NAMA_HARI, NAMA_BULAN } from '@/lib/dateUtils';
 import type { Kegiatan } from '@/data/types';
 import { cn } from '@/lib/utils';
@@ -49,7 +50,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
   const [dicoba, setDicoba] = React.useState(false);
 
   const cancelBtnRef = React.useRef<HTMLButtonElement>(null);
-  const alasanSelectRef = React.useRef<HTMLSelectElement>(null);
+  const alasanSelectRef = React.useRef<HTMLButtonElement>(null);
 
   // Initialize or reset form when modal opens
   React.useEffect(() => {
@@ -79,12 +80,21 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
   }`;
 
   // Grouped Ruangan options
-  const groupedRuangan = tempatList
-    .map((t) => ({
-      tempatNama: t.nama,
-      ruanganList: ruanganList.filter((r) => r.tempat === t.id),
-    }))
-    .filter((g) => g.ruanganList.length > 0);
+  const groupedRuanganForSelect: TempatRuanganGroup[] = React.useMemo(() => {
+    return tempatList
+      .map((t) => ({
+        id: t.id,
+        nama: t.nama,
+        ruangan: ruanganList
+          .filter((r) => r.tempat === t.id)
+          .map((r) => ({
+            id: r.id,
+            nama: `${r.nama} · kapasitas ${r.kapasitas}`,
+            kapasitas: r.kapasitas,
+          })),
+      }))
+      .filter((g) => g.ruangan.length > 0);
+  }, [tempatList, ruanganList]);
 
   // Validation
   const waktuSalah =
@@ -97,7 +107,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
   const s0 = mulai ? menit(mulai) : 540;
   const e0 = selesai ? menit(selesai) : s0 + 60;
   const jamMulaiInt = Math.floor(s0 / 60);
-  const base = Math.max(7, Math.min(15, jamMulaiInt - 1));
+  const base = Math.max(6, Math.min(20, jamMulaiInt - 1));
 
   const bentrokDi = (a: number, b: number) =>
     semuaKegiatan.filter(
@@ -255,20 +265,16 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                 >
                   Alasan penjadwalan ulang <span className="text-(--color-danger)">*</span>
                 </label>
-                <select
-                  id="alasan-ulang-select"
+                <Select
                   ref={alasanSelectRef}
                   value={alasan}
-                  onChange={(e) => {
-                    setAlasan(e.target.value);
-                    if (e.target.value) setDicoba(false);
+                  onValueChange={(val) => {
+                    setAlasan(val);
+                    if (val) setDicoba(false);
                   }}
-                  className={cn(
-                    'h-6.5 px-1.5 text-[13px] bg-white rounded border cursor-pointer outline-none transition-colors',
-                    errAlasan
-                      ? 'border-(--color-danger) border-b-2'
-                      : 'border-(--color-border-strong) hover:border-(--color-text-secondary) focus:border-(--color-brand)'
-                  )}
+                  placeholder="Pilih alasan penjadwalan ulang"
+                  density="compact"
+                  error={errAlasan}
                 >
                   <option value="">Pilih alasan penjadwalan ulang</option>
                   {daftarAlasan.map((opt) => (
@@ -276,7 +282,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                       {opt}
                     </option>
                   ))}
-                </select>
+                </Select>
 
                 {errAlasan && (
                   <div className="text-[11px] text-(--color-danger) leading-relaxed flex items-center gap-1.25">
@@ -394,23 +400,15 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                 <label htmlFor="ruangan-baru-select" className="text-[11.5px] text-(--color-text-secondary) font-medium">
                   Ruangan
                 </label>
-                <select
-                  id="ruangan-baru-select"
+                <GroupedRuanganSelect
+                  groups={groupedRuanganForSelect}
                   value={ruangan}
-                  onChange={(e) => setRuangan(e.target.value)}
-                  className="h-6.5 px-1.5 text-[13px] bg-white rounded border border-(--color-border-strong) hover:border-(--color-text-secondary) focus:border-(--color-brand) cursor-pointer outline-none transition-colors"
-                >
-                  <option value="">Tanpa ruangan</option>
-                  {groupedRuangan.map((g) => (
-                    <optgroup key={g.tempatNama} label={g.tempatNama}>
-                      {g.ruanganList.map((r) => (
-                        <option key={r.id} value={r.id}>
-                          {r.nama} · kapasitas {r.kapasitas}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
+                  onValueChange={setRuangan}
+                  density="compact"
+                  allowNone={true}
+                  noneLabel="Tanpa ruangan"
+                  placeholder="Pilih ruangan"
+                />
               </div>
 
               {/* Pratinjau Ketersediaan Title */}
