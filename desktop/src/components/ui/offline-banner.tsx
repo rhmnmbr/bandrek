@@ -20,7 +20,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
   cachedAt = "16 Sep 2026, 11:45",
   onRetry,
   isRetrying = false,
-  variant = "dark-charcoal",
+  variant = "surface-sunken",
   className,
 }) => {
   const getVariantStyles = (): {

@@ -8,6 +8,7 @@ import {
   ChevronDown12Regular,
   ChevronLeft12Regular,
   ChevronRight12Regular,
+  Add16Regular,
 } from '@fluentui/react-icons';
 
 export interface DaftarToolbarProps {
@@ -30,6 +31,7 @@ export interface DaftarToolbarProps {
   cari: string;
   onChangeCari: (val: string) => void;
   simulatedToday?: string;
+  onNewKegiatan?: () => void;
 }
 
 const STATUS_OPTIONS: { id: StatusKegiatan | ''; label: string }[] = [
@@ -61,6 +63,7 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
   cari,
   onChangeCari,
   simulatedToday = '2026-09-16',
+  onNewKegiatan,
 }) => {
   // Dropdown open states: 'dari' | 'sampai' | 'jenis' | 'status' | 'subjek' | 'kelas' | null
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
@@ -647,6 +650,19 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
       >
         Ekspor CSV
       </button>
+
+      {/* 9. Tombol Tambah Kegiatan Baru */}
+      {onNewKegiatan && (
+        <button
+          type="button"
+          onClick={onNewKegiatan}
+          title="Buat kegiatan baru (Ctrl+N)"
+          className="flex-none h-6.5 px-2.75 rounded bg-(--color-brand) text-white font-medium text-[12px] flex items-center gap-1 hover:bg-(--color-brand-pressed) transition-colors cursor-pointer shadow-xs whitespace-nowrap"
+        >
+          <Add16Regular className="text-[13px]" />
+          <span>Kegiatan baru</span>
+        </button>
+      )}
     </div>
   );
 };

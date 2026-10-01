@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Checkmark16Regular, Warning16Regular } from '@fluentui/react-icons';
 import { MatriksAnomalyBanner } from './MatriksAnomalyBanner';
 import { MatrixCell, type MatrixCellState } from '@/components/ui/matrix-cell';
 import type {
@@ -129,8 +130,8 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
             })}
 
             {/* Sticky Checkmark Col (W: 62px) */}
-            <div className="w-[62px] flex-none sticky right-0 z-20 bg-[#FAFAFA] border-l border-[#E1DFDD] h-[34px] flex items-end justify-end px-2.5 pb-1.5 text-[#5C5A58] font-semibold">
-              ✓
+            <div className="w-[62px] flex-none sticky right-0 z-20 bg-[#FAFAFA] border-l border-[#E1DFDD] h-[34px] flex items-end justify-end px-2.5 pb-1.5 text-[#5C5A58]">
+              <Checkmark16Regular className="w-3.5 h-3.5" />
             </div>
           </div>
 
@@ -172,7 +173,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
                       : 'bg-white text-[#242424] hover:bg-[#FAFAFA]'
                   }`}
                 >
-                  {isTertinggal && <span className="flex-none font-bold text-[#8A5200]">⚠</span>}
+                  {isTertinggal && <Warning16Regular className="w-3.5 h-3.5 flex-none text-[#8A5200]" />}
                   <span
                     className={`flex-1 min-w-0 truncate ${
                       sw.aktif ? 'text-[#242424]' : 'line-through text-[#5C5A58]'

@@ -125,7 +125,7 @@ export function DataLayerScreen() {
       {/* Offline Banner if simulated offline */}
       {config.offlineBannerVisible && (
         <OfflineBanner
-          variant="dark-charcoal"
+          variant="surface-sunken"
           cachedAt="16 Sep 2026, 11:39"
           onRetry={() => updateConfig({ errorType: 'none' })}
         />

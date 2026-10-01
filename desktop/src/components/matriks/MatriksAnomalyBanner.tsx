@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Warning16Regular } from '@fluentui/react-icons';
 
 interface MatriksAnomalyBannerProps {
   totalSiswa: number;
@@ -15,7 +16,7 @@ export const MatriksAnomalyBanner: React.FC<MatriksAnomalyBannerProps> = ({
 }) => {
   return (
     <div className="flex flex-none items-center gap-2 rounded-md border border-[#F0A82E] bg-[#FFF3E0] p-[6px_10px] text-[11.5px] text-[#8A5200] mx-[14px] mb-[9px]">
-      <span className="flex-none font-bold">⚠</span>
+      <Warning16Regular className="w-4 h-4 flex-none" />
       <span className="flex-1 min-w-0 leading-[1.45]">
         {totalSiswa} siswa punya catatan {namaMapel} di luar jenjang {jenjang} — biasanya salah input saat memilih materi.
       </span>

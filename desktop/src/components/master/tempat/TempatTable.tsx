@@ -1,3 +1,4 @@
+import { Warning16Regular } from '@fluentui/react-icons';
 import type { Tempat } from '@/data/types/master';
 
 interface TempatTableProps {
@@ -31,11 +32,6 @@ export function TempatTable({
             const jumlahRuangan = t.jumlahRuangan || 0;
             const isKosong = jumlahRuangan === 0;
 
-            let namaTeks = t.nama;
-            if (isKosong) {
-              namaTeks = `⚠ ${t.nama}`;
-            }
-
             return (
               <div
                 key={t.id}
@@ -49,11 +45,12 @@ export function TempatTable({
               >
                 {/* Nama Tempat */}
                 <div
-                  className={`flex-1 min-w-[140px] truncate pr-2 ${
+                  className={`flex-1 min-w-[140px] truncate pr-2 flex items-center gap-1.5 ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   } ${isKosong ? 'text-(--color-warning-fg)' : 'text-(--color-text-primary)'}`}
                 >
-                  {namaTeks}
+                  {isKosong && <Warning16Regular className="w-3.5 h-3.5 shrink-0 text-(--color-warning-fg)" />}
+                  <span className="truncate">{t.nama}</span>
                 </div>
 
                 {/* Ruangan Count */}
@@ -77,7 +74,7 @@ export function TempatTable({
       {/* Warning Box if any Tempat has 0 Ruangan */}
       {zeroRuanganList.length > 0 && (
         <div className="flex shrink-0 items-start gap-2 border-t border-(--color-warning-border) bg-(--color-warning-subtle) p-2.5 text-xs text-(--color-warning-fg) leading-relaxed">
-          <span>⚠</span>
+          <Warning16Regular className="w-4 h-4 shrink-0 mt-0.5 text-(--color-warning-fg)" />
           <span className="flex-1 min-w-0">
             {zeroRuanganList.map((x) => x.nama).join(', ')} belum punya ruangan, jadi belum bisa dipilih di form kegiatan.
           </span>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Warning16Regular } from '@fluentui/react-icons';
 import { useLogin } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 
@@ -68,7 +69,7 @@ export function LoginScreen() {
         <form onSubmit={handleLogin} className="flex flex-col gap-3.5">
           {errorMsg && (
             <div className="rounded-sm border border-(--color-danger) bg-(--color-danger-subtle) p-2 text-xs text-(--color-danger-fg) flex items-center gap-1.5 leading-snug">
-              <span>⚠</span>
+              <Warning16Regular className="w-3.5 h-3.5 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}

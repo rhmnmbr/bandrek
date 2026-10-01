@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { Warning16Regular } from '@fluentui/react-icons';
 import type { Tempat, Ruangan } from '@/data/types/master';
 import { RuanganTable } from './RuanganTable';
 
@@ -297,7 +298,7 @@ export function TempatFormView({
         {dicobaFlag && errorsToDisplay.length > 0 && (
           <div className="flex-[1_1_100%] rounded-md border border-(--color-danger) bg-(--color-danger-subtle) p-2 text-xs leading-relaxed text-(--color-danger-fg)">
             <div className="font-semibold flex items-center gap-1.5">
-              <span>⚠</span>
+              <Warning16Regular className="w-4 h-4 shrink-0" />
               <span>Belum bisa disimpan — {errorsToDisplay.length} hal perlu dibereskan:</span>
             </div>
             <ul className="mt-1 list-disc pl-6 space-y-0.5">
@@ -332,7 +333,7 @@ export function TempatFormView({
               />
               {hasRuanganNamaError && (
                 <div className="text-[11px] text-(--color-danger) flex items-center gap-1 leading-tight">
-                  <span>⚠</span>
+                  <Warning16Regular className="w-3.5 h-3.5 shrink-0" />
                   <span>
                     {ruanganErrors.find((e) => e.includes('nama')) || 'Isi nama ruangan.'}
                   </span>
@@ -398,7 +399,7 @@ export function TempatFormView({
               />
               {hasTempatNamaError && (
                 <div className="text-[11px] text-(--color-danger) flex items-center gap-1 leading-tight">
-                  <span>⚠</span>
+                  <Warning16Regular className="w-3.5 h-3.5 shrink-0" />
                   <span>
                     {tempatErrors.find((e) => e.includes('nama')) || 'Isi nama tempat.'}
                   </span>

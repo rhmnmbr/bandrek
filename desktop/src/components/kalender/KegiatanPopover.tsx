@@ -6,12 +6,13 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { formatTanggalRingkas, NAMA_BULAN_PENDEK, toDate } from '@/lib/dateUtils';
-import type { Kegiatan, StatusKegiatan } from '@/data/types/kegiatan';
+import type { Kegiatan } from '@/data/types/kegiatan';
 import type { Subjek, Siswa, Kelas } from '@/data/types/master';
 import {
   Dismiss16Regular,
   ChevronDown12Regular,
 } from '@fluentui/react-icons';
+import { KegiatanBadge } from '@/components/ui/badge';
 
 export interface KegiatanPopoverProps {
   kegiatan: Kegiatan | null;
@@ -29,47 +30,6 @@ export interface KegiatanPopoverProps {
   onOpenBatal?: (kegiatan: Kegiatan) => void;
   onNavigateKegiatan?: (kegiatanId: string) => void;
 }
-
-const STATUS_BADGE_CONFIG: Record<
-  StatusKegiatan,
-  { label: string; glyph: string; bg: string; ink: string; border: string }
-> = {
-  terjadwal: {
-    label: 'Terjadwal',
-    glyph: '·',
-    bg: '#EFF6FC',
-    ink: '#0F6CBD',
-    border: '#0F6CBD',
-  },
-  belum_direalisasi: {
-    label: 'Belum direalisasi',
-    glyph: '⚠',
-    bg: '#FFF4CE',
-    ink: '#795B00',
-    border: '#F0A82E',
-  },
-  terealisasi: {
-    label: 'Terealisasi',
-    glyph: '✓',
-    bg: '#DFF6DD',
-    ink: '#107C10',
-    border: '#107C10',
-  },
-  dijadwal_ulang: {
-    label: 'Dijadwal ulang',
-    glyph: '↻',
-    bg: '#F3EDFD',
-    ink: '#5C2E91',
-    border: '#8764B8',
-  },
-  dibatalkan: {
-    label: 'Dibatalkan',
-    glyph: '✕',
-    bg: '#F5F5F5',
-    ink: '#5C5A58',
-    border: '#C8C6C4',
-  },
-};
 
 export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
   kegiatan,
@@ -91,7 +51,6 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
 
   if (!isOpen || !kegiatan || !anchorElement) return null;
 
-  const stConfig = STATUS_BADGE_CONFIG[kegiatan.status] || STATUS_BADGE_CONFIG.terjadwal;
   const isBatal = kegiatan.status === 'dibatalkan';
 
   // Subjek names map
@@ -150,17 +109,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
             >
               {kegiatan.nama}
             </h3>
-            <div
-              style={{
-                borderColor: stConfig.border,
-                backgroundColor: stConfig.bg,
-                color: stConfig.ink,
-              }}
-              className="inline-flex items-center gap-1 mt-1.5 px-2.25 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap border"
-            >
-              <span>{stConfig.glyph}</span>
-              <span>{stConfig.label}</span>
-            </div>
+            <KegiatanBadge status={kegiatan.status} className="mt-1.5" />
           </div>
 
           <button
@@ -412,7 +361,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
               <button
                 type="button"
                 disabled
-                title={`Kegiatan ${stConfig.label.toLowerCase()} tidak bisa direalisasi`}
+                title="Kegiatan yang dibatalkan atau dijadwalkan ulang tidak bisa direalisasi"
                 className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#EDEBE9] text-[#8A8886] cursor-not-allowed whitespace-nowrap"
               >
                 Isi realisasi

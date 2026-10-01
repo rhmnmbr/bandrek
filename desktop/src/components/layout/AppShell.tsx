@@ -45,15 +45,16 @@ export const AppShell: React.FC = () => {
       return filter === 'perlu_realisasi' ? 'Kegiatan Perlu Realisasi' : 'Daftar kegiatan';
     }
     if (pathname.startsWith('/kegiatan/')) return 'Kegiatan';
-    if (pathname === '/matriks') return 'Matriks belajar';
-    if (pathname === '/master/siswa') return 'Siswa';
-    if (pathname === '/master/subjek') return 'Subjek';
-    if (pathname === '/master/mapel') return 'Mata pelajaran & materi';
-    if (pathname === '/master/kelas') return 'Kelas';
-    if (pathname === '/master/tempat') return 'Tempat & ruangan';
-    if (pathname === '/master/jenis') return 'Jenis kegiatan';
-    if (pathname === '/data') return 'Simulasi Data Layer & Mock';
-    if (pathname === '/katalog') return 'Katalog Komponen';
+    if (pathname.startsWith('/matriks')) return 'Matriks belajar';
+    if (pathname.startsWith('/master/siswa')) return 'Siswa';
+    if (pathname.startsWith('/master/subjek')) return 'Subjek';
+    if (pathname.startsWith('/master/mapel')) return 'Mata pelajaran & materi';
+    if (pathname.startsWith('/master/kelas')) return 'Kelas';
+    if (pathname.startsWith('/master/tempat')) return 'Tempat & ruangan';
+    if (pathname.startsWith('/master/jenis')) return 'Jenis kegiatan';
+    if (pathname.startsWith('/pengaturan/pengguna')) return 'Manajemen pengguna';
+    if (pathname.startsWith('/data')) return 'Simulasi Data Layer & Mock';
+    if (pathname.startsWith('/katalog')) return 'Katalog Komponen';
     return 'Bandrek';
   };
 

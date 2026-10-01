@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { Warning16Regular } from '@fluentui/react-icons';
 import type { PeranUser } from '@/data/types/auth';
 import {
   useUsersList,
@@ -419,7 +420,7 @@ export function UserManagementScreen() {
               {dicoba && errors.length > 0 && (
                 <div className="rounded-md border border-(--color-danger) bg-(--color-danger-subtle) p-2 text-xs leading-relaxed text-(--color-danger-fg)">
                   <div className="font-semibold flex items-center gap-1.5">
-                    <span>⚠</span>
+                    <Warning16Regular className="w-4 h-4 shrink-0" />
                     <span>Belum bisa disimpan — {errors.length} hal perlu dibereskan:</span>
                   </div>
                   <ul className="mt-1 list-disc pl-6 space-y-0.5">

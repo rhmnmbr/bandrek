@@ -1,3 +1,4 @@
+import { KegiatanBadge } from '@/components/ui/badge';
 import type { SubjekProfil, KetersediaanRutinItem } from '@/data/types/master';
 
 interface ProfilSubjekViewProps {
@@ -219,16 +220,10 @@ export function ProfilSubjekView({
                       {d.peran}
                     </div>
                     <div className="w-[130px] shrink-0">
-                      <span
-                        className="inline-flex items-center h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border whitespace-nowrap"
-                        style={{
-                          borderColor: d.stBrd,
-                          backgroundColor: d.stBg,
-                          color: d.stInk,
-                        }}
-                      >
-                        {d.stLabel}
-                      </span>
+                      <KegiatanBadge
+                        status={d.lewat ? 'belum' : 'terjadwal'}
+                        label={d.stLabel.replace(/^[⚠●]\s*/, '')}
+                      />
                     </div>
                   </div>
                 ))

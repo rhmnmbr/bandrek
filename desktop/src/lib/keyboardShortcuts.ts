@@ -132,6 +132,10 @@ export function useGlobalKeyboardShortcuts(handlers?: KeyboardShortcutHandlers) 
             e.preventDefault();
             navigate('/master/jenis');
             break;
+          case '0':
+            e.preventDefault();
+            navigate('/pengaturan/pengguna');
+            break;
         }
       }
     };

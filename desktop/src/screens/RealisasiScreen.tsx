@@ -3,7 +3,10 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   ChevronLeft16Regular,
   Warning16Regular,
+  Warning12Regular,
+  Checkmark16Regular,
 } from '@fluentui/react-icons';
+import { KegiatanBadge } from '@/components/ui/badge';
 import {
   useKegiatanDetail,
   useKegiatanDaftar,
@@ -543,23 +546,11 @@ export const RealisasiScreen: React.FC = () => {
 
   // Derive status pill
   let pilLabel = 'Terjadwal';
-  let pilGlyph = '●';
-  let pilBrd = '#0F6CBD';
-  let pilBg = '#EBF3FC';
-  let pilInk = '#0C548F';
 
   if (kegiatan.status === 'belum_direalisasi') {
-    pilGlyph = '⚠';
-    pilBrd = '#F0A82E';
-    pilBg = '#FFF3E0';
-    pilInk = '#8A5200';
     const telatHari = Math.round((new Date().getTime() - toDate(kegiatan.tanggal).getTime()) / 86400000);
     pilLabel = telatHari > 0 ? `Belum direalisasi · telat ${telatHari} hari` : 'Belum direalisasi';
   } else if (kegiatan.status === 'terealisasi') {
-    pilGlyph = '✓';
-    pilBrd = '#4CAF50';
-    pilBg = '#E8F5E9';
-    pilInk = '#2E7D32';
     pilLabel = 'Terealisasi';
   }
 
@@ -653,13 +644,16 @@ export const RealisasiScreen: React.FC = () => {
         </div>
 
         {/* Status Pill */}
-        <div
-          style={{ borderColor: pilBrd, backgroundColor: pilBg, color: pilInk }}
-          className="flex-none inline-flex items-center gap-1 border rounded-full px-2.25 py-0.5 text-[11.5px] whitespace-nowrap"
-        >
-          <span>{pilGlyph}</span>
-          <span>{pilLabel}</span>
-        </div>
+        <KegiatanBadge
+          status={
+            kegiatan.status === 'terealisasi'
+              ? 'terealisasi'
+              : kegiatan.status === 'belum_direalisasi'
+              ? 'belum'
+              : 'terjadwal'
+          }
+          label={pilLabel}
+        />
 
         <div className="flex-1" />
 
@@ -875,7 +869,7 @@ export const RealisasiScreen: React.FC = () => {
           {/* Time Inline Error */}
           {dicoba && timeError && (
             <div className="flex-none px-3.5 pt-1 text-[11px] text-(--color-danger-ink) flex items-center gap-1">
-              <span>⚠</span>
+              <Warning12Regular className="w-3.5 h-3.5 flex-none" />
               <span>{timeError}</span>
             </div>
           )}
@@ -920,7 +914,7 @@ export const RealisasiScreen: React.FC = () => {
                 {/* Materi Inline Error */}
                 {dicoba && materiError && (
                   <div className="text-[11px] text-(--color-danger-ink) leading-tight flex items-center gap-1 mt-0.5">
-                    <span>⚠</span>
+                    <Warning12Regular className="w-3.5 h-3.5 flex-none" />
                     <span>{materiError}</span>
                   </div>
                 )}
@@ -928,7 +922,7 @@ export const RealisasiScreen: React.FC = () => {
                 {/* Materi Discrepancy Notice */}
                 {materiBeda && (
                   <div className="text-[11px] text-[#8A5200] leading-tight flex items-start gap-1 mt-0.5">
-                    <span className="flex-none">⚠</span>
+                    <Warning12Regular className="w-3.5 h-3.5 flex-none mt-0.5" />
                     <span>{materiBedaTeks}</span>
                   </div>
                 )}
@@ -954,7 +948,7 @@ export const RealisasiScreen: React.FC = () => {
                 />
                 {dicoba && ketuntasanError && (
                   <div className="text-[11px] text-(--color-danger-ink) leading-tight flex items-center gap-1 mt-0.5">
-                    <span>⚠</span>
+                    <Warning12Regular className="w-3.5 h-3.5 flex-none" />
                     <span>{ketuntasanError}</span>
                   </div>
                 )}
@@ -1107,7 +1101,7 @@ export const RealisasiScreen: React.FC = () => {
                         {/* Error banner below invalid row */}
                         {isError && (
                           <div className="flex items-center gap-1.25 px-3 py-1 pl-9 border-b border-[#EDEBE9] bg-[#FDE7E9] text-[11px] leading-tight text-(--color-danger-ink)">
-                            <span>⚠</span>
+                            <Warning12Regular className="w-3.5 h-3.5 flex-none" />
                             <span>Pilih status kehadiran untuk {sw?.nama || sid}.</span>
                           </div>
                         )}
@@ -1247,7 +1241,7 @@ export const RealisasiScreen: React.FC = () => {
                         {/* Error banner below invalid row */}
                         {isError && (
                           <div className="flex items-center gap-1.25 px-3 py-1 pl-9 border-b border-[#EDEBE9] bg-[#FDE7E9] text-[11px] leading-tight text-(--color-danger-ink)">
-                            <span>⚠</span>
+                            <Warning12Regular className="w-3.5 h-3.5 flex-none" />
                             <span>Pilih status kehadiran untuk {sbObj?.nama || sb.id}.</span>
                           </div>
                         )}
@@ -1321,9 +1315,15 @@ export const RealisasiScreen: React.FC = () => {
               backgroundColor: statusBoxBg,
               color: statusBoxInk,
             }}
-            className="flex-none border rounded-md p-2.5 text-xs leading-normal flex gap-1.75"
+            className="flex-none border rounded-md p-2.5 text-xs leading-normal flex gap-2"
           >
-            <span className="flex-none font-semibold text-sm">{statusBoxGlyph}</span>
+            <span className="flex-none flex items-center mt-0.5">
+              {statusBoxGlyph === '✓' ? (
+                <Checkmark16Regular className="w-4 h-4 text-[#2E7D32]" />
+              ) : (
+                <Warning16Regular className="w-4 h-4 text-[#8A5200]" />
+              )}
+            </span>
             <div className="flex-1 min-w-0">
               <div className="font-semibold">{statusBoxTitle}</div>
               <div className="mt-0.5 leading-relaxed">{statusBoxTeks}</div>

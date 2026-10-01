@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Warning24Regular } from '@fluentui/react-icons';
 
 interface MatriksEmptyStateProps {
   type: 'tanpa_materi' | 'tanpa_siswa';
@@ -34,7 +35,9 @@ export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
   return (
     <div className="flex flex-1 min-h-0 items-center justify-center p-6 bg-white">
       <div className="max-w-[440px] text-center">
-        <div className="text-[22px] text-[#8A5200] mb-2 font-bold select-none">⚠</div>
+        <div className="flex justify-center mb-2">
+          <Warning24Regular className="w-6 h-6 text-[#8A5200]" />
+        </div>
         <div className="text-[15px] font-semibold text-[#242424] mb-1.5">{judul}</div>
         <div className="text-[13.5px] text-[#424242] leading-[1.55] mb-3.5">{deskripsi}</div>
         <div className="flex items-center justify-center gap-2">

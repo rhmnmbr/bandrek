@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  Checkmark12Regular,
   CircleHalfFill16Regular,
   Mail16Regular,
   Dismiss16Regular,
@@ -30,9 +31,9 @@ export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
     const renderContent = () => {
       switch (state) {
         case "tersampaikan":
-          return <span className="font-semibold text-[12.5px] leading-none">✓</span>;
+          return <Checkmark12Regular className="text-current text-[11px]" />;
         case "selesai_manual":
-          return <span className="font-semibold italic text-[12.5px] leading-none">✓</span>;
+          return <Checkmark12Regular className="text-current text-[11px] opacity-90" />;
         case "sakit":
           return <CircleHalfFill16Regular className="text-current text-[11px]" />;
         case "izin":

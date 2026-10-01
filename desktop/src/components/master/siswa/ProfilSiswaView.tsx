@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { KehadiranBadge, KegiatanBadge } from '@/components/ui/badge';
 import type { SiswaProfil } from '@/data/types/master';
 
 interface ProfilSiswaViewProps {
@@ -276,16 +277,16 @@ export function ProfilSiswaView({
                     {r.materi}
                   </div>
                   <div className="w-24 shrink-0">
-                    <span
-                      className="inline-flex h-4.5 items-center px-1.75 rounded-full text-[10.5px] font-semibold border whitespace-nowrap"
-                      style={{
-                        borderColor: r.kehadiran.brd,
-                        backgroundColor: r.kehadiran.bg,
-                        color: r.kehadiran.ink,
-                      }}
-                    >
-                      {r.kehadiran.glyph} {r.kehadiran.label}
-                    </span>
+                    {r.kehadiran.status === 'batal' ? (
+                      <KegiatanBadge status="dibatalkan" label="Batal" />
+                    ) : r.kehadiran.status === 'hadir' || r.kehadiran.status === 'izin' || r.kehadiran.status === 'sakit' || r.kehadiran.status === 'alpa' ? (
+                      <KehadiranBadge status={r.kehadiran.status} label={r.kehadiran.label} />
+                    ) : (
+                      <span className="inline-flex h-4.5 items-center px-1.75 rounded-full text-[10.5px] font-semibold border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted) whitespace-nowrap">
+                        <span className="opacity-60">·</span>
+                        <span className="ml-1">{r.kehadiran.label}</span>
+                      </span>
+                    )}
                   </div>
                   <div className="w-32.5 shrink-0 truncate text-[11.5px] text-(--color-text-muted)">
                     {r.catatan}

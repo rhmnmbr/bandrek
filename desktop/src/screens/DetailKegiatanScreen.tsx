@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft16Regular } from '@fluentui/react-icons';
+import { ChevronLeft16Regular, Warning16Regular } from '@fluentui/react-icons';
+import { KegiatanBadge, KehadiranBadge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast';
 import {
   useKegiatanDetail,
@@ -24,68 +25,6 @@ import {
 } from '@/lib/dateUtils';
 import type { StatusKegiatan, Kegiatan } from '@/data/types';
 import { cn } from '@/lib/utils';
-
-// ==========================================
-// CONFIG STATUS & KEHADIRAN (DESIGN.md & PROTOTYPE)
-// ==========================================
-const STATUS_CONFIG: Record<
-  StatusKegiatan,
-  { label: string; glyph: string; accent: string; bg: string; ink: string }
-> = {
-  terjadwal: {
-    label: 'Terjadwal',
-    glyph: '●',
-    accent: '#0F6CBD',
-    bg: '#EBF3FC',
-    ink: '#0C548F',
-  },
-  belum_direalisasi: {
-    label: 'Belum direalisasi',
-    glyph: '⚠',
-    accent: '#F0A82E',
-    bg: '#FFF3E0',
-    ink: '#8A5200',
-  },
-  terealisasi: {
-    label: 'Terealisasi',
-    glyph: '✓',
-    accent: '#4CAF50',
-    bg: '#E8F5E9',
-    ink: '#2E7D32',
-  },
-  dijadwal_ulang: {
-    label: 'Dijadwal ulang',
-    glyph: '↻',
-    accent: '#8764B8',
-    bg: '#F3EFFA',
-    ink: '#5B4394',
-  },
-  dibatalkan: {
-    label: 'Dibatalkan',
-    glyph: '✕',
-    accent: '#C8C6C4',
-    bg: '#F5F5F5',
-    ink: '#5C5A58',
-  },
-};
-
-const KEHADIRAN_CONFIG: Record<
-  string,
-  { label: string; glyph: string; brd: string; bg: string; ink: string }
-> = {
-  hadir: { label: 'Hadir', glyph: '✓', brd: '#4CAF50', bg: '#E8F5E9', ink: '#2E7D32' },
-  sakit: { label: 'Sakit', glyph: '◐', brd: '#F0A82E', bg: '#FFF3E0', ink: '#8A5200' },
-  izin: { label: 'Izin', glyph: '✉', brd: '#0F6CBD', bg: '#EBF3FC', ink: '#0C548F' },
-  alpa: { label: 'Alpa', glyph: '✕', brd: '#C50F1F', bg: '#FDE7E9', ink: '#9B0C18' },
-};
-
-const KEHADIRAN_DEFAULT = {
-  label: 'Belum diisi',
-  glyph: '·',
-  brd: '#E1DFDD',
-  bg: '#F5F5F5',
-  ink: '#5C5A58',
-};
 
 export const DetailKegiatanScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -192,7 +131,6 @@ export const DetailKegiatanScreen: React.FC = () => {
     );
   }
 
-  const s = STATUS_CONFIG[kegiatan.status] || STATUS_CONFIG.terjadwal;
   const bolehUbah = kegiatan.status === 'terjadwal' || kegiatan.status === 'belum_direalisasi';
   const bolehRealisasi = bolehUbah || kegiatan.status === 'terealisasi';
   const isDibatalkan = kegiatan.status === 'dibatalkan';
@@ -261,13 +199,12 @@ export const DetailKegiatanScreen: React.FC = () => {
   const pesertaList = kegiatan.siswa.map((sid) => {
     const sw = siswaMap.get(sid);
     const kh = re && re.kehadiran && re.kehadiran[sid] ? re.kehadiran[sid] : null;
-    const t = kh && KEHADIRAN_CONFIG[kh] ? KEHADIRAN_CONFIG[kh] : KEHADIRAN_DEFAULT;
     return {
       id: sid,
       nama: (sw?.nama || sid) + (sw?.aktif === false ? ' · nonaktif' : ''),
       jenjang: sw?.jenjang || '—',
       aktif: sw?.aktif !== false,
-      badge: t,
+      kehadiranStatus: kh,
       catatan: (re && re.catatanSiswa && re.catatanSiswa[sid]) ? re.catatanSiswa[sid] : '—',
     };
   });
@@ -337,12 +274,11 @@ export const DetailKegiatanScreen: React.FC = () => {
     id: string;
     nama: string;
     waktu: string;
-    statusBadge: { glyph: string; label: string; accent: string; bg: string; ink: string };
+    status: StatusKegiatan;
   }> = [];
 
   const tambahTerkait = (target?: Kegiatan | null) => {
     if (!target || terkait.some((t) => t.id === target.id)) return;
-    const b = STATUS_CONFIG[target.status] || STATUS_CONFIG.terjadwal;
     const namaTerkait = target.materi
       ? `${mapelMap.get(target.mapel || '')?.nama || ''} · ${materiMap.get(target.materi)?.nama || ''}`
       : target.nama;
@@ -351,7 +287,7 @@ export const DetailKegiatanScreen: React.FC = () => {
       id: target.id,
       nama: namaTerkait,
       waktu: `${formatTanggalPendek(target.tanggal)} · ${target.mulai}`,
-      statusBadge: b,
+      status: target.status,
     });
   };
 
@@ -456,16 +392,7 @@ export const DetailKegiatanScreen: React.FC = () => {
         </div>
 
         {/* Activity Status Badge Pill */}
-        <div
-          style={{
-            borderColor: s.accent,
-            backgroundColor: s.bg,
-            color: s.ink,
-          }}
-          className="flex-none inline-flex items-center gap-1 rounded-full px-2.25 py-px text-[11.5px] font-semibold whitespace-nowrap border"
-        >
-          {s.glyph} {s.label}
-        </div>
+        <KegiatanBadge status={kegiatan.status} />
 
         <div className="flex-1" />
 
@@ -502,7 +429,7 @@ export const DetailKegiatanScreen: React.FC = () => {
           <button
             type="button"
             disabled
-            title={`Kegiatan ${s.label.toLowerCase()} hanya bisa dibaca`}
+            title="Kegiatan ini hanya bisa dibaca"
             className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-[#EDEBE9] text-[#8A8886] cursor-not-allowed whitespace-nowrap"
           >
             Ubah kegiatan
@@ -657,7 +584,7 @@ export const DetailKegiatanScreen: React.FC = () => {
             </div>
           ) : (
             <div className="rounded-lg border border-[#F0A82E] bg-[#FFF3E0] p-3 flex gap-2.5 items-start">
-              <span className="text-[#8A5200] text-[13px] font-bold leading-none mt-0.5">⚠</span>
+              <Warning16Regular className="text-[#8A5200] w-4 h-4 flex-none mt-0.5" />
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-semibold text-[#8A5200]">{kosongJudul}</div>
                 <div className="text-[12.5px] text-[#8A5200] leading-relaxed mt-0.75">
@@ -671,7 +598,7 @@ export const DetailKegiatanScreen: React.FC = () => {
                     title={
                       bolehRealisasi
                         ? 'Catat kehadiran dan hasil sesi ini'
-                        : `Kegiatan ${s.label.toLowerCase()} tidak bisa direalisasi`
+                        : 'Kegiatan yang dibatalkan atau dijadwalkan ulang tidak bisa direalisasi'
                     }
                     className={cn(
                       'h-6.5 px-2.75 rounded text-xs font-semibold transition-all whitespace-nowrap',
@@ -733,16 +660,14 @@ export const DetailKegiatanScreen: React.FC = () => {
                       </span>
                       <span className="w-16 flex-none text-[#424242]">{p.jenjang}</span>
                       <span className="w-23 flex-none">
-                        <span
-                          style={{
-                            borderColor: p.badge.brd,
-                            backgroundColor: p.badge.bg,
-                            color: p.badge.ink,
-                          }}
-                          className="inline-flex items-center gap-1 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border"
-                        >
-                          {p.badge.glyph} {p.badge.label}
-                        </span>
+                        {p.kehadiranStatus ? (
+                          <KehadiranBadge status={p.kehadiranStatus as any} />
+                        ) : (
+                          <span className="inline-flex items-center gap-1 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted)">
+                            <span className="opacity-60">·</span>
+                            <span>Belum diisi</span>
+                          </span>
+                        )}
                       </span>
                       <span
                         className="w-58 flex-none text-[#424242] truncate"
@@ -815,16 +740,7 @@ export const DetailKegiatanScreen: React.FC = () => {
                   <span className="text-[11.5px] text-(--color-text-secondary) font-mono">
                     {t.waktu}
                   </span>
-                  <span
-                    style={{
-                      borderColor: t.statusBadge.accent,
-                      backgroundColor: t.statusBadge.bg,
-                      color: t.statusBadge.ink,
-                    }}
-                    className="inline-flex items-center gap-1 self-start mt-0.5 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border"
-                  >
-                    {t.statusBadge.glyph} {t.statusBadge.label}
-                  </span>
+                  <KegiatanBadge status={t.status} className="self-start mt-0.5" />
                 </button>
               ))}
             </div>

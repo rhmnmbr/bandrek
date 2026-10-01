@@ -1,4 +1,12 @@
 import * as React from 'react';
+import {
+  Checkmark12Regular,
+  Checkmark16Regular,
+  Circle12Filled,
+  CircleHalfFill12Regular,
+  Mail12Regular,
+  Dismiss12Regular,
+} from '@fluentui/react-icons';
 import { DatePicker } from '@/components/ui/date-picker';
 import { formatTanggalPendek } from '@/lib/dateUtils';
 import type { SelMatriks, KolomMateri, BarisSiswa } from '@/data/types';
@@ -16,21 +24,24 @@ interface MatriksCellPopoverProps {
   onNavigateToKegiatan: (kegiatanId: string) => void;
 }
 
-const BADGE_CONFIG = {
-  tersampaikan: { label: 'Tersampaikan', glyph: '✓', bg: '#E8F5E9', border: '#4CAF50', text: '#2E7D32', italic: false },
-  selesai_manual: { label: 'Ditandai manual', glyph: '✓', bg: '#F2FAF3', border: '#9CCBA0', text: '#2E7D32', italic: true },
-  terjadwal: { label: 'Sudah dijadwalkan', glyph: '●', bg: '#FAFAFA', border: '#C8C6C4', text: '#5C5A58', italic: false },
-  sakit: { label: 'Sakit', glyph: '◐', bg: '#FFF3E0', border: '#F0A82E', text: '#8A5200', italic: false },
-  izin: { label: 'Izin', glyph: '✉', bg: '#EBF3FC', border: '#0F6CBD', text: '#0C548F', italic: false },
-  alpa: { label: 'Alpa', glyph: '✕', bg: '#FDE7E9', border: '#C50F1F', text: '#9B0C18', italic: false },
-  kosong: { label: 'Belum dijadwalkan', glyph: '·', bg: '#FFFFFF', border: '#EDEBE9', text: '#8A8886', italic: false },
+const BADGE_CONFIG: Record<
+  string,
+  { label: string; icon: React.ReactNode; bg: string; border: string; text: string; italic?: boolean }
+> = {
+  tersampaikan: { label: 'Tersampaikan', icon: <Checkmark12Regular className="w-3 h-3 text-current" />, bg: '#E8F5E9', border: '#4CAF50', text: '#2E7D32' },
+  selesai_manual: { label: 'Ditandai manual', icon: <Checkmark12Regular className="w-3 h-3 text-current opacity-90" />, bg: '#F2FAF3', border: '#9CCBA0', text: '#2E7D32', italic: true },
+  terjadwal: { label: 'Sudah dijadwalkan', icon: <Circle12Filled className="w-2.5 h-2.5 text-current" />, bg: '#FAFAFA', border: '#C8C6C4', text: '#5C5A58' },
+  sakit: { label: 'Sakit', icon: <CircleHalfFill12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FFF3E0', border: '#F0A82E', text: '#8A5200' },
+  izin: { label: 'Izin', icon: <Mail12Regular className="w-2.5 h-2.5 text-current" />, bg: '#EBF3FC', border: '#0F6CBD', text: '#0C548F' },
+  alpa: { label: 'Alpa', icon: <Dismiss12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FDE7E9', border: '#C50F1F', text: '#9B0C18' },
+  kosong: { label: 'Belum dijadwalkan', icon: <span className="text-[11px] leading-none opacity-60">·</span>, bg: '#FFFFFF', border: '#EDEBE9', text: '#8A8886' },
 };
 
-const PRESENCE_CONFIG: Record<string, { label: string; glyph: string; bg: string; border: string; text: string }> = {
-  hadir: { label: 'Hadir', glyph: '✓', bg: '#E8F5E9', border: '#4CAF50', text: '#2E7D32' },
-  izin: { label: 'Izin', glyph: '✉', bg: '#EBF3FC', border: '#0F6CBD', text: '#0C548F' },
-  sakit: { label: 'Sakit', glyph: '◐', bg: '#FFF3E0', border: '#F0A82E', text: '#8A5200' },
-  alpa: { label: 'Alpa', glyph: '✕', bg: '#FDE7E9', border: '#C50F1F', text: '#9B0C18' },
+const PRESENCE_CONFIG: Record<string, { label: string; icon: React.ReactNode; bg: string; border: string; text: string }> = {
+  hadir: { label: 'Hadir', icon: <Checkmark12Regular className="w-3 h-3 text-current" />, bg: '#E8F5E9', border: '#4CAF50', text: '#2E7D32' },
+  izin: { label: 'Izin', icon: <Mail12Regular className="w-2.5 h-2.5 text-current" />, bg: '#EBF3FC', border: '#0F6CBD', text: '#0C548F' },
+  sakit: { label: 'Sakit', icon: <CircleHalfFill12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FFF3E0', border: '#F0A82E', text: '#8A5200' },
+  alpa: { label: 'Alpa', icon: <Dismiss12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FDE7E9', border: '#C50F1F', text: '#9B0C18' },
 };
 
 export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
@@ -143,11 +154,10 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
               borderColor: badge.border,
               backgroundColor: badge.bg,
               color: badge.text,
-              fontStyle: badge.italic ? 'italic' : 'normal',
             }}
-            className="flex-none inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap"
+            className="flex-none inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap"
           >
-            <span>{badge.glyph}</span>
+            <span className="flex items-center">{badge.icon}</span>
             <span>{badge.label}</span>
           </div>
         </div>
@@ -166,7 +176,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                 : k.realisasiAda
                 ? 'Tanpa status'
                 : 'Belum direalisasi';
-              const presenceGlyph = pres ? pres.glyph : '·';
+              const presenceIcon = pres ? pres.icon : <span className="opacity-60">·</span>;
               const presenceBg = pres ? pres.bg : '#F5F5F5';
               const presenceBorder = pres ? pres.border : '#C8C6C4';
               const presenceText = pres ? pres.text : '#5C5A58';
@@ -205,7 +215,8 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                       }}
                       className="inline-flex items-center gap-1 h-[17px] px-1.5 rounded-full border text-[10.5px] font-semibold whitespace-nowrap"
                     >
-                      {presenceGlyph} {presenceLabel}
+                      <span className="flex items-center">{presenceIcon}</span>
+                      <span>{presenceLabel}</span>
                     </span>
                     <span className="inline-flex items-center h-[17px] px-1.5 rounded-full border border-[#E1DFDD] bg-white text-[#424242] text-[10.5px] whitespace-nowrap">
                       {ketuntasanLabel}
@@ -225,7 +236,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
         <div className="mt-3 border-t border-[#E1DFDD] bg-[#FAFAFA] p-[11px_14px]">
           {isTersampaikanOtomatis ? (
             <div className="flex items-start gap-1.5 text-[12px] leading-normal text-[#2E7D32]">
-              <span className="font-bold">✓</span>
+              <Checkmark16Regular className="w-4 h-4 text-[#2E7D32] flex-none mt-0.5" />
               <div className="flex-1 min-w-0">
                 Sudah tersampaikan lewat kehadiran di “{sourceHadirKeg?.namaKegiatan || 'kegiatan'}” pada{' '}
                 {sourceHadirKeg ? formatTanggalPendek(sourceHadirKeg.tanggal) : 'sesi terkait'}. Ceklis manual hanya untuk materi yang tidak punya jejak kehadiran — kalau catatan kehadirannya keliru, perbaiki lewat “Ubah realisasi” di kegiatan itu.

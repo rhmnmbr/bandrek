@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Checkmark16Regular, Warning16Regular } from '@fluentui/react-icons';
 import { useToast } from '@/components/ui/toast';
 
 export function SetupServerScreen() {
@@ -119,7 +120,13 @@ export function SetupServerScreen() {
                   : 'border border-(--color-danger) bg-(--color-danger-subtle) text-(--color-danger-fg)'
               }`}
             >
-              <span>{testResult.status === 'success' ? '✓' : '⚠'}</span>
+              <span className="flex-none flex items-center">
+                {testResult.status === 'success' ? (
+                  <Checkmark16Regular className="w-3.5 h-3.5 text-[#2E7D32]" />
+                ) : (
+                  <Warning16Regular className="w-3.5 h-3.5 text-(--color-danger-fg)" />
+                )}
+              </span>
               <span>{testResult.message}</span>
             </div>
           )}

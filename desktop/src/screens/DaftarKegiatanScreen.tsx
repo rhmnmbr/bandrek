@@ -322,6 +322,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
         cari={cari}
         onChangeCari={setCari}
         simulatedToday={SIMULATED_TODAY}
+        onNewKegiatan={() => setFormOpen(true)}
       />
 
       {/* 2. Quick Filter Chips Bar */}

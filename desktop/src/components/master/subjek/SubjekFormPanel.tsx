@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Warning16Regular } from '@fluentui/react-icons';
 import type { JenisKelamin } from '@/data/types/common';
 import type { Subjek, PeranSubjek, MataPelajaran } from '@/data/types/master';
 
@@ -216,7 +217,7 @@ export function SubjekFormPanel({
         {showErrors && errorList.length > 0 && (
           <div className="shrink-0 rounded-md border border-(--color-danger) bg-(--color-danger-subtle) p-2 text-xs leading-relaxed text-(--color-danger-fg)">
             <div className="font-semibold flex items-center gap-1.5">
-              <span>⚠</span>
+              <Warning16Regular className="w-4 h-4 shrink-0" />
               <span>Belum bisa disimpan — {errorList.length} hal perlu dibereskan:</span>
             </div>
             <ul className="mt-1 pl-6 list-disc">
@@ -250,7 +251,7 @@ export function SubjekFormPanel({
           />
           {showErrors && errNama && (
             <div className="text-[11px] text-(--color-danger-fg) flex items-center gap-1">
-              <span>⚠</span>
+              <Warning16Regular className="w-3.5 h-3.5 shrink-0" />
               <span>{errNama}</span>
             </div>
           )}
