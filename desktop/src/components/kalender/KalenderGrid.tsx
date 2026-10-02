@@ -29,6 +29,73 @@ export interface KalenderGridProps {
   className?: string;
 }
 
+interface FreeSlot {
+  left: number;
+  width: number;
+}
+
+/**
+ * Menghitung rentang track horizontal yang kosong (belum terisi kegiatan)
+ * untuk suatu slot jam tertentu agar hover '+' presisi di area sisa.
+ */
+function getFreeSlotsForHour(events: LayoutEventItem[], hour: number): FreeSlot[] {
+  const hourStart = hour * 60;
+  const hourEnd = (hour + 1) * 60;
+
+  const overlapping = events.filter((ev) => {
+    const s = ev.startMin != null ? ev.startMin : 0;
+    const e = ev.endMin != null ? ev.endMin : 0;
+    return s < hourEnd && e > hourStart;
+  });
+
+  if (overlapping.length === 0) {
+    return [{ left: 0, width: 100 }];
+  }
+
+  const occupiedRanges = overlapping
+    .map((ev) => ({
+      start: Math.max(0, ev.left),
+      end: Math.min(100, ev.left + ev.width),
+    }))
+    .sort((a, b) => a.start - b.start);
+
+  const merged: { start: number; end: number }[] = [];
+  for (const range of occupiedRanges) {
+    if (merged.length === 0) {
+      merged.push({ ...range });
+    } else {
+      const prev = merged[merged.length - 1];
+      if (range.start <= prev.end + 0.5) {
+        prev.end = Math.max(prev.end, range.end);
+      } else {
+        merged.push({ ...range });
+      }
+    }
+  }
+
+  const freeSlots: FreeSlot[] = [];
+  let currentPos = 0;
+
+  for (const occ of merged) {
+    if (occ.start > currentPos + 1) {
+      freeSlots.push({
+        left: Math.round(currentPos * 10) / 10,
+        width: Math.round((occ.start - currentPos) * 10) / 10,
+      });
+    }
+    currentPos = Math.max(currentPos, occ.end);
+  }
+
+  if (currentPos < 99) {
+    freeSlots.push({
+      left: Math.round(currentPos * 10) / 10,
+      width: Math.round((100 - currentPos) * 10) / 10,
+    });
+  }
+
+  return freeSlots;
+}
+
 export const KalenderGrid: React.FC<KalenderGridProps> = ({
   days,
   nowLine,
@@ -39,32 +106,39 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
 }) => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [slotPx, setSlotPx] = React.useState<number>(SLOT_PX);
+  const [colWidth, setColWidth] = React.useState<number>(150);
 
-  // Dynamically calculate slot height based on viewport height
+  // Dynamically calculate slot height and column width based on viewport
   React.useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
 
-    const updateSlotHeight = () => {
+    const updateDimensions = () => {
       const h = el.clientHeight;
       const totalHours = JAM_AKHIR - JAM_AWAL; // 17 hours (06:00 - 23:00)
       const pad = 16; // pt-2 (8px) + pb-2 (8px)
       const available = h - pad;
       if (available > 0) {
         const calculated = Math.floor(available / totalHours);
-        setSlotPx(Math.max(SLOT_PX, calculated));
+        setSlotPx(Math.max(SLOT_PX, Math.min(46, calculated)));
+      }
+
+      const w = el.clientWidth;
+      const availableW = w - 56; // 56px left hour column
+      if (availableW > 0 && days.length > 0) {
+        setColWidth(Math.floor(availableW / days.length));
       }
     };
 
-    updateSlotHeight();
-    const ro = new ResizeObserver(updateSlotHeight);
+    updateDimensions();
+    const ro = new ResizeObserver(updateDimensions);
     ro.observe(el);
-    window.addEventListener('resize', updateSlotHeight);
+    window.addEventListener('resize', updateDimensions);
     return () => {
       ro.disconnect();
-      window.removeEventListener('resize', updateSlotHeight);
+      window.removeEventListener('resize', updateDimensions);
     };
-  }, []);
+  }, [days.length]);
 
   // Generate 06:00 .. 23:00 hour marks
   const hourMarks = React.useMemo(() => {
@@ -164,21 +238,36 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                 {/* Hourly Slot Cells */}
                 {Array.from({ length: JAM_AKHIR - JAM_AWAL }).map((_, slotIdx) => {
                   const hour = JAM_AWAL + slotIdx;
+                  const freeSlots = getFreeSlotsForHour(d.events, hour);
+
                   return (
                     <div
                       key={`slot-${d.iso}-${hour}`}
                       style={{ height: `${slotPx}px` }}
-                      className="border-b border-[#EDEBE9] relative group"
+                      className="border-b border-[#EDEBE9] relative"
                     >
-                      {/* Clickable slot area with hover + indicator */}
-                      <button
-                        type="button"
-                        onClick={() => onSelectSlot(d.iso, hour)}
-                        title={`Klik untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
-                        className="absolute inset-[2px] rounded border border-dashed border-transparent group-hover:border-[#8CC3F0] group-hover:bg-[#EBF3FC] text-transparent group-hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
-                      >
-                        <Add12Regular className="text-[13px]" />
-                      </button>
+                      {/* Clickable track-aware free slot areas with hover + indicator */}
+                      {freeSlots.map((slot) => {
+                        const slotPixelWidth = (slot.width / 100) * colWidth;
+                        // Sembunyikan hover jika area sisa terlalu kecil (< 36px) agar tombol '+' tidak terpotong
+                        if (slotPixelWidth < 36) return null;
+
+                        return (
+                          <button
+                            key={`free-slot-${d.iso}-${hour}-${slot.left}`}
+                            type="button"
+                            onClick={() => onSelectSlot(d.iso, hour)}
+                            title={`Klik untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
+                            style={{
+                              left: `calc(${slot.left}% + 1px)`,
+                              width: `calc(${slot.width}% - 3px)`,
+                            }}
+                            className="absolute top-[2px] bottom-[2px] rounded border border-dashed border-transparent hover:border-[#8CC3F0] hover:bg-[#EBF3FC] text-transparent hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
+                          >
+                            <Add12Regular className="text-[13px]" />
+                          </button>
+                        );
+                      })}
                     </div>
                   );
                 })}
