@@ -167,7 +167,7 @@ export const AppShell: React.FC = () => {
         )}
 
         {/* Content Area */}
-        <main className="flex-1 min-h-0 overflow-auto relative bg-(--color-canvas)">
+        <main className="flex-1 min-h-0 flex flex-col overflow-hidden relative bg-(--color-canvas)">
           <Outlet />
         </main>
       </div>

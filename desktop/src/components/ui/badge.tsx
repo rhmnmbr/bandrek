@@ -83,15 +83,15 @@ export const KegiatanBadge: React.FC<KegiatanBadgeProps> = ({ status, label, cla
   return (
     <span
       className={cn(
-        "inline-flex items-center h-4.5 pr-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
+        "inline-flex items-center h-5 pl-1.5 pr-2 gap-1 rounded-full border text-[11px] font-semibold whitespace-nowrap select-none",
         config.className,
         className
       )}
     >
-      <span className="w-5 h-full flex-none flex items-center justify-center">
+      <span className="flex-none flex items-center justify-center">
         {config.icon}
       </span>
-      <span className="leading-none translate-y-[-1.5px]">{label || config.defaultLabel}</span>
+      <span className="leading-none">{label || config.defaultLabel}</span>
     </span>
   );
 };
@@ -137,15 +137,15 @@ export const KehadiranBadge: React.FC<KehadiranBadgeProps> = ({ status, label, c
   return (
     <span
       className={cn(
-        "inline-flex items-center h-4.5 pr-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
+        "inline-flex items-center h-5 pl-1.5 pr-2 gap-1 rounded-full border text-[11px] font-semibold whitespace-nowrap select-none",
         config.className,
         className
       )}
     >
-      <span className="w-5 h-full flex-none flex items-center justify-center">
+      <span className="flex-none flex items-center justify-center">
         {config.icon}
       </span>
-      <span className="leading-none translate-y-[-1.5px]">{label || config.defaultLabel}</span>
+      <span className="leading-none">{label || config.defaultLabel}</span>
     </span>
   );
 };
@@ -165,14 +165,14 @@ export const MasterStatusBadge: React.FC<MasterStatusBadgeProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center h-4.5 px-2 rounded-full border text-[10.5px] font-semibold whitespace-nowrap select-none",
+        "inline-flex items-center h-5 px-2.25 rounded-full border text-[11px] font-semibold whitespace-nowrap select-none",
         isAktif
           ? "border-(--color-success) text-(--color-success-ink) bg-white"
           : "border-(--color-border-strong) text-(--color-text-muted) bg-(--color-canvas)",
         className
       )}
     >
-      <span className="leading-none translate-y-[-1.5px]">
+      <span className="leading-none">
         {label || (isAktif ? "Aktif" : "Nonaktif")}
       </span>
     </span>

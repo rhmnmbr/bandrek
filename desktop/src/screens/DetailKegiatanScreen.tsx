@@ -476,7 +476,7 @@ export const DetailKegiatanScreen: React.FC = () => {
       </div>
 
       {/* 2. Main Content Frame (Left Panel + Right Sidebar) */}
-      <div className="flex-1 min-h-0 flex bg-(--color-surface-sunken)">
+      <div className="flex-1 min-h-0 flex bg-(--color-surface-alt)">
         {/* Left Scrollable Area */}
         <div className="flex-1 min-w-0 overflow-y-auto p-3 flex flex-col gap-3">
           {/* Kartu 1: RENCANA */}

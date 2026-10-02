@@ -180,10 +180,10 @@ export const RealisasiScreen: React.FC = () => {
       ? `Jam selesai aktual harus setelah jam mulai. Ubah menjadi setelah ${mulai}.`
       : null;
 
-  const durasiStr = timeValid ? `${menit(selesai) - menit(mulai)} mnt` : '—';
+  const durasiStr = timeValid ? `${menit(selesai) - menit(mulai)} menit` : '—';
   const dMulai = kegiatan && mulai ? menit(mulai) - menit(kegiatan.mulai) : 0;
   const adaSelisih = Boolean(mulai && dMulai !== 0);
-  const selisihStr = dMulai > 0 ? `mulai telat ${dMulai} mnt` : `mulai ${-dMulai} mnt lebih awal`;
+  const selisihStr = dMulai > 0 ? `mulai telat ${dMulai} menit` : `mulai ${-dMulai} menit lebih awal`;
 
   // Materi discrepancy detection
   const plannedMateriObj = kegiatan?.materi ? materiMap.get(kegiatan.materi) : null;
@@ -340,6 +340,18 @@ export const RealisasiScreen: React.FC = () => {
     setIsDirty(true);
   };
 
+  const handleKosongkanSubjek = () => {
+    if (!kegiatan) return;
+    setKehadiranSubjek((prev) => {
+      const next = { ...prev };
+      kegiatan.subjek.forEach((s) => {
+        delete next[s.id];
+      });
+      return next;
+    });
+    setIsDirty(true);
+  };
+
   // Toggle single presence (clicking active deselects it)
   const handleToggleKehadiranSiswa = (sid: string, val: KehadiranValue) => {
     setKehadiran((prev) => {
@@ -418,10 +430,10 @@ export const RealisasiScreen: React.FC = () => {
         mulaiRef.current?.focus();
       } else if (materiError) {
         materiRef.current?.focus();
-      } else if (siswaMissing.length > 0) {
-        setTimeout(() => scrollToErrorRow(`siswa:${siswaMissing[0]}`), 60);
       } else if (subjekMissing.length > 0) {
         setTimeout(() => scrollToErrorRow(`subjek:${subjekMissing[0]}`), 60);
+      } else if (siswaMissing.length > 0) {
+        setTimeout(() => scrollToErrorRow(`siswa:${siswaMissing[0]}`), 60);
       }
       return;
     }
@@ -533,7 +545,7 @@ export const RealisasiScreen: React.FC = () => {
 
   if (isError || !kegiatan) {
     return (
-      <div className="flex-1 min-h-0 flex flex-col items-center justify-center bg-(--color-surface-sunken) p-6 gap-3">
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center bg-(--color-surface-alt) p-6 gap-3">
         <div className="text-[15px] font-semibold text-(--color-text)">
           Kegiatan tidak ditemukan
         </div>
@@ -563,6 +575,14 @@ export const RealisasiScreen: React.FC = () => {
   if (timeError) ringkasanErrors.push(timeError);
   if (materiError) ringkasanErrors.push(materiError);
   if (ketuntasanError) ringkasanErrors.push(ketuntasanError);
+  if (subjekMissing.length > 0) {
+    const names = subjekMissing
+      .map((s) => subjekMap.get(s.id)?.nama || s.id)
+      .join(', ');
+    ringkasanErrors.push(
+      `${subjekMissing.length} subjek belum punya status kehadiran: ${names}.`
+    );
+  }
   if (siswaMissing.length > 0) {
     const previewNames = siswaMissing
       .slice(0, 3)
@@ -571,14 +591,6 @@ export const RealisasiScreen: React.FC = () => {
     const moreText = siswaMissing.length > 3 ? ` dan ${siswaMissing.length - 3} lainnya` : '';
     ringkasanErrors.push(
       `${siswaMissing.length} siswa belum punya status kehadiran: ${previewNames}${moreText}.`
-    );
-  }
-  if (subjekMissing.length > 0) {
-    const names = subjekMissing
-      .map((s) => subjekMap.get(s.id)?.nama || s.id)
-      .join(', ');
-    ringkasanErrors.push(
-      `${subjekMissing.length} subjek belum punya status kehadiran: ${names}.`
     );
   }
 
@@ -602,8 +614,8 @@ export const RealisasiScreen: React.FC = () => {
     statusBoxInk = '#8A5200';
     statusBoxGlyph = '⚠';
     const parts: string[] = [];
-    if (siswaMissing.length > 0) parts.push(`${siswaMissing.length} siswa belum punya status kehadiran`);
     if (subjekMissing.length > 0) parts.push(`${subjekMissing.length} subjek belum punya status kehadiran`);
+    if (siswaMissing.length > 0) parts.push(`${siswaMissing.length} siswa belum punya status kehadiran`);
     if (materiError || ketuntasanError) parts.push('materi dan ketuntasan belum lengkap');
     if (timeError) parts.push('jam aktual belum benar');
     statusBoxTeks = `${parts.join('. ')}. ${
@@ -618,7 +630,7 @@ export const RealisasiScreen: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white select-none">
+    <div className="h-full w-full flex-1 min-h-0 flex flex-col bg-white select-none">
       {/* 1. Header / Top Toolbar (H: 44px) */}
       <div className="h-11 flex-none border-b border-(--color-border) bg-white flex items-center gap-2.25 px-3.5 select-none z-10">
         {/* [<] Back Button */}
@@ -626,7 +638,7 @@ export const RealisasiScreen: React.FC = () => {
           type="button"
           onClick={handleKembali}
           title="Kembali · Esc"
-          className="w-6.5 h-6.5 flex-none rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-sunken) flex items-center justify-center cursor-pointer transition-colors text-xs"
+          className="w-6.5 h-6.5 flex-none rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-alt) flex items-center justify-center cursor-pointer transition-colors text-xs"
         >
           <ChevronLeft16Regular className="text-[12px]" />
         </button>
@@ -667,7 +679,7 @@ export const RealisasiScreen: React.FC = () => {
             type="button"
             onClick={() => navigate('/kegiatan?filter=perlu_realisasi')}
             title="Lihat kegiatan lain yang belum direalisasi"
-            className="flex-none bg-transparent border-none px-2 py-1 rounded text-xs text-(--color-text-secondary) hover:bg-(--color-surface-sunken) hover:text-(--color-text) cursor-pointer whitespace-nowrap"
+            className="flex-none bg-transparent border-none px-2 py-1 rounded text-xs text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) cursor-pointer whitespace-nowrap"
           >
             {menungguCount} kegiatan lain menunggu
           </button>
@@ -678,7 +690,7 @@ export const RealisasiScreen: React.FC = () => {
           type="button"
           onClick={handleSimpanDraf}
           title="Simpan isian sementara tanpa menandai terealisasi"
-          className="flex-none h-6.5 px-2.75 border border-(--color-border-strong) rounded bg-white text-[12.5px] text-(--color-text) cursor-pointer whitespace-nowrap hover:bg-(--color-surface-sunken) active:bg-(--color-surface-alt) transition-colors"
+          className="flex-none h-6.5 px-2.75 border border-(--color-border-strong) rounded bg-white text-[12.5px] text-(--color-text) cursor-pointer whitespace-nowrap hover:bg-(--color-surface-alt) active:bg-(--color-surface-sunken) transition-colors"
         >
           Simpan draf
         </button>
@@ -720,16 +732,16 @@ export const RealisasiScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Rencana Card (Read-Only) */}
-          <div className="flex-none mx-3.5 mt-3.25 border border-(--color-border) rounded-lg bg-(--color-surface-sunken) p-2.5 px-3 flex items-center gap-3.5 text-[12.5px]">
-            {/* Column 1: Nama & Waktu */}
-            <div className="flex-1 min-w-0 leading-tight">
-              <div className="text-sm font-semibold truncate text-(--color-text)">
+          {/* Rencana Kegiatan (Context Bar) */}
+          <div className="flex-none mx-3.5 mt-3.25 border border-(--color-border) rounded-lg bg-(--color-surface-alt) p-2.5 px-3 flex items-center gap-3.5 text-[12.5px]">
+            <div className="flex-none max-w-[65%] leading-snug">
+              <div className="text-[14px] font-semibold text-(--color-text) truncate">
                 {kegiatan.nama}
               </div>
-              <div className="text-[#5C5A58] font-mono text-[11.5px] truncate mt-0.5">
-                Rencana: {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
-                {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`} ·{' '}
+              <div className="font-mono text-[11.5px] text-(--color-text-secondary) truncate mt-0.5">
+                {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
+                {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}
+                {' · '}
                 {kegiatan.tempatCustom
                   ? kegiatan.tempatCustom
                   : currentRuangan
@@ -738,39 +750,23 @@ export const RealisasiScreen: React.FC = () => {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="w-px h-7.5 flex-none bg-(--color-border)" />
 
-            {/* Column 2: Rencana Materi */}
-            <div className="w-46.5 flex-none leading-tight">
-              <div className="text-[10.5px] tracking-wider text-[#5C5A58] uppercase">
+            <div className="flex-none leading-snug">
+              <div className="text-[10px] font-semibold tracking-wider text-[#5C5A58] uppercase">
                 RENCANA MATERI
               </div>
-              <div className="truncate text-(--color-text) mt-0.5">
+              <div
+                className="text-[#242424] text-[12.5px] truncate mt-0.5"
+                title={plannedMateriObj ? plannedMateriNama : 'Tanpa materi'}
+              >
                 {plannedMateriObj ? plannedMateriNama : 'Tanpa materi'}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="w-px h-7.5 flex-none bg-(--color-border)" />
-
-            {/* Column 3: Subjek */}
-            <div className="w-59 flex-none leading-tight">
-              <div className="text-[10.5px] tracking-wider text-[#5C5A58] uppercase">
-                SUBJEK
-              </div>
-              <div className="truncate text-(--color-text) mt-0.5">
-                {kegiatan.subjek.length > 0
-                  ? kegiatan.subjek
-                      .map((s) => `${subjekMap.get(s.id)?.nama || s.id} (${s.peran})`)
-                      .join(', ')
-                  : '—'}
               </div>
             </div>
           </div>
 
           {/* Actual Time Controls */}
-          <div className="flex-none px-3.5 pt-3 flex gap-2.5 items-start">
+          <div className="flex-none px-3.5 pt-3 flex gap-2.5 items-end">
             {/* Jam Mulai Aktual */}
             <div className="w-26 flex-none flex flex-col gap-1">
               <label
@@ -825,7 +821,7 @@ export const RealisasiScreen: React.FC = () => {
             </div>
 
             {/* Duration & Delta Badges */}
-            <div className="flex-none h-6.5 mt-4.25 flex items-center gap-1.75 text-xs text-[#424242]">
+            <div className="flex-none h-6.5 flex items-center gap-1.75 text-xs text-(--color-text-secondary)">
               <span className="font-mono whitespace-nowrap">{durasiStr}</span>
               {adaSelisih && (
                 <span className="border border-[#F0A82E] bg-[#FFF3E0] text-[#8A5200] rounded-full px-2 py-px text-[11px] whitespace-nowrap">
@@ -837,7 +833,7 @@ export const RealisasiScreen: React.FC = () => {
             <div className="flex-1" />
 
             {/* Sama dengan rencana Checkbox */}
-            <label className="flex-none mt-4.25 h-6.5 flex items-center gap-1.75 text-xs text-[#424242] cursor-pointer select-none">
+            <label className="flex-none h-6.5 flex items-center gap-1.75 text-xs text-(--color-text-secondary) cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={sama}
@@ -943,20 +939,179 @@ export const RealisasiScreen: React.FC = () => {
             </div>
           )}
 
-          {/* Combined Kehadiran Container (Siswa & Subjek) */}
+          {/* Combined Kehadiran Container (Subjek & Siswa) */}
           <div className="flex-1 min-h-0 mx-3.5 my-3.5 border border-(--color-border) rounded-lg flex flex-col overflow-hidden bg-white">
-            {/* Section A: Kehadiran Siswa */}
+            {/* Section A: Kehadiran Subjek */}
+            <div
+              className={cn(
+                'flex flex-col overflow-hidden',
+                kegiatan.siswa.length > 0
+                  ? 'flex-none max-h-56 border-b border-(--color-border)'
+                  : 'flex-1 min-h-0'
+              )}
+            >
+              {/* Header bar Subjek */}
+              <div className="flex-none h-9 px-3 bg-(--color-surface-alt) border-b border-(--color-border) flex items-center gap-2.25 select-none">
+                <span className="flex-none text-[10.5px] tracking-wider text-[#5C5A58] uppercase font-medium">
+                  KEHADIRAN SUBJEK · {kegiatan.subjek.length} ORANG
+                </span>
+                <button
+                  type="button"
+                  onClick={handleTandaiSemuaHadirSubjek}
+                  className="flex-none h-6 px-2.25 rounded border border-(--color-border-strong) bg-white text-[11.5px] text-(--color-text) hover:bg-(--color-surface-alt) active:bg-(--color-surface-sunken) cursor-pointer"
+                >
+                  Tandai semua hadir
+                </button>
+                <button
+                  type="button"
+                  onClick={handleKosongkanSubjek}
+                  disabled={subjekCounts.belumDiisi === kegiatan.subjek.length}
+                  className={cn(
+                    'flex-none h-6 px-2.25 rounded border-none bg-transparent text-[11.5px]',
+                    subjekCounts.belumDiisi === kegiatan.subjek.length
+                      ? 'text-[#A19F9D] cursor-not-allowed'
+                      : 'text-(--color-brand) hover:bg-[#EBF3FC] cursor-pointer'
+                  )}
+                >
+                  Kosongkan
+                </button>
+
+                <div className="flex-1 min-w-2" />
+
+                {/* Subjek Attendance Status Counts */}
+                <div className="flex-none flex items-center text-xs whitespace-nowrap">
+                  {KEHADIRAN_ITEMS.map((key) => {
+                    const count = subjekCounts.counts[key];
+                    const cfg = KEHADIRAN_CONFIG[key];
+                    return (
+                      <span
+                        key={key}
+                        style={{ color: count ? cfg.ink : '#8A8886' }}
+                        className="mr-1"
+                      >
+                        {count} {cfg.label.toLowerCase()} ·
+                      </span>
+                    );
+                  })}
+                  <span
+                    style={{
+                      color:
+                        subjekCounts.belumDiisi > 0
+                          ? dicoba
+                            ? '#9B0C18'
+                            : '#8A5200'
+                          : '#2E7D32',
+                    }}
+                    className="font-semibold"
+                  >
+                    {subjekCounts.belumDiisi} belum diisi
+                  </span>
+                </div>
+              </div>
+
+              {/* Scrollable Subjek Table Body with Sticky Header */}
+              <div
+                ref={subjekScrollRef}
+                data-rel-scroll="subjek"
+                className="flex-1 min-h-0 overflow-y-auto"
+              >
+                {/* Table Header Subjek (Sticky) */}
+                <div className="sticky top-0 z-10 flex-none h-6 px-3 bg-white border-b border-[#EDEBE9] flex items-center text-[10.5px] tracking-wider text-[#5C5A58] uppercase select-none">
+                  <div className="w-6 flex-none">#</div>
+                  <div className="flex-1 min-w-0">NAMA</div>
+                  <div className="w-17.5 flex-none text-left">PERAN</div>
+                  <div className="w-53 flex-none">
+                    KEHADIRAN <span className="text-(--color-danger)">*</span>
+                  </div>
+                  <div className="w-72.5 flex-none">KETERANGAN</div>
+                </div>
+
+                {kegiatan.subjek.length > 0 ? (
+                  kegiatan.subjek.map((sb, idx) => {
+                    const sbObj = subjekMap.get(sb.id);
+                    const isError = Boolean(dicoba && !kehadiranSubjek[sb.id]);
+                    const currentStatus = kehadiranSubjek[sb.id] || null;
+
+                    return (
+                      <div key={sb.id} data-rel-row={`subjek:${sb.id}`}>
+                        <div
+                          style={{
+                            backgroundColor: isError ? '#FDE7E9' : '#FFFFFF',
+                            boxShadow: isError ? 'inset 3px 0 0 #C50F1F' : 'none',
+                          }}
+                          className="h-8.5 px-3 border-b border-[#EDEBE9] flex items-center text-[12.5px] transition-colors"
+                        >
+                          {/* Row Number */}
+                          <div
+                            style={{ color: isError ? '#9B0C18' : '#5C5A58' }}
+                            className="w-6 flex-none font-mono text-[11px]"
+                          >
+                            {idx + 1}
+                          </div>
+
+                          {/* Subjek Name */}
+                          <div className="flex-1 min-w-0 truncate text-[#242424]">
+                            {sbObj?.nama || sb.id}
+                          </div>
+
+                          {/* Peran */}
+                          <div className="w-17.5 flex-none text-[#424242]">
+                            {sb.peran}
+                          </div>
+
+                          {/* Segmented Buttons for Presence */}
+                          <div className="w-53 flex-none">
+                            <KehadiranSegmentedControl
+                              value={currentStatus}
+                              onChange={(val) => handleToggleKehadiranSubjek(sb.id, val)}
+                              error={isError}
+                            />
+                          </div>
+
+                          {/* Keterangan Subjek */}
+                          <input
+                            type="text"
+                            value={catatanSubjek[sb.id] || ''}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setCatatanSubjek((prev) => ({ ...prev, [sb.id]: val }));
+                              setIsDirty(true);
+                            }}
+                            placeholder="keterangan singkat"
+                            className="w-72.5 flex-none h-6.5 px-2 rounded border border-[#EDEBE9] hover:border-[#8A8886] focus:border-(--color-brand) bg-white text-xs outline-none transition-colors"
+                          />
+                        </div>
+
+                        {/* Error banner below invalid row */}
+                        {isError && (
+                          <div className="flex items-center gap-1.25 px-3 py-1 pl-9 border-b border-[#EDEBE9] bg-[#FDE7E9] text-[11px] leading-tight text-(--color-danger-ink)">
+                            <Warning12Regular className="w-3.5 h-3.5 flex-none" />
+                            <span>Pilih status kehadiran untuk {sbObj?.nama || sb.id}.</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="p-3 text-[12.5px] leading-relaxed text-[#5C5A58]">
+                    Kegiatan ini tidak punya subjek tercatat. Tambahkan lewat “Ubah kegiatan” kalau memang ada yang mengisi.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Section B: Kehadiran Siswa */}
             {kegiatan.siswa.length > 0 ? (
               <div className="flex-1 min-h-33 flex flex-col overflow-hidden">
                 {/* Header bar Siswa */}
-                <div className="flex-none h-9 px-3 bg-(--color-surface-sunken) border-b border-(--color-border) flex items-center gap-2.25 select-none">
+                <div className="flex-none h-9 px-3 bg-(--color-surface-alt) border-b border-(--color-border) flex items-center gap-2.25 select-none">
                   <span className="flex-none text-[10.5px] tracking-wider text-[#5C5A58] uppercase font-medium">
                     KEHADIRAN · {kegiatan.siswa.length} SISWA
                   </span>
                   <button
                     type="button"
                     onClick={handleTandaiSemuaHadirSiswa}
-                    className="flex-none h-6 px-2.25 rounded border border-(--color-border-strong) bg-white text-[11.5px] text-(--color-text) hover:bg-(--color-surface-sunken) active:bg-(--color-surface-alt) cursor-pointer"
+                    className="flex-none h-6 px-2.25 rounded border border-(--color-border-strong) bg-white text-[11.5px] text-(--color-text) hover:bg-(--color-surface-alt) active:bg-(--color-surface-sunken) cursor-pointer"
                   >
                     Tandai semua hadir
                   </button>
@@ -1007,23 +1162,23 @@ export const RealisasiScreen: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Table Header Siswa */}
-                <div className="flex-none h-6 px-3 bg-white border-b border-[#EDEBE9] flex items-center text-[10.5px] tracking-wider text-[#5C5A58] uppercase select-none">
-                  <div className="w-6 flex-none">#</div>
-                  <div className="flex-1 min-w-0">NAMA</div>
-                  <div className="w-17.5 flex-none">JENJANG</div>
-                  <div className="w-53 flex-none">
-                    KEHADIRAN <span className="text-(--color-danger)">*</span>
-                  </div>
-                  <div className="w-72.5 flex-none">CATATAN SISWA</div>
-                </div>
-
-                {/* Scrollable Student Table Body */}
+                {/* Scrollable Student Table Body with Sticky Header */}
                 <div
                   ref={siswaScrollRef}
                   data-rel-scroll="siswa"
                   className="flex-1 min-h-0 overflow-y-auto"
                 >
+                  {/* Table Header Siswa (Sticky) */}
+                  <div className="sticky top-0 z-10 flex-none h-6 px-3 bg-white border-b border-[#EDEBE9] flex items-center text-[10.5px] tracking-wider text-[#5C5A58] uppercase select-none">
+                    <div className="w-6 flex-none">#</div>
+                    <div className="flex-1 min-w-0">NAMA</div>
+                    <div className="w-17.5 flex-none text-left">JENJANG</div>
+                    <div className="w-53 flex-none">
+                      KEHADIRAN <span className="text-(--color-danger)">*</span>
+                    </div>
+                    <div className="w-72.5 flex-none">CATATAN SISWA</div>
+                  </div>
+
                   {kegiatan.siswa.map((sid, idx) => {
                     const sw = siswaMap.get(sid);
                     const isError = Boolean(dicoba && !kehadiran[sid]);
@@ -1099,154 +1254,15 @@ export const RealisasiScreen: React.FC = () => {
               </div>
             ) : (
               /* Tanpa Siswa Notice */
-              <div className="flex-none p-3 bg-(--color-surface-sunken) border-b border-(--color-border) text-[12.5px] leading-relaxed text-[#5C5A58]">
-                Kegiatan ini tanpa siswa — rapat memang begitu. Cukup isi kehadiran subjek di bawah.
+              <div className="flex-none p-3 bg-(--color-surface-alt) text-[12.5px] leading-relaxed text-[#5C5A58]">
+                Kegiatan ini tanpa siswa.
               </div>
             )}
-
-            {/* Section B: Kehadiran Subjek */}
-            <div className="flex-none flex flex-col max-h-46.5 border-t border-(--color-border) overflow-hidden">
-              {/* Header bar Subjek */}
-              <div className="flex-none h-9 px-3 bg-(--color-surface-sunken) border-b border-(--color-border) flex items-center gap-2.25 select-none">
-                <span className="flex-none text-[10.5px] tracking-wider text-[#5C5A58] uppercase font-medium">
-                  KEHADIRAN SUBJEK · {kegiatan.subjek.length} ORANG
-                </span>
-                <button
-                  type="button"
-                  onClick={handleTandaiSemuaHadirSubjek}
-                  className="flex-none h-6 px-2.25 rounded border border-(--color-border-strong) bg-white text-[11.5px] text-(--color-text) hover:bg-(--color-surface-sunken) active:bg-(--color-surface-alt) cursor-pointer"
-                >
-                  Tandai semua hadir
-                </button>
-
-                <div className="flex-1 min-w-2" />
-
-                {/* Subjek Attendance Status Counts */}
-                <div className="flex-none flex items-center text-xs whitespace-nowrap">
-                  {KEHADIRAN_ITEMS.map((key) => {
-                    const count = subjekCounts.counts[key];
-                    const cfg = KEHADIRAN_CONFIG[key];
-                    return (
-                      <span
-                        key={key}
-                        style={{ color: count ? cfg.ink : '#8A8886' }}
-                        className="mr-1"
-                      >
-                        {count} {cfg.label.toLowerCase()} ·
-                      </span>
-                    );
-                  })}
-                  <span
-                    style={{
-                      color:
-                        subjekCounts.belumDiisi > 0
-                          ? dicoba
-                            ? '#9B0C18'
-                            : '#8A5200'
-                          : '#2E7D32',
-                    }}
-                    className="font-semibold"
-                  >
-                    {subjekCounts.belumDiisi} belum diisi
-                  </span>
-                </div>
-              </div>
-
-              {/* Table Header Subjek */}
-              <div className="flex-none h-6 px-3 bg-white border-b border-[#EDEBE9] flex items-center text-[10.5px] tracking-wider text-[#5C5A58] uppercase select-none">
-                <div className="w-6 flex-none">#</div>
-                <div className="flex-1 min-w-0">NAMA</div>
-                <div className="w-17.5 flex-none">PERAN</div>
-                <div className="w-53 flex-none">
-                  KEHADIRAN <span className="text-(--color-danger)">*</span>
-                </div>
-                <div className="w-72.5 flex-none">KETERANGAN</div>
-              </div>
-
-              {/* Scrollable Subjek Table Body */}
-              <div
-                ref={subjekScrollRef}
-                data-rel-scroll="subjek"
-                className="flex-1 min-h-0 overflow-y-auto"
-              >
-                {kegiatan.subjek.length > 0 ? (
-                  kegiatan.subjek.map((sb, idx) => {
-                    const sbObj = subjekMap.get(sb.id);
-                    const isError = Boolean(dicoba && !kehadiranSubjek[sb.id]);
-                    const currentStatus = kehadiranSubjek[sb.id] || null;
-
-                    return (
-                      <div key={sb.id} data-rel-row={`subjek:${sb.id}`}>
-                        <div
-                          style={{
-                            backgroundColor: isError ? '#FDE7E9' : '#FFFFFF',
-                            boxShadow: isError ? 'inset 3px 0 0 #C50F1F' : 'none',
-                          }}
-                          className="h-8.5 px-3 border-b border-[#EDEBE9] flex items-center text-[12.5px] transition-colors"
-                        >
-                          {/* Row Number */}
-                          <div
-                            style={{ color: isError ? '#9B0C18' : '#5C5A58' }}
-                            className="w-6 flex-none font-mono text-[11px]"
-                          >
-                            {idx + 1}
-                          </div>
-
-                          {/* Subjek Name */}
-                          <div className="flex-1 min-w-0 truncate text-[#242424]">
-                            {sbObj?.nama || sb.id}
-                          </div>
-
-                          {/* Peran */}
-                          <div className="w-17.5 flex-none text-[#424242]">
-                            {sb.peran}
-                          </div>
-
-                          {/* Segmented Buttons for Presence */}
-                          <div className="w-53 flex-none">
-                            <KehadiranSegmentedControl
-                              value={currentStatus}
-                              onChange={(val) => handleToggleKehadiranSubjek(sb.id, val)}
-                              error={isError}
-                            />
-                          </div>
-
-                          {/* Keterangan Subjek */}
-                          <input
-                            type="text"
-                            value={catatanSubjek[sb.id] || ''}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setCatatanSubjek((prev) => ({ ...prev, [sb.id]: val }));
-                              setIsDirty(true);
-                            }}
-                            placeholder="keterangan singkat"
-                            className="w-72.5 flex-none h-6.5 px-2 rounded border border-[#EDEBE9] hover:border-[#8A8886] focus:border-(--color-brand) bg-white text-xs outline-none transition-colors"
-                          />
-                        </div>
-
-                        {/* Error banner below invalid row */}
-                        {isError && (
-                          <div className="flex items-center gap-1.25 px-3 py-1 pl-9 border-b border-[#EDEBE9] bg-[#FDE7E9] text-[11px] leading-tight text-(--color-danger-ink)">
-                            <Warning12Regular className="w-3.5 h-3.5 flex-none" />
-                            <span>Pilih status kehadiran untuk {sbObj?.nama || sb.id}.</span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="p-3 text-[12.5px] leading-relaxed text-[#5C5A58]">
-                    Kegiatan ini tidak punya subjek tercatat. Tambahkan lewat “Ubah kegiatan” kalau memang ada yang mengisi.
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
 
         {/* Right Sidebar (310px fixed width) */}
-        <div className="w-77.5 flex-none border-l border-(--color-border) bg-(--color-surface-sunken) p-3.5 flex flex-col gap-2.5 overflow-y-auto select-none">
+        <div className="w-77.5 flex-none border-l border-(--color-border) bg-(--color-surface-alt) p-3.5 flex flex-col gap-3 overflow-y-auto select-none">
           {/* Catatan Kegiatan */}
           <div className="flex-none text-[10.5px] tracking-wider text-[#5C5A58] uppercase font-medium">
             CATATAN KEGIATAN

@@ -147,6 +147,18 @@ export class MockDataStore {
           this.ceklisManual = parsed.ceklisManual;
           this.kegiatan = parsed.kegiatan;
           if (parsed.users) this.users = parsed.users;
+
+          // Sinkronkan kegiatan baru dari INITIAL_SEED jika belum ada di storage
+          let adaBaru = false;
+          INITIAL_SEED.kegiatan.forEach((seedKeg) => {
+            if (!this.kegiatan.some((k) => k.id === seedKeg.id)) {
+              this.kegiatan.push(JSON.parse(JSON.stringify(seedKeg)));
+              adaBaru = true;
+            }
+          });
+          if (adaBaru) {
+            this.persist();
+          }
         }
       }
     } catch {

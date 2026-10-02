@@ -123,7 +123,7 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                 ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
                 : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
               disabled &&
-                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
+                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-canvas) text-(--color-text-muted)",
               className
             )}
           >

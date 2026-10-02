@@ -7476,6 +7476,43 @@ export const INITIAL_SEED: SeedData = {
       "status": "belum"
     },
     {
+      "id": "e130",
+      "mapel": "M1",
+      "materi": "T9",
+      "kelas": "K5",
+      "catatan": "Sesi penguatan konsep dan pembahasan soal latihan mingguan.",
+      "realisasi": null,
+      "nama": "Matematika Kelas SMP Reguler",
+      "jenis": "J1",
+      "tanggal": "2026-09-15",
+      "mulai": "15:30",
+      "selesai": "17:00",
+      "ruangan": "R6",
+      "subjek": [
+        {
+          "id": "U6",
+          "peran": "Pengisi"
+        },
+        {
+          "id": "U10",
+          "peran": "Support"
+        }
+      ],
+      "siswa": [
+        "S7",
+        "S12",
+        "S16",
+        "S23",
+        "S28",
+        "S33",
+        "S39",
+        "S46",
+        "S74",
+        "S79"
+      ],
+      "status": "belum"
+    },
+    {
       "id": "e74",
       "mapel": "M1",
       "materi": "T10",
