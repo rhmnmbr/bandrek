@@ -383,11 +383,11 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                             }}
                             title={`Klik atau seret untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
                             style={{
-                              left: `calc(${slot.left}% + 1px)`,
-                              width: `calc(${slot.width}% - 3px)`,
+                              left: `calc(${slot.left}% + 2px)`,
+                              width: `calc(${slot.width}% - 4px)`,
                             }}
                             className={cn(
-                              'absolute top-[2px] bottom-[2px] rounded border border-dashed border-transparent hover:border-[#8CC3F0] hover:bg-[#EBF3FC] text-transparent hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors',
+                              'absolute top-px bottom-0.5 rounded border border-dashed border-transparent hover:border-[#8CC3F0] hover:bg-[#EBF3FC] text-transparent hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors',
                               dragPreview && 'pointer-events-none'
                             )}
                           >
@@ -412,8 +412,8 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                       style={{
                         top: `${dragTop}px`,
                         height: `${dragHeight}px`,
-                        left: `calc(${dragPreview.left}% + 1px)`,
-                        width: `calc(${dragPreview.width}% - 3px)`,
+                        left: `calc(${dragPreview.left}% + 2px)`,
+                        width: `calc(${dragPreview.width}% - 4px)`,
                       }}
                       className="absolute z-20 rounded-[2px] border border-(--color-brand) bg-[rgba(15,108,189,0.14)] pointer-events-none flex items-start justify-center pt-0.5 select-none shadow-xs"
                     >
