@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input, SearchInput, Textarea, FormLabel, InlineError } from '@/components/ui/input';
 import { Select, GroupedRuanganSelect, type TempatRuanganGroup } from '@/components/ui/select';
+import { DatePicker } from '@/components/ui/date-picker';
+import { TimePicker } from '@/components/ui/time-picker';
 import { SubjekChip, AddSubjekButton, type SubjekPeran } from '@/components/ui/subjek-chip';
 import { ErrorSummary, type ErrorSummaryItem } from '@/components/ui/error-summary';
 import { ConflictWarning } from '@/components/ui/conflict-warning';
@@ -41,7 +43,9 @@ export interface FormKegiatanInitialData {
   tanggal?: string;
   mulai?: string;
   selesai?: string;
+  sepanjangHari?: boolean;
   ruangan?: string;
+  tempatCustom?: string;
   mapel?: string;
   materi?: string;
   subjek?: Array<{ id: string; peran: string }>;
@@ -92,7 +96,16 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   const [tanggal, setTanggal] = React.useState<string>(() => initialData?.tanggal || '');
   const [mulai, setMulai] = React.useState<string>(() => initialData?.mulai || '08:00');
   const [selesai, setSelesai] = React.useState<string>(() => initialData?.selesai || '09:30');
+  const [sepanjangHari, setSepanjangHari] = React.useState<boolean>(
+    () => Boolean(initialData?.sepanjangHari)
+  );
   const [ruangan, setRuangan] = React.useState<string>(() => initialData?.ruangan || '');
+  const [isCustomTempat, setIsCustomTempat] = React.useState<boolean>(
+    () => Boolean(initialData?.tempatCustom)
+  );
+  const [tempatCustom, setTempatCustom] = React.useState<string>(
+    () => initialData?.tempatCustom || ''
+  );
   const [mapel, setMapel] = React.useState<string>(() => initialData?.mapel || '');
   const [materi, setMateri] = React.useState<string>(() => initialData?.materi || '');
   const [subjek, setSubjek] = React.useState<Array<{ id: string; peran: string }>>(() => {
@@ -141,9 +154,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   // Field refs for error scrolling & focusing
   const namaRef = React.useRef<HTMLInputElement>(null);
   const jenisRef = React.useRef<HTMLButtonElement>(null);
-  const tanggalRef = React.useRef<HTMLInputElement>(null);
-  const mulaiRef = React.useRef<HTMLInputElement>(null);
-  const selesaiRef = React.useRef<HTMLInputElement>(null);
+  const tanggalRef = React.useRef<HTMLButtonElement>(null);
+  const mulaiRef = React.useRef<HTMLButtonElement>(null);
+  const selesaiRef = React.useRef<HTMLButtonElement>(null);
   const ruanganRef = React.useRef<HTMLButtonElement>(null);
   const mapelRef = React.useRef<HTMLButtonElement>(null);
   const materiRef = React.useRef<HTMLButtonElement>(null);
@@ -276,9 +289,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     queryKey: [
       'cekBentrok',
       tanggal,
-      mulai,
-      selesai,
-      ruangan,
+      sepanjangHari ? '07:00' : mulai,
+      sepanjangHari ? '18:00' : selesai,
+      isCustomTempat ? '' : ruangan,
       subjekIds.join(','),
       selectedSiswaIds.join(','),
       mode,
@@ -287,9 +300,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     queryFn: () =>
       repositories.kegiatan.cekBentrok({
         tanggal,
-        mulai,
-        selesai,
-        ruangan,
+        mulai: sepanjangHari ? '07:00' : mulai,
+        selesai: sepanjangHari ? '18:00' : selesai,
+        ruangan: isCustomTempat ? '' : ruangan,
         subjek: subjekIds,
         siswa: selectedSiswaIds,
         excludeKegiatanId: mode === 'edit' ? kegiatanId : undefined,
@@ -297,9 +310,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     enabled: Boolean(
       open &&
         tanggal &&
-        mulai &&
-        selesai &&
-        menit(selesai) > menit(mulai)
+        (sepanjangHari || (mulai && selesai && menit(selesai) > menit(mulai)))
     ),
     staleTime: 500,
   });
@@ -326,13 +337,15 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     if (!tanggal) {
       err.tanggal = 'Tanggal belum diisi.';
     }
-    if (!mulai) {
-      err.mulai = 'Jam mulai belum diisi.';
-    }
-    if (!selesai) {
-      err.selesai = 'Jam selesai belum diisi.';
-    } else if (mulai && menit(selesai) <= menit(mulai)) {
-      err.selesai = `Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah ${mulai}.`;
+    if (!sepanjangHari) {
+      if (!mulai) {
+        err.mulai = 'Jam mulai belum diisi.';
+      }
+      if (!selesai) {
+        err.selesai = 'Jam selesai belum diisi.';
+      } else if (mulai && menit(selesai) <= menit(mulai)) {
+        err.selesai = `Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah ${mulai}.`;
+      }
     }
     if (subjek.filter((s) => Boolean(s.id)).length === 0) {
       err.subjek =
@@ -344,7 +357,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     }
 
     return err;
-  }, [nama, jenis, currentJenisData, mapel, materi, tanggal, mulai, selesai, subjek, selectedSiswaIds]);
+  }, [nama, jenis, currentJenisData, mapel, materi, tanggal, mulai, selesai, sepanjangHari, subjek, selectedSiswaIds]);
 
   const currentErrors = validateForm();
   const hasErrors = Object.keys(currentErrors).length > 0;
@@ -481,6 +494,10 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
       try {
         let savedResult: Kegiatan;
+        const effectiveMulai = sepanjangHari ? '07:00' : mulai;
+        const effectiveSelesai = sepanjangHari ? '18:00' : selesai;
+        const effectiveRuangan = isCustomTempat ? '' : ruangan;
+        const effectiveTempatCustom = isCustomTempat ? tempatCustom.trim() : null;
 
         if (mode === 'edit' && kegiatanId) {
           savedResult = await updateKegiatanAsync({
@@ -491,9 +508,11 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               mapel: currentJenisData?.materiWajib ? mapel : null,
               materi: currentJenisData?.materiWajib ? materi : null,
               tanggal,
-              mulai,
-              selesai,
-              ruangan,
+              mulai: effectiveMulai,
+              selesai: effectiveSelesai,
+              sepanjangHari,
+              ruangan: effectiveRuangan,
+              tempatCustom: effectiveTempatCustom,
               subjek: subjek.map((s) => ({ id: s.id, peran: s.peran as any })),
               siswa: selectedSiswaIds,
               catatan: catatan.trim(),
@@ -511,9 +530,11 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             mapel: currentJenisData?.materiWajib ? mapel : null,
             materi: currentJenisData?.materiWajib ? materi : null,
             tanggal,
-            mulai,
-            selesai,
-            ruangan,
+            mulai: effectiveMulai,
+            selesai: effectiveSelesai,
+            sepanjangHari,
+            ruangan: effectiveRuangan,
+            tempatCustom: effectiveTempatCustom,
             subjek: subjek.map((s) => ({ id: s.id, peran: s.peran as any })),
             siswa: selectedSiswaIds,
             catatan: catatan.trim(),
@@ -570,7 +591,10 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
       tanggal,
       mulai,
       selesai,
+      sepanjangHari,
       ruangan,
+      isCustomTempat,
+      tempatCustom,
       subjek,
       selectedSiswaIds,
       catatan,
@@ -604,9 +628,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
   if (!open) return null;
 
-  // Header pill text e.g. "Rab, 16 Sep · 08:00"
+  // Header pill text e.g. "Rab, 16 Sep · 08:00" or "Rab, 16 Sep · Sepanjang hari"
   const contextPill = tanggal
-    ? `${formatTanggalPendek(tanggal)}${mulai ? ` · ${mulai}` : ''}`
+    ? `${formatTanggalPendek(tanggal)} · ${sepanjangHari ? 'Sepanjang hari' : mulai || '08:00'}`
     : 'Tanggal belum dipilih';
 
   // Error summary list
@@ -731,10 +755,12 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             {/* 2. Jenis Kegiatan & Tanggal */}
             <div className="grid grid-cols-[1fr_132px] gap-2.5 items-start">
               {/* Jenis Kegiatan */}
-              <div>
-                <FormLabel required error={Boolean(dicoba && currentErrors.jenis)}>
-                  Jenis kegiatan
-                </FormLabel>
+              <div className="min-w-0">
+                <div className="h-3.5 mb-1 flex items-center">
+                  <FormLabel className="mb-0" required error={Boolean(dicoba && currentErrors.jenis)}>
+                    Jenis kegiatan
+                  </FormLabel>
+                </div>
                 <Select
                   ref={jenisRef}
                   value={jenis}
@@ -758,7 +784,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   <InlineError message={currentErrors.jenis} />
                 )}
                 {currentJenisData && (
-                  <p className="mt-1 text-[11px] text-(--color-text-muted) leading-tight">
+                  <p className="mt-1 text-[11px] text-(--color-text-muted) leading-4">
                     {currentJenisData.materiWajib
                       ? 'Jenis ini mewajibkan mata pelajaran dan materi.'
                       : 'Jenis ini tidak memakai materi.'}
@@ -767,26 +793,23 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               </div>
 
               {/* Tanggal */}
-              <div>
-                <FormLabel required error={Boolean(dicoba && currentErrors.tanggal)}>
-                  Tanggal
-                </FormLabel>
-                <input
+              <div className="min-w-0">
+                <div className="h-3.5 mb-1 flex items-center">
+                  <FormLabel className="mb-0" required error={Boolean(dicoba && currentErrors.tanggal)}>
+                    Tanggal
+                  </FormLabel>
+                </div>
+                <DatePicker
                   ref={tanggalRef}
-                  type="date"
                   value={tanggal}
-                  onChange={(e) => {
-                    setTanggal(e.target.value);
+                  onChange={(val) => {
+                    setTanggal(val);
                     markTouched('tanggal');
                   }}
-                  onBlur={() => markTouched('tanggal')}
-                  className={cn(
-                    'w-full h-6.5 px-2 rounded-md font-mono text-[12px] bg-white text-(--color-text) transition-colors',
-                    'border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] focus:outline-none',
-                    (dicoba || touched.tanggal) &&
-                      currentErrors.tanggal &&
-                      'border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)]'
-                  )}
+                  formatDisplay="dd/MM/yyyy"
+                  placeholder="Pilih tanggal"
+                  error={Boolean((dicoba || touched.tanggal) && currentErrors.tanggal)}
+                  className="font-mono text-[12.5px]"
                 />
                 {(dicoba || touched.tanggal) && currentErrors.tanggal && (
                   <InlineError message={currentErrors.tanggal} />
@@ -794,78 +817,132 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               </div>
             </div>
 
-            {/* 3. Mulai, Selesai, Ruangan */}
-            <div className="grid grid-cols-[1fr_1fr_1.35fr] gap-2.5 items-start">
-              {/* Mulai */}
-              <div>
-                <FormLabel required error={Boolean(dicoba && currentErrors.mulai)}>
-                  Mulai
-                </FormLabel>
-                <input
-                  ref={mulaiRef}
-                  type="time"
-                  step={300}
-                  value={mulai}
-                  onChange={(e) => {
-                    setMulai(e.target.value);
-                    markTouched('mulai');
-                  }}
-                  onBlur={() => markTouched('mulai')}
-                  className={cn(
-                    'w-full h-6.5 px-2 rounded-md font-mono text-[12px] bg-white text-(--color-text) transition-colors',
-                    'border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] focus:outline-none',
-                    (dicoba || touched.mulai) &&
-                      currentErrors.mulai &&
-                      'border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)]'
-                  )}
-                />
-                {(dicoba || touched.mulai) && currentErrors.mulai && (
-                  <InlineError message={currentErrors.mulai} />
-                )}
+            {/* 3. Waktu & Tempat */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11.5px] font-semibold text-[#5C5A58]">WAKTU & TEMPAT</span>
+                <label className="flex items-center gap-1.5 cursor-pointer text-[12px] text-(--color-text-secondary) hover:text-(--color-text) select-none">
+                  <input
+                    type="checkbox"
+                    checked={sepanjangHari}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setSepanjangHari(checked);
+                      if (checked) {
+                        setMulai('07:00');
+                        setSelesai('18:00');
+                      }
+                      setIsDirty(true);
+                    }}
+                    className="rounded border-(--color-border-strong) text-(--color-brand) focus:ring-(--color-brand) w-3.5 h-3.5 cursor-pointer"
+                  />
+                  <span className="font-medium">Sepanjang hari</span>
+                </label>
               </div>
 
-              {/* Selesai */}
-              <div>
-                <FormLabel required error={Boolean(dicoba && currentErrors.selesai)}>
-                  Selesai
-                </FormLabel>
-                <input
-                  ref={selesaiRef}
-                  type="time"
-                  step={300}
-                  value={selesai}
-                  onChange={(e) => {
-                    setSelesai(e.target.value);
-                    markTouched('selesai');
-                  }}
-                  onBlur={() => markTouched('selesai')}
-                  className={cn(
-                    'w-full h-6.5 px-2 rounded-md font-mono text-[12px] bg-white text-(--color-text) transition-colors',
-                    'border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] focus:outline-none',
-                    (dicoba || touched.selesai) &&
-                      currentErrors.selesai &&
-                      'border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)]'
-                  )}
-                />
-                {(dicoba || touched.selesai) && currentErrors.selesai && (
-                  <InlineError message={currentErrors.selesai} />
-                )}
-              </div>
+              <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.35fr)] gap-2.5 items-start">
+                {sepanjangHari ? (
+                  <div className="col-span-2 min-w-0">
+                    <div className="h-3.5 mb-1 flex items-center">
+                      <FormLabel className="mb-0">Waktu</FormLabel>
+                    </div>
+                    <div className="h-(--density-control-h) px-2.5 rounded-md bg-(--color-canvas) border border-(--color-border) text-(--color-text-muted) text-[12.5px] flex items-center font-medium select-none truncate">
+                      Sepanjang hari
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Mulai */}
+                    <div className="min-w-0">
+                      <div className="h-3.5 mb-1 flex items-center">
+                        <FormLabel className="mb-0" required error={Boolean(dicoba && currentErrors.mulai)}>
+                          Mulai
+                        </FormLabel>
+                      </div>
+                      <TimePicker
+                        ref={mulaiRef}
+                        value={mulai}
+                        onChange={(val) => {
+                          setMulai(val);
+                          markTouched('mulai');
+                        }}
+                        onBlur={() => markTouched('mulai')}
+                        error={Boolean((dicoba || touched.mulai) && currentErrors.mulai)}
+                      />
+                      {(dicoba || touched.mulai) && currentErrors.mulai && (
+                        <InlineError message={currentErrors.mulai} />
+                      )}
+                    </div>
 
-              {/* Ruangan (Grouped by Tempat) */}
-              <div>
-                <FormLabel>Ruangan</FormLabel>
-                <GroupedRuanganSelect
-                  ref={ruanganRef}
-                  groups={tempatRuanganGroups}
-                  value={ruangan}
-                  onValueChange={(val) => {
-                    setRuangan(val);
-                    markTouched('ruangan');
-                  }}
-                  allowNone
-                  noneLabel="Tanpa ruangan"
-                />
+                    {/* Selesai */}
+                    <div className="min-w-0">
+                      <div className="h-3.5 mb-1 flex items-center">
+                        <FormLabel className="mb-0" required error={Boolean(dicoba && currentErrors.selesai)}>
+                          Selesai
+                        </FormLabel>
+                      </div>
+                      <TimePicker
+                        ref={selesaiRef}
+                        value={selesai}
+                        onChange={(val) => {
+                          setSelesai(val);
+                          markTouched('selesai');
+                        }}
+                        onBlur={() => markTouched('selesai')}
+                        error={Boolean((dicoba || touched.selesai) && currentErrors.selesai)}
+                      />
+                      {(dicoba || touched.selesai) && currentErrors.selesai && (
+                        <InlineError message={currentErrors.selesai} />
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Tempat (Dropdown Tempat/Ruangan atau Input Manual) */}
+                <div className="min-w-0">
+                  <div className="h-3.5 mb-1 flex items-center justify-between">
+                    <span className="text-[11.5px] font-medium leading-none text-(--color-text-muted) select-none">
+                      Tempat
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCustomTempat((prev) => !prev);
+                        if (!isCustomTempat) setRuangan('');
+                        else setTempatCustom('');
+                        setIsDirty(true);
+                      }}
+                      className="p-0 m-0 border-none bg-transparent text-[11.5px] font-medium leading-none text-(--color-brand) hover:underline cursor-pointer outline-none focus:outline-none"
+                    >
+                      {isCustomTempat ? 'Pilih dari daftar' : 'Tempat lain'}
+                    </button>
+                  </div>
+                  {isCustomTempat ? (
+                    <input
+                      type="text"
+                      placeholder="Misal: Ruang Zoom, Kafe, Rumah Siswa..."
+                      value={tempatCustom}
+                      onChange={(e) => {
+                        setTempatCustom(e.target.value);
+                        setIsDirty(true);
+                      }}
+                      className="block w-full min-w-0 h-(--density-control-h) px-2 rounded-md text-[12.5px] bg-white text-(--color-text) border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] focus:outline-none transition-colors"
+                    />
+                  ) : (
+                    <GroupedRuanganSelect
+                      ref={ruanganRef}
+                      groups={tempatRuanganGroups}
+                      value={ruangan}
+                      onValueChange={(val) => {
+                        setRuangan(val);
+                        markTouched('ruangan');
+                      }}
+                      allowNone
+                      noneLabel="Tanpa tempat"
+                      placeholder="Pilih tempat / ruangan"
+                    />
+                  )}
+                </div>
               </div>
             </div>
 

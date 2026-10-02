@@ -24,7 +24,8 @@ export interface KalenderGridProps {
     badgeTop: number;
   };
   onSelectEvent: (kegiatan: Kegiatan, e: React.MouseEvent) => void;
-  onSelectSlot: (iso: string, hour: number) => void;
+  onSelectSlot: (iso: string, startHour: number, endHour?: number) => void;
+  onClosePopover?: () => void;
   onMoreClick: (iso: string) => void;
   className?: string;
 }
@@ -101,12 +102,119 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
   nowLine,
   onSelectEvent,
   onSelectSlot,
+  onClosePopover,
   onMoreClick,
   className,
 }) => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [slotPx, setSlotPx] = React.useState<number>(SLOT_PX);
   const [colWidth, setColWidth] = React.useState<number>(150);
+
+  // Session tracking to distinguish simple click from drag
+  const [trackingSession, setTrackingSession] = React.useState<{
+    iso: string;
+    startHour: number;
+    startY: number;
+    left: number;
+    width: number;
+  } | null>(null);
+  const trackingSessionRef = React.useRef(trackingSession);
+  trackingSessionRef.current = trackingSession;
+
+  // Visual drag preview overlay state (only active once movement threshold is passed)
+  const [dragPreview, setDragPreview] = React.useState<{
+    iso: string;
+    startHour: number;
+    currentHour: number;
+    left: number;
+    width: number;
+  } | null>(null);
+  const dragPreviewRef = React.useRef(dragPreview);
+  dragPreviewRef.current = dragPreview;
+
+  const dragCompletedTimestampRef = React.useRef<number>(0);
+
+  // Global listeners while tracking pointer
+  React.useEffect(() => {
+    if (!trackingSession) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const session = trackingSessionRef.current;
+      if (!session) return;
+
+      const colEl = document.querySelector<HTMLElement>(`[data-col-iso="${session.iso}"]`);
+      if (!colEl) return;
+
+      const rect = colEl.getBoundingClientRect();
+      const relY = e.clientY - rect.top;
+      const slotIdx = Math.floor(relY / slotPx);
+      const clampedHour = Math.max(JAM_AWAL, Math.min(JAM_AKHIR - 1, JAM_AWAL + slotIdx));
+
+      // Differentiate between click and drag: only activate preview if moved >= 5px or moved across slots
+      const hasMovedEnough =
+        Math.abs(e.clientY - session.startY) >= 5 || clampedHour !== session.startHour;
+      if (!hasMovedEnough && !dragPreviewRef.current) return;
+
+      const prevPreview = dragPreviewRef.current;
+      if (!prevPreview || prevPreview.currentHour !== clampedHour) {
+        setDragPreview({
+          iso: session.iso,
+          startHour: session.startHour,
+          currentHour: clampedHour,
+          left: session.left,
+          width: session.width,
+        });
+      }
+
+      // Smooth auto-scroll when dragging near container top/bottom edge
+      if (scrollContainerRef.current) {
+        const cRect = scrollContainerRef.current.getBoundingClientRect();
+        if (e.clientY < cRect.top + 32) {
+          scrollContainerRef.current.scrollTop -= 8;
+        } else if (e.clientY > cRect.bottom - 32) {
+          scrollContainerRef.current.scrollTop += 8;
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      const session = trackingSessionRef.current;
+      const preview = dragPreviewRef.current;
+      if (!session) return;
+
+      dragCompletedTimestampRef.current = Date.now();
+      setDragPreview(null);
+      setTrackingSession(null);
+
+      if (preview) {
+        // User dragged to select a range
+        const minH = Math.min(preview.startHour, preview.currentHour);
+        const maxH = Math.max(preview.startHour, preview.currentHour) + 1;
+        onSelectSlot(preview.iso, minH, maxH);
+      } else {
+        // User just clicked without dragging (no time label flash)
+        onSelectSlot(session.iso, session.startHour, session.startHour + 1);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        dragCompletedTimestampRef.current = Date.now();
+        setDragPreview(null);
+        setTrackingSession(null);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [trackingSession?.iso, slotPx, onSelectSlot]);
 
   // Dynamically calculate slot height and column width based on viewport
   React.useEffect(() => {
@@ -226,6 +334,7 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
             {days.map((d) => (
               <div
                 key={`col-${d.iso}`}
+                data-col-iso={d.iso}
                 className={cn(
                   'flex-1 min-w-0 relative border-l border-[#EDEBE9]',
                   d.isToday
@@ -256,13 +365,31 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                           <button
                             key={`free-slot-${d.iso}-${hour}-${slot.left}`}
                             type="button"
-                            onClick={() => onSelectSlot(d.iso, hour)}
-                            title={`Klik untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
+                            onMouseDown={(e) => {
+                              if (e.button !== 0) return;
+                              e.preventDefault();
+                              onClosePopover?.();
+                              setTrackingSession({
+                                iso: d.iso,
+                                startHour: hour,
+                                startY: e.clientY,
+                                left: slot.left,
+                                width: slot.width,
+                              });
+                            }}
+                            onClick={() => {
+                              if (Date.now() - dragCompletedTimestampRef.current < 200) return;
+                              onSelectSlot(d.iso, hour, hour + 1);
+                            }}
+                            title={`Klik atau seret untuk membuat kegiatan · ${d.num} ${d.dow} ${String(hour).padStart(2, '0')}:00`}
                             style={{
                               left: `calc(${slot.left}% + 1px)`,
                               width: `calc(${slot.width}% - 3px)`,
                             }}
-                            className="absolute top-[2px] bottom-[2px] rounded border border-dashed border-transparent hover:border-[#8CC3F0] hover:bg-[#EBF3FC] text-transparent hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors"
+                            className={cn(
+                              'absolute top-[2px] bottom-[2px] rounded border border-dashed border-transparent hover:border-[#8CC3F0] hover:bg-[#EBF3FC] text-transparent hover:text-(--color-brand) flex items-center justify-center cursor-pointer transition-colors',
+                              dragPreview && 'pointer-events-none'
+                            )}
                           >
                             <Add12Regular className="text-[13px]" />
                           </button>
@@ -271,6 +398,31 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                     </div>
                   );
                 })}
+
+                {/* Drag Selection Preview Overlay */}
+                {dragPreview && dragPreview.iso === d.iso && (() => {
+                  const minH = Math.min(dragPreview.startHour, dragPreview.currentHour);
+                  const maxH = Math.max(dragPreview.startHour, dragPreview.currentHour) + 1;
+                  const dragTop = (minH - JAM_AWAL) * slotPx;
+                  const dragHeight = (maxH - minH) * slotPx - 2;
+                  const label = `${String(minH).padStart(2, '0')}:00–${String(maxH).padStart(2, '0')}:00`;
+
+                  return (
+                    <div
+                      style={{
+                        top: `${dragTop}px`,
+                        height: `${dragHeight}px`,
+                        left: `calc(${dragPreview.left}% + 1px)`,
+                        width: `calc(${dragPreview.width}% - 3px)`,
+                      }}
+                      className="absolute z-20 rounded-[2px] border border-(--color-brand) bg-[rgba(15,108,189,0.14)] pointer-events-none flex items-start justify-center pt-0.5 select-none shadow-xs"
+                    >
+                      <span className="font-mono text-[10.5px] font-medium text-[#0C548F] leading-none select-none">
+                        {label}
+                      </span>
+                    </div>
+                  );
+                })()}
 
                 {/* Overlaid Events Layer */}
                 <div className="absolute inset-0 pointer-events-none">

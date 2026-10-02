@@ -144,7 +144,7 @@ export const DetailKegiatanScreen: React.FC = () => {
   // Rencana details
   const ru = kegiatan.ruangan ? ruanganMap.get(kegiatan.ruangan) : null;
   const tp = ru ? tempatMap.get(ru.tempat) : null;
-  const tempatStr = ru ? `${tp?.nama || ''} · ${ru.nama}` : 'Tanpa ruangan';
+  const tempatStr = kegiatan.tempatCustom || (ru ? `${tp?.nama || ''} · ${ru.nama}` : 'Tanpa tempat');
 
   const jn = jenisMap.get(kegiatan.jenis);
   const jenisStr = jn ? jn.nama : '—';
@@ -490,7 +490,8 @@ export const DetailKegiatanScreen: React.FC = () => {
                 <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
                   <span className="w-15.5 flex-none text-(--color-text-secondary)">Waktu</span>
                   <span className="flex-1 min-w-0 font-mono text-(--color-text)">
-                    {formatTanggalRingkas(kegiatan.tanggal)} · {kegiatan.mulai}–{kegiatan.selesai}
+                    {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
+                    {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}
                   </span>
                 </div>
                 <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
@@ -796,7 +797,9 @@ export const DetailKegiatanScreen: React.FC = () => {
             tanggal: kegiatan.tanggal,
             mulai: kegiatan.mulai,
             selesai: kegiatan.selesai,
+            sepanjangHari: Boolean(kegiatan.sepanjangHari),
             ruangan: kegiatan.ruangan || '',
+            tempatCustom: kegiatan.tempatCustom || '',
             mapel: kegiatan.mapel || '',
             materi: kegiatan.materi || '',
             subjek: kegiatan.subjek,

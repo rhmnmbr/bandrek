@@ -24,7 +24,9 @@ export interface RawKegiatanSeed {
   tanggal: string;
   mulai: string;
   selesai: string;
+  sepanjangHari?: boolean;
   ruangan: string;
+  tempatCustom?: string | null;
   subjek: Array<{ id: string; peran: any }>;
   siswa: string[];
   catatan: string;

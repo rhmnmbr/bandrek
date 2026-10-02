@@ -16,7 +16,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         disabled={disabled}
         ref={ref}
         className={cn(
-          "w-full rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast)",
+          "block w-full rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast)",
           "placeholder:text-(--color-text-muted) focus:outline-none",
           density === "compact"
             ? "h-(--density-control-h) px-2 text-[12.5px]"
@@ -155,9 +155,14 @@ export const FormLabel: React.FC<FormLabelProps> = ({
 export interface InlineErrorProps {
   message?: string;
   className?: string;
+  showIcon?: boolean;
 }
 
-export const InlineError: React.FC<InlineErrorProps> = ({ message, className }) => {
+export const InlineError: React.FC<InlineErrorProps> = ({
+  message,
+  className,
+  showIcon = true,
+}) => {
   if (!message) return null;
   return (
     <div
@@ -167,9 +172,11 @@ export const InlineError: React.FC<InlineErrorProps> = ({ message, className }) 
       )}
       role="alert"
     >
-      <span className="flex-none h-4 flex items-center justify-center text-(--color-danger) translate-y-[0.5px]">
-        <Warning12Regular />
-      </span>
+      {showIcon && (
+        <span className="flex-none h-4 flex items-center justify-center text-(--color-danger) translate-y-[0.5px]">
+          <Warning12Regular />
+        </span>
+      )}
       <span>{message}</span>
     </div>
   );

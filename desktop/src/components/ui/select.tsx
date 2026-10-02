@@ -940,6 +940,10 @@ export const GroupedRuanganSelect = React.forwardRef<
                 );
               })()}
 
+              {allowNone && groups.length > 0 && (
+                <div className="my-1 border-t border-(--color-border)" />
+              )}
+
               {/* Grouped Ruangan per Tempat */}
               {groups.map((group) => (
                 <div key={group.id} className="flex flex-col gap-px">

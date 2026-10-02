@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/segmented-control';
 import { ConfirmDialog } from '@/components/ui/dialog';
 import { Select } from '@/components/ui/select';
+import { TimePicker } from '@/components/ui/time-picker';
 import { useToast } from '@/components/ui/toast';
 import {
   menit,
@@ -100,7 +101,7 @@ export const RealisasiScreen: React.FC = () => {
   const [confirmDiscardOpen, setConfirmDiscardOpen] = React.useState<boolean>(false);
 
   // Field refs for auto-focus/scrolling
-  const mulaiRef = React.useRef<HTMLInputElement>(null);
+  const mulaiRef = React.useRef<HTMLButtonElement>(null);
   const materiRef = React.useRef<HTMLButtonElement>(null);
   const siswaScrollRef = React.useRef<HTMLDivElement>(null);
   const subjekScrollRef = React.useRef<HTMLDivElement>(null);
@@ -496,7 +497,9 @@ export const RealisasiScreen: React.FC = () => {
             tanggal: '',
             mulai: kegiatan.mulai,
             selesai: kegiatan.selesai,
+            sepanjangHari: Boolean(kegiatan.sepanjangHari),
             ruangan: kegiatan.ruangan || '',
+            tempatCustom: kegiatan.tempatCustom || '',
             mapel: kegiatan.mapel || '',
             materi: materi || kegiatan.materi || '',
             subjek: kegiatan.subjek,
@@ -725,10 +728,13 @@ export const RealisasiScreen: React.FC = () => {
                 {kegiatan.nama}
               </div>
               <div className="text-[#5C5A58] font-mono text-[11.5px] truncate mt-0.5">
-                Rencana: {formatTanggalRingkas(kegiatan.tanggal)} · {kegiatan.mulai}–{kegiatan.selesai} ·{' '}
-                {currentRuangan
+                Rencana: {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
+                {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`} ·{' '}
+                {kegiatan.tempatCustom
+                  ? kegiatan.tempatCustom
+                  : currentRuangan
                   ? `${currentTempat?.nama || '—'} › ${currentRuangan.nama}`
-                  : 'Tanpa ruangan'}
+                  : 'Tanpa tempat'}
               </div>
             </div>
 
@@ -777,25 +783,17 @@ export const RealisasiScreen: React.FC = () => {
                 Jam mulai aktual <span className="text-(--color-danger)">*</span>
               </label>
               <div className="relative">
-                <input
+                <TimePicker
                   id="rel-jam-mulai"
                   ref={mulaiRef}
-                  type="time"
-                  step={300}
                   value={mulai}
                   disabled={sama}
-                  onChange={(e) => {
-                    setMulai(e.target.value);
+                  onChange={(val) => {
+                    setMulai(val);
                     setSama(false);
                     setIsDirty(true);
                   }}
-                  className={cn(
-                    'w-full h-6.5 px-1.5 rounded border font-mono text-[12.5px] transition-colors outline-none',
-                    sama
-                      ? 'bg-[#F5F5F5] text-[#5C5A58] border-(--color-border)'
-                      : 'bg-white text-(--color-text) border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand)',
-                    dicoba && timeError && 'border-(--color-danger) text-(--color-danger-ink)'
-                  )}
+                  error={Boolean(dicoba && timeError)}
                 />
               </div>
             </div>
@@ -812,24 +810,16 @@ export const RealisasiScreen: React.FC = () => {
                 Jam selesai aktual <span className="text-(--color-danger)">*</span>
               </label>
               <div className="relative">
-                <input
+                <TimePicker
                   id="rel-jam-selesai"
-                  type="time"
-                  step={300}
                   value={selesai}
                   disabled={sama}
-                  onChange={(e) => {
-                    setSelesai(e.target.value);
+                  onChange={(val) => {
+                    setSelesai(val);
                     setSama(false);
                     setIsDirty(true);
                   }}
-                  className={cn(
-                    'w-full h-6.5 px-1.5 rounded border font-mono text-[12.5px] transition-colors outline-none',
-                    sama
-                      ? 'bg-[#F5F5F5] text-[#5C5A58] border-(--color-border)'
-                      : 'bg-white text-(--color-text) border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand)',
-                    dicoba && timeError && 'border-(--color-danger) text-(--color-danger-ink)'
-                  )}
+                  error={Boolean(dicoba && timeError)}
                 />
               </div>
             </div>

@@ -193,7 +193,9 @@ export class MockKegiatanRepository implements IKegiatanRepository {
           tanggal: input.tanggal,
           mulai: input.mulai,
           selesai: input.selesai,
+          sepanjangHari: input.sepanjangHari ?? false,
           ruangan: input.ruangan,
+          tempatCustom: input.tempatCustom || null,
           subjek: input.subjek,
           siswa: input.siswa,
           catatan: input.catatan || '',
@@ -228,7 +230,11 @@ export class MockKegiatanRepository implements IKegiatanRepository {
           tanggal: input.tanggal ?? existing.tanggal,
           mulai: input.mulai ?? existing.mulai,
           selesai: input.selesai ?? existing.selesai,
+          sepanjangHari:
+            input.sepanjangHari !== undefined ? input.sepanjangHari : existing.sepanjangHari,
           ruangan: input.ruangan ?? existing.ruangan,
+          tempatCustom:
+            input.tempatCustom !== undefined ? input.tempatCustom : existing.tempatCustom,
           subjek: input.subjek ?? existing.subjek,
           siswa: input.siswa ?? existing.siswa,
           catatan: input.catatan ?? existing.catatan,

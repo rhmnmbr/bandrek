@@ -131,7 +131,8 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           <div className="flex gap-2.5 leading-[1.45]">
             <span className="w-[66px] flex-none text-[#5C5A58]">Waktu</span>
             <span className="flex-1 min-w-0 font-mono text-[12px]">
-              {formatTanggalRingkas(kegiatan.tanggal)} · {kegiatan.mulai}–{kegiatan.selesai}
+              {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
+              {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}
             </span>
           </div>
 
@@ -156,9 +157,11 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           <div className="flex gap-2.5 leading-[1.45]">
             <span className="w-[66px] flex-none text-[#5C5A58]">Tempat</span>
             <span className="flex-1 min-w-0">
-              {kegiatan.namaTempat && kegiatan.namaRuangan
+              {kegiatan.tempatCustom
+                ? kegiatan.tempatCustom
+                : kegiatan.namaTempat && kegiatan.namaRuangan
                 ? `${kegiatan.namaTempat} · ${kegiatan.namaRuangan}`
-                : kegiatan.namaRuangan || 'Tanpa ruangan'}
+                : kegiatan.namaRuangan || kegiatan.namaTempat || 'Tanpa tempat'}
             </span>
           </div>
 

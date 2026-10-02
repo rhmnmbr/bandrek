@@ -166,8 +166,10 @@ export function enrichKegiatan(
     statusRaw: raw.status,
     aksiDiizinkan,
     tempat: place ? place.id : '',
-    namaTempat: place ? place.nama : 'Tempat tidak diketahui',
-    namaRuangan: room ? room.nama : 'Ruangan tidak diketahui',
+    namaTempat: raw.tempatCustom ? raw.tempatCustom : place ? place.nama : 'Tempat tidak diketahui',
+    namaRuangan: raw.tempatCustom ? raw.tempatCustom : room ? room.nama : 'Ruangan tidak diketahui',
+    tempatCustom: raw.tempatCustom || null,
+    sepanjangHari: Boolean(raw.sepanjangHari),
     namaJenis: kind ? kind.nama : 'Kegiatan',
     warnaJenis: kind ? kind.warna : 'lainnya',
     namaMapel: course ? course.nama : undefined,
@@ -208,8 +210,8 @@ export function detectScheduleConflicts(
   const roomName = roomObj ? roomObj.nama : 'Ruangan';
 
   for (const k of candidateKegiatan) {
-    // 1. Bentrok Ruangan
-    if (k.ruangan === ruangan) {
+    // 1. Bentrok Ruangan (hanya untuk ruangan terdaftar, bukan custom/kosong)
+    if (Boolean(ruangan) && k.ruangan === ruangan) {
       conflicts.push({
         tipe: 'ruangan',
         entitasId: ruangan,

@@ -59,7 +59,9 @@ export interface Kegiatan {
   tanggal: string; // YYYY-MM-DD
   mulai: string; // HH:mm
   selesai: string; // HH:mm
+  sepanjangHari?: boolean;
   ruangan: string; // Ruangan ID
+  tempatCustom?: string | null;
   subjek: KegiatanSubjekItem[];
   siswa: string[]; // List of Siswa IDs
   catatan: string;
@@ -165,7 +167,9 @@ export interface CreateKegiatanInput {
   tanggal: string;
   mulai: string;
   selesai: string;
+  sepanjangHari?: boolean;
   ruangan: string;
+  tempatCustom?: string | null;
   subjek: KegiatanSubjekItem[];
   siswa: string[];
   catatan?: string;

@@ -287,7 +287,9 @@ export const KalenderScreen: React.FC = () => {
           tanggal: kegiatan.tanggal,
           mulai: kegiatan.mulai,
           selesai: kegiatan.selesai,
+          sepanjangHari: Boolean(kegiatan.sepanjangHari),
           ruangan: kegiatan.ruangan || '',
+          tempatCustom: kegiatan.tempatCustom || '',
           mapel: kegiatan.mapel || '',
           materi: kegiatan.materi || '',
           subjek: kegiatan.subjek,
@@ -332,12 +334,13 @@ export const KalenderScreen: React.FC = () => {
     []
   );
 
-  // Handle Empty Slot Selection (Click on calendar grid to create kegiatan)
+  // Handle Empty Slot Selection (Click or drag on calendar grid to create kegiatan)
   const handleSelectSlot = React.useCallback(
-    (iso: string, hour: number) => {
+    (iso: string, startHour: number, endHour?: number) => {
       setActivePopover(null);
-      const jamMulai = `${String(hour).padStart(2, '0')}:00`;
-      const jamSelesai = `${String(hour + 1).padStart(2, '0')}:30`;
+      const effectiveEndHour = endHour ?? (startHour + 1);
+      const jamMulai = `${String(startHour).padStart(2, '0')}:00`;
+      const jamSelesai = `${String(effectiveEndHour).padStart(2, '0')}:00`;
       setFormState({
         open: true,
         initialData: {
@@ -508,6 +511,7 @@ export const KalenderScreen: React.FC = () => {
             nowLine={nowLine}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelectSlot}
+            onClosePopover={() => setActivePopover(null)}
             onMoreClick={(iso) => {
               handleMoreClick(iso);
               setActivePopover(null);

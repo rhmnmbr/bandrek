@@ -4,9 +4,12 @@ import { Clock16Regular } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export interface TimePickerProps {
+  id?: string;
+  name?: string;
   value?: string;
   defaultValue?: string;
   onChange?: (time: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   disabled?: boolean;
   error?: boolean | string;
@@ -20,9 +23,12 @@ const MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, "
 export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
   (
     {
+      id,
+      name,
       value: propValue,
       defaultValue,
       onChange,
+      onBlur,
       placeholder = "00:00",
       disabled = false,
       error = false,
@@ -87,13 +93,24 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
       setInternalTime(newTime);
       onChange?.(newTime);
       setOpen(false);
+      onBlur?.();
     };
 
     return (
-      <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+      <PopoverPrimitive.Root
+        open={open}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          if (!nextOpen) {
+            onBlur?.();
+          }
+        }}
+      >
         <PopoverPrimitive.Trigger asChild>
           <button
             ref={ref}
+            id={id}
+            name={name}
             type="button"
             disabled={disabled}
             className={cn(
@@ -120,7 +137,7 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             </span>
             <Clock16Regular
               className={cn(
-                "flex-none ml-1.5",
+                "flex-none ml-1.5 w-3.5 h-3.5",
                 error
                   ? "text-(--color-danger)"
                   : disabled
@@ -136,7 +153,7 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             align="start"
             sideOffset={3}
             className={cn(
-              "z-50 w-32.5 overflow-hidden rounded-md border border-(--color-border-strong) bg-white p-0 text-(--color-text) shadow-(--shadow-overlay) outline-none duration-75",
+              "z-50 w-32 overflow-hidden rounded-md border border-[#C8C6C4] bg-white p-0 text-(--color-text) shadow-(--shadow-overlay) outline-none duration-75",
               "animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1"
             )}
           >
@@ -151,7 +168,7 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
               <div
                 ref={hourContainerRef}
                 data-time-column
-                className="flex-1 overflow-y-auto p-1 space-y-0.5"
+                className="flex-1 overflow-y-auto p-1 space-y-0.5 scrollbar-thin [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
               >
                 {HOURS.map((h) => {
                   const isSelected = h === currentHour;
@@ -178,7 +195,7 @@ export const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
               <div
                 ref={minuteContainerRef}
                 data-time-column
-                className="flex-1 overflow-y-auto p-1 space-y-0.5"
+                className="flex-1 overflow-y-auto p-1 space-y-0.5 scrollbar-thin [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
               >
                 {MINUTES.map((m) => {
                   const isSelected = m === currentMinute;

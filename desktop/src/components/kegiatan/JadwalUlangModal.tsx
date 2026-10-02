@@ -10,6 +10,8 @@ import {
 } from '@/data/hooks';
 import { useToast } from '@/components/ui/toast';
 import { Select, GroupedRuanganSelect, type TempatRuanganGroup } from '@/components/ui/select';
+import { DatePicker } from '@/components/ui/date-picker';
+import { TimePicker } from '@/components/ui/time-picker';
 import { formatTanggalRingkas, menit, toDate, NAMA_HARI, NAMA_BULAN } from '@/lib/dateUtils';
 import type { Kegiatan } from '@/data/types';
 import { cn } from '@/lib/utils';
@@ -332,12 +334,12 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                   <label htmlFor="tanggal-baru" className="text-[11.5px] text-(--color-text-secondary) font-medium">
                     Tanggal <span className="text-(--color-danger)">*</span>
                   </label>
-                  <input
-                    id="tanggal-baru"
-                    type="date"
+                  <DatePicker
                     value={tanggal}
-                    onChange={(e) => setTanggal(e.target.value)}
-                    className="w-full h-6.5 px-2 rounded border border-(--color-border-strong) bg-white font-mono text-xs text-(--color-text) hover:border-(--color-text-secondary) focus:border-(--color-brand) outline-none"
+                    onChange={(val) => setTanggal(val)}
+                    formatDisplay="dd/MM/yyyy"
+                    placeholder="Pilih tanggal"
+                    className="font-mono text-xs"
                   />
                 </div>
 
@@ -346,13 +348,10 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                   <label htmlFor="mulai-baru" className="text-[11.5px] text-(--color-text-secondary) font-medium">
                     Mulai <span className="text-(--color-danger)">*</span>
                   </label>
-                  <input
+                  <TimePicker
                     id="mulai-baru"
-                    type="time"
-                    step={300}
                     value={mulai}
-                    onChange={(e) => setMulai(e.target.value)}
-                    className="w-full h-6.5 px-1.5 rounded border border-(--color-border-strong) bg-white font-mono text-xs text-(--color-text) hover:border-(--color-text-secondary) focus:border-(--color-brand) outline-none"
+                    onChange={(val) => setMulai(val)}
                   />
                 </div>
 
@@ -367,18 +366,11 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                   >
                     Selesai <span className="text-(--color-danger)">*</span>
                   </label>
-                  <input
+                  <TimePicker
                     id="selesai-baru"
-                    type="time"
-                    step={300}
                     value={selesai}
-                    onChange={(e) => setSelesai(e.target.value)}
-                    className={cn(
-                      'w-full h-6.5 px-1.5 rounded border bg-white font-mono text-xs text-(--color-text) outline-none transition-colors',
-                      errWaktu
-                        ? 'border-(--color-danger) border-b-2'
-                        : 'border-(--color-border-strong) hover:border-(--color-text-secondary) focus:border-(--color-brand)'
-                    )}
+                    onChange={(val) => setSelesai(val)}
+                    error={Boolean(errWaktu)}
                   />
                 </div>
               </div>

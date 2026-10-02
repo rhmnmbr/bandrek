@@ -53,10 +53,13 @@ export function susunLayoutKegiatan(
   const rawList: RawEvent[] = kegiatanList
     .filter((k) => k.tanggal === isoTanggal)
     .map((k) => {
-      const s = menit(k.mulai);
-      const e = menit(k.selesai);
+      const s = k.sepanjangHari ? min0 : menit(k.mulai);
+      const e = k.sepanjangHari ? min1 : menit(k.selesai);
       const metaParts: string[] = [];
-      if (k.namaRuangan) metaParts.push(k.namaRuangan);
+      if (k.tempatCustom) metaParts.push(k.tempatCustom);
+      else if (k.namaRuangan && k.namaRuangan !== 'Ruangan tidak diketahui' && k.namaRuangan !== 'Tanpa ruangan') metaParts.push(k.namaRuangan);
+      else if (k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui') metaParts.push(k.namaTempat);
+
       if (k.pengisiUtama) metaParts.push(k.pengisiUtama.nama);
       if (k.jumlahSiswa > 0) metaParts.push(`${k.jumlahSiswa} siswa`);
 
@@ -67,7 +70,7 @@ export function susunLayoutKegiatan(
         e,
         tanggal: k.tanggal,
         meta: metaParts.join(' · '),
-        jamLabel: `${k.mulai}–${k.selesai}`,
+        jamLabel: k.sepanjangHari ? 'Sepanjang hari' : `${k.mulai}–${k.selesai}`,
       };
     })
     .filter((x) => x.e > min0 && x.s < min1)

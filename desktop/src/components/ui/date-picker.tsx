@@ -230,20 +230,20 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             align="start"
             sideOffset={3}
             className={cn(
-              "z-50 w-65 rounded-lg border border-(--color-border-strong) bg-white p-3 text-(--color-text) shadow-(--shadow-overlay) outline-none duration-75",
+              "z-50 w-52 rounded-[6px] border border-[#C8C6C4] bg-white p-2 text-(--color-text) shadow-(--shadow-overlay) outline-none duration-75 select-none",
               "animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1"
             )}
           >
             {/* Calendar Navigation Header */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1.5 px-0.5">
               {/* Header Title with interactive quick jump buttons */}
               {viewMode === "days" && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5">
                   <button
                     type="button"
                     title="Pilih bulan"
                     onClick={() => setViewMode("months")}
-                    className="flex items-center gap-1 font-semibold text-[13px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1.5 py-0.5 rounded-sm cursor-pointer transition-colors capitalize"
+                    className="flex items-center gap-0.5 font-semibold text-[12px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1 py-0.5 rounded-[3px] cursor-pointer transition-colors capitalize"
                   >
                     <span>{format(viewDate, "MMMM", { locale: id })}</span>
                     <ChevronDown12Regular className="text-(--color-text-muted) w-3 h-3" />
@@ -255,7 +255,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       setYearRangeStart(Math.floor(getYear(viewDate) / 12) * 12);
                       setViewMode("years");
                     }}
-                    className="flex items-center gap-1 font-semibold text-[13px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1.5 py-0.5 rounded-sm cursor-pointer transition-colors"
+                    className="flex items-center gap-0.5 font-semibold text-[12px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1 py-0.5 rounded-[3px] cursor-pointer transition-colors"
                   >
                     <span>{format(viewDate, "yyyy")}</span>
                     <ChevronDown12Regular className="text-(--color-text-muted) w-3 h-3" />
@@ -264,8 +264,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               )}
 
               {viewMode === "months" && (
-                <div className="flex items-center gap-1 font-semibold text-[13px] text-(--color-text)">
-                  <span className="text-(--color-text-muted) font-normal text-[12px]">Bulan —</span>
+                <div className="flex items-center">
                   <button
                     type="button"
                     title="Pilih tahun"
@@ -273,7 +272,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       setYearRangeStart(Math.floor(getYear(viewDate) / 12) * 12);
                       setViewMode("years");
                     }}
-                    className="flex items-center gap-1 hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1.5 py-0.5 rounded-sm cursor-pointer transition-colors"
+                    className="flex items-center gap-0.5 font-semibold text-[12px] text-(--color-text) hover:text-(--color-brand) hover:bg-(--color-surface-sunken) px-1 py-0.5 rounded-[3px] cursor-pointer transition-colors"
                   >
                     <span>{getYear(viewDate)}</span>
                     <ChevronDown12Regular className="text-(--color-text-muted) w-3 h-3" />
@@ -282,13 +281,13 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               )}
 
               {viewMode === "years" && (
-                <div className="font-semibold text-[13px] text-(--color-text) px-1.5 py-0.5 select-none">
+                <div className="font-semibold text-[12px] text-(--color-text) px-1 py-0.5 select-none">
                   {yearRangeStart} – {yearRangeStart + 11}
                 </div>
               )}
 
               {/* Prev and Next navigation chevrons */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 <button
                   type="button"
                   title={
@@ -299,9 +298,9 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       : "12 tahun sebelumnya"
                   }
                   onClick={handlePrev}
-                  className="h-5.5 w-5.5 flex items-center justify-center rounded-sm text-(--color-text-secondary) hover:bg-(--color-surface-sunken) cursor-pointer transition-colors"
+                  className="h-5 w-5 flex items-center justify-center rounded-[3px] text-(--color-text-secondary) hover:bg-(--color-surface-sunken) hover:text-(--color-text) cursor-pointer transition-colors"
                 >
-                  <ChevronLeft12Regular />
+                  <ChevronLeft12Regular className="w-3.5 h-3.5" />
                 </button>
                 <button
                   type="button"
@@ -313,9 +312,9 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                       : "12 tahun berikutnya"
                   }
                   onClick={handleNext}
-                  className="h-5.5 w-5.5 flex items-center justify-center rounded-sm text-(--color-text-secondary) hover:bg-(--color-surface-sunken) cursor-pointer transition-colors"
+                  className="h-5 w-5 flex items-center justify-center rounded-[3px] text-(--color-text-secondary) hover:bg-(--color-surface-sunken) hover:text-(--color-text) cursor-pointer transition-colors"
                 >
-                  <ChevronRight12Regular />
+                  <ChevronRight12Regular className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -326,11 +325,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             {viewMode === "days" && (
               <>
                 {/* Days of Week Row */}
-                <div className="grid grid-cols-7 gap-1 text-center mb-1">
+                <div className="grid grid-cols-7 gap-0.5 text-center mb-0.5">
                   {weekDays.map((d) => (
                     <div
                       key={d}
-                      className="text-[10.5px] font-semibold text-(--color-text-muted) py-0.5 select-none"
+                      className="text-[10px] font-semibold text-(--color-text-muted) py-0.5 select-none"
                     >
                       {d}
                     </div>
@@ -338,7 +337,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                 </div>
 
                 {/* Calendar Days Grid */}
-                <div className="grid grid-cols-7 gap-1">
+                <div className="grid grid-cols-7 gap-0.5">
                   {daysInView.map((day) => {
                     const inCurrentMonth = isSameMonth(day, viewDate);
                     const selected = internalDate && isSameDay(day, internalDate);
@@ -350,20 +349,20 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                         type="button"
                         onClick={() => handleSelectDay(day)}
                         className={cn(
-                          "h-6.5 w-6.5 mx-auto flex items-center justify-center rounded-full text-[12px] font-normal cursor-pointer select-none transition-colors",
+                          "h-6 w-6 mx-auto flex items-center justify-center rounded-full text-[11.5px] font-normal cursor-pointer select-none transition-colors border",
                           selected &&
-                            "bg-(--color-brand) text-white font-semibold hover:bg-(--color-brand)",
+                            "border-(--color-brand) bg-(--color-brand) text-white font-semibold hover:bg-(--color-brand)",
                           !selected &&
                             today &&
-                            "ring-1 ring-(--color-brand) text-(--color-brand-ink) font-semibold hover:bg-(--color-brand-subtle)",
+                            "border-(--color-brand) text-(--color-brand) font-semibold hover:bg-(--color-brand-subtle)",
                           !selected &&
                             !today &&
                             inCurrentMonth &&
-                            "text-(--color-text) hover:bg-(--color-brand-subtle)",
+                            "border-transparent text-(--color-text) hover:bg-(--color-brand-subtle)",
                           !selected &&
                             !today &&
                             !inCurrentMonth &&
-                            "text-(--color-icon-faint) hover:bg-(--color-surface-alt)"
+                            "border-transparent text-(--color-icon-faint) hover:bg-(--color-surface-alt)"
                         )}
                       >
                         {format(day, "d")}
@@ -378,7 +377,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             {/* VIEW 2: MONTHS (Quick Month Picker)                            */}
             {/* ============================================================== */}
             {viewMode === "months" && (
-              <div className="grid grid-cols-3 gap-1.5 py-1">
+              <div className="grid grid-cols-4 gap-1 py-1">
                 {MONTHS_LIST.map((m) => {
                   const isSelected =
                     internalDate &&
@@ -391,20 +390,21 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                     <button
                       key={m.index}
                       type="button"
+                      title={m.full}
                       onClick={() => {
                         setViewDate((prev) => setMonth(prev, m.index));
                         setViewMode("days");
                       }}
                       className={cn(
-                        "h-8.5 rounded-md text-[12px] font-medium transition-colors cursor-pointer select-none flex items-center justify-center",
+                        "h-6.5 rounded-[4px] text-[11px] font-medium transition-colors cursor-pointer select-none flex items-center justify-center border",
                         isSelected
-                          ? "bg-(--color-brand) text-white font-semibold"
+                          ? "border-(--color-brand) bg-(--color-brand) text-white font-semibold"
                           : isThisMonth
-                          ? "ring-1 ring-(--color-brand) text-(--color-brand-ink) font-semibold hover:bg-(--color-brand-subtle)"
-                          : "text-(--color-text) hover:bg-(--color-brand-subtle)"
+                          ? "border-(--color-brand) text-(--color-brand) font-semibold hover:bg-(--color-brand-subtle)"
+                          : "border-transparent text-(--color-text) hover:bg-(--color-brand-subtle)"
                       )}
                     >
-                      {m.full}
+                      {m.short}
                     </button>
                   );
                 })}
@@ -415,7 +415,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             {/* VIEW 3: YEARS (Quick Year Picker)                              */}
             {/* ============================================================== */}
             {viewMode === "years" && (
-              <div className="grid grid-cols-3 gap-1.5 py-1">
+              <div className="grid grid-cols-4 gap-1 py-1">
                 {yearsInView.map((yr) => {
                   const isSelected = internalDate && getYear(internalDate) === yr;
                   const isThisYear = getYear(new Date()) === yr;
@@ -429,12 +429,12 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                         setViewMode("months");
                       }}
                       className={cn(
-                        "h-8.5 rounded-md text-[12.5px] font-mono transition-colors cursor-pointer select-none flex items-center justify-center",
+                        "h-6.5 rounded-[4px] text-[11px] font-mono transition-colors cursor-pointer select-none flex items-center justify-center border",
                         isSelected
-                          ? "bg-(--color-brand) text-white font-semibold"
+                          ? "border-(--color-brand) bg-(--color-brand) text-white font-semibold"
                           : isThisYear
-                          ? "ring-1 ring-(--color-brand) text-(--color-brand-ink) font-semibold hover:bg-(--color-brand-subtle)"
-                          : "text-(--color-text) hover:bg-(--color-brand-subtle)"
+                          ? "border-(--color-brand) text-(--color-brand) font-semibold hover:bg-(--color-brand-subtle)"
+                          : "border-transparent text-(--color-text) hover:bg-(--color-brand-subtle)"
                       )}
                     >
                       {yr}
@@ -445,7 +445,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             )}
 
             {/* Footer Clear & Today / Back Actions */}
-            <div className="flex items-center justify-between border-t border-(--color-border-subtle) mt-2.5 pt-2 text-[12px]">
+            <div className="flex items-center justify-between border-t border-(--color-border-subtle) mt-1.5 pt-1.5 px-0.5 text-[11.5px]">
               {viewMode === "days" ? (
                 <>
                   <button
