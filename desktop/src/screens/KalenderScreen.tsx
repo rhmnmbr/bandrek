@@ -111,24 +111,24 @@ export const KalenderScreen: React.FC = () => {
     const inPeriod = semuaKegiatan.filter((k) => setTampil.has(k.tanggal));
 
     let activeCount = 0;
-    if (filters.jenis) activeCount++;
-    if (filters.subjek) activeCount++;
-    if (filters.siswa) activeCount++;
-    if (filters.kelas) activeCount++;
-    if (filters.ruangan) activeCount++;
+    if (filters.jenis.length > 0) activeCount++;
+    if (filters.subjek.length > 0) activeCount++;
+    if (filters.siswa.length > 0) activeCount++;
+    if (filters.kelas.length > 0) activeCount++;
+    if (filters.ruangan.length > 0) activeCount++;
     if (filters.status.length < 5) activeCount++;
 
     const filtered = inPeriod.filter((k) => {
       // 1. Jenis filter
-      if (filters.jenis && k.jenis !== filters.jenis) return false;
+      if (filters.jenis.length > 0 && !filters.jenis.includes(k.jenis)) return false;
       // 2. Subjek filter
-      if (filters.subjek && !k.subjek.some((s) => s.id === filters.subjek)) return false;
+      if (filters.subjek.length > 0 && !k.subjek.some((s) => filters.subjek.includes(s.id))) return false;
       // 3. Siswa filter
-      if (filters.siswa && !k.siswa.includes(filters.siswa)) return false;
+      if (filters.siswa.length > 0 && !k.siswa.some((sid) => filters.siswa.includes(sid))) return false;
       // 4. Kelas filter
-      if (filters.kelas && k.kelas !== filters.kelas) return false;
+      if (filters.kelas.length > 0 && (!k.kelas || !filters.kelas.includes(k.kelas))) return false;
       // 5. Ruangan filter
-      if (filters.ruangan && k.ruangan !== filters.ruangan) return false;
+      if (filters.ruangan.length > 0 && (!k.ruangan || !filters.ruangan.includes(k.ruangan))) return false;
       // 6. Status filter
       if (!filters.status.includes(k.status)) return false;
       return true;
@@ -246,7 +246,7 @@ export const KalenderScreen: React.FC = () => {
           tanggal: anchorDate || todayIso,
           mulai: '08:00',
           selesai: '09:30',
-          ruangan: filters.ruangan || '',
+          ruangan: filters.ruangan.length === 1 ? filters.ruangan[0] : '',
         },
       });
     };
@@ -345,7 +345,7 @@ export const KalenderScreen: React.FC = () => {
           tanggal: iso,
           mulai: jamMulai,
           selesai: jamSelesai,
-          ruangan: filters.ruangan || '',
+          ruangan: filters.ruangan.length === 1 ? filters.ruangan[0] : '',
         },
       });
     },

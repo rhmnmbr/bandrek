@@ -22,11 +22,11 @@ export const STATUS_DEFAULT: StatusKegiatan[] = [
 ];
 
 export interface KalenderStateFilters {
-  jenis: string;
-  subjek: string;
-  siswa: string;
-  kelas: string;
-  ruangan: string;
+  jenis: string[];
+  subjek: string[];
+  siswa: string[];
+  kelas: string[];
+  ruangan: string[];
   status: StatusKegiatan[];
 }
 
@@ -37,11 +37,11 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
 
   // Filters state
   const [filters, setFilters] = React.useState<KalenderStateFilters>({
-    jenis: '',
-    subjek: '',
-    siswa: '',
-    kelas: '',
-    ruangan: '',
+    jenis: [],
+    subjek: [],
+    siswa: [],
+    kelas: [],
+    ruangan: [],
     status: [...STATUS_DEFAULT],
   });
 
@@ -104,7 +104,7 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
   }, []);
 
   const setFilterField = React.useCallback(
-    (field: keyof Omit<KalenderStateFilters, 'status'>, value: string) => {
+    (field: keyof Omit<KalenderStateFilters, 'status'>, value: string[]) => {
       setFilters((prev) => ({ ...prev, [field]: value }));
     },
     []
@@ -112,11 +112,11 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
 
   const resetFilters = React.useCallback(() => {
     setFilters({
-      jenis: '',
-      subjek: '',
-      siswa: '',
-      kelas: '',
-      ruangan: '',
+      jenis: [],
+      subjek: [],
+      siswa: [],
+      kelas: [],
+      ruangan: [],
       status: [...STATUS_DEFAULT],
     });
   }, []);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Select } from '@/components/ui/select';
+import { MultiSelect } from '@/components/ui/select';
 import {
   ChevronLeft12Regular,
   ChevronRight12Regular,
@@ -35,7 +35,7 @@ export interface KalenderSidebarProps {
   onSelectDate: (iso: string) => void;
   onPrevMiniMonth: () => void;
   onNextMiniMonth: () => void;
-  onFilterChange: (field: keyof Omit<KalenderStateFilters, 'status'>, value: string) => void;
+  onFilterChange: (field: keyof Omit<KalenderStateFilters, 'status'>, value: string[]) => void;
   onToggleStatus: (status: StatusKegiatan) => void;
   onResetFilters: () => void;
   className?: string;
@@ -234,22 +234,21 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
       </div>
       <div className="flex flex-col gap-1.5 mb-4">
         {/* Filter Jenis */}
-        <Select
+        <MultiSelect
           value={filters.jenis}
           onValueChange={(val) => onFilterChange('jenis', val)}
           placeholder="Jenis kegiatan"
           density="compact"
         >
-          <option value="">Jenis kegiatan</option>
           {jenisList.map((j) => (
             <option key={j.id} value={j.id}>
               {j.nama}
             </option>
           ))}
-        </Select>
+        </MultiSelect>
 
         {/* Filter Subjek (Searchable) */}
-        <Select
+        <MultiSelect
           searchable
           searchPlaceholder="Cari subjek..."
           value={filters.subjek}
@@ -257,16 +256,15 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
           placeholder="Subjek"
           density="compact"
         >
-          <option value="">Subjek</option>
           {sortedSubjekList.map((s) => (
             <option key={s.id} value={s.id}>
               {s.nama}
             </option>
           ))}
-        </Select>
+        </MultiSelect>
 
         {/* Filter Siswa (Searchable) */}
-        <Select
+        <MultiSelect
           searchable
           searchPlaceholder="Cari siswa..."
           value={filters.siswa}
@@ -274,37 +272,34 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
           placeholder="Siswa"
           density="compact"
         >
-          <option value="">Siswa</option>
           {sortedSiswaList.map((s) => (
             <option key={s.id} value={s.id}>
               {s.nama}
             </option>
           ))}
-        </Select>
+        </MultiSelect>
 
         {/* Filter Kelas */}
-        <Select
+        <MultiSelect
           value={filters.kelas}
           onValueChange={(val) => onFilterChange('kelas', val)}
           placeholder="Kelas"
           density="compact"
         >
-          <option value="">Kelas</option>
           {kelasList.map((k) => (
             <option key={k.id} value={k.id}>
               {k.nama}
             </option>
           ))}
-        </Select>
+        </MultiSelect>
 
         {/* Filter Ruangan */}
-        <Select
+        <MultiSelect
           value={filters.ruangan}
           onValueChange={(val) => onFilterChange('ruangan', val)}
           placeholder="Ruangan"
           density="compact"
         >
-          <option value="">Ruangan</option>
           {ruanganList.map((r) => {
             const namaTempat = tempatMap.get(r.tempat) || '';
             return (
@@ -313,7 +308,7 @@ export const KalenderSidebar: React.FC<KalenderSidebarProps> = ({
               </option>
             );
           })}
-        </Select>
+        </MultiSelect>
       </div>
 
       {/* 3. Status Kegiatan Checkboxes */}

@@ -336,6 +336,379 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
 Select.displayName = "Select";
 
 // ============================================================================
+// MultiSelect (Multi-Option Dropdown with Checkboxes)
+// ============================================================================
+
+export interface MultiSelectOption {
+  value: string;
+  label: React.ReactNode;
+  disabled?: boolean;
+}
+
+export interface MultiSelectProps {
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
+  placeholder?: string;
+  options?: MultiSelectOption[];
+  disabled?: boolean;
+  error?: boolean | string;
+  density?: "compact" | "comfortable";
+  className?: string;
+  name?: string;
+  children?: React.ReactNode;
+  searchable?: boolean;
+  searchPlaceholder?: string;
+}
+
+export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
+  (
+    {
+      value: propValue,
+      defaultValue = [],
+      onValueChange,
+      placeholder = "Pilih opsi...",
+      options,
+      disabled = false,
+      error = false,
+      density = "compact",
+      className,
+      name,
+      children,
+      searchable = false,
+      searchPlaceholder,
+    },
+    ref
+  ) => {
+    // Parse options from props or children (<option value="...">label</option>)
+    const parsedOptions: MultiSelectOption[] = React.useMemo(() => {
+      if (options && options.length > 0) return options;
+      const list: MultiSelectOption[] = [];
+      React.Children.forEach(children, (child) => {
+        if (React.isValidElement(child)) {
+          if (child.type === "option" || (child.props as any).value !== undefined) {
+            const val = String((child.props as any).value ?? "");
+            if (val !== "") {
+              list.push({
+                value: val,
+                label: (child.props as any).children ?? val,
+                disabled: (child.props as any).disabled,
+              });
+            }
+          }
+        }
+      });
+      return list;
+    }, [options, children]);
+
+    const isControlled = propValue !== undefined;
+    const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(defaultValue);
+    const currentValues = isControlled ? (propValue ?? []) : uncontrolledValue;
+
+    const [open, setOpen] = React.useState(false);
+    const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
+    const optionsContainerRef = React.useRef<HTMLDivElement>(null);
+    const searchInputRef = React.useRef<HTMLInputElement>(null);
+    const [searchQuery, setSearchQuery] = React.useState("");
+
+    React.useEffect(() => {
+      if (open) {
+        setSearchQuery("");
+        if (searchable) {
+          const timer = setTimeout(() => searchInputRef.current?.focus(), 40);
+          return () => clearTimeout(timer);
+        }
+      }
+    }, [open, searchable]);
+
+    const filteredOptions: MultiSelectOption[] = React.useMemo(() => {
+      if (!searchable || !searchQuery.trim()) return parsedOptions;
+      const q = searchQuery.toLowerCase().trim();
+      return parsedOptions.filter((opt) => {
+        const text = typeof opt.label === "string" ? opt.label : String(opt.value);
+        return text.toLowerCase().includes(q);
+      });
+    }, [parsedOptions, searchQuery, searchable]);
+
+    const handleToggle = (val: string) => {
+      const exists = currentValues.includes(val);
+      const nextValues = exists
+        ? currentValues.filter((v) => v !== val)
+        : [...currentValues, val];
+
+      if (!isControlled) {
+        setUncontrolledValue(nextValues);
+      }
+      onValueChange?.(nextValues);
+    };
+
+    const handleSelectAll = () => {
+      const allSelectable = filteredOptions
+        .filter((o) => !o.disabled)
+        .map((o) => o.value);
+      const combined = Array.from(new Set([...currentValues, ...allSelectable]));
+      if (!isControlled) {
+        setUncontrolledValue(combined);
+      }
+      onValueChange?.(combined);
+    };
+
+    const handleDeselectAll = () => {
+      const filteredSet = new Set(filteredOptions.map((o) => o.value));
+      const remaining = currentValues.filter((v) => !filteredSet.has(v));
+      if (!isControlled) {
+        setUncontrolledValue(remaining);
+      }
+      onValueChange?.(remaining);
+    };
+
+    // Keyboard navigation
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (disabled) return;
+
+      if (!open) {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setOpen(true);
+        }
+        return;
+      }
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setHighlightedIndex((prev) => {
+          let next = prev + 1;
+          while (next < filteredOptions.length && filteredOptions[next]?.disabled) {
+            next++;
+          }
+          if (next >= filteredOptions.length) next = 0;
+          return next;
+        });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setHighlightedIndex((prev) => {
+          let next = prev - 1;
+          while (next >= 0 && filteredOptions[next]?.disabled) {
+            next--;
+          }
+          if (next < 0) next = filteredOptions.length - 1;
+          return next;
+        });
+      } else if (e.key === "Enter" || (!searchable && e.key === " ")) {
+        e.preventDefault();
+        const target = filteredOptions[highlightedIndex];
+        if (target && !target.disabled) {
+          handleToggle(target.value);
+        }
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+      } else if (e.key === "Tab") {
+        setOpen(false);
+      }
+    };
+
+    // Scroll highlighted item into view
+    React.useEffect(() => {
+      if (open && highlightedIndex >= 0 && optionsContainerRef.current) {
+        const optionEls = optionsContainerRef.current.querySelectorAll<HTMLButtonElement>(
+          "[role='checkbox']"
+        );
+        const targetEl = optionEls[highlightedIndex];
+        if (targetEl && typeof targetEl.scrollIntoView === "function") {
+          targetEl.scrollIntoView({ block: "nearest" });
+        }
+      }
+    }, [open, highlightedIndex]);
+
+    const selectedCount = currentValues.length;
+    let displayContent: React.ReactNode = placeholder;
+    if (selectedCount === 1) {
+      const opt = parsedOptions.find((o) => o.value === currentValues[0]);
+      displayContent = opt ? opt.label : currentValues[0];
+    } else if (selectedCount > 1) {
+      const firstOpt = parsedOptions.find((o) => o.value === currentValues[0]);
+      const firstLabel = firstOpt ? firstOpt.label : currentValues[0];
+      displayContent = (
+        <span className="flex items-center gap-1.5 min-w-0">
+          <span className="truncate">{firstLabel}</span>
+          <span className="flex-none rounded-full bg-(--color-brand-subtle) px-1.5 py-0.5 text-[10px] font-semibold text-(--color-brand-ink) leading-none border border-(--color-brand)">
+            +{selectedCount - 1}
+          </span>
+        </span>
+      );
+    }
+
+    return (
+      <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+        {name && (
+          <input
+            type="hidden"
+            name={name}
+            value={currentValues.join(",")}
+          />
+        )}
+        <PopoverPrimitive.Trigger asChild>
+          <button
+            ref={ref}
+            type="button"
+            disabled={disabled}
+            onKeyDown={handleKeyDown}
+            className={cn(
+              "flex w-full items-center justify-between rounded-md bg-(--color-surface) text-(--color-text) transition-colors duration-(--dur-fast) cursor-pointer select-none",
+              "focus:outline-none",
+              density === "compact"
+                ? "h-(--density-control-h) pl-2 pr-1.5 text-[12.5px]"
+                : "h-8 pl-3 pr-2 text-[13.5px]",
+              error
+                ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
+                : selectedCount > 0
+                ? "border border-(--color-brand) shadow-[inset_0_-1px_0_0_var(--color-brand)]"
+                : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
+              disabled &&
+                "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
+              className
+            )}
+          >
+            <span
+              className={cn(
+                "truncate text-left flex-1",
+                selectedCount === 0
+                  ? "text-(--color-text-secondary) font-normal"
+                  : "text-(--color-text) font-medium"
+              )}
+            >
+              {displayContent}
+            </span>
+            <ChevronDown12Regular
+              className={cn(
+                "text-[#8A8886] flex-none ml-1.5 transition-transform duration-150",
+                open && "rotate-180"
+              )}
+            />
+          </button>
+        </PopoverPrimitive.Trigger>
+
+        <PopoverPrimitive.Portal>
+          <PopoverPrimitive.Content
+            side="bottom"
+            align="start"
+            sideOffset={3}
+            avoidCollisions={false}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            onKeyDown={handleKeyDown}
+            className={cn(
+              "z-50 min-w-[max(220px,var(--radix-popover-trigger-width))] w-max max-w-90 max-h-80 overflow-y-auto rounded-[6px] border border-[#C8C6C4] bg-white p-1 text-(--color-text) shadow-[0_8px_16px_rgba(0,0,0,0.14),0_0_2px_rgba(0,0,0,0.12)] outline-none duration-75",
+              "animate-in fade-in-0 zoom-in-95",
+              "flex flex-col gap-px",
+              "scrollbar-thin [scrollbar-color:#C8C6C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C8C6C4] [&::-webkit-scrollbar-track]:bg-transparent"
+            )}
+          >
+            {/* Search Input Bar */}
+            {searchable && (
+              <div className="sticky top-0 bg-white pt-0.5 pb-1.5 px-0.5 border-b border-(--color-border) mb-1 z-10">
+                <div className="relative flex items-center">
+                  <Search16Regular className="absolute left-1.5 text-(--color-text-muted) w-3.5 h-3.5 pointer-events-none" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={searchPlaceholder || "Cari..."}
+                    className="w-full h-6 pl-6 pr-5 text-[12px] rounded border border-(--color-border-strong) bg-(--color-surface-sunken) focus:bg-white focus:border-(--color-brand) focus:outline-none transition-colors"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("");
+                        searchInputRef.current?.focus();
+                      }}
+                      className="absolute right-1 text-(--color-text-muted) hover:text-(--color-text) cursor-pointer p-0.5"
+                    >
+                      <Dismiss12Regular className="w-2.5 h-2.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Quick Actions (Pilih semua / Hapus pilihan) */}
+            {filteredOptions.length > 1 && (
+              <div className="flex items-center justify-between px-2 py-1 text-[11px] border-b border-(--color-border) mb-1 text-(--color-text-secondary)">
+                <span>{selectedCount} dipilih</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSelectAll}
+                    className="text-(--color-brand) hover:underline cursor-pointer"
+                  >
+                    Pilih semua
+                  </button>
+                  <span>·</span>
+                  <button
+                    type="button"
+                    onClick={handleDeselectAll}
+                    className="text-(--color-text-muted) hover:text-(--color-text) hover:underline cursor-pointer"
+                  >
+                    Kosongkan
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Options List */}
+            <div ref={optionsContainerRef} className="flex flex-col gap-px">
+              {filteredOptions.length === 0 ? (
+                <div className="py-2.5 px-2 text-center text-[12px] text-(--color-text-muted)">
+                  Tidak ditemukan
+                </div>
+              ) : (
+                filteredOptions.map((opt, idx) => {
+                  const isSelected = currentValues.includes(opt.value);
+                  const isHighlighted = idx === highlightedIndex;
+
+                  return (
+                    <button
+                      key={`${opt.value}-${idx}`}
+                      type="button"
+                      role="checkbox"
+                      aria-checked={isSelected}
+                      disabled={opt.disabled}
+                      onClick={() => handleToggle(opt.value)}
+                      onMouseEnter={() => setHighlightedIndex(idx)}
+                      title={typeof opt.label === "string" ? opt.label : undefined}
+                      className={cn(
+                        "w-full text-left px-2 py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] transition-colors select-none outline-none flex items-center gap-2",
+                        isSelected
+                          ? "bg-[#EBF3FC] text-[#0C548F] font-medium"
+                          : isHighlighted
+                          ? "bg-(--color-surface-sunken) text-(--color-text) font-normal"
+                          : "bg-transparent text-(--color-text) font-normal hover:bg-(--color-surface-sunken)",
+                        opt.disabled && "opacity-50 cursor-not-allowed pointer-events-none"
+                      )}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => {}}
+                        className="h-3.5 w-3.5 rounded accent-(--color-brand) cursor-pointer pointer-events-none flex-none"
+                      />
+                      <span className="truncate flex-1">{opt.label}</span>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          </PopoverPrimitive.Content>
+        </PopoverPrimitive.Portal>
+      </PopoverPrimitive.Root>
+    );
+  }
+);
+MultiSelect.displayName = "MultiSelect";
+
+// ============================================================================
 // GroupedRuanganSelect (Grouped by Tempat with Capacity)
 // ============================================================================
 
