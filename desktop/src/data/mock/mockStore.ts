@@ -148,8 +148,34 @@ export class MockDataStore {
           this.kegiatan = parsed.kegiatan;
           if (parsed.users) this.users = parsed.users;
 
-          // Sinkronkan kegiatan baru dari INITIAL_SEED jika belum ada di storage
           let adaBaru = false;
+
+          // 1. Pulihkan data e130 jika di storage lama sempat ter-overwrite oleh "Matematika Kelas SMP Reguler"
+          const idxCorruptedE130 = this.kegiatan.findIndex(
+            (k) => k.id === 'e130' && k.nama === 'Matematika Kelas SMP Reguler'
+          );
+          if (idxCorruptedE130 !== -1) {
+            const originalE130 = INITIAL_SEED.kegiatan.find((k) => k.id === 'e130');
+            if (originalE130) {
+              this.kegiatan[idxCorruptedE130] = JSON.parse(JSON.stringify(originalE130));
+              adaBaru = true;
+            }
+          }
+
+          // 2. Bersihkan entri duplikat berdasarkan ID
+          const seenIds = new Set<string>();
+          const deduped: RawKegiatanSeed[] = [];
+          for (const k of this.kegiatan) {
+            if (!seenIds.has(k.id)) {
+              seenIds.add(k.id);
+              deduped.push(k);
+            } else {
+              adaBaru = true;
+            }
+          }
+          this.kegiatan = deduped;
+
+          // 3. Sinkronkan kegiatan baru dari INITIAL_SEED jika belum ada di storage (termasuk e134)
           INITIAL_SEED.kegiatan.forEach((seedKeg) => {
             if (!this.kegiatan.some((k) => k.id === seedKeg.id)) {
               this.kegiatan.push(JSON.parse(JSON.stringify(seedKeg)));

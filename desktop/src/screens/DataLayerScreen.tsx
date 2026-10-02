@@ -115,7 +115,7 @@ export function DataLayerScreen() {
   const handleResetData = () => {
     resetData();
     showToast({
-      message: 'Data mock berhasil direset kembali ke seed awal (80 siswa, 133 kegiatan).',
+      message: 'Data mock berhasil direset kembali ke seed awal (80 siswa, 134 kegiatan).',
       type: 'success',
     });
   };

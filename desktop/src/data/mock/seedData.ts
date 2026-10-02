@@ -1,5 +1,5 @@
 // Bandrek — Ported seed data from docs/prototype/seed.js
-// 80 siswa, 12 subjek, 8 kelas, 6 mapel, 48 materi, 3 tempat, 9 ruangan, 5 jenis, 64 ceklis manual, 133 kegiatan.
+// 80 siswa, 12 subjek, 8 kelas, 6 mapel, 48 materi, 3 tempat, 9 ruangan, 5 jenis, 64 ceklis manual, 134 kegiatan.
 import type {
   Siswa,
   Subjek,
@@ -7476,7 +7476,7 @@ export const INITIAL_SEED: SeedData = {
       "status": "belum"
     },
     {
-      "id": "e130",
+      "id": "e134",
       "mapel": "M1",
       "materi": "T9",
       "kelas": "K5",
