@@ -178,7 +178,7 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
   return (
     <div
       ref={containerRef}
-      className="flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-wrap border-b border-(--color-border) bg-(--color-canvas) text-[12px] select-none"
+      className="flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-(--color-canvas) text-[12px] select-none"
     >
       {/* 1. Date Range: Dari */}
       <div className="relative flex-none">
@@ -638,31 +638,31 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
         className="flex-none w-39.5 h-6.5 border border-(--color-border-strong) rounded bg-white px-2 text-[12px] text-(--color-text) placeholder:text-(--color-text-muted) hover:border-(--color-text-muted) focus:border-(--color-brand) focus:outline-none transition-colors"
       />
 
-      {/* Flexible Spacer */}
-      <div className="flex-1 min-w-2" />
-
-      {/* 8. Ekspor CSV (Disabled per spec) */}
-      <button
-        type="button"
-        disabled
-        title="Ekspor CSV menyusul di tahap berikutnya"
-        className="flex-none h-6.5 px-2.75 border border-(--color-border) rounded bg-(--color-surface-alt) text-(--color-text-muted) text-[12px] cursor-not-allowed whitespace-nowrap"
-      >
-        Ekspor CSV
-      </button>
-
-      {/* 9. Tombol Tambah Kegiatan Baru */}
-      {onNewKegiatan && (
+      {/* Right Actions Group (selalu rata kanan, terkunci agar tidak pernah melompat ke kiri) */}
+      <div className="ml-auto flex items-center gap-1.75 flex-none pl-2">
+        {/* 8. Ekspor CSV (Disabled per spec) */}
         <button
           type="button"
-          onClick={onNewKegiatan}
-          title="Buat kegiatan baru (Ctrl+N)"
-          className="flex-none h-6.5 px-2.75 rounded bg-(--color-brand) text-white font-medium text-[12px] flex items-center gap-1 hover:bg-(--color-brand-pressed) transition-colors cursor-pointer shadow-xs whitespace-nowrap"
+          disabled
+          title="Ekspor CSV menyusul di tahap berikutnya"
+          className="flex-none h-6.5 px-2.75 border border-(--color-border) rounded bg-(--color-surface-alt) text-(--color-text-muted) text-[12px] cursor-not-allowed whitespace-nowrap"
         >
-          <Add16Regular className="text-[13px]" />
-          <span>Kegiatan baru</span>
+          Ekspor CSV
         </button>
-      )}
+
+        {/* 9. Tombol Tambah Kegiatan Baru */}
+        {onNewKegiatan && (
+          <button
+            type="button"
+            onClick={onNewKegiatan}
+            title="Buat kegiatan baru (Ctrl+N)"
+            className="flex-none h-6.5 px-2.75 rounded bg-(--color-brand) text-white font-medium text-[12px] flex items-center gap-1 hover:bg-(--color-brand-pressed) transition-colors cursor-pointer shadow-xs whitespace-nowrap"
+          >
+            <Add16Regular className="text-[13px]" />
+            <span>Kegiatan baru</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 };

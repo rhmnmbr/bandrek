@@ -43,7 +43,7 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
   sortDesc,
 }) => {
   return (
-    <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-wrap border-b border-(--color-border) bg-white text-[12px] select-none">
+    <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white text-[12px] select-none">
       <span className="flex-none text-[11.5px] text-(--color-text-muted) whitespace-nowrap">
         Filter cepat
       </span>
@@ -123,22 +123,23 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
         );
       })}
 
-      <div className="flex-1 min-w-2" />
+      {/* Right side summary & reset (selalu rata kanan) */}
+      <div className="ml-auto flex items-center gap-2 flex-none pl-2">
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="flex-none h-6 px-2 border-none bg-transparent text-(--color-brand) text-[12px] cursor-pointer rounded hover:bg-(--color-brand-subtle) whitespace-nowrap transition-colors"
+          >
+            Reset filter
+          </button>
+        )}
 
-      {hasActiveFilters && (
-        <button
-          type="button"
-          onClick={onResetFilters}
-          className="flex-none h-6 px-2 border-none bg-transparent text-(--color-brand) text-[12px] cursor-pointer rounded hover:bg-(--color-brand-subtle) whitespace-nowrap transition-colors"
-        >
-          Reset filter
-        </button>
-      )}
-
-      <span className="flex-none text-[12px] text-(--color-text-muted) whitespace-nowrap">
-        Menampilkan {totalDisplayed} dari {totalAll} kegiatan · urut{' '}
-        {sortDesc ? 'terbaru dulu' : 'terlama dulu'}
-      </span>
+        <span className="flex-none text-[12px] text-(--color-text-muted) whitespace-nowrap">
+          Menampilkan {totalDisplayed} dari {totalAll} kegiatan · urut{' '}
+          {sortDesc ? 'terbaru dulu' : 'terlama dulu'}
+        </span>
+      </div>
     </div>
   );
 };

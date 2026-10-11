@@ -56,9 +56,9 @@ export const DaftarKegiatanScreen: React.FC = () => {
     };
   }, [semuaKegiatan]);
 
-  // Local filter states
-  const [dari, setDari] = React.useState<string>('');
-  const [sampai, setSampai] = React.useState<string>('');
+  // Local filter states - initialized immediately to avoid layout shift on mount
+  const [dari, setDari] = React.useState<string>(() => toIso(addDays(toDate(SIMULATED_TODAY), -14)));
+  const [sampai, setSampai] = React.useState<string>(() => SIMULATED_TODAY);
   const [jenis, setJenis] = React.useState<string>('');
   const [status, setStatus] = React.useState<StatusKegiatan | ''>('');
   const [subjek, setSubjek] = React.useState<string>('');
@@ -67,15 +67,12 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
 
-  // Synchronize initial dates once defaultRentang is available
+  // Synchronize latest activity date once data arrives if default dataset extends beyond simulated today
   React.useEffect(() => {
-    if (!dari && defaultRentang.dari) {
-      setDari(defaultRentang.dari);
-    }
-    if (!sampai && defaultRentang.sampai) {
+    if (defaultRentang.sampai && sampai === SIMULATED_TODAY && defaultRentang.sampai !== SIMULATED_TODAY) {
       setSampai(defaultRentang.sampai);
     }
-  }, [defaultRentang, dari, sampai]);
+  }, [defaultRentang.sampai, sampai]);
 
   // Handle URL query parameter `?filter=perlu_realisasi` or `?filter=perlu`
   React.useEffect(() => {
