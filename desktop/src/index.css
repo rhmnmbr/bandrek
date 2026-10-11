@@ -16,16 +16,20 @@
 
     /* Brand & Permukaan */
     --color-brand:          #0F6CBD;
+    --color-brand-hover:    #115EA3;
     --color-brand-pressed:  #115EA3;
     --color-brand-subtle:   #EBF3FC;
+    --color-brand-bg:       #EBF3FC;
     --color-brand-ink:      #0C548F;
     --color-surface:        #FFFFFF;
+    --color-surface-hover:  #FAFAFA;
     --color-surface-alt:    #FAFAFA;
     --color-surface-sunken: #EDEBE9;
     --color-canvas:         #F5F5F5;
 
     /* Teks & Garis */
     --color-text:           #242424;
+    --color-text-primary:   #242424;
     --color-text-secondary: #424242;
     --color-text-muted:     #5C5A58;
     --color-icon-faint:     #8A8886;
@@ -40,10 +44,18 @@
     --color-success-ink:    #2E7D32;
     --color-warning:        #F0A82E;
     --color-warning-bg:     #FFF3E0;
+    --color-warning-subtle: #FFF3E0;
     --color-warning-ink:    #8A5200;
+    --color-warning-fg:     #8A5200;
+    --color-warning-text:   #8A5200;
+    --color-warning-border: #F0A82E;
     --color-danger:         #C50F1F;
     --color-danger-bg:      #FDE7E9;
+    --color-danger-subtle:  #FDE7E9;
     --color-danger-ink:     #9B0C18;
+    --color-danger-fg:      #9B0C18;
+    --color-danger-text:    #9B0C18;
+    --color-danger-border:  #C50F1F;
     --color-info:           #0F6CBD;
     --color-info-bg:        #EBF3FC;
     --color-info-ink:       #0C548F;

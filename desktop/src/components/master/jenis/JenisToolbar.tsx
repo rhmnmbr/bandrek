@@ -27,7 +27,7 @@ export function JenisToolbar({
           type="button"
           onClick={onJenisBaru}
           title="Tambah jenis kegiatan baru · Ctrl+N"
-          className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-hover) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
+          className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
           <svg
             width="11"

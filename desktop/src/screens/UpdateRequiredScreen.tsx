@@ -191,7 +191,7 @@ export function UpdateRequiredScreen({
             <button
               type="button"
               onClick={handleFinish}
-              className="flex h-9 w-full items-center justify-center rounded-sm bg-(--color-brand) px-4 text-[13px] font-semibold text-white shadow-xs transition-colors duration-(--dur-fast) hover:bg-(--color-brand-hover) cursor-pointer"
+              className="flex h-9 w-full items-center justify-center rounded-sm bg-(--color-brand) px-4 text-[13px] font-semibold text-white shadow-xs transition-colors duration-(--dur-fast) hover:bg-(--color-brand-pressed) cursor-pointer"
             >
               Mulai Ulang & Buka Aplikasi
             </button>
@@ -201,7 +201,7 @@ export function UpdateRequiredScreen({
                 type="button"
                 onClick={handleStartUpdate}
                 disabled={isUpdating}
-                className="flex h-9 w-full items-center justify-center gap-2 rounded-sm bg-(--color-brand) px-4 text-[13px] font-semibold text-white shadow-xs transition-colors duration-(--dur-fast) hover:bg-(--color-brand-hover) disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="flex h-9 w-full items-center justify-center gap-2 rounded-sm bg-(--color-brand) px-4 text-[13px] font-semibold text-white shadow-xs transition-colors duration-(--dur-fast) hover:bg-(--color-brand-pressed) disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <ArrowDownload16Regular className="text-[15px]" />
                 <span>{isUpdating ? 'Sedang Memperbarui...' : 'Unduh & Pasang Pembaruan'}</span>

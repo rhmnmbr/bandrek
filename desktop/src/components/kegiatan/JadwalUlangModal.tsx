@@ -248,7 +248,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
               </div>
 
               {/* Old Activity Box */}
-              <div className="p-2.5 border border-(--color-border) rounded-md bg-(--color-surface-sunken) text-[12.5px] leading-relaxed flex flex-col gap-0.5">
+              <div className="p-2.5 border border-(--color-border) rounded-md bg-(--color-surface-alt) text-[12.5px] leading-relaxed flex flex-col gap-0.5">
                 <div className="font-semibold text-(--color-text)">{kegiatan.nama}</div>
                 <div className="font-mono text-[11.5px] text-(--color-text-secondary) line-through">
                   {formatTanggalRingkas(kegiatan.tanggal)} · {kegiatan.mulai}–{kegiatan.selesai}
@@ -322,7 +322,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
             </div>
 
             {/* Right Column: JADWAL BARU */}
-            <div className="w-94 flex-none p-3.5 flex flex-col gap-2.5 bg-(--color-surface-sunken)">
+            <div className="w-94 flex-none p-3.5 flex flex-col gap-2.5 bg-(--color-surface-alt)">
               <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-secondary) uppercase">
                 JADWAL BARU
               </div>
@@ -457,7 +457,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="p-3.5 border-t border-(--color-border) bg-(--color-surface-sunken) flex items-center gap-2">
+          <div className="p-3.5 border-t border-(--color-border) bg-(--color-surface-alt) flex items-center gap-2">
             <div className="flex-1 min-w-0 text-xs text-(--color-text-secondary) leading-relaxed">
               {hasilTeks}
             </div>
@@ -466,7 +466,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
               ref={cancelBtnRef}
               type="button"
               onClick={onClose}
-              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-sunken) text-xs font-normal cursor-pointer transition-colors"
+              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-alt) text-xs font-normal cursor-pointer transition-colors"
             >
               Batal
             </button>
@@ -480,7 +480,7 @@ export const JadwalUlangModal: React.FC<JadwalUlangModalProps> = ({
                 'h-6.5 px-3.5 rounded text-xs font-semibold whitespace-nowrap transition-colors border-none',
                 off
                   ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
-                  : 'bg-(--color-brand) text-white hover:bg-(--color-brand-hover) cursor-pointer'
+                  : 'bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) cursor-pointer'
               )}
             >
               {jadwalUlangMutation.isPending ? 'Menyimpan...' : 'Jadwalkan ulang'}

@@ -34,7 +34,7 @@ export function KelasEmptyState({
             <button
               type="button"
               onClick={onNewKelas}
-              className="h-6.5 px-3 border-none rounded-sm bg-(--color-brand) text-(--color-surface) text-[13px] font-semibold hover:bg-(--color-brand-hover) transition-colors cursor-pointer"
+              className="h-6.5 px-3 border-none rounded-sm bg-(--color-brand) text-(--color-surface) text-[13px] font-semibold hover:bg-(--color-brand-pressed) transition-colors cursor-pointer"
             >
               + Kelas baru
             </button>

@@ -273,7 +273,7 @@ export function UserManagementScreen() {
               type="button"
               onClick={handleNewUser}
               title="Tambah pengguna baru · Ctrl+N"
-              className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-hover) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
+              className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
             >
               <span>+ Pengguna baru</span>
             </button>
@@ -583,7 +583,7 @@ export function UserManagementScreen() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="h-6.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-hover) text-white text-[12.5px] font-semibold cursor-pointer transition-colors flex items-center gap-1.5"
+                className="h-6.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer transition-colors flex items-center gap-1.5"
               >
                 <span>{isNewMode ? 'Simpan pengguna' : 'Simpan'}</span>
                 <span className="font-mono text-[10px] opacity-75">Ctrl S</span>

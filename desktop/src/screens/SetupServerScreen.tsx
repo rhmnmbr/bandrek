@@ -149,7 +149,7 @@ export function SetupServerScreen() {
           <button
             type="button"
             onClick={handleSave}
-            className="h-8 px-4 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-hover) text-white text-[13px] font-semibold cursor-pointer transition-colors"
+            className="h-8 px-4 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[13px] font-semibold cursor-pointer transition-colors"
           >
             Simpan & Lanjutkan
           </button>

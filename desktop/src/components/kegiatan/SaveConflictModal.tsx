@@ -124,7 +124,7 @@ export const SaveConflictModal: React.FC<SaveConflictModalProps> = ({
               <button
                 type="button"
                 onClick={onUseMine}
-                className="flex h-7 items-center justify-center rounded-sm bg-(--color-brand) px-3 text-[12px] font-medium text-white transition-colors duration-(--dur-fast) hover:bg-(--color-brand-hover) cursor-pointer"
+                className="flex h-7 items-center justify-center rounded-sm bg-(--color-brand) px-3 text-[12px] font-medium text-white transition-colors duration-(--dur-fast) hover:bg-(--color-brand-pressed) cursor-pointer"
               >
                 Pakai punya saya
               </button>

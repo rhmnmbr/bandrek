@@ -104,7 +104,7 @@ export function LoginScreen() {
           <button
             type="submit"
             disabled={loginMutation.isPending}
-            className="mt-1 h-8.5 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-hover) text-white text-[13px] font-semibold cursor-pointer transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="mt-1 h-8.5 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[13px] font-semibold cursor-pointer transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <span>{loginMutation.isPending ? 'Memeriksa...' : 'Masuk'}</span>
           </button>

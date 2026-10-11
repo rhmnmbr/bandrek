@@ -137,7 +137,7 @@ export function MapelConfirmModal({
             onClick={onConfirm}
             className={`h-7 px-3.5 rounded border-none text-[12.5px] font-semibold cursor-pointer transition-colors ${
               isNonaktif
-                ? 'bg-(--color-brand) hover:bg-(--color-brand-hover) text-white'
+                ? 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white'
                 : 'bg-(--color-danger) hover:bg-[#A80000] text-white'
             }`}
           >

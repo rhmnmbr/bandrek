@@ -136,7 +136,7 @@ export const BatalkanKegiatanModal: React.FC<BatalkanKegiatanModalProps> = ({
           </div>
 
           {/* Activity Summary Box */}
-          <div className="mx-4 my-2.75 p-2.75 border border-(--color-border) rounded-md bg-(--color-surface-sunken) text-[12.5px] leading-relaxed flex flex-col gap-0.5">
+          <div className="mx-4 my-2.75 p-2.75 border border-(--color-border) rounded-md bg-(--color-surface-alt) text-[12.5px] leading-relaxed flex flex-col gap-0.5">
             <div className="font-semibold text-(--color-text)">{kegiatan.nama}</div>
             <div className="font-mono text-[11.5px] text-(--color-text-secondary)">
               {formatTanggalRingkas(kegiatan.tanggal)} · {kegiatan.mulai}–{kegiatan.selesai}
@@ -232,7 +232,7 @@ export const BatalkanKegiatanModal: React.FC<BatalkanKegiatanModalProps> = ({
               ref={cancelBtnRef}
               type="button"
               onClick={onClose}
-              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-sunken) text-xs font-normal cursor-pointer transition-colors"
+              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-alt) text-xs font-normal cursor-pointer transition-colors"
             >
               Tutup
             </button>

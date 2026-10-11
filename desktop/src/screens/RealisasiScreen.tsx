@@ -647,7 +647,7 @@ export const RealisasiScreen: React.FC = () => {
         <button
           type="button"
           onClick={handleKembali}
-          className="bg-transparent border-none p-0 text-[12.5px] text-(--color-brand) hover:text-(--color-brand-hover) cursor-pointer font-normal whitespace-nowrap"
+          className="bg-transparent border-none p-0 text-[12.5px] text-(--color-brand) hover:text-(--color-brand-pressed) cursor-pointer font-normal whitespace-nowrap"
         >
           {breadcrumbAsal}
         </button>

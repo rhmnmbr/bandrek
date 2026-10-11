@@ -123,7 +123,7 @@ export const DetailKegiatanScreen: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate('/kalender')}
-          className="mt-2 h-7 px-3.5 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-hover) cursor-pointer"
+          className="mt-2 h-7 px-3.5 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) cursor-pointer"
         >
           Kembali ke Kalender
         </button>
@@ -378,7 +378,7 @@ export const DetailKegiatanScreen: React.FC = () => {
         <button
           type="button"
           onClick={handleKembali}
-          className="bg-transparent border-none p-0 text-[12.5px] text-(--color-brand) hover:text-(--color-brand-hover) cursor-pointer font-normal"
+          className="bg-transparent border-none p-0 text-[12.5px] text-(--color-brand) hover:text-(--color-brand-pressed) cursor-pointer font-normal"
         >
           {breadcrumbAsal}
         </button>
@@ -417,7 +417,7 @@ export const DetailKegiatanScreen: React.FC = () => {
             type="button"
             onClick={handleUtamaClick}
             title="Buka form kegiatan"
-            className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-hover) active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+            className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
           >
             Ubah kegiatan
           </button>
@@ -426,7 +426,7 @@ export const DetailKegiatanScreen: React.FC = () => {
             type="button"
             onClick={handleUtamaClick}
             title="Buka layar realisasi"
-            className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-hover) active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+            className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
           >
             Ubah realisasi
           </button>
@@ -458,7 +458,7 @@ export const DetailKegiatanScreen: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleJadwalUlang}
-                  className="text-left h-7 px-2 rounded text-[12.5px] bg-transparent text-(--color-text) hover:bg-(--color-brand-bg) cursor-pointer transition-colors"
+                  className="text-left h-7 px-2 rounded text-[12.5px] bg-transparent text-(--color-text) hover:bg-(--color-brand-subtle) cursor-pointer transition-colors"
                 >
                   Jadwalkan ulang
                 </button>
@@ -625,7 +625,7 @@ export const DetailKegiatanScreen: React.FC = () => {
                       type="button"
                       onClick={handleIsiRealisasi}
                       title="Catat kehadiran dan hasil sesi ini"
-                      className="h-6.5 px-2.75 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-hover) active:translate-y-px cursor-pointer whitespace-nowrap"
+                      className="h-6.5 px-2.75 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) active:translate-y-px cursor-pointer whitespace-nowrap"
                     >
                       Isi realisasi
                     </button>
@@ -659,51 +659,49 @@ export const DetailKegiatanScreen: React.FC = () => {
             </div>
 
             {pesertaList.length > 0 ? (
-              <div>
-                {/* Table Header */}
-                <div className="flex items-center h-6 px-3 border-b border-(--color-border-subtle) bg-white text-[11px] font-semibold tracking-wider text-(--color-text-secondary) uppercase">
+              <div className="max-h-72 overflow-y-auto">
+                {/* Table Header (Sticky so it stays visible and aligns with body scrollbar) */}
+                <div className="sticky top-0 z-10 flex items-center h-6 px-3 border-b border-(--color-border-subtle) bg-white text-[11px] font-semibold tracking-wider text-(--color-text-secondary) uppercase select-none">
                   <span className="flex-1 min-w-0">NAMA</span>
                   <span className="w-16 flex-none">JENJANG</span>
                   <span className="w-23 flex-none">KEHADIRAN</span>
                   <span className="w-58 flex-none">CATATAN</span>
                 </div>
 
-                {/* Table Body (Scrollable max-h-72) */}
-                <div className="max-h-72 overflow-y-auto">
-                  {pesertaList.map((p) => (
-                    <div
-                      key={p.id}
-                      className="flex items-center h-8 px-3 border-b border-(--color-border-subtle) last:border-b-0 text-[12.5px] hover:bg-(--color-surface-alt) transition-colors"
+                {/* Table Body */}
+                {pesertaList.map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center h-8 px-3 border-b border-(--color-border-subtle) last:border-b-0 text-[12.5px] hover:bg-(--color-surface-alt) transition-colors"
+                  >
+                    <span
+                      className={cn(
+                        'flex-1 min-w-0 truncate',
+                        p.aktif ? 'text-(--color-text)' : 'text-(--color-text-secondary)'
+                      )}
+                      title={p.nama}
                     >
-                      <span
-                        className={cn(
-                          'flex-1 min-w-0 truncate',
-                          p.aktif ? 'text-(--color-text)' : 'text-(--color-text-secondary)'
-                        )}
-                        title={p.nama}
-                      >
-                        {p.nama}
-                      </span>
-                      <span className="w-16 flex-none text-[#424242]">{p.jenjang}</span>
-                      <span className="w-23 flex-none">
-                        {p.kehadiranStatus ? (
-                          <KehadiranBadge status={p.kehadiranStatus as any} />
-                        ) : (
-                          <span className="inline-flex items-center gap-1 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted)">
-                            <span className="opacity-60">·</span>
-                            <span>Belum diisi</span>
-                          </span>
-                        )}
-                      </span>
-                      <span
-                        className="w-58 flex-none text-[#424242] truncate"
-                        title={p.catatan}
-                      >
-                        {p.catatan}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                      {p.nama}
+                    </span>
+                    <span className="w-16 flex-none text-[#424242]">{p.jenjang}</span>
+                    <span className="w-23 flex-none">
+                      {p.kehadiranStatus ? (
+                        <KehadiranBadge status={p.kehadiranStatus as any} />
+                      ) : (
+                        <span className="inline-flex items-center gap-1 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted)">
+                          <span className="opacity-60">·</span>
+                          <span>Belum diisi</span>
+                        </span>
+                      )}
+                    </span>
+                    <span
+                      className="w-58 flex-none text-[#424242] truncate"
+                      title={p.catatan}
+                    >
+                      {p.catatan}
+                    </span>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="p-3.5 text-[12.5px] text-(--color-text-secondary) leading-relaxed">

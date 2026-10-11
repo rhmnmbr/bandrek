@@ -563,7 +563,7 @@ export function KelasFormView({
           className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
             simpanDisabled || isSubmitting
               ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
-              : 'bg-(--color-brand) hover:bg-(--color-brand-hover) text-white cursor-pointer'
+              : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
           }`}
         >
           <span>{isNew ? 'Simpan kelas' : 'Simpan'}</span>
