@@ -1,10 +1,11 @@
 import * as React from "react";
 import {
-  Checkmark12Regular,
+  Checkmark16Regular,
   CircleHalfFill16Regular,
   Mail16Regular,
   Dismiss16Regular,
   Circle12Filled,
+  Edit16Regular,
 } from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
@@ -31,22 +32,22 @@ export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
     const renderContent = () => {
       switch (state) {
         case "tersampaikan":
-          return <Checkmark12Regular className="text-current text-[11px]" />;
+          return <Checkmark16Regular className="w-3.5 h-3.5 text-current" />;
         case "selesai_manual":
-          return <Checkmark12Regular className="text-current text-[11px] opacity-90" />;
+          return <Edit16Regular className="w-3.5 h-3.5 text-current" />;
         case "sakit":
-          return <CircleHalfFill16Regular className="text-current text-[11px]" />;
+          return <CircleHalfFill16Regular className="w-2.5 h-2.5 text-current" />;
         case "izin":
-          return <Mail16Regular className="text-current text-[11px]" />;
+          return <Mail16Regular className="w-3 h-3 text-current" />;
         case "alpa":
-          return <Dismiss16Regular className="text-current text-[11px]" />;
+          return <Dismiss16Regular className="w-3 h-3 text-current" />;
         case "batal":
-          return <Dismiss16Regular className="text-current opacity-60 text-[11px]" />;
+          return <Dismiss16Regular className="w-3 h-3 text-current opacity-60" />;
         case "terjadwal":
-          return <Circle12Filled className="text-current text-[10px]" />;
+          return <Circle12Filled className="w-2.5 h-2.5 text-current" />;
         case "kosong":
         default:
-          return <span className="text-[12.5px] leading-none opacity-60">·</span>;
+          return <span className="size-1 rounded-full bg-current opacity-60 flex-none" />;
       }
     };
 
@@ -59,17 +60,17 @@ export const MatrixCell = React.forwardRef<HTMLButtonElement, MatrixCellProps>(
         case "tersampaikan":
           return "bg-[#E8F5E9] text-[#2E7D32] border-r border-[#EDEBE9]";
         case "selesai_manual":
-          return "bg-[#F2FAF3] text-[#2E7D32] shadow-[inset_0_0_0_1px_#9CCBA0] border-r border-[#EDEBE9]";
+          return "bg-[#E0F2F1] text-[#00695C] border-r border-[#EDEBE9]";
         case "sakit":
-          return "bg-[#FFF3E0] text-[#8A5200] shadow-[inset_0_0_0_1px_#F0A82E] border-r border-[#EDEBE9]";
+          return "bg-[#FFF3E0] text-[#8A5200] border-r border-[#EDEBE9]";
         case "izin":
-          return "bg-[#EBF3FC] text-[#0C548F] shadow-[inset_0_0_0_1px_#0F6CBD] border-r border-[#EDEBE9]";
+          return "bg-[#EBF3FC] text-[#0C548F] border-r border-[#EDEBE9]";
         case "alpa":
-          return "bg-[#FDE7E9] text-[#9B0C18] shadow-[inset_0_0_0_1px_#C50F1F] border-r border-[#EDEBE9]";
+          return "bg-[#FDE7E9] text-[#9B0C18] border-r border-[#EDEBE9]";
         case "batal":
           return "bg-(--color-canvas) text-(--color-text-muted) border-r border-[#EDEBE9]";
         case "terjadwal":
-          return "bg-[#FAFAFA] text-[#5C5A58] shadow-[inset_0_0_0_1px_#C8C6C4] border-r border-[#EDEBE9]";
+          return "bg-[#FAFAFA] text-[#5C5A58] border-r border-[#EDEBE9]";
         case "kosong":
         default:
           return "bg-transparent text-[#8A8886] border-r border-[#EDEBE9] hover:bg-[#FAFAFA]";

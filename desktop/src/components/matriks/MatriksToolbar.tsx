@@ -65,7 +65,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
   const currentKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
-    <div ref={containerRef} className="flex flex-col bg-white">
+    <div ref={containerRef} className="flex flex-col bg-white relative z-50">
       {/* 1. Subheader Row (H: 44px) */}
       <div className="flex h-11 flex-none items-center gap-[11px] border-b border-[#E1DFDD] px-[14px]">
         <div className="text-[12.5px] text-[#5C5A58] truncate">
@@ -103,7 +103,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
       </div>
 
       {/* 2. Filter Bar (H: 48px, bg #FAFAFA) */}
-      <div className="flex flex-none flex-wrap items-center gap-[7px] border-b border-[#E1DFDD] bg-[#FAFAFA] p-[11px_14px] text-[12px]">
+      <div className="flex flex-none flex-wrap items-center gap-[7px] border-b border-[#E1DFDD] bg-[#FAFAFA] p-[11px_14px] text-[12px] relative z-50">
         {/* Mapel Pill Selector (Wajib di kiri, 1 mapel) */}
         <div className="relative flex-none">
           <button
@@ -116,7 +116,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
             <ChevronDown12Regular className="text-[#0C548F]" />
           </button>
           {openDropdown === 'mapel' && (
-            <div className="absolute left-0 top-[29px] z-20 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
+            <div className="absolute left-0 top-[29px] z-50 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
               {mapelList.map((m) => {
                 const isSelected = m.id === selectedMapelId;
                 return (
@@ -153,7 +153,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
             <ChevronDown12Regular className="text-[#0C548F]" />
           </button>
           {openDropdown === 'jenjang' && (
-            <div className="absolute left-0 top-[29px] z-20 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
+            <div className="absolute left-0 top-[29px] z-50 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
               {jenjangOptions.map((j) => {
                 const isSelected = j.id === selectedJenjang;
                 return (
@@ -196,7 +196,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
             <ChevronDown12Regular className="text-[#8A8886]" />
           </button>
           {openDropdown === 'kelas' && (
-            <div className="absolute left-0 top-[29px] z-20 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
+            <div className="absolute left-0 top-[29px] z-50 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
               <button
                 type="button"
                 onClick={() => {
@@ -257,27 +257,30 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
 
         <div className="flex-1 min-w-2" />
 
-        {/* Checkbox Tampilkan Siswa Nonaktif */}
-        <label className="flex flex-none items-center gap-[7px] text-[#424242] text-[12px] cursor-pointer select-none whitespace-nowrap">
-          <input
-            type="checkbox"
-            checked={showNonaktif}
-            onChange={onToggleNonaktif}
-            className="size-3.25 m-0 accent-[#0F6CBD] cursor-pointer"
-          />
-          <span>Tampilkan siswa nonaktif</span>
-        </label>
+        {/* Filter Checkboxes */}
+        <div className="flex flex-none items-center gap-5 text-[12px] text-[#424242]">
+          {/* Checkbox Tampilkan Siswa Nonaktif */}
+          <label className="flex items-center gap-2 cursor-pointer select-none whitespace-nowrap">
+            <input
+              type="checkbox"
+              checked={showNonaktif}
+              onChange={onToggleNonaktif}
+              className="w-3.5 h-3.5 m-0 accent-(--color-brand) cursor-pointer translate-y-px"
+            />
+            <span className="leading-none">Tampilkan siswa nonaktif</span>
+          </label>
 
-        {/* Checkbox Tandai Siswa Tertinggal */}
-        <label className="flex flex-none items-center gap-[7px] text-[#424242] text-[12px] cursor-pointer select-none whitespace-nowrap">
-          <input
-            type="checkbox"
-            checked={tandaiTertinggal}
-            onChange={onToggleTandaiTertinggal}
-            className="size-3.25 m-0 accent-[#0F6CBD] cursor-pointer"
-          />
-          <span>Tandai siswa tertinggal</span>
-        </label>
+          {/* Checkbox Tandai Siswa Tertinggal */}
+          <label className="flex items-center gap-2 cursor-pointer select-none whitespace-nowrap">
+            <input
+              type="checkbox"
+              checked={tandaiTertinggal}
+              onChange={onToggleTandaiTertinggal}
+              className="w-3.5 h-3.5 m-0 accent-(--color-brand) cursor-pointer translate-y-px"
+            />
+            <span className="leading-none">Tandai siswa tertinggal</span>
+          </label>
+        </div>
       </div>
     </div>
   );

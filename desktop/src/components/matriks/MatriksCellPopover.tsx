@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  Checkmark12Regular,
   Checkmark16Regular,
   Circle12Filled,
-  CircleHalfFill12Regular,
-  Mail12Regular,
-  Dismiss12Regular,
+  CircleHalfFill16Regular,
+  Mail16Regular,
+  Dismiss16Regular,
+  Edit16Regular,
 } from '@fluentui/react-icons';
 import { DatePicker } from '@/components/ui/date-picker';
 import { formatTanggalPendek } from '@/lib/dateUtils';
@@ -28,20 +28,20 @@ const BADGE_CONFIG: Record<
   string,
   { label: string; icon: React.ReactNode; bg: string; border: string; text: string; italic?: boolean }
 > = {
-  tersampaikan: { label: 'Tersampaikan', icon: <Checkmark12Regular className="w-3 h-3 text-current" />, bg: '#E8F5E9', border: '#4CAF50', text: '#2E7D32' },
-  selesai_manual: { label: 'Ditandai manual', icon: <Checkmark12Regular className="w-3 h-3 text-current opacity-90" />, bg: '#F2FAF3', border: '#9CCBA0', text: '#2E7D32', italic: true },
-  terjadwal: { label: 'Sudah dijadwalkan', icon: <Circle12Filled className="w-2.5 h-2.5 text-current" />, bg: '#FAFAFA', border: '#C8C6C4', text: '#5C5A58' },
-  sakit: { label: 'Sakit', icon: <CircleHalfFill12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FFF3E0', border: '#F0A82E', text: '#8A5200' },
-  izin: { label: 'Izin', icon: <Mail12Regular className="w-2.5 h-2.5 text-current" />, bg: '#EBF3FC', border: '#0F6CBD', text: '#0C548F' },
-  alpa: { label: 'Alpa', icon: <Dismiss12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FDE7E9', border: '#C50F1F', text: '#9B0C18' },
-  kosong: { label: 'Belum dijadwalkan', icon: <span className="text-[11px] leading-none opacity-60">·</span>, bg: '#FFFFFF', border: '#EDEBE9', text: '#8A8886' },
+  tersampaikan: { label: 'Tersampaikan', icon: <Checkmark16Regular className="w-3 h-3 text-current flex-none" />, bg: '#E8F5E9', border: '#81C784', text: '#2E7D32' },
+  selesai_manual: { label: 'Ditandai manual', icon: <Edit16Regular className="w-3 h-3 text-current flex-none" />, bg: '#E0F2F1', border: '#80CBC4', text: '#00695C', italic: true },
+  terjadwal: { label: 'Sudah dijadwalkan', icon: <Circle12Filled className="w-2.5 h-2.5 text-current flex-none" />, bg: '#FAFAFA', border: '#C8C6C4', text: '#5C5A58' },
+  sakit: { label: 'Sakit', icon: <CircleHalfFill16Regular className="w-2.5 h-2.5 text-current flex-none" />, bg: '#FFF3E0', border: '#FFB74D', text: '#8A5200' },
+  izin: { label: 'Izin', icon: <Mail16Regular className="w-2.5 h-2.5 text-current flex-none" />, bg: '#EBF3FC', border: '#90CAF9', text: '#0C548F' },
+  alpa: { label: 'Alpa', icon: <Dismiss16Regular className="w-2.5 h-2.5 text-current flex-none" />, bg: '#FDE7E9', border: '#EF9A9A', text: '#9B0C18' },
+  kosong: { label: 'Belum dijadwalkan', icon: <span className="size-1 rounded-full bg-current opacity-60 flex-none" />, bg: '#FFFFFF', border: '#C8C6C4', text: '#8A8886' },
 };
 
 const PRESENCE_CONFIG: Record<string, { label: string; icon: React.ReactNode; bg: string; border: string; text: string }> = {
-  hadir: { label: 'Hadir', icon: <Checkmark12Regular className="w-3 h-3 text-current" />, bg: '#E8F5E9', border: '#4CAF50', text: '#2E7D32' },
-  izin: { label: 'Izin', icon: <Mail12Regular className="w-2.5 h-2.5 text-current" />, bg: '#EBF3FC', border: '#0F6CBD', text: '#0C548F' },
-  sakit: { label: 'Sakit', icon: <CircleHalfFill12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FFF3E0', border: '#F0A82E', text: '#8A5200' },
-  alpa: { label: 'Alpa', icon: <Dismiss12Regular className="w-2.5 h-2.5 text-current" />, bg: '#FDE7E9', border: '#C50F1F', text: '#9B0C18' },
+  hadir: { label: 'Hadir', icon: <Checkmark16Regular className="w-3 h-3 text-current flex-none" />, bg: '#E8F5E9', border: '#81C784', text: '#2E7D32' },
+  izin: { label: 'Izin', icon: <Mail16Regular className="w-2.5 h-2.5 text-current flex-none" />, bg: '#EBF3FC', border: '#90CAF9', text: '#0C548F' },
+  sakit: { label: 'Sakit', icon: <CircleHalfFill16Regular className="w-2.5 h-2.5 text-current flex-none" />, bg: '#FFF3E0', border: '#FFB74D', text: '#8A5200' },
+  alpa: { label: 'Alpa', icon: <Dismiss16Regular className="w-2.5 h-2.5 text-current flex-none" />, bg: '#FDE7E9', border: '#EF9A9A', text: '#9B0C18' },
 };
 
 export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
@@ -155,10 +155,10 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
               backgroundColor: badge.bg,
               color: badge.text,
             }}
-            className="flex-none inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap"
+            className="flex-none inline-flex items-center gap-1.5 h-5 rounded-full border px-2 text-[11px] font-semibold leading-none whitespace-nowrap"
           >
-            <span className="flex items-center">{badge.icon}</span>
-            <span>{badge.label}</span>
+            <span className="flex items-center justify-center flex-none">{badge.icon}</span>
+            <span className="leading-none">{badge.label}</span>
           </div>
         </div>
 
@@ -176,7 +176,11 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                 : k.realisasiAda
                 ? 'Tanpa status'
                 : 'Belum direalisasi';
-              const presenceIcon = pres ? pres.icon : <span className="opacity-60">·</span>;
+              const presenceIcon = pres ? (
+                pres.icon
+              ) : (
+                <span className="size-1 rounded-full bg-current opacity-60 flex-none" />
+              );
               const presenceBg = pres ? pres.bg : '#F5F5F5';
               const presenceBorder = pres ? pres.border : '#C8C6C4';
               const presenceText = pres ? pres.text : '#5C5A58';
@@ -213,13 +217,13 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                         borderColor: presenceBorder,
                         color: presenceText,
                       }}
-                      className="inline-flex items-center gap-1 h-[17px] px-1.5 rounded-full border text-[10.5px] font-semibold whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 h-[18px] px-2 rounded-full border text-[10.5px] font-semibold leading-none whitespace-nowrap"
                     >
-                      <span className="flex items-center">{presenceIcon}</span>
-                      <span>{presenceLabel}</span>
+                      <span className="flex items-center justify-center flex-none">{presenceIcon}</span>
+                      <span className="relative -top-px leading-none">{presenceLabel}</span>
                     </span>
-                    <span className="inline-flex items-center h-[17px] px-1.5 rounded-full border border-[#E1DFDD] bg-white text-[#424242] text-[10.5px] whitespace-nowrap">
-                      {ketuntasanLabel}
+                    <span className="inline-flex items-center h-[18px] px-2 rounded-full border border-[#E1DFDD] bg-white text-[#424242] text-[10.5px] leading-none whitespace-nowrap">
+                      <span className="relative -top-px leading-none">{ketuntasanLabel}</span>
                     </span>
                   </div>
                 </button>
@@ -244,30 +248,28 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              <label className="flex items-start gap-2 text-[12.5px] text-[#242424] cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-[12.5px] text-[#242424] cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={(e) => setChecked(e.target.checked)}
-                  className="size-3.25 mt-0.5 accent-[#0F6CBD] cursor-pointer"
+                  className="w-3.5 h-3.5 m-0 accent-(--color-brand) cursor-pointer translate-y-px"
                 />
-                <span className="leading-normal">Tandai sudah dipelajari</span>
+                <span className="leading-none">Tandai sudah dipelajari</span>
               </label>
 
               {checked && (
                 <div className="flex flex-col gap-2 pt-1 animate-in fade-in duration-100">
-                  <div className="flex gap-2 items-end">
-                    <div className="w-[140px] flex flex-col gap-1">
-                      <label className="text-[11.5px] text-[#5C5A58]">Tanggal dipelajari</label>
-                      <DatePicker
-                        value={tanggal}
-                        onChange={setTanggal}
-                        placeholder="Pilih tanggal"
-                        density="compact"
-                        className="h-[26px] bg-white font-mono text-[11.5px]"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0 text-[11px] leading-[1.45] text-[#5C5A58] pb-1">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11.5px] text-[#5C5A58]">Tanggal dipelajari</label>
+                    <DatePicker
+                      value={tanggal}
+                      onChange={setTanggal}
+                      placeholder="Pilih tanggal"
+                      density="compact"
+                      className="h-[26px] w-[160px] bg-white font-mono text-[11.5px]"
+                    />
+                    <div className="text-[11px] text-[#5C5A58]">
                       Boleh dikosongkan kalau tidak ingat kapan.
                     </div>
                   </div>
