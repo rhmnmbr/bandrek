@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import {
   useKegiatanDaftar,
   useJenisKegiatanList,
@@ -29,8 +29,11 @@ const SIMULATED_TODAY = '2026-09-16';
 
 export const DaftarKegiatanScreen: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { showToast } = useToast();
+
+  const currentPath = `${location.pathname}${location.search}`;
 
   // Queries
   const { data: semuaKegiatan = [] } = useKegiatanDaftar({});
@@ -276,11 +279,15 @@ export const DaftarKegiatanScreen: React.FC = () => {
 
   // Action Handlers
   const handleOpenDetail = (kegiatan: Kegiatan) => {
-    navigate(`/kegiatan/${kegiatan.id}`, { state: { from: 'daftar' } });
+    navigate(`/kegiatan/${kegiatan.id}`, {
+      state: { from: 'daftar', fromTitle: 'Kegiatan', fromPath: currentPath },
+    });
   };
 
   const handleIsiRealisasi = (kegiatan: Kegiatan) => {
-    navigate(`/kegiatan/${kegiatan.id}/realisasi`, { state: { from: 'daftar' } });
+    navigate(`/kegiatan/${kegiatan.id}/realisasi`, {
+      state: { from: 'daftar', fromTitle: 'Kegiatan', fromPath: currentPath },
+    });
   };
 
   const handleJadwalUlang = (kegiatan: Kegiatan) => {
@@ -381,7 +388,11 @@ export const DaftarKegiatanScreen: React.FC = () => {
             });
           }}
           onHighlightConflict={() => {}}
-          onOpenDetail={(id) => navigate(`/kegiatan/${id}`, { state: { from: 'daftar' } })}
+          onOpenDetail={(id) =>
+            navigate(`/kegiatan/${id}`, {
+              state: { from: 'daftar', fromTitle: 'Kegiatan', fromPath: currentPath },
+            })
+          }
         />
       )}
 
@@ -405,7 +416,9 @@ export const DaftarKegiatanScreen: React.FC = () => {
             setModalUlangState({ open: false, kegiatan: null, dariBatal: false })
           }
           onNavigateBaru={(baruId) => {
-            navigate(`/kegiatan/${baruId}`, { state: { from: 'daftar' } });
+            navigate(`/kegiatan/${baruId}`, {
+              state: { from: 'daftar', fromTitle: 'Kegiatan', fromPath: currentPath },
+            });
           }}
         />
       )}

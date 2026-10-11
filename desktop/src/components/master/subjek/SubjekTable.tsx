@@ -23,8 +23,8 @@ export function SubjekTable({
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
-        <div className="flex flex-col min-h-full">
+      <div className="flex-1 min-h-0 overflow-auto">
+        <div className="flex flex-col min-h-full min-w-[822px] w-full">
           {/* Sticky Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             <div className="w-[210px] shrink-0">NAMA LENGKAP</div>

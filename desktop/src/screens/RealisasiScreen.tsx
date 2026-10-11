@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
-  ChevronLeft16Regular,
+  ArrowLeft16Regular,
   Warning16Regular,
   Warning12Regular,
   Checkmark16Regular,
@@ -48,6 +48,15 @@ const KEHADIRAN_CONFIG: Record<
   izin: { label: 'Izin', glyph: '✉', brd: '#0F6CBD', bg: '#EBF3FC', ink: '#0C548F' },
   sakit: { label: 'Sakit', glyph: '◐', brd: '#F0A82E', bg: '#FFF3E0', ink: '#8A5200' },
   alpa: { label: 'Alpa', glyph: '✕', brd: '#C50F1F', bg: '#FDE7E9', ink: '#9B0C18' },
+};
+
+const FROM_MAP: Record<string, { title: string; path: string }> = {
+  kalender: { title: 'Kalender', path: '/kalender' },
+  daftar: { title: 'Kegiatan', path: '/kegiatan' },
+  kegiatan: { title: 'Kegiatan', path: '/kegiatan' },
+  matriks: { title: 'Matriks belajar', path: '/matriks' },
+  siswa: { title: 'Siswa', path: '/master/siswa' },
+  subjek: { title: 'Subjek', path: '/master/subjek' },
 };
 
 export const RealisasiScreen: React.FC = () => {
@@ -273,8 +282,10 @@ export const RealisasiScreen: React.FC = () => {
   }, [semuaKegiatan, kegiatan]);
 
   // Breadcrumb Asal
-  const breadcrumbAsal = location.state?.fromTitle || 'Kalender';
-  const breadcrumbPath = location.state?.fromPath || '/kalender';
+  const sourceKey = location.state?.from as string | undefined;
+  const mappedSource = sourceKey && FROM_MAP[sourceKey] ? FROM_MAP[sourceKey] : null;
+  const breadcrumbAsal = location.state?.fromTitle || mappedSource?.title || 'Kalender';
+  const breadcrumbPath = location.state?.fromPath || mappedSource?.path || '/kalender';
 
   // Navigation Back Handlers
   const handleKembali = React.useCallback(() => {
@@ -282,14 +293,16 @@ export const RealisasiScreen: React.FC = () => {
       setConfirmDiscardOpen(true);
       return;
     }
-    if (breadcrumbPath) {
-      navigate(breadcrumbPath);
+    if (location.state?.fromPath) {
+      navigate(location.state.fromPath);
+    } else if (mappedSource?.path) {
+      navigate(mappedSource.path);
     } else if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate('/kalender');
     }
-  }, [isDirty, breadcrumbPath, navigate]);
+  }, [isDirty, location.state?.fromPath, mappedSource?.path, navigate]);
 
   // Esc listener
   React.useEffect(() => {
@@ -489,7 +502,10 @@ export const RealisasiScreen: React.FC = () => {
         type: 'success',
         action: {
           label: 'Lihat detail',
-          onClick: () => navigate(`/kegiatan/${kegiatan.id}`),
+          onClick: () =>
+            navigate(`/kegiatan/${kegiatan.id}`, {
+              state: { fromTitle: breadcrumbAsal, fromPath: breadcrumbPath },
+            }),
         },
       });
 
@@ -632,30 +648,19 @@ export const RealisasiScreen: React.FC = () => {
   return (
     <div className="h-full w-full flex-1 min-h-0 flex flex-col bg-white select-none">
       {/* 1. Header / Top Toolbar (H: 44px) */}
-      <div className="h-11 flex-none border-b border-(--color-border) bg-white flex items-center gap-2.25 px-3.5 select-none z-10">
-        {/* [<] Back Button */}
+      <div className="h-11 flex-none border-b border-(--color-border) bg-white flex items-center gap-2.5 px-3.5 select-none z-10">
+        {/* Back Button (Ghost Icon Button) */}
         <button
           type="button"
           onClick={handleKembali}
-          title="Kembali · Esc"
-          className="w-6.5 h-6.5 flex-none rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-alt) flex items-center justify-center cursor-pointer transition-colors text-xs"
+          title={`Kembali ke ${breadcrumbAsal} · Esc`}
+          className="w-7 h-7 flex-none rounded flex items-center justify-center text-(--color-text-secondary) hover:text-(--color-text) hover:bg-(--color-surface-sunken) active:bg-(--color-surface-alt) cursor-pointer transition-colors"
         >
-          <ChevronLeft16Regular className="text-[12px]" />
+          <ArrowLeft16Regular className="text-[16px]" />
         </button>
-
-        {/* Breadcrumb Asal Link */}
-        <button
-          type="button"
-          onClick={handleKembali}
-          className="bg-transparent border-none p-0 text-[12.5px] text-(--color-brand) hover:text-(--color-brand-pressed) cursor-pointer font-normal whitespace-nowrap"
-        >
-          {breadcrumbAsal}
-        </button>
-
-        <span className="text-[#8A8886]">›</span>
 
         {/* Screen Title */}
-        <div className="text-[18px] font-semibold text-(--color-text) whitespace-nowrap">
+        <div className="text-[17px] font-semibold text-(--color-text) whitespace-nowrap">
           {mode === 'ubah' ? 'Ubah realisasi' : 'Isi realisasi'}
         </div>
 

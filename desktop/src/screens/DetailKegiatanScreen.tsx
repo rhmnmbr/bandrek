@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft16Regular, Warning16Regular, Clock16Regular } from '@fluentui/react-icons';
+import { ArrowLeft16Regular, Warning16Regular, Clock16Regular } from '@fluentui/react-icons';
 import { KegiatanBadge, KehadiranBadge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast';
 import {
@@ -26,6 +26,15 @@ import {
 import type { StatusKegiatan, Kegiatan } from '@/data/types';
 import { cn } from '@/lib/utils';
 
+const FROM_MAP: Record<string, { title: string; path: string }> = {
+  kalender: { title: 'Kalender', path: '/kalender' },
+  daftar: { title: 'Kegiatan', path: '/kegiatan' },
+  kegiatan: { title: 'Kegiatan', path: '/kegiatan' },
+  matriks: { title: 'Matriks belajar', path: '/matriks' },
+  siswa: { title: 'Siswa', path: '/master/siswa' },
+  subjek: { title: 'Subjek', path: '/master/subjek' },
+};
+
 export const DetailKegiatanScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -40,6 +49,12 @@ export const DetailKegiatanScreen: React.FC = () => {
     dariBatal: false,
   });
   const menuRef = React.useRef<HTMLDivElement>(null);
+
+  // Source & Breadcrumb
+  const sourceKey = location.state?.from as string | undefined;
+  const mappedSource = sourceKey && FROM_MAP[sourceKey] ? FROM_MAP[sourceKey] : null;
+  const breadcrumbAsal = location.state?.fromTitle || mappedSource?.title || 'Kalender';
+  const breadcrumbPath = location.state?.fromPath || mappedSource?.path || '/kalender';
 
   // Queries
   const { data: kegiatan, isLoading, isError } = useKegiatanDetail(id || '');
@@ -79,12 +94,14 @@ export const DetailKegiatanScreen: React.FC = () => {
   const handleKembali = React.useCallback(() => {
     if (location.state?.fromPath) {
       navigate(location.state.fromPath);
+    } else if (mappedSource?.path) {
+      navigate(mappedSource.path);
     } else if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate('/kalender');
     }
-  }, [location.state, navigate]);
+  }, [location.state?.fromPath, mappedSource?.path, navigate]);
 
   // Keyboard shortcut Esc
   React.useEffect(() => {
@@ -358,37 +375,24 @@ export const DetailKegiatanScreen: React.FC = () => {
           ? 'Realisasi kehadiran dan materi dapat dicatat setelah kegiatan dimulai.'
           : 'Kehadiran dan ketuntasan belum tercatat, jadi materi ini belum masuk matriks belajar.';
 
-  const breadcrumbAsal = location.state?.fromTitle || 'Kalender';
-
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white select-none">
       {/* 1. Header / Top Toolbar (H: 44px) */}
-      <div className="h-11 flex-none border-b border-(--color-border) bg-white flex items-center gap-2.25 px-3.5 select-none z-10">
-        {/* Breadcrumb: Back Button [<] */}
+      <div className="h-11 flex-none border-b border-(--color-border) bg-white flex items-center gap-2.5 px-3.5 select-none z-10">
+        {/* Back Button (Ghost Icon Button) */}
         <button
           type="button"
           onClick={handleKembali}
-          title="Kembali · Esc"
-          className="w-6.5 h-6.5 flex-none rounded border border-(--color-border-strong) bg-white text-(--color-text) hover:bg-(--color-surface-sunken) flex items-center justify-center cursor-pointer transition-colors text-xs"
+          title={`Kembali ke ${breadcrumbAsal} · Esc`}
+          className="w-7 h-7 flex-none rounded flex items-center justify-center text-(--color-text-secondary) hover:text-(--color-text) hover:bg-(--color-surface-sunken) active:bg-(--color-surface-alt) cursor-pointer transition-colors"
         >
-          <ChevronLeft16Regular className="text-[12px]" />
+          <ArrowLeft16Regular className="text-[16px]" />
         </button>
-
-        {/* Breadcrumb Asal Link */}
-        <button
-          type="button"
-          onClick={handleKembali}
-          className="bg-transparent border-none p-0 text-[12.5px] text-(--color-brand) hover:text-(--color-brand-pressed) cursor-pointer font-normal"
-        >
-          {breadcrumbAsal}
-        </button>
-
-        <span className="text-[#8A8886]">›</span>
 
         {/* Activity Name */}
         <div
           className={cn(
-            'text-[18px] font-semibold whitespace-nowrap overflow-hidden text-ellipsis max-w-[440px]',
+            'text-[17px] font-semibold text-(--color-text) whitespace-nowrap overflow-hidden text-ellipsis max-w-[480px]',
             isDibatalkan && 'line-through text-(--color-text-muted)'
           )}
           title={kegiatan.nama}
@@ -755,7 +759,11 @@ export const DetailKegiatanScreen: React.FC = () => {
                 <button
                   key={t.id}
                   type="button"
-                  onClick={() => navigate(`/kegiatan/${t.id}`)}
+                  onClick={() =>
+                    navigate(`/kegiatan/${t.id}`, {
+                      state: { fromTitle: breadcrumbAsal, fromPath: breadcrumbPath },
+                    })
+                  }
                   className="text-left border border-(--color-border) rounded-md bg-white p-2 hover:bg-(--color-surface-alt) hover:border-(--color-border-strong) cursor-pointer flex flex-col gap-0.75 transition-all"
                 >
                   <span className="text-[12.5px] font-semibold leading-snug text-(--color-text) line-clamp-1">

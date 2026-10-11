@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import type { Subjek, PeranSubjek } from '@/data/types/master';
 import {
   useSubjekList,
@@ -24,6 +24,7 @@ export function SubjekScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
 
   // Route / Query logic for Profil
@@ -319,10 +320,22 @@ export function SubjekScreen() {
             navigate(`/kalender?subjek=${profilId}`);
           }}
           onBukaKegiatan={(kId) => {
-            navigate(`/kegiatan/${kId}`);
+            navigate(`/kegiatan/${kId}`, {
+              state: {
+                from: 'subjek',
+                fromTitle: 'Subjek',
+                fromPath: `${location.pathname}${location.search}`,
+              },
+            });
           }}
           onBukaRealisasi={(kId) => {
-            navigate(`/kegiatan/${kId}/realisasi`);
+            navigate(`/kegiatan/${kId}/realisasi`, {
+              state: {
+                from: 'subjek',
+                fromTitle: 'Subjek',
+                fromPath: `${location.pathname}${location.search}`,
+              },
+            });
           }}
           onTambahKetersediaan={(item) => {
             tambahKetersediaanMutation.mutate({ id: profilId, item });

@@ -94,14 +94,16 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
               )}
             >
               {showWarn && (
-                <Warning12Regular className="w-2.75 h-2.75 flex-none text-[#C47D00]" />
+                <Warning12Regular className="w-2.75 h-2.75 flex-none text-[#C47D00] relative top-[0.5px]" />
               )}
-              <span className="flex items-center leading-none">{chip.label}</span>
-              {count > 0 && (
-                <span className="font-mono text-[10.5px] opacity-85 flex items-center leading-none">
-                  {count}
-                </span>
-              )}
+              <span className="flex items-baseline gap-1 leading-none">
+                <span>{chip.label}</span>
+                {count > 0 && (
+                  <span className="font-mono text-[10.5px] opacity-85">
+                    {count}
+                  </span>
+                )}
+              </span>
             </button>
 
             {isActive && (

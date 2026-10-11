@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/components/ui/toast';
 import {
   useMapelList,
@@ -31,6 +31,7 @@ const JENJANG_ORDER: JenjangPendidikan[] = ['SD', 'SMP', 'SMA'];
 
 export const MatriksScreen: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
 
   // Master Data
@@ -246,9 +247,15 @@ export const MatriksScreen: React.FC = () => {
   // Navigate to kegiatan
   const handleNavigateToKegiatan = React.useCallback(
     (kegiatanId: string) => {
-      navigate(`/kegiatan/${kegiatanId}`, { state: { from: 'matriks' } });
+      navigate(`/kegiatan/${kegiatanId}`, {
+        state: {
+          from: 'matriks',
+          fromTitle: 'Matriks belajar',
+          fromPath: `${location.pathname}${location.search}`,
+        },
+      });
     },
-    [navigate]
+    [navigate, location.pathname, location.search]
   );
 
   // Single Cell Manual Checklist Handlers

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import {
   Search16Regular,
@@ -29,10 +29,39 @@ type SearchItem =
 
 export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [query, setQuery] = React.useState('');
   const [results, setResults] = React.useState<SearchItem[]>([]);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const currentTitle =
+    location.pathname.startsWith('/kegiatan')
+      ? 'Kegiatan'
+      : location.pathname.startsWith('/matriks')
+        ? 'Matriks belajar'
+        : location.pathname.startsWith('/master/subjek')
+          ? 'Subjek'
+          : location.pathname.startsWith('/master/siswa')
+            ? 'Siswa'
+            : 'Kalender';
+
+  const handleOpenItem = React.useCallback(
+    (item: SearchItem) => {
+      if (item.type === 'kegiatan') {
+        navigate(item.url, {
+          state: {
+            fromTitle: currentTitle,
+            fromPath: `${location.pathname}${location.search}`,
+          },
+        });
+      } else {
+        navigate(item.url);
+      }
+      onClose();
+    },
+    [navigate, location.pathname, location.search, currentTitle, onClose]
+  );
 
   // Focus input on open
   React.useEffect(() => {
@@ -137,8 +166,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (results[selectedIndex]) {
-        navigate(results[selectedIndex].url);
-        onClose();
+        handleOpenItem(results[selectedIndex]);
       }
     } else if (e.key === 'Escape') {
       e.preventDefault();
@@ -193,10 +221,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
                 return (
                   <div
                     key={`${item.type}-${idx}`}
-                    onClick={() => {
-                      navigate(item.url);
-                      onClose();
-                    }}
+                    onClick={() => handleOpenItem(item)}
                     onMouseEnter={() => setSelectedIndex(idx)}
                     className={cn(
                       'flex items-center gap-2.5 rounded-lg px-3 py-2 cursor-pointer transition-colors',

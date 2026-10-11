@@ -7,7 +7,13 @@ import {
   Checkmark12Regular,
   Dismiss12Regular,
   ArrowClockwise12Regular,
+  MoreVertical16Regular,
+  Edit16Regular,
+  Eye16Regular,
+  Dismiss16Regular,
+  ArrowClockwise16Regular,
 } from '@fluentui/react-icons';
+import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover';
 
 export interface DaftarTableProps {
   kegiatanList: Kegiatan[];
@@ -25,6 +31,11 @@ export interface DaftarTableProps {
 
 const MAX_DISPLAY_ROWS = 300;
 
+interface MenuState {
+  kegiatan: Kegiatan;
+  anchorEl: HTMLElement;
+}
+
 export const DaftarTable: React.FC<DaftarTableProps> = ({
   kegiatanList,
   simulatedToday = '2026-09-16',
@@ -38,6 +49,7 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
   onJadwalUlang,
   onBatalkan,
 }) => {
+  const [menuState, setMenuState] = React.useState<MenuState | null>(null);
   const total = kegiatanList.length;
   const isPotong = total > MAX_DISPLAY_ROWS;
   const displayList = isPotong ? kegiatanList.slice(0, MAX_DISPLAY_ROWS) : kegiatanList;
@@ -57,11 +69,11 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
       {/* Scrollable Table Viewport */}
       <div
         data-dft-scroll="tabel"
-        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden select-none"
+        className="flex-1 min-h-0 overflow-auto select-none"
       >
-        <div className="flex flex-col min-h-full">
+        <div className="flex flex-col min-h-full min-w-[1060px] w-full">
           {/* 1. Sticky Table Header */}
-          <div className="flex items-center h-6.5 flex-none sticky top-0 z-10 bg-[#FAFAFA] border-b border-(--color-border) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
+          <div className="flex items-center h-6.5 flex-none sticky top-0 z-10 w-full min-w-full bg-[#FAFAFA] border-b border-(--color-border) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             {/* TANGGAL */}
             <button
               type="button"
@@ -101,8 +113,8 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
             {/* STATUS */}
             <div className="w-32 flex-none pl-2">STATUS</div>
 
-            {/* AKSI */}
-            <div className="w-37.5 flex-none text-right">AKSI</div>
+            {/* AKSI SPHERICAL / EMPTY HEADER */}
+            <div className="w-10 flex-none" />
           </div>
 
           {/* 2. Table Rows */}
@@ -134,7 +146,7 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
                 onClick={() => onOpenDetail(ev)}
                 title={`Buka detail ${ev.nama}`}
                 className={cn(
-                  'flex items-center h-8 flex-none border-b border-[#EDEBE9] px-3.5 text-[12.5px] cursor-pointer transition-colors',
+                  'flex items-center h-8 flex-none border-b border-[#EDEBE9] px-3.5 text-[12.5px] cursor-pointer transition-colors w-full min-w-full',
                   perlu
                     ? 'bg-[#FFF8EE] shadow-[inset_3px_0_0_#F0A82E] hover:bg-[#FFF3E0]'
                     : 'bg-white hover:bg-[#FAFAFA]'
@@ -215,95 +227,31 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
                     {isTerealisasi && <Checkmark12Regular className="w-2.75 h-2.75 flex-none" />}
                     {isUlang && <ArrowClockwise12Regular className="w-2.5 h-2.5 flex-none" />}
                     {isBatal && <Dismiss12Regular className="w-2.25 h-2.25 flex-none" />}
-                    <span className="leading-none">{ev.labelStatus || 'Terjadwal'}</span>
+                    <span className="leading-none -translate-y-px">{ev.labelStatus || 'Terjadwal'}</span>
                   </span>
                 </div>
 
-                {/* AKSI BUTTONS */}
-                <div className="w-37.5 flex-none flex items-center justify-end gap-1.25">
-                  {/* Primary Action Button */}
-                  {ev.aksiDiizinkan?.includes('isi_realisasi') && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onIsiRealisasi(ev);
-                      }}
-                      title="Catat kehadiran dan hasil sesi ini"
-                      className="flex-none h-6 px-2.25 border-none rounded bg-(--color-brand) text-white text-[11.5px] font-semibold cursor-pointer whitespace-nowrap hover:bg-(--color-brand-pressed) transition-colors"
-                    >
-                      Isi realisasi
-                    </button>
-                  )}
-                  {isTerealisasi && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onIsiRealisasi(ev);
-                      }}
-                      title="Perbaiki kehadiran atau catatan realisasi"
-                      className="flex-none h-6 px-2.25 border-none rounded bg-(--color-brand) text-white text-[11.5px] font-semibold cursor-pointer whitespace-nowrap hover:bg-(--color-brand-pressed) transition-colors"
-                    >
-                      Ubah realisasi
-                    </button>
-                  )}
-                  {isTerjadwal && !ev.aksiDiizinkan?.includes('isi_realisasi') && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenDetail(ev);
-                      }}
-                      title="Buka detail kegiatan"
-                      className="flex-none h-6 px-2 border-none bg-transparent text-(--color-brand) text-[11.5px] cursor-pointer rounded whitespace-nowrap hover:bg-(--color-brand-subtle) transition-colors"
-                    >
-                      Lihat detail
-                    </button>
-                  )}
-
-                  {/* Secondary Reschedule & Cancel Buttons (only for Terjadwal & Belum) */}
-                  {(isTerjadwal || isBelum) && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onJadwalUlang(ev);
-                        }}
-                        title="Jadwalkan ulang kegiatan ini"
-                        className="w-6 h-6 flex-none border border-(--color-border-strong) rounded bg-white text-[#424242] text-[11px] cursor-pointer hover:bg-(--color-surface-alt) flex items-center justify-center transition-colors"
-                      >
-                        ↻
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onBatalkan(ev);
-                        }}
-                        title="Batalkan kegiatan ini"
-                        className="w-6 h-6 flex-none border border-[#C50F1F] rounded bg-white text-[#9B0C18] text-[11px] cursor-pointer hover:bg-[#FDE7E9] flex items-center justify-center transition-colors"
-                      >
-                        <Dismiss12Regular className="w-2.75 h-2.75" />
-                      </button>
-                    </>
-                  )}
-
-                  {/* Read-Only Status: Hanya Detail */}
-                  {(isBatal || isUlang) && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenDetail(ev);
-                      }}
-                      title={`Kegiatan ${ev.labelStatus || ''} hanya bisa dibaca`}
-                      className="flex-none h-6 px-2 border-none bg-transparent text-(--color-brand) text-[11.5px] cursor-pointer rounded whitespace-nowrap hover:bg-(--color-brand-subtle) transition-colors"
-                    >
-                      Lihat detail
-                    </button>
-                  )}
+                {/* AKSI: MENU TITIK TIGA */}
+                <div className="w-10 flex-none flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const el = e.currentTarget;
+                      setMenuState((prev) =>
+                        prev?.kegiatan.id === ev.id ? null : { kegiatan: ev, anchorEl: el }
+                      );
+                    }}
+                    title={`Menu aksi ${ev.nama}`}
+                    className={cn(
+                      'w-6.5 h-6.5 rounded flex items-center justify-center transition-colors cursor-pointer',
+                      menuState?.kegiatan.id === ev.id
+                        ? 'bg-(--color-surface-sunken) text-(--color-text)'
+                        : 'text-(--color-text-muted) hover:text-(--color-text) hover:bg-(--color-surface-sunken)'
+                    )}
+                  >
+                    <MoreVertical16Regular className="w-4 h-4 flex-none" />
+                  </button>
                 </div>
               </div>
             );
@@ -312,6 +260,115 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
           <div className="flex-1 min-h-0" />
         </div>
       </div>
+
+      {/* Single Anchored Action Popover */}
+      {menuState && (
+        <Popover
+          key={menuState.kegiatan.id}
+          open={Boolean(menuState)}
+          onOpenChange={(open) => {
+            if (!open) setMenuState(null);
+          }}
+        >
+          <PopoverAnchor virtualRef={{ current: menuState.anchorEl }} />
+          <PopoverContent
+            align="end"
+            side="bottom"
+            sideOffset={4}
+            className="w-48 p-1 flex flex-col gap-0.5 bg-white border border-(--color-border) rounded-md shadow-(--shadow-overlay) text-[12px] select-none z-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 1. Isi Realisasi (jika belum atau jadwal sudah tiba) */}
+            {(menuState.kegiatan.status === 'belum_direalisasi' ||
+              (menuState.kegiatan.status === 'terjadwal' &&
+                menuState.kegiatan.aksiDiizinkan?.includes('isi_realisasi'))) && (
+              <button
+                type="button"
+                onClick={() => {
+                  const keg = menuState.kegiatan;
+                  setMenuState(null);
+                  onIsiRealisasi(keg);
+                }}
+                className="w-full h-7 px-2.5 rounded text-left flex items-center gap-2 hover:bg-(--color-surface-alt) text-(--color-brand) font-medium cursor-pointer transition-colors"
+              >
+                <Edit16Regular className="w-3.5 h-3.5 flex-none" />
+                <span>Isi realisasi</span>
+              </button>
+            )}
+
+            {/* 2. Ubah Realisasi (jika sudah terealisasi) */}
+            {menuState.kegiatan.status === 'terealisasi' && (
+              <button
+                type="button"
+                onClick={() => {
+                  const keg = menuState.kegiatan;
+                  setMenuState(null);
+                  onIsiRealisasi(keg);
+                }}
+                className="w-full h-7 px-2.5 rounded text-left flex items-center gap-2 hover:bg-(--color-surface-alt) text-(--color-brand) font-medium cursor-pointer transition-colors"
+              >
+                <Edit16Regular className="w-3.5 h-3.5 flex-none" />
+                <span>Ubah realisasi</span>
+              </button>
+            )}
+
+            {/* 3. Jadwalkan Ulang (Terjadwal & Belum) */}
+            {(menuState.kegiatan.status === 'terjadwal' ||
+              menuState.kegiatan.status === 'belum_direalisasi') && (
+              <button
+                type="button"
+                onClick={() => {
+                  const keg = menuState.kegiatan;
+                  setMenuState(null);
+                  onJadwalUlang(keg);
+                }}
+                className="w-full h-7 px-2.5 rounded text-left flex items-center gap-2 hover:bg-(--color-surface-alt) text-(--color-text) cursor-pointer transition-colors"
+              >
+                <ArrowClockwise16Regular className="w-3.5 h-3.5 flex-none text-(--color-text-secondary)" />
+                <span>Jadwalkan ulang</span>
+              </button>
+            )}
+
+            {/* 4. Batalkan (Terjadwal & Belum) */}
+            {(menuState.kegiatan.status === 'terjadwal' ||
+              menuState.kegiatan.status === 'belum_direalisasi') && (
+              <button
+                type="button"
+                onClick={() => {
+                  const keg = menuState.kegiatan;
+                  setMenuState(null);
+                  onBatalkan(keg);
+                }}
+                className="w-full h-7 px-2.5 rounded text-left flex items-center gap-2 hover:bg-[#FDE7E9] text-[#9B0C18] cursor-pointer transition-colors"
+              >
+                <Dismiss16Regular className="w-3.5 h-3.5 flex-none text-[#9B0C18]" />
+                <span>Batalkan kegiatan</span>
+              </button>
+            )}
+
+            {/* Divider jika ada aksi lain sebelum Lihat Detail */}
+            {(menuState.kegiatan.status === 'terjadwal' ||
+              menuState.kegiatan.status === 'belum_direalisasi' ||
+              menuState.kegiatan.status === 'terealisasi') && (
+              <div className="h-px bg-(--color-border) my-0.5" />
+            )}
+
+            {/* 5. Lihat Detail */}
+            <button
+              type="button"
+              onClick={() => {
+                const keg = menuState.kegiatan;
+                setMenuState(null);
+                onOpenDetail(keg);
+              }}
+              className="w-full h-7 px-2.5 rounded text-left flex items-center gap-2 hover:bg-(--color-surface-alt) text-(--color-text) cursor-pointer transition-colors"
+            >
+              <Eye16Regular className="w-3.5 h-3.5 flex-none text-(--color-text-secondary)" />
+              <span>Lihat detail</span>
+            </button>
+          </PopoverContent>
+        </Popover>
+      )}
 
       {/* 3. Sticky Bottom Summary Bar */}
       <div className="flex-none h-7.5 border-t border-(--color-border) bg-[#FAFAFA] flex items-center gap-2.5 px-3.5 text-[11.5px] text-(--color-text-muted) select-none">
