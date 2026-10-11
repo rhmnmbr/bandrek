@@ -79,7 +79,7 @@ export function KelasToolbar({
           value={cari}
           onChange={(e) => onCariChange(e.target.value)}
           placeholder="Cari nama kelas"
-          className="flex-1 min-w-[150px] max-w-[280px] h-6.5 rounded border border-(--color-border-strong) bg-(--color-surface) px-2 text-xs text-(--color-text-primary) placeholder:text-(--color-text-placeholder) focus:outline-none focus:border-(--color-brand)"
+          className="flex-1 min-w-0 h-6.5 rounded border border-(--color-border-strong) bg-(--color-surface) px-2 text-xs text-(--color-text-primary) placeholder:text-(--color-text-placeholder) focus:outline-none focus:border-(--color-brand)"
         />
 
         {/* Jenjang Dropdown */}
@@ -87,7 +87,7 @@ export function KelasToolbar({
           <button
             type="button"
             onClick={() => setJenjangOpen((prev) => !prev)}
-            className={`flex h-6.5 items-center justify-between gap-2.5 rounded px-2 text-xs whitespace-nowrap cursor-pointer transition-colors border ${
+            className={`flex h-6.5 items-center justify-between gap-1.5 rounded px-2 text-xs whitespace-nowrap cursor-pointer transition-colors border ${
               jenjang !== 'semua'
                 ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand) font-semibold'
                 : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-border-muted)'
@@ -102,7 +102,7 @@ export function KelasToolbar({
             </svg>
           </button>
           {jenjangOpen && (
-            <div className="absolute left-0 top-[29px] z-12 min-w-full w-max rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5 max-h-65 overflow-y-auto">
+            <div className="absolute right-0 top-[29px] z-12 min-w-full w-max rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5 max-h-65 overflow-y-auto">
               <button
                 type="button"
                 onClick={() => {

@@ -37,10 +37,12 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const currentPath = `${location.pathname}${location.search}`;
 
   // Queries
-  const { data: semuaKegiatan = [], isLoading } = useKegiatanDaftar({});
-  const { data: jenisList = [] } = useJenisKegiatanList();
-  const { data: subjekList = [] } = useSubjekList();
-  const { data: kelasList = [] } = useKelasList();
+  const { data: semuaKegiatan = [], isLoading: loadingKegiatan } = useKegiatanDaftar({});
+  const { data: jenisList = [], isLoading: loadingJenis } = useJenisKegiatanList();
+  const { data: subjekList = [], isLoading: loadingSubjek } = useSubjekList();
+  const { data: kelasList = [], isLoading: loadingKelas } = useKelasList();
+
+  const isPageLoading = loadingKegiatan || loadingJenis || loadingSubjek || loadingKelas;
 
   // Calculate default date range: past 14 days to latest event in dataset
   const defaultRentang = React.useMemo(() => {
@@ -56,9 +58,13 @@ export const DaftarKegiatanScreen: React.FC = () => {
     };
   }, [semuaKegiatan]);
 
-  // Local filter states - initialized immediately to avoid layout shift on mount
-  const [dari, setDari] = React.useState<string>(() => toIso(addDays(toDate(SIMULATED_TODAY), -14)));
-  const [sampai, setSampai] = React.useState<string>(() => SIMULATED_TODAY);
+  // Local filter states - user explicit selections (null means default derived from data)
+  const [userDari, setUserDari] = React.useState<string | null>(null);
+  const [userSampai, setUserSampai] = React.useState<string | null>(null);
+
+  const dari = userDari ?? defaultRentang.dari;
+  const sampai = userSampai ?? defaultRentang.sampai;
+
   const [jenis, setJenis] = React.useState<string>('');
   const [status, setStatus] = React.useState<StatusKegiatan | ''>('');
   const [subjek, setSubjek] = React.useState<string>('');
@@ -66,13 +72,6 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const [cari, setCari] = React.useState<string>('');
   const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
-
-  // Synchronize latest activity date once data arrives if default dataset extends beyond simulated today
-  React.useEffect(() => {
-    if (defaultRentang.sampai && sampai === SIMULATED_TODAY && defaultRentang.sampai !== SIMULATED_TODAY) {
-      setSampai(defaultRentang.sampai);
-    }
-  }, [defaultRentang.sampai, sampai]);
 
   // Handle URL query parameter `?filter=perlu_realisasi` or `?filter=perlu`
   React.useEffect(() => {
@@ -249,8 +248,8 @@ export const DaftarKegiatanScreen: React.FC = () => {
 
   // Reset all filters
   const handleResetFilters = () => {
-    setDari(defaultRentang.dari);
-    setSampai(defaultRentang.sampai);
+    setUserDari(null);
+    setUserSampai(null);
     setJenis('');
     setStatus('');
     setSubjek('');
@@ -270,8 +269,8 @@ export const DaftarKegiatanScreen: React.FC = () => {
     const dToday = toDate(SIMULATED_TODAY);
     const dPast = addDays(dToday, -365);
     const dFuture = addDays(dToday, 365);
-    setDari(toIso(dPast));
-    setSampai(toIso(dFuture));
+    setUserDari(toIso(dPast));
+    setUserSampai(toIso(dFuture));
     setCepat('');
   };
 
@@ -306,72 +305,77 @@ export const DaftarKegiatanScreen: React.FC = () => {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white">
-      {/* 1. Main Filter Bar */}
-      <DaftarToolbar
-        dari={dari}
-        sampai={sampai}
-        onChangeDari={setDari}
-        onChangeSampai={setSampai}
-        rentangMati={Boolean(cepat)}
-        jenis={jenis}
-        onChangeJenis={setJenis}
-        jenisList={jenisList}
-        status={status}
-        onChangeStatus={setStatus}
-        subjek={subjek}
-        onChangeSubjek={setSubjek}
-        subjekList={subjekList}
-        kelas={kelas}
-        onChangeKelas={setKelas}
-        kelasList={kelasList}
-        cari={cari}
-        onChangeCari={setCari}
-        simulatedToday={SIMULATED_TODAY}
-        onNewKegiatan={() => setFormOpen(true)}
-      />
-
-      {/* 2. Quick Filter Chips Bar */}
-      <DaftarQuickFilters
-        activeCepat={cepat}
-        onToggleCepat={handleToggleCepat}
-        counts={quickFilterCounts}
-        hasActiveFilters={Boolean(hasActiveFilters)}
-        onResetFilters={handleResetFilters}
-        totalDisplayed={filteredKegiatan.length}
-        totalAll={semuaKegiatan.length}
-        sortDesc={sortDesc}
-      />
-
-      {/* 3. Table or Empty State */}
-      {isLoading ? (
+      {isPageLoading ? (
         <DaftarKegiatanSkeleton />
-      ) : filteredKegiatan.length > 0 ? (
-        <DaftarTable
-          kegiatanList={filteredKegiatan}
-          simulatedToday={SIMULATED_TODAY}
-          dari={dari}
-          sampai={sampai}
-          activeCepat={cepat}
-          sortDesc={sortDesc}
-          onToggleSort={() => setSortDesc((prev) => !prev)}
-          onOpenDetail={handleOpenDetail}
-          onIsiRealisasi={handleIsiRealisasi}
-          onJadwalUlang={handleJadwalUlang}
-          onBatalkan={handleBatalkan}
-        />
       ) : (
-        <DaftarEmptyState
-          hasFilters={activeDropdownCount > 0 || Boolean(cepat)}
-          activeFilterCount={activeDropdownCount + (cepat ? 1 : 0)}
-          hasCepat={Boolean(cepat)}
-          totalAll={semuaKegiatan.length}
-          dari={dari}
-          sampai={sampai}
-          onClearCepat={() => setCepat('')}
-          onResetAllFilters={handleResetFilters}
-          onNewKegiatan={() => setFormOpen(true)}
-          onWidenRange={handleWidenRange}
-        />
+        <>
+          {/* 1. Main Filter Bar */}
+          <DaftarToolbar
+            dari={dari}
+            sampai={sampai}
+            onChangeDari={(val) => setUserDari(val)}
+            onChangeSampai={(val) => setUserSampai(val)}
+            rentangMati={Boolean(cepat)}
+            jenis={jenis}
+            onChangeJenis={setJenis}
+            jenisList={jenisList}
+            status={status}
+            onChangeStatus={setStatus}
+            subjek={subjek}
+            onChangeSubjek={setSubjek}
+            subjekList={subjekList}
+            kelas={kelas}
+            onChangeKelas={setKelas}
+            kelasList={kelasList}
+            cari={cari}
+            onChangeCari={setCari}
+            simulatedToday={SIMULATED_TODAY}
+            onNewKegiatan={() => setFormOpen(true)}
+          />
+
+          {/* 2. Quick Filter Chips Bar */}
+          <DaftarQuickFilters
+            activeCepat={cepat}
+            onToggleCepat={handleToggleCepat}
+            counts={quickFilterCounts}
+            hasActiveFilters={Boolean(hasActiveFilters)}
+            onResetFilters={handleResetFilters}
+            totalDisplayed={filteredKegiatan.length}
+            totalAll={semuaKegiatan.length}
+            sortDesc={sortDesc}
+            isLoading={false}
+          />
+
+          {/* 3. Table or Empty State */}
+          {filteredKegiatan.length > 0 ? (
+            <DaftarTable
+              kegiatanList={filteredKegiatan}
+              simulatedToday={SIMULATED_TODAY}
+              dari={dari}
+              sampai={sampai}
+              activeCepat={cepat}
+              sortDesc={sortDesc}
+              onToggleSort={() => setSortDesc((prev) => !prev)}
+              onOpenDetail={handleOpenDetail}
+              onIsiRealisasi={handleIsiRealisasi}
+              onJadwalUlang={handleJadwalUlang}
+              onBatalkan={handleBatalkan}
+            />
+          ) : (
+            <DaftarEmptyState
+              hasFilters={activeDropdownCount > 0 || Boolean(cepat)}
+              activeFilterCount={activeDropdownCount + (cepat ? 1 : 0)}
+              hasCepat={Boolean(cepat)}
+              totalAll={semuaKegiatan.length}
+              dari={dari}
+              sampai={sampai}
+              onClearCepat={() => setCepat('')}
+              onResetAllFilters={handleResetFilters}
+              onNewKegiatan={() => setFormOpen(true)}
+              onWidenRange={handleWidenRange}
+            />
+          )}
+        </>
       )}
 
       {/* 4. Side Panel: Form Kegiatan (A4) */}

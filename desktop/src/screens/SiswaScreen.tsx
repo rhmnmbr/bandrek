@@ -18,7 +18,7 @@ import { SiswaEmptyState } from '@/components/master/siswa/SiswaEmptyState';
 import { SiswaFormPanel, type SiswaFormData } from '@/components/master/siswa/SiswaFormPanel';
 import { SiswaConfirmModal } from '@/components/master/siswa/SiswaConfirmModal';
 import { ProfilSiswaView } from '@/components/master/siswa/ProfilSiswaView';
-import { MasterTableSkeleton, ProfilSiswaSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, ProfilSiswaSkeleton, SiswaSkeleton } from '@/components/skeleton';
 import { BANDREK_EVENTS, dispatchBandrekEvent } from '@/lib/keyboardShortcuts';
 
 export function SiswaScreen() {
@@ -63,8 +63,8 @@ export function SiswaScreen() {
     desc,
   });
 
-  const { data: allSiswa = [] } = useSiswaList({ status: 'semua' });
-  const { data: kelasList = [] } = useKelasList();
+  const { data: allSiswa = [], isLoading: isLoadingAllSiswa } = useSiswaList({ status: 'semua' });
+  const { data: kelasList = [], isLoading: isLoadingKelas } = useKelasList();
   const { data: profilData, isLoading: isLoadingProfil } = useSiswaProfil(profilId || '', Boolean(profilId));
 
   // Mutations
@@ -360,6 +360,11 @@ export function SiswaScreen() {
         }}
       />
     );
+  }
+
+  // Full page Siswa Skeleton during initial page loading
+  if (isLoadingSiswa || isLoadingAllSiswa || isLoadingKelas) {
+    return <SiswaSkeleton />;
   }
 
   // Master Siswa Screen: Table View + Side Panel

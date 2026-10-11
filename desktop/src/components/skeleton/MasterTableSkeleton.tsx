@@ -14,6 +14,8 @@ export interface MasterTableSkeletonProps {
   rowCount?: number;
   minWidth?: string;
   className?: string;
+  hasFooter?: boolean;
+  footerWidth?: string;
 }
 
 export function MasterTableSkeleton({
@@ -21,6 +23,8 @@ export function MasterTableSkeleton({
   rowCount = 9,
   minWidth,
   className,
+  hasFooter = true,
+  footerWidth,
 }: MasterTableSkeletonProps) {
   return (
     <div className={cn('flex flex-1 min-h-0 flex-col overflow-hidden', className)}>
@@ -83,6 +87,13 @@ export function MasterTableSkeleton({
           </div>
         </div>
       </div>
+
+      {/* Sticky Footer */}
+      {hasFooter && (
+        <div className="flex h-7.5 shrink-0 items-center border-t border-(--color-border) bg-(--color-surface-alt) px-3.5">
+          <Skeleton className={cn('h-3', footerWidth || 'w-48')} />
+        </div>
+      )}
     </div>
   );
 }

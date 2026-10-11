@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function FormPanelSkeleton({ title }: { title?: string }) {
   return (
-    <div className="flex flex-1 min-h-0 flex-col bg-white p-4 gap-4 overflow-y-auto select-none">
+    <div className="flex flex-1 min-h-0 flex-col bg-(--color-surface) p-4 gap-4 overflow-y-auto select-none">
       {/* Panel Header */}
       <div className="flex items-center justify-between pb-3 border-b border-(--color-border)">
         <div className="flex items-center gap-2">

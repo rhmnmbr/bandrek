@@ -17,6 +17,7 @@ export interface DaftarQuickFiltersProps {
   totalDisplayed: number;
   totalAll: number;
   sortDesc: boolean;
+  isLoading?: boolean;
 }
 
 interface ChipConfig {
@@ -41,6 +42,7 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
   totalDisplayed,
   totalAll,
   sortDesc,
+  isLoading = false,
 }) => {
   return (
     <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white text-[12px] select-none">
@@ -82,14 +84,18 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
           >
             <button
               type="button"
+              disabled={isLoading}
               onClick={() => onToggleCepat(chip.id)}
               title={
-                isActive
-                  ? 'Filter cepat aktif — klik untuk melepas'
-                  : `${chip.label} · ${count} kegiatan`
+                isLoading
+                  ? 'Memuat data kegiatan…'
+                  : isActive
+                    ? 'Filter cepat aktif — klik untuk melepas'
+                    : `${chip.label} · ${count} kegiatan`
               }
               className={cn(
-                'h-6 pl-2.5 pr-2 border-none bg-transparent text-inherit text-[11.5px] cursor-pointer whitespace-nowrap flex items-center gap-1.25 hover:brightness-97 transition-all',
+                'h-6 pl-2.5 pr-2 border-none bg-transparent text-inherit text-[11.5px] whitespace-nowrap flex items-center gap-1.25 transition-all',
+                isLoading ? 'cursor-default opacity-70' : 'cursor-pointer hover:brightness-97',
                 isActive && 'font-semibold'
               )}
             >
@@ -125,7 +131,7 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
 
       {/* Right side summary & reset (selalu rata kanan) */}
       <div className="ml-auto flex items-center gap-2 flex-none pl-2">
-        {hasActiveFilters && (
+        {!isLoading && hasActiveFilters && (
           <button
             type="button"
             onClick={onResetFilters}
@@ -136,8 +142,14 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
         )}
 
         <span className="flex-none text-[12px] text-(--color-text-muted) whitespace-nowrap">
-          Menampilkan {totalDisplayed} dari {totalAll} kegiatan · urut{' '}
-          {sortDesc ? 'terbaru dulu' : 'terlama dulu'}
+          {isLoading ? (
+            'Memuat data kegiatan…'
+          ) : (
+            <>
+              Menampilkan {totalDisplayed} dari {totalAll} kegiatan · urut{' '}
+              {sortDesc ? 'terbaru dulu' : 'terlama dulu'}
+            </>
+          )}
         </span>
       </div>
     </div>

@@ -22,7 +22,7 @@ import {
   type MateriFormData,
 } from '@/components/master/mapel/MapelFormView';
 import { MapelConfirmModal } from '@/components/master/mapel/MapelConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, FormPanelSkeleton, MapelSkeleton } from '@/components/skeleton';
 
 export function MapelScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -458,6 +458,11 @@ export function MapelScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedMateriId, isNewMateri, handleNewMateri, handleNewMapel]);
 
+  // Full page Mapel Skeleton during initial page loading
+  if (isLoadingAllMapel || isLoadingFilteredMapel) {
+    return <MapelSkeleton />;
+  }
+
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
       {/* Left Column (288px) */}
@@ -501,7 +506,7 @@ export function MapelScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {isLoadingAllMapel ? (
+        {isLoadingAllMapel || isLoadingFilteredMapel ? (
           <FormPanelSkeleton title="Memuat detail mata pelajaran..." />
         ) : selectedMapel || isBaruMode ? (
           <MapelFormView

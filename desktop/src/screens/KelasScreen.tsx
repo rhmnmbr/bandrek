@@ -14,7 +14,7 @@ import { KelasTable } from '@/components/master/kelas/KelasTable';
 import { KelasEmptyState } from '@/components/master/kelas/KelasEmptyState';
 import { KelasFormView, type KelasFormData } from '@/components/master/kelas/KelasFormView';
 import { KelasConfirmModal } from '@/components/master/kelas/KelasConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, FormPanelSkeleton, KelasSkeleton } from '@/components/skeleton';
 
 export function KelasScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -210,10 +210,15 @@ export function KelasScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewKelas]);
 
+  // Full page Kelas Skeleton during initial page loading
+  if (isLoadingAllKelas || isLoadingFilteredKelas) {
+    return <KelasSkeleton />;
+  }
+
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
-      {/* Left Column (288px) */}
-      <div className="flex flex-col w-[288px] flex-[0_0_288px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
+      {/* Left Column (336px) */}
+      <div className="flex flex-col w-[336px] flex-[0_0_336px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
         <KelasToolbar
           totalKelas={totalKelas}
           totalKeanggotaan={totalKeanggotaan}
@@ -253,7 +258,7 @@ export function KelasScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {isLoadingAllKelas ? (
+        {isLoadingAllKelas || isLoadingFilteredKelas ? (
           <FormPanelSkeleton title="Memuat detail kelas..." />
         ) : selectedKelas || isBaruMode ? (
           <KelasFormView

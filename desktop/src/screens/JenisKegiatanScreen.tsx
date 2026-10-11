@@ -16,7 +16,7 @@ import {
   type JenisKegiatanFormData,
 } from '@/components/master/jenis/JenisFormView';
 import { JenisConfirmModal } from '@/components/master/jenis/JenisConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, FormPanelSkeleton, JenisKegiatanSkeleton } from '@/components/skeleton';
 
 export function JenisKegiatanScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -243,6 +243,10 @@ export function JenisKegiatanScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewJenis]);
 
+  if ((isLoadingAllJenis || isLoadingFilteredJenis) && !adaFilter) {
+    return <JenisKegiatanSkeleton />;
+  }
+
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
       {/* Left Column (flex-1 wide table) */}
@@ -286,7 +290,7 @@ export function JenisKegiatanScreen() {
 
       {/* Right Column (352px sidebar form panel) */}
       <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
-        {isLoadingAllJenis ? (
+        {isLoadingAllJenis || isLoadingFilteredJenis ? (
           <FormPanelSkeleton title="Memuat detail jenis kegiatan..." />
         ) : selectedJenis || isBaruMode ? (
           <JenisFormView

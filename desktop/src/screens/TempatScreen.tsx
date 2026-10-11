@@ -21,7 +21,7 @@ import {
   type RuanganFormData,
 } from '@/components/master/tempat/TempatFormView';
 import { TempatConfirmModal } from '@/components/master/tempat/TempatConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, FormPanelSkeleton, TempatSkeleton } from '@/components/skeleton';
 
 export function TempatScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -310,6 +310,11 @@ export function TempatScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedRuanganId, isNewRuangan, handleNewRuangan, handleNewTempat]);
 
+  // Full page Tempat Skeleton during initial page loading
+  if (isLoadingAllTempat || isLoadingFilteredTempat) {
+    return <TempatSkeleton />;
+  }
+
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
       {/* Left Column (288px) */}
@@ -350,7 +355,7 @@ export function TempatScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {isLoadingAllTempat ? (
+        {isLoadingAllTempat || isLoadingFilteredTempat ? (
           <FormPanelSkeleton title="Memuat detail tempat & ruangan..." />
         ) : selectedTempat || isBaruMode ? (
           <TempatFormView

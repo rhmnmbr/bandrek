@@ -2,7 +2,60 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function DaftarKegiatanSkeleton({ rowCount = 10 }: { rowCount?: number }) {
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white overflow-hidden">
+    <div className="flex-1 min-h-0 flex flex-col bg-white overflow-hidden select-none">
+      {/* 1. Main Filter Bar Skeleton (Exact match: h-11.5, px-3.5, gap-1.75) */}
+      <div className="flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white">
+        {/* Date: Dari */}
+        <Skeleton className="h-6.5 w-26.5 rounded shrink-0" />
+
+        {/* Arrow placeholder */}
+        <Skeleton className="h-2 w-3 rounded-xs shrink-0 self-center" />
+
+        {/* Date: Sampai */}
+        <Skeleton className="h-6.5 w-26.5 rounded shrink-0" />
+
+        {/* Dropdown: Jenis */}
+        <Skeleton className="h-6.5 w-25 rounded shrink-0" />
+
+        {/* Dropdown: Status */}
+        <Skeleton className="h-6.5 w-26 rounded shrink-0" />
+
+        {/* Dropdown: Subjek */}
+        <Skeleton className="h-6.5 w-27 rounded shrink-0" />
+
+        {/* Dropdown: Kelas */}
+        <Skeleton className="h-6.5 w-25 rounded shrink-0" />
+
+        {/* Search input */}
+        <Skeleton className="h-6.5 w-39.5 rounded shrink-0" />
+
+        {/* Right Action Buttons */}
+        <div className="ml-auto flex items-center gap-1.75 flex-none pl-2">
+          {/* Ekspor CSV */}
+          <Skeleton className="h-6.5 w-21 rounded shrink-0" />
+          {/* + Kegiatan baru */}
+          <Skeleton className="h-6.5 w-28.5 rounded shrink-0" />
+        </div>
+      </div>
+
+      {/* 2. Quick Filter Chips Bar Skeleton (Exact match: px-3.5, py-2.25, gap-1.75) */}
+      <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white">
+        {/* Label */}
+        <Skeleton className="h-3 w-14 rounded shrink-0 mr-0.5" />
+
+        {/* Chips */}
+        <Skeleton className="h-6 w-24.5 rounded-full shrink-0" />
+        <Skeleton className="h-6 w-16.5 rounded-full shrink-0" />
+        <Skeleton className="h-6 w-19 rounded-full shrink-0" />
+        <Skeleton className="h-6 w-22 rounded-full shrink-0" />
+
+        {/* Right side summary */}
+        <div className="ml-auto flex items-center gap-2 flex-none pl-2">
+          <Skeleton className="h-3.5 w-56 rounded shrink-0" />
+        </div>
+      </div>
+
+      {/* 3. Table Skeleton */}
       <div className="flex-1 min-h-0 overflow-auto">
         <div className="flex flex-col min-h-full min-w-[1100px] w-full">
           {/* Sticky Table Header */}
@@ -19,7 +72,7 @@ export function DaftarKegiatanSkeleton({ rowCount = 10 }: { rowCount?: number })
             <div className="w-10 shrink-0" />
           </div>
 
-          {/* Shimmer Table Rows */}
+          {/* Table Rows */}
           <div className="flex flex-col">
             {Array.from({ length: rowCount }).map((_, idx) => (
               <div

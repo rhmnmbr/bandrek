@@ -17,7 +17,7 @@ export function ProfilSiswaSkeleton() {
       </div>
 
       {/* 2. Profil Info Card */}
-      <div className="border border-(--color-border) rounded-lg bg-white p-4 flex items-center justify-between shadow-xs">
+      <div className="border border-(--color-border) rounded-lg bg-(--color-surface) p-4 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-4">
           <Skeleton className="w-14 h-14 rounded-full shrink-0" />
           <div className="flex flex-col gap-1.5">
@@ -40,7 +40,7 @@ export function ProfilSiswaSkeleton() {
         {Array.from({ length: 4 }).map((_, idx) => (
           <div
             key={idx}
-            className="border border-(--color-border) rounded-md bg-white p-3 flex flex-col gap-1.5 shadow-xs"
+            className="border border-(--color-border) rounded-md bg-(--color-surface) p-3 flex flex-col gap-1.5 shadow-xs"
           >
             <Skeleton className="h-3 w-24" />
             <Skeleton className="h-6 w-16" />
@@ -50,7 +50,7 @@ export function ProfilSiswaSkeleton() {
       </div>
 
       {/* 4. Riwayat Kegiatan Section Skeleton */}
-      <div className="border border-(--color-border) rounded-lg bg-white p-4 flex flex-col gap-3 shadow-xs">
+      <div className="border border-(--color-border) rounded-lg bg-(--color-surface) p-4 flex flex-col gap-3 shadow-xs">
         <div className="flex items-center justify-between pb-2 border-b border-(--color-border-subtle)">
           <Skeleton className="h-4 w-36" />
           <div className="flex gap-2">

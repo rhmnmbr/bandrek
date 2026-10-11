@@ -8,7 +8,7 @@ import {
   useUpdateUser,
 } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
-import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, FormPanelSkeleton, UserManagementSkeleton } from '@/components/skeleton';
 
 export function UserManagementScreen() {
   const { data: users = [], isLoading: isLoadingUsers } = useUsersList();
@@ -258,6 +258,10 @@ export function UserManagementScreen() {
         .toUpperCase();
 
   const isCurrentLoggedInUser = currentSession?.user?.id === selectedUser?.id;
+
+  if (isLoadingUsers && !cari) {
+    return <UserManagementSkeleton />;
+  }
 
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">

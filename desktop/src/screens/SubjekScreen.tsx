@@ -19,7 +19,7 @@ import { SubjekEmptyState } from '@/components/master/subjek/SubjekEmptyState';
 import { SubjekFormPanel, type SubjekFormData } from '@/components/master/subjek/SubjekFormPanel';
 import { SubjekConfirmModal } from '@/components/master/subjek/SubjekConfirmModal';
 import { ProfilSubjekView } from '@/components/master/subjek/ProfilSubjekView';
-import { MasterTableSkeleton, ProfilSubjekSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, ProfilSubjekSkeleton, SubjekSkeleton } from '@/components/skeleton';
 
 export function SubjekScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -60,8 +60,8 @@ export function SubjekScreen() {
     q: cari,
   });
 
-  const { data: allSubjek = [] } = useSubjekList({ status: 'semua' });
-  const { data: mapelList = [] } = useMapelList();
+  const { data: allSubjek = [], isLoading: isLoadingAllSubjek } = useSubjekList({ status: 'semua' });
+  const { data: mapelList = [], isLoading: isLoadingMapel } = useMapelList();
   const { data: profilData, isLoading: isLoadingProfil } = useSubjekProfil(profilId || '', Boolean(profilId));
 
   // Mutations
@@ -369,6 +369,11 @@ export function SubjekScreen() {
         />
       </div>
     );
+  }
+
+  // Full page Subjek Skeleton during initial page loading
+  if (isLoadingSubjek || isLoadingAllSubjek || isLoadingMapel) {
+    return <SubjekSkeleton />;
   }
 
   return (

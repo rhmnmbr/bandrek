@@ -3,23 +3,31 @@ import { cn } from '@/lib/utils';
 
 export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * If true (default), uses the linear shimmer gradient animation.
-   * If false, falls back to standard Tailwind pulse.
+   * Animation mode:
+   * - 'none': Static silent block (no animation, calm desktop look) - Opsi 3
+   * - 'shimmer': Linear shimmer gradient sweep
+   * - 'pulse': Standard gentle opacity pulse
    */
+  animation?: 'none' | 'shimmer' | 'pulse';
   shimmer?: boolean;
 }
 
 export function Skeleton({
   className,
-  shimmer = true,
+  animation = 'none',
+  shimmer,
   ...props
 }: SkeletonProps) {
+  // If shimmer is explicitly passed as boolean, respect it; otherwise use animation mode
+  const animMode = shimmer !== undefined ? (shimmer ? 'shimmer' : 'pulse') : animation;
+
   return (
     <div
       aria-hidden="true"
       className={cn(
-        'rounded-md',
-        shimmer ? 'skeleton-shimmer' : 'animate-pulse bg-(--color-surface-sunken)',
+        'rounded-md bg-(--color-surface-sunken)',
+        animMode === 'shimmer' && 'skeleton-shimmer',
+        animMode === 'pulse' && 'animate-pulse',
         className
       )}
       {...props}
