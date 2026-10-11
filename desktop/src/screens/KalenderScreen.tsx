@@ -17,6 +17,7 @@ import { KalenderToolbar } from '@/components/kalender/KalenderToolbar';
 import { KalenderGrid, type DayColumnData } from '@/components/kalender/KalenderGrid';
 import { KalenderMonthView } from '@/components/kalender/KalenderMonthView';
 import { KalenderEmptyState } from '@/components/kalender/KalenderEmptyState';
+import { KalenderSkeleton } from '@/components/skeleton';
 import { KegiatanPopover } from '@/components/kalender/KegiatanPopover';
 import {
   FormKegiatanPanel,
@@ -99,7 +100,7 @@ export const KalenderScreen: React.FC = () => {
   const rentangMulai = tanggalTampil[0] || anchorDate;
   const rentangSelesai = tanggalTampil[tanggalTampil.length - 1] || anchorDate;
 
-  const { data: semuaKegiatan = [] } = useKegiatanKalender({
+  const { data: semuaKegiatan = [], isLoading: loadingKegiatan } = useKegiatanKalender({
     rentangMulai,
     rentangSelesai,
     tampilkanDibatalkan: true, // Fetch all so status filters work locally in real-time
@@ -417,6 +418,10 @@ export const KalenderScreen: React.FC = () => {
   const isPeriodEmpty = filteredKegiatan.length === 0;
   const countLabel = `Menampilkan ${filteredKegiatan.length} dari ${allInPeriodCount} kegiatan`;
   const currentMonth = toDate(anchorDate).getMonth();
+
+  if (loadingKegiatan && semuaKegiatan.length === 0) {
+    return <KalenderSkeleton />;
+  }
 
   return (
     <div className="flex h-full w-full min-h-0 bg-white select-none">

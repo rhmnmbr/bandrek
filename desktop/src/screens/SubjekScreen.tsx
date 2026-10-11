@@ -19,6 +19,7 @@ import { SubjekEmptyState } from '@/components/master/subjek/SubjekEmptyState';
 import { SubjekFormPanel, type SubjekFormData } from '@/components/master/subjek/SubjekFormPanel';
 import { SubjekConfirmModal } from '@/components/master/subjek/SubjekConfirmModal';
 import { ProfilSubjekView } from '@/components/master/subjek/ProfilSubjekView';
+import { MasterTableSkeleton, ProfilSubjekSkeleton } from '@/components/skeleton';
 
 export function SubjekScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -53,7 +54,7 @@ export function SubjekScreen() {
   });
 
   // Queries
-  const { data: subjekList = [] } = useSubjekList({
+  const { data: subjekList = [], isLoading: isLoadingSubjek } = useSubjekList({
     status,
     peran,
     q: cari,
@@ -61,7 +62,7 @@ export function SubjekScreen() {
 
   const { data: allSubjek = [] } = useSubjekList({ status: 'semua' });
   const { data: mapelList = [] } = useMapelList();
-  const { data: profilData } = useSubjekProfil(profilId || '', Boolean(profilId));
+  const { data: profilData, isLoading: isLoadingProfil } = useSubjekProfil(profilId || '', Boolean(profilId));
 
   // Mutations
   const createSubjekMutation = useCreateSubjek();
@@ -307,7 +308,10 @@ export function SubjekScreen() {
   }, [handleOpenNewSubjek]);
 
   // If in Profil mode, render ProfilSubjekView
-  if (profilId && profilData) {
+  if (profilId) {
+    if (isLoadingProfil || !profilData) {
+      return <ProfilSubjekSkeleton />;
+    }
     return (
       <div className="flex flex-1 min-h-0 flex-col bg-(--color-surface)">
         <ProfilSubjekView
@@ -388,7 +392,20 @@ export function SubjekScreen() {
       <div className="flex flex-1 min-h-0 bg-(--color-surface)">
         {/* Table View */}
         <div className="flex-1 min-w-0 flex flex-col">
-          {subjekList.length > 0 ? (
+          {isLoadingSubjek ? (
+            <MasterTableSkeleton
+              rowCount={10}
+              columns={[
+                { width: 'w-[210px]', headerTitle: 'NAMA LENGKAP' },
+                { width: 'w-[92px]', headerTitle: 'KELAMIN' },
+                { width: 'w-[104px]', headerTitle: 'PERAN' },
+                { width: 'flex-1 min-w-[110px]', isFlex: true, headerTitle: 'MATA PELAJARAN' },
+                { width: 'w-[126px]', headerTitle: 'KONTAK' },
+                { width: 'w-[74px]', headerTitle: 'KEGIATAN', align: 'right' },
+                { width: 'w-[78px]', headerTitle: 'STATUS' },
+              ]}
+            />
+          ) : subjekList.length > 0 ? (
             <SubjekTable
               subjekList={subjekList}
               selectedId={selectedSubjekId}

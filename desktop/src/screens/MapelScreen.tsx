@@ -22,6 +22,7 @@ import {
   type MateriFormData,
 } from '@/components/master/mapel/MapelFormView';
 import { MapelConfirmModal } from '@/components/master/mapel/MapelConfirmModal';
+import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 
 export function MapelScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -51,8 +52,8 @@ export function MapelScreen() {
   });
 
   // Queries
-  const { data: allMapel = [] } = useMapelList();
-  const { data: filteredMapel = [] } = useMapelList({
+  const { data: allMapel = [], isLoading: isLoadingAllMapel } = useMapelList();
+  const { data: filteredMapel = [], isLoading: isLoadingFilteredMapel } = useMapelList({
     status,
     q: cari,
   });
@@ -473,7 +474,15 @@ export function MapelScreen() {
           onMapelBaru={handleNewMapel}
         />
 
-        {filteredMapel.length > 0 ? (
+        {isLoadingFilteredMapel ? (
+          <MasterTableSkeleton
+            rowCount={8}
+            columns={[
+              { width: 'flex-1 min-w-[150px]', isFlex: true, headerTitle: 'MATA PELAJARAN' },
+              { width: 'w-[74px]', headerTitle: 'MATERI', align: 'right' },
+            ]}
+          />
+        ) : filteredMapel.length > 0 ? (
           <MapelTable
             mapelList={filteredMapel}
             selectedId={selectedMapelId}
@@ -492,7 +501,9 @@ export function MapelScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {selectedMapel || isBaruMode ? (
+        {isLoadingAllMapel ? (
+          <FormPanelSkeleton title="Memuat detail mata pelajaran..." />
+        ) : selectedMapel || isBaruMode ? (
           <MapelFormView
             key={
               isNewMateri

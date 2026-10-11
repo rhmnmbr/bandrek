@@ -30,6 +30,7 @@ import { ConfirmDialog } from '@/components/ui/dialog';
 import { Select } from '@/components/ui/select';
 import { TimePicker } from '@/components/ui/time-picker';
 import { useToast } from '@/components/ui/toast';
+import { RealisasiSkeleton } from '@/components/skeleton';
 import {
   menit,
   formatTanggalRingkas,
@@ -552,11 +553,7 @@ export const RealisasiScreen: React.FC = () => {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex-1 min-h-0 flex items-center justify-center bg-white text-(--color-text-secondary) text-[13px]">
-        Memuat data realisasi kegiatan...
-      </div>
-    );
+    return <RealisasiSkeleton />;
   }
 
   if (isError || !kegiatan) {

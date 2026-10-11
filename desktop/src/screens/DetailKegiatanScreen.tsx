@@ -18,6 +18,7 @@ import {
 import { FormKegiatanPanel } from '@/components/kegiatan/FormKegiatanPanel';
 import { BatalkanKegiatanModal } from '@/components/kegiatan/BatalkanKegiatanModal';
 import { JadwalUlangModal } from '@/components/kegiatan/JadwalUlangModal';
+import { DetailKegiatanSkeleton } from '@/components/skeleton';
 import {
   formatTanggalRingkas,
   formatTanggalPendek,
@@ -121,11 +122,7 @@ export const DetailKegiatanScreen: React.FC = () => {
   }, [menuOpen, formEditOpen, modalBatalOpen, modalUlangState.open, handleKembali]);
 
   if (isLoading) {
-    return (
-      <div className="flex-1 min-h-0 flex items-center justify-center bg-white text-(--color-text-secondary) text-[13px]">
-        Memuat detail kegiatan...
-      </div>
-    );
+    return <DetailKegiatanSkeleton />;
   }
 
   if (isError || !kegiatan) {

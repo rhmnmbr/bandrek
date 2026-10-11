@@ -21,6 +21,7 @@ import {
   type RuanganFormData,
 } from '@/components/master/tempat/TempatFormView';
 import { TempatConfirmModal } from '@/components/master/tempat/TempatConfirmModal';
+import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 
 export function TempatScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -47,8 +48,8 @@ export function TempatScreen() {
   });
 
   // Queries
-  const { data: allTempat = [] } = useTempatList();
-  const { data: filteredTempat = [] } = useTempatList({
+  const { data: allTempat = [], isLoading: isLoadingAllTempat } = useTempatList();
+  const { data: filteredTempat = [], isLoading: isLoadingFilteredTempat } = useTempatList({
     q: cari,
   });
 
@@ -323,7 +324,15 @@ export function TempatScreen() {
           onTempatBaru={handleNewTempat}
         />
 
-        {filteredTempat.length > 0 ? (
+        {isLoadingFilteredTempat ? (
+          <MasterTableSkeleton
+            rowCount={8}
+            columns={[
+              { width: 'flex-1 min-w-[140px]', isFlex: true, headerTitle: 'TEMPAT' },
+              { width: 'w-[74px]', headerTitle: 'RUANGAN', align: 'right' },
+            ]}
+          />
+        ) : filteredTempat.length > 0 ? (
           <TempatTable
             tempatList={filteredTempat}
             selectedId={selectedTempatId}
@@ -341,7 +350,9 @@ export function TempatScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {selectedTempat || isBaruMode ? (
+        {isLoadingAllTempat ? (
+          <FormPanelSkeleton title="Memuat detail tempat & ruangan..." />
+        ) : selectedTempat || isBaruMode ? (
           <TempatFormView
             key={
               isNewRuangan

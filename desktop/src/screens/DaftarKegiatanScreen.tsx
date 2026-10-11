@@ -20,6 +20,7 @@ import { DaftarToolbar } from '@/components/daftar/DaftarToolbar';
 import { DaftarQuickFilters } from '@/components/daftar/DaftarQuickFilters';
 import { DaftarTable } from '@/components/daftar/DaftarTable';
 import { DaftarEmptyState } from '@/components/daftar/DaftarEmptyState';
+import { DaftarKegiatanSkeleton } from '@/components/skeleton';
 
 import { FormKegiatanPanel } from '@/components/kegiatan/FormKegiatanPanel';
 import { BatalkanKegiatanModal } from '@/components/kegiatan/BatalkanKegiatanModal';
@@ -36,7 +37,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const currentPath = `${location.pathname}${location.search}`;
 
   // Queries
-  const { data: semuaKegiatan = [] } = useKegiatanDaftar({});
+  const { data: semuaKegiatan = [], isLoading } = useKegiatanDaftar({});
   const { data: jenisList = [] } = useJenisKegiatanList();
   const { data: subjekList = [] } = useSubjekList();
   const { data: kelasList = [] } = useKelasList();
@@ -345,7 +346,9 @@ export const DaftarKegiatanScreen: React.FC = () => {
       />
 
       {/* 3. Table or Empty State */}
-      {filteredKegiatan.length > 0 ? (
+      {isLoading ? (
+        <DaftarKegiatanSkeleton />
+      ) : filteredKegiatan.length > 0 ? (
         <DaftarTable
           kegiatanList={filteredKegiatan}
           simulatedToday={SIMULATED_TODAY}

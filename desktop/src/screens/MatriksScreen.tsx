@@ -19,6 +19,7 @@ import { MatriksCellPopover } from '@/components/matriks/MatriksCellPopover';
 import { MatriksBulkToolbar } from '@/components/matriks/MatriksBulkToolbar';
 import { MatriksAnomalyModal } from '@/components/matriks/MatriksAnomalyModal';
 import { MatriksEmptyState } from '@/components/matriks/MatriksEmptyState';
+import { MatriksSkeleton } from '@/components/skeleton';
 import type {
   JenjangPendidikan,
   SelMatriks,
@@ -418,13 +419,7 @@ export const MatriksScreen: React.FC = () => {
 
   // Loading state
   if (isLoading || !matriksResult) {
-    return (
-      <div className="flex flex-1 flex-col h-full bg-white">
-        <div className="flex flex-1 items-center justify-center">
-          <div className="text-[13.5px] text-[#5C5A58]">Memuat matriks belajar…</div>
-        </div>
-      </div>
-    );
+    return <MatriksSkeleton />;
   }
 
   // Check Prerequisite Empty States

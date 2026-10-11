@@ -36,6 +36,14 @@ import { useToast } from "@/components/ui/toast";
 import { EmptyState } from "@/components/ui/empty-state";
 import { OfflineBanner } from "@/components/ui/offline-banner";
 import {
+  Skeleton,
+  SkeletonText,
+  SkeletonAvatar,
+  SkeletonBadge,
+  SkeletonButton,
+} from "@/components/ui/skeleton";
+import { MasterTableSkeleton } from "@/components/skeleton";
+import {
   Table,
   TableHeader,
   TableBody,
@@ -1820,6 +1828,104 @@ export function KatalogScreen() {
                 </TableRow>
               </TableBody>
             </Table>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* SECTION 18: LOADING STATE & SKELETON SHIMMER                   */}
+        {/* ============================================================== */}
+        <section id="section-skeleton" className="space-y-4">
+          <div className="flex items-baseline justify-between border-b border-(--color-border) pb-2">
+            <div>
+              <h2 className="text-[18px] font-semibold text-(--color-text)">
+                18. Loading State & Skeleton Shimmer
+              </h2>
+              <p className="text-[12px] text-(--color-text-muted)">
+                Placeholder animasi shimmer modern untuk layout tabel, kartu, formulir, dan profil
+              </p>
+            </div>
+            <span className="font-mono text-[10.5px] text-(--color-text-muted)">
+              DESIGN.md §2.3 / §3.11
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Primitives showcase */}
+            <div className="border border-(--color-border) rounded-lg bg-white p-4 flex flex-col gap-4 shadow-xs">
+              <h3 className="text-sm font-semibold text-(--color-text)">Elemen Dasar (Atoms)</h3>
+              
+              <div className="space-y-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs text-(--color-text-muted)">Teks & Baris (SkeletonText)</span>
+                  <SkeletonText lines={3} lastLineWidth="w-1/2" />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs text-(--color-text-muted)">Avatar & Badge</span>
+                  <div className="flex items-center gap-3">
+                    <SkeletonAvatar size="w-9 h-9" />
+                    <SkeletonAvatar size="w-7 h-7" />
+                    <SkeletonBadge />
+                    <SkeletonBadge className="w-20" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs text-(--color-text-muted)">Tombol (SkeletonButton)</span>
+                  <div className="flex items-center gap-2">
+                    <SkeletonButton />
+                    <SkeletonButton className="w-16 h-8" />
+                    <SkeletonButton className="w-32 h-8" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card & Form preview */}
+            <div className="border border-(--color-border) rounded-lg bg-white p-4 flex flex-col gap-3 shadow-xs">
+              <h3 className="text-sm font-semibold text-(--color-text)">Kartu Informasi (Card Skeleton)</h3>
+              <div className="flex items-center gap-3 pb-2 border-b border-(--color-border-subtle)">
+                <SkeletonAvatar size="w-10 h-10" />
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-3 w-28" />
+                </div>
+                <SkeletonBadge />
+              </div>
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="flex flex-col gap-1">
+                  <Skeleton className="h-2.5 w-16" />
+                  <Skeleton className="h-4 w-28" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Skeleton className="h-2.5 w-16" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-(--color-border-subtle)">
+                <SkeletonButton className="w-16" />
+                <SkeletonButton className="w-24" />
+              </div>
+            </div>
+          </div>
+
+          {/* Table skeleton showcase */}
+          <div className="border border-(--color-border) rounded-lg bg-white overflow-hidden shadow-xs">
+            <div className="p-3 border-b border-(--color-border) bg-(--color-surface-alt) flex items-center justify-between">
+              <span className="text-xs font-semibold text-(--color-text)">Pratinjau Shimmer Tabel Data (MasterTableSkeleton)</span>
+              <span className="text-[11px] text-(--color-text-muted)">8 baris · animasi gradient shimmer</span>
+            </div>
+            <div className="h-56 overflow-hidden">
+              <MasterTableSkeleton
+                rowCount={6}
+                columns={[
+                  { width: 'w-44', headerTitle: 'NAMA KEGIATAN' },
+                  { width: 'w-24', headerTitle: 'WAKTU' },
+                  { width: 'flex-1 min-w-32', isFlex: true, headerTitle: 'LOKASI / RUANGAN' },
+                  { width: 'w-24', headerTitle: 'STATUS' },
+                ]}
+              />
+            </div>
           </div>
         </section>
       </main>

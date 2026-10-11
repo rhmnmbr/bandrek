@@ -8,9 +8,10 @@ import {
   useUpdateUser,
 } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
+import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 
 export function UserManagementScreen() {
-  const { data: users = [] } = useUsersList();
+  const { data: users = [], isLoading: isLoadingUsers } = useUsersList();
   const { data: currentSession } = useAuthSession();
   const { showToast } = useToast();
 
@@ -300,14 +301,25 @@ export function UserManagementScreen() {
         </div>
 
         {/* Table Body */}
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
-          <div className="flex flex-col min-h-full">
-            <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-              <div className="flex-1 min-w-[160px] pr-2">PENGGUNA</div>
-              <div className="w-[120px] shrink-0 pr-2">USERNAME</div>
-              <div className="w-[90px] shrink-0 pr-2">PERAN</div>
-              <div className="w-[80px] shrink-0 text-right pr-2">STATUS</div>
-            </div>
+        {isLoadingUsers ? (
+          <MasterTableSkeleton
+            rowCount={8}
+            columns={[
+              { width: 'flex-1 min-w-[160px]', isFlex: true, headerTitle: 'PENGGUNA' },
+              { width: 'w-[120px]', headerTitle: 'USERNAME' },
+              { width: 'w-[90px]', headerTitle: 'PERAN' },
+              { width: 'w-[80px]', headerTitle: 'STATUS', align: 'right' },
+            ]}
+          />
+        ) : (
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+            <div className="flex flex-col min-h-full">
+              <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
+                <div className="flex-1 min-w-[160px] pr-2">PENGGUNA</div>
+                <div className="w-[120px] shrink-0 pr-2">USERNAME</div>
+                <div className="w-[90px] shrink-0 pr-2">PERAN</div>
+                <div className="w-[80px] shrink-0 text-right pr-2">STATUS</div>
+              </div>
 
             {filteredUsers.map((u) => {
               const isSelected = !isNewMode && selectedUser?.id === u.id;
@@ -385,6 +397,7 @@ export function UserManagementScreen() {
             })}
           </div>
         </div>
+        )}
 
         {/* Footer */}
         <div className="flex h-7.5 shrink-0 items-center border-t border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[11.5px] text-(--color-text-muted)">
@@ -394,7 +407,9 @@ export function UserManagementScreen() {
 
       {/* Right Column (Form Panel, 352px) */}
       <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
-        {selectedUser || isNewMode ? (
+        {isLoadingUsers ? (
+          <FormPanelSkeleton title="Memuat pengguna..." />
+        ) : selectedUser || isNewMode ? (
           <div className="flex flex-1 min-h-0 flex-col bg-(--color-surface-alt)">
             {/* Header */}
             <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">

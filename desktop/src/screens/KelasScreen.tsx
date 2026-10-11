@@ -14,6 +14,7 @@ import { KelasTable } from '@/components/master/kelas/KelasTable';
 import { KelasEmptyState } from '@/components/master/kelas/KelasEmptyState';
 import { KelasFormView, type KelasFormData } from '@/components/master/kelas/KelasFormView';
 import { KelasConfirmModal } from '@/components/master/kelas/KelasConfirmModal';
+import { MasterTableSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 
 export function KelasScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -31,8 +32,8 @@ export function KelasScreen() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Queries
-  const { data: allKelas = [] } = useKelasList();
-  const { data: filteredKelas = [] } = useKelasList({
+  const { data: allKelas = [], isLoading: isLoadingAllKelas } = useKelasList();
+  const { data: filteredKelas = [], isLoading: isLoadingFilteredKelas } = useKelasList({
     jenjang,
     q: cari,
   });
@@ -225,7 +226,16 @@ export function KelasScreen() {
           onKelasBaru={handleNewKelas}
         />
 
-        {filteredKelas.length > 0 ? (
+        {isLoadingFilteredKelas ? (
+          <MasterTableSkeleton
+            rowCount={8}
+            columns={[
+              { width: 'flex-1 min-w-[120px]', isFlex: true, headerTitle: 'NAMA KELAS' },
+              { width: 'w-[66px]', headerTitle: 'JENJANG' },
+              { width: 'w-[54px]', headerTitle: 'SISWA', align: 'right' },
+            ]}
+          />
+        ) : filteredKelas.length > 0 ? (
           <KelasTable
             kelasList={filteredKelas}
             selectedId={selectedId}
@@ -243,7 +253,9 @@ export function KelasScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {selectedKelas || isBaruMode ? (
+        {isLoadingAllKelas ? (
+          <FormPanelSkeleton title="Memuat detail kelas..." />
+        ) : selectedKelas || isBaruMode ? (
           <KelasFormView
             key={isBaruMode ? 'baru' : selectedKelas?.id}
             kelas={selectedKelas}
