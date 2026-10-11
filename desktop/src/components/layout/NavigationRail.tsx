@@ -25,6 +25,7 @@ import {
 } from '@fluentui/react-icons';
 import { usePerluRealisasiCount } from '@/data/hooks';
 import { useAuthSession } from '@/data/hooks/useAuth';
+import { BandrekLogo, BandrekCupIcon } from '@/components/ui/bandrek-logo';
 
 export interface NavigationRailProps {
   collapsed: boolean;
@@ -184,22 +185,27 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
       aria-label="Navigasi Utama"
     >
       {/* Brand Header */}
-      <div className="flex h-10 items-center mb-1.5 gap-2">
-        <div className="flex h-7.5 w-7.5 flex-none items-center justify-center rounded-md bg-(--color-brand) text-white font-semibold text-[15px] shadow-xs">
-          B
-        </div>
+      <div className="relative flex h-12 items-center mb-1 overflow-hidden">
+        {/* Expanded: Full horizontal logo SVG (bukan teks hardcoded) */}
         <div
           className={cn(
-            'flex flex-col whitespace-nowrap flex-none transition-opacity duration-150 ease-in-out',
-            collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            'flex items-center w-full px-1 transition-opacity duration-150 ease-in-out',
+            collapsed ? 'opacity-0 pointer-events-none absolute left-0' : 'opacity-100'
           )}
+          title="Bandrek - Bandung Remaja Intelek"
         >
-          <span className="text-[15px] font-semibold text-(--color-text) tracking-tight leading-tight">
-            Bandrek
-          </span>
-          <span className="text-[10px] text-(--color-text-muted) leading-normal">
-            Bimbel Management
-          </span>
+          <BandrekLogo className="h-10 w-auto max-w-full text-[#4D5962]" />
+        </div>
+
+        {/* Collapsed: Standalone cup icon SVG */}
+        <div
+          className={cn(
+            'flex h-9 w-9 items-center justify-center mx-auto transition-opacity duration-150 ease-in-out',
+            collapsed ? 'opacity-100' : 'opacity-0 pointer-events-none absolute left-1'
+          )}
+          title="Bandrek"
+        >
+          <BandrekCupIcon className="w-7 h-7 text-[#4D5962]" />
         </div>
       </div>
 
