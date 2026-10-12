@@ -23,6 +23,7 @@ interface MapelFormViewProps {
   isNewMateri: boolean;
   existingMapel: MataPelajaran[];
   materiList: Materi[];
+  isLoadingMateri?: boolean;
   onSaveMapel: (data: MapelFormData) => Promise<void>;
   onDeleteMapel: () => void;
   onToggleAktifMapel: () => void;
@@ -44,6 +45,7 @@ export function MapelFormView({
   isNewMateri,
   existingMapel,
   materiList,
+  isLoadingMateri = false,
   onSaveMapel,
   onDeleteMapel,
   onToggleAktifMapel,
@@ -246,13 +248,14 @@ export function MapelFormView({
     ? 'Mata pelajaran baru'
     : mapel?.nama || '';
 
+  const countMateri = !isLoadingMateri ? materiList.length : (mapel?.jumlahMateri ?? materiList.length);
   const panelSub = isChildMode
     ? isNewMateri
       ? `Materi baru di ${mapel?.nama || ''}`
       : `${mapel?.nama || ''} · ${activeMateri?.jumlahKegiatan || 0} kegiatan`
     : isNewMapel
     ? 'Isi datanya, lalu simpan'
-    : `${materiList.length} materi · ${mapel?.jumlahKegiatan || 0} kegiatan`;
+    : `${countMateri} materi · ${mapel?.jumlahKegiatan || 0} kegiatan`;
 
   const isCurrentActive = isChildMode ? activeMateri?.aktif ?? true : mapel?.aktif ?? true;
 
@@ -371,14 +374,14 @@ export function MapelFormView({
 
             {/* Switch Aktif Materi */}
             <div className="flex-[1_1_100%] flex flex-col gap-1">
-              <label className="flex items-start gap-2 p-2 rounded-md border border-(--color-border) bg-(--color-surface) hover:border-(--color-border-strong) cursor-pointer transition-colors">
+              <label className="flex items-center gap-2 p-2 rounded-md border border-(--color-border) bg-(--color-surface) hover:border-(--color-border-strong) cursor-pointer transition-colors">
                 <input
                   type="checkbox"
                   checked={aktifMateri}
                   onChange={(e) => setAktifMateri(e.target.checked)}
-                  className="mt-0.5 h-3.5 w-3.5 accent-(--color-brand) cursor-pointer"
+                  className="h-3.5 w-3.5 shrink-0 accent-(--color-brand) cursor-pointer"
                 />
-                <span className="flex-1 min-w-0 text-[12.5px] leading-relaxed text-(--color-text-primary)">
+                <span className="flex-1 min-w-0 text-[12.5px] text-(--color-text-primary) select-none">
                   Aktif — jadi kolom di matriks belajar
                 </span>
               </label>
@@ -436,14 +439,14 @@ export function MapelFormView({
 
             {/* Switch Aktif Mapel */}
             <div className="flex-[1_1_100%] flex flex-col gap-1">
-              <label className="flex items-start gap-2 p-2 rounded-md border border-(--color-border) bg-(--color-surface) hover:border-(--color-border-strong) cursor-pointer transition-colors">
+              <label className="flex items-center gap-2 p-2 rounded-md border border-(--color-border) bg-(--color-surface) hover:border-(--color-border-strong) cursor-pointer transition-colors">
                 <input
                   type="checkbox"
                   checked={aktifMapel}
                   onChange={(e) => setAktifMapel(e.target.checked)}
-                  className="mt-0.5 h-3.5 w-3.5 accent-(--color-brand) cursor-pointer"
+                  className="h-3.5 w-3.5 shrink-0 accent-(--color-brand) cursor-pointer"
                 />
-                <span className="flex-1 min-w-0 text-[12.5px] leading-relaxed text-(--color-text-primary)">
+                <span className="flex-1 min-w-0 text-[12.5px] text-(--color-text-primary) select-none">
                   Aktif — muncul di form kegiatan dan matriks belajar
                 </span>
               </label>
@@ -459,6 +462,8 @@ export function MapelFormView({
               <MateriTable
                 mapelNama={mapel.nama}
                 materiList={materiList}
+                isLoading={isLoadingMateri}
+                jumlahMateri={mapel.jumlahMateri}
                 onNewMateri={onNewMateri}
                 onSelectMateri={onSelectMateri}
                 onReorderMateri={onReorderMateri}

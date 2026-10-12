@@ -5,7 +5,6 @@ interface MapelTableProps {
   selectedId: string | null;
   onSelectMapel: (id: string) => void;
   totalDb: number;
-  isStatusFiltered?: boolean;
 }
 
 export function MapelTable({
@@ -13,7 +12,6 @@ export function MapelTable({
   selectedId,
   onSelectMapel,
   totalDb,
-  isStatusFiltered,
 }: MapelTableProps) {
   const zeroMateriList = mapelList.filter((m) => (m.jumlahMateri || 0) === 0);
 
@@ -97,9 +95,10 @@ export function MapelTable({
       )}
 
       {/* Sticky Footer */}
-      <div className="flex h-7.5 shrink-0 items-center border-t border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[11.5px] text-(--color-text-muted)">
-        Menampilkan {mapelList.length} dari {totalDb} mata pelajaran
-        {isStatusFiltered && ' · nonaktif disembunyikan'}
+      <div className="flex h-8 shrink-0 items-center border-t border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[11.5px] text-(--color-text-muted)">
+        <span className="truncate">
+          Menampilkan {mapelList.length} dari {totalDb} mata pelajaran
+        </span>
       </div>
     </div>
   );

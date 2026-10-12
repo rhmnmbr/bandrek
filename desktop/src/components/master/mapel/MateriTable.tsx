@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import type { Materi } from '@/data/types/master';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ReOrderDotsVertical16Regular } from '@fluentui/react-icons';
 
 interface MateriTableProps {
   mapelNama: string;
   materiList: Materi[];
+  isLoading?: boolean;
+  jumlahMateri?: number;
   onNewMateri: () => void;
   onSelectMateri: (materi: Materi) => void;
   onReorderMateri: (orderedIds: string[]) => Promise<void>;
@@ -12,11 +16,16 @@ interface MateriTableProps {
 export function MateriTable({
   mapelNama,
   materiList,
+  isLoading = false,
+  jumlahMateri,
   onNewMateri,
   onSelectMateri,
   onReorderMateri,
 }: MateriTableProps) {
   const [dragState, setDragState] = useState<{ id: string; over: string } | null>(null);
+
+  const countDisplay = !isLoading ? materiList.length : (jumlahMateri ?? materiList.length);
+  const skeletonRowCount = jumlahMateri ? Math.min(Math.max(jumlahMateri, 2), 6) : 4;
 
   // Drag & drop handlers
   const handleDragStart = (e: React.DragEvent, id: string) => {
@@ -87,13 +96,18 @@ export function MateriTable({
       {/* Section Header */}
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted) truncate">
-          MATERI · {materiList.length} · URUTAN = KOLOM MATRIKS
+          MATERI · {countDisplay} · URUTAN = KOLOM MATRIKS
         </div>
         <button
           type="button"
           onClick={onNewMateri}
+          disabled={isLoading}
           title={`Tambah materi di ${mapelNama}`}
-          className="flex h-5.75 shrink-0 items-center gap-1 px-2.25 rounded-sm border border-(--color-border) bg-(--color-surface) text-(--color-brand) text-[11.5px] font-medium hover:bg-(--color-brand-subtle) transition-colors cursor-pointer"
+          className={`flex h-5.75 shrink-0 items-center gap-1 px-2.25 rounded-sm border border-(--color-border) bg-(--color-surface) text-[11.5px] font-medium transition-colors ${
+            isLoading
+              ? 'opacity-50 cursor-not-allowed text-(--color-text-muted)'
+              : 'text-(--color-brand) hover:bg-(--color-brand-subtle) cursor-pointer'
+          }`}
         >
           <svg
             width="10"
@@ -123,7 +137,50 @@ export function MateriTable({
         </div>
 
         {/* Rows */}
-        {materiList.map((m, index) => {
+        {isLoading && materiList.length === 0 ? (
+          Array.from({ length: skeletonRowCount }).map((_, idx) => (
+            <div
+              key={idx}
+              className="flex h-8 items-center border-b border-(--color-border) px-1 text-[12.5px] bg-(--color-surface)"
+            >
+              {/* Drag Handle Placeholder */}
+              <div className="w-5 shrink-0 flex items-center justify-center">
+                <Skeleton className="h-3 w-3 rounded-xs opacity-40" />
+              </div>
+
+              {/* Nomor Urut */}
+              <div className="w-7.5 shrink-0 pr-2.5 flex justify-end">
+                <Skeleton className="h-3 w-3 rounded-xs opacity-60" />
+              </div>
+
+              {/* Nama Materi */}
+              <div className="flex-1 min-w-[140px] pr-2">
+                <Skeleton
+                  className={`h-3.5 rounded-xs ${
+                    idx % 3 === 0 ? 'w-36' : idx % 2 === 0 ? 'w-24' : 'w-44'
+                  }`}
+                />
+              </div>
+
+              {/* Dipakai */}
+              <div className="w-24 shrink-0 pr-2.5 flex justify-end">
+                <Skeleton className="h-3 w-16 rounded-xs" />
+              </div>
+
+              {/* Status Pill */}
+              <div className="w-[74px] shrink-0">
+                <Skeleton className="h-4.5 w-12 rounded-full" />
+              </div>
+
+              {/* Ubah Action Button */}
+              <div className="w-24 shrink-0 flex justify-end pr-1">
+                <Skeleton className="h-3.5 w-8 rounded-xs" />
+              </div>
+            </div>
+          ))
+        ) : (
+          <>
+            {materiList.map((m, index) => {
           const isDragging = dragState?.id === m.id;
           const isOver = dragState?.over === m.id && dragState.id !== m.id;
           const currentIds = materiList.map((item) => item.id);
@@ -154,21 +211,14 @@ export function MateriTable({
               } ${isDragging ? 'bg-(--color-surface-alt)' : 'bg-(--color-surface)'}`}
             >
               {/* Drag Handle */}
-              <div className="w-5.5 shrink-0 flex items-center justify-center">
+              <div className="w-5 shrink-0 flex items-center justify-center">
                 <button
                   type="button"
                   onKeyDown={(e) => handleKeyDown(e, m.id)}
-                  title="Seret untuk mengubah urutan — atau fokuskan tombol ini lalu tekan panah atas/bawah"
-                  className="flex h-5.5 w-5 items-center justify-center rounded-sm border-none bg-transparent text-(--color-text-disabled) hover:bg-(--color-surface-alt) hover:text-(--color-text-secondary) cursor-grab transition-colors"
+                  title="Seret untuk mengubah urutan (atau gunakan panah atas/bawah)"
+                  className="flex h-6 w-5 items-center justify-center rounded-xs border-none bg-transparent text-(--color-text-muted) hover:bg-(--color-surface-alt) hover:text-(--color-text-primary) cursor-grab active:cursor-grabbing transition-colors"
                 >
-                  <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
-                    <circle cx="5" cy="4" r="1.3" />
-                    <circle cx="11" cy="4" r="1.3" />
-                    <circle cx="5" cy="8" r="1.3" />
-                    <circle cx="11" cy="8" r="1.3" />
-                    <circle cx="5" cy="12" r="1.3" />
-                    <circle cx="11" cy="12" r="1.3" />
-                  </svg>
+                  <ReOrderDotsVertical16Regular className="w-4 h-4 shrink-0" />
                 </button>
               </div>
 
@@ -229,10 +279,12 @@ export function MateriTable({
           );
         })}
 
-        {materiList.length === 0 && (
-          <div className="p-3 text-center text-xs text-(--color-text-muted) leading-relaxed">
-            Belum ada materi untuk mata pelajaran ini. Pakai "+ Materi" di atas untuk menambahkan.
-          </div>
+            {materiList.length === 0 && (
+              <div className="p-3 text-center text-xs text-(--color-text-muted) leading-relaxed">
+                Belum ada materi untuk mata pelajaran ini. Pakai "+ Materi" di atas untuk menambahkan.
+              </div>
+            )}
+          </>
         )}
       </div>
 

@@ -20,6 +20,10 @@ export interface DaftarQuickFiltersProps {
   isLoading?: boolean;
   activeSiswa?: { id: string; nama: string } | null;
   onClearSiswa?: () => void;
+  activeMapel?: { id: string; nama: string } | null;
+  onClearMapel?: () => void;
+  activeTempat?: { id: string; nama: string } | null;
+  onClearTempat?: () => void;
 }
 
 interface ChipConfig {
@@ -47,6 +51,10 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
   isLoading = false,
   activeSiswa,
   onClearSiswa,
+  activeMapel,
+  onClearMapel,
+  activeTempat,
+  onClearTempat,
 }) => {
   return (
     <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white text-[12px] select-none">
@@ -62,6 +70,38 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
               type="button"
               onClick={onClearSiswa}
               title="Lepas filter siswa ini"
+              className="w-4 h-4 flex-none rounded-full border-none bg-transparent text-inherit cursor-pointer flex items-center justify-center hover:bg-[#FDE7E9] hover:text-[#9B0C18] transition-colors"
+            >
+              <Dismiss12Regular className="w-2.5 h-2.5" />
+            </button>
+          )}
+        </div>
+      )}
+
+      {activeMapel && (
+        <div className="flex-none flex items-center h-6 rounded-full border border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold pl-2.5 pr-1 gap-1 text-[11.5px]">
+          <span>Mata pelajaran: {activeMapel.nama}</span>
+          {onClearMapel && (
+            <button
+              type="button"
+              onClick={onClearMapel}
+              title="Lepas filter mata pelajaran ini"
+              className="w-4 h-4 flex-none rounded-full border-none bg-transparent text-inherit cursor-pointer flex items-center justify-center hover:bg-[#FDE7E9] hover:text-[#9B0C18] transition-colors"
+            >
+              <Dismiss12Regular className="w-2.5 h-2.5" />
+            </button>
+          )}
+        </div>
+      )}
+
+      {activeTempat && (
+        <div className="flex-none flex items-center h-6 rounded-full border border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold pl-2.5 pr-1 gap-1 text-[11.5px]">
+          <span>Tempat: {activeTempat.nama}</span>
+          {onClearTempat && (
+            <button
+              type="button"
+              onClick={onClearTempat}
+              title="Lepas filter tempat ini"
               className="w-4 h-4 flex-none rounded-full border-none bg-transparent text-inherit cursor-pointer flex items-center justify-center hover:bg-[#FDE7E9] hover:text-[#9B0C18] transition-colors"
             >
               <Dismiss12Regular className="w-2.5 h-2.5" />

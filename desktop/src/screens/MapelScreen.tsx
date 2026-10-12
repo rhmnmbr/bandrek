@@ -73,7 +73,13 @@ export function MapelScreen() {
   const selectedMapelId = selectedMapel?.id || '';
 
   // Materi list for selected Mapel
-  const { data: materiList = [] } = useMateriList(selectedMapelId, Boolean(selectedMapelId));
+  const {
+    data: materiList = [],
+    isLoading: isLoadingMateri,
+    isFetching: isFetchingMateri,
+  } = useMateriList(selectedMapelId, Boolean(selectedMapelId));
+
+  const isMateriLoading = isLoadingMateri || (isFetchingMateri && materiList.length === 0);
 
   // Active Materi
   const activeMateri = useMemo(() => {
@@ -490,7 +496,6 @@ export function MapelScreen() {
             selectedId={selectedMapelId}
             onSelectMapel={handleSelectMapel}
             totalDb={totalMapel}
-            isStatusFiltered={status !== 'semua'}
           />
         ) : (
           <MapelEmptyState
@@ -522,6 +527,7 @@ export function MapelScreen() {
             isNewMateri={isNewMateri}
             existingMapel={allMapel}
             materiList={materiList}
+            isLoadingMateri={isMateriLoading}
             onSaveMapel={handleSaveMapel}
             onDeleteMapel={() =>
               setDialogState({

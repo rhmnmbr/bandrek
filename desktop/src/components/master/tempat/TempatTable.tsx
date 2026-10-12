@@ -82,8 +82,8 @@ export function TempatTable({
       )}
 
       {/* Sticky Footer */}
-      <div className="flex h-7.5 shrink-0 items-center border-t border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[11.5px] text-(--color-text-muted)">
-        Menampilkan {tempatList.length} dari {totalDb} tempat
+      <div className="flex h-8 shrink-0 items-center border-t border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[11.5px] text-(--color-text-muted)">
+        <span className="truncate">Menampilkan {tempatList.length} dari {totalDb} tempat</span>
       </div>
     </div>
   );

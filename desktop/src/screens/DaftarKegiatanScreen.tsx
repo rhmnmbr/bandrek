@@ -6,6 +6,8 @@ import {
   useSubjekList,
   useKelasList,
   useSiswaList,
+  useMapelList,
+  useTempatList,
 } from '@/data/hooks';
 import type { Kegiatan, StatusKegiatan, QuickFilterDaftar } from '@/data/types/kegiatan';
 import {
@@ -43,6 +45,8 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const { data: subjekList = [], isLoading: loadingSubjek } = useSubjekList();
   const { data: kelasList = [], isLoading: loadingKelas } = useKelasList();
   const { data: siswaList = [] } = useSiswaList({ status: 'semua' });
+  const { data: mapelList = [] } = useMapelList();
+  const { data: tempatList = [] } = useTempatList();
 
   const isPageLoading = loadingKegiatan || loadingJenis || loadingSubjek || loadingKelas;
 
@@ -329,6 +333,16 @@ export const DaftarKegiatanScreen: React.FC = () => {
     handleUpdateParam('siswa', val || null);
   };
 
+  const handleChangeMapel = (val: string) => {
+    setMapel(val);
+    handleUpdateParam('mapel', val || null);
+  };
+
+  const handleChangeTempat = (val: string) => {
+    setTempat(val);
+    handleUpdateParam('tempat', val || null);
+  };
+
   const handleChangeCari = (val: string) => {
     setCari(val);
     handleUpdateParam('cari', val.trim() || null);
@@ -430,6 +444,18 @@ export const DaftarKegiatanScreen: React.FC = () => {
     return s ? { id: s.id, nama: s.nama } : { id: siswa, nama: 'Siswa' };
   }, [siswa, siswaList]);
 
+  const activeMapelObj = React.useMemo(() => {
+    if (!mapel) return null;
+    const m = mapelList.find((item) => item.id === mapel);
+    return m ? { id: m.id, nama: m.nama } : { id: mapel, nama: 'Mata pelajaran' };
+  }, [mapel, mapelList]);
+
+  const activeTempatObj = React.useMemo(() => {
+    if (!tempat) return null;
+    const t = tempatList.find((item) => item.id === tempat);
+    return t ? { id: t.id, nama: t.nama } : { id: tempat, nama: 'Tempat' };
+  }, [tempat, tempatList]);
+
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white">
       {isPageLoading ? (
@@ -473,6 +499,10 @@ export const DaftarKegiatanScreen: React.FC = () => {
             isLoading={false}
             activeSiswa={activeSiswaObj}
             onClearSiswa={() => handleChangeSiswa('')}
+            activeMapel={activeMapelObj}
+            onClearMapel={() => handleChangeMapel('')}
+            activeTempat={activeTempatObj}
+            onClearTempat={() => handleChangeTempat('')}
           />
 
           {/* 3. Table or Empty State */}
