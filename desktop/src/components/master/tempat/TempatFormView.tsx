@@ -22,6 +22,7 @@ interface TempatFormViewProps {
   isNewRuangan: boolean;
   existingTempat: Tempat[];
   ruanganList: Ruangan[];
+  isLoadingRuangan?: boolean;
   onSaveTempat: (data: TempatFormData) => Promise<void>;
   onDeleteTempat: () => void;
   onSaveRuangan: (data: RuanganFormData) => Promise<void>;
@@ -40,6 +41,7 @@ export function TempatFormView({
   isNewRuangan,
   existingTempat,
   ruanganList,
+  isLoadingRuangan = false,
   onSaveTempat,
   onDeleteTempat,
   onSaveRuangan,
@@ -238,13 +240,17 @@ export function TempatFormView({
     ? 'Tempat baru'
     : tempat?.nama || '';
 
+  const countRuangan = !isLoadingRuangan
+    ? ruanganList.length
+    : (tempat?.jumlahRuangan ?? ruanganList.length);
+
   const panelSub = isChildMode
     ? isNewRuangan
       ? `Ruangan baru di ${tempat?.nama || ''}`
       : `${tempat?.nama || ''} · ${activeRuangan?.jumlahKegiatan || 0} kegiatan`
     : isNewTempat
     ? 'Isi datanya, lalu simpan'
-    : `${ruanganList.length} ruangan · ${tempat?.jumlahKegiatan || 0} kegiatan`;
+    : `${countRuangan} ruangan · ${tempat?.jumlahKegiatan || 0} kegiatan`;
 
   // Deletion permissions
   const bisaHapusTempat = Boolean(tempat?.id && tempat.dapatDihapus);
@@ -412,6 +418,8 @@ export function TempatFormView({
               <RuanganTable
                 tempatNama={tempat.nama}
                 ruanganList={ruanganList}
+                isLoading={isLoadingRuangan}
+                jumlahRuangan={tempat.jumlahRuangan}
                 onNewRuangan={onNewRuangan}
                 onSelectRuangan={onSelectRuangan}
               />

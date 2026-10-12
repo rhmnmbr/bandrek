@@ -68,10 +68,16 @@ export function TempatScreen() {
   const selectedTempatId = selectedTempat?.id || '';
 
   // Ruangan list for selected Tempat
-  const { data: ruanganList = [] } = useRuanganByTempat(
+  const {
+    data: ruanganList = [],
+    isLoading: isLoadingRuangan,
+    isFetching: isFetchingRuangan,
+  } = useRuanganByTempat(
     selectedTempatId,
     Boolean(selectedTempatId)
   );
+
+  const isRuanganLoading = isLoadingRuangan || (isFetchingRuangan && ruanganList.length === 0);
 
   // Active Ruangan
   const activeRuangan = useMemo(() => {
@@ -374,6 +380,7 @@ export function TempatScreen() {
             isNewRuangan={isNewRuangan}
             existingTempat={allTempat}
             ruanganList={ruanganList}
+            isLoadingRuangan={isRuanganLoading}
             onSaveTempat={handleSaveTempat}
             onDeleteTempat={() =>
               setDialogState({
