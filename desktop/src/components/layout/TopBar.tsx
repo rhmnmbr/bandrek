@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils';
 import {
   Navigation20Regular,
   Search16Regular,
-  PlugDisconnected16Regular,
   Database16Regular,
   Color16Regular,
   ArrowExit16Regular,
@@ -24,7 +23,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   title,
   onToggleRail,
   onQuickSearch,
-  isOffline = false,
   className,
 }) => {
   const logoutMutation = useLogout();
@@ -69,14 +67,6 @@ export const TopBar: React.FC<TopBarProps> = ({
           Ctrl K
         </kbd>
       </button>
-
-      {/* Offline Status Indicator */}
-      {isOffline && (
-        <div className="flex items-center gap-1 rounded border border-(--color-border-strong) bg-(--color-surface-sunken) px-2 py-0.5 text-[11px] font-medium text-(--color-text) shadow-xs">
-          <PlugDisconnected16Regular className="text-[13px] text-(--color-text-secondary)" />
-          <span>Mode Baca</span>
-        </div>
-      )}
 
       {/* Flexible Spacer */}
       <div className="flex-1" />

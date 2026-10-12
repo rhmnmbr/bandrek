@@ -16,13 +16,31 @@ export interface OfflineBannerProps {
   className?: string;
 }
 
+const formatCachedAt = (rawDate?: string): string => {
+  if (!rawDate) return "16 Sep 2026, 11:45";
+  if (rawDate.includes(',') && !rawDate.includes('T')) return rawDate;
+  const d = new Date(rawDate);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+  return rawDate;
+};
+
 export const OfflineBanner: React.FC<OfflineBannerProps> = ({
   cachedAt = "16 Sep 2026, 11:45",
   onRetry,
   isRetrying = false,
-  variant = "surface-sunken",
+  variant = "warning",
   className,
 }) => {
+  const formattedCachedAt = React.useMemo(() => formatCachedAt(cachedAt), [cachedAt]);
+
   const getVariantStyles = (): {
     container: string;
     icon: React.ReactNode;
@@ -50,7 +68,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
         return {
           container:
             "bg-(--color-warning-bg) border-b border-(--color-warning) text-(--color-warning-ink)",
-          icon: <Warning16Regular className="text-(--color-warning-ink) flex-none" />,
+          icon: <PlugDisconnected16Regular className="text-(--color-warning-ink) flex-none" />,
           badge: "bg-(--color-warning) text-white",
           btn: "border-(--color-warning-ink) text-(--color-warning-ink) bg-white hover:bg-(--color-warning-bg)",
         };
@@ -72,21 +90,21 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
     <div
       role="status"
       className={cn(
-        "sticky top-0 z-50 w-full px-4 py-1.5 flex items-center justify-between text-[12px] select-none transition-colors duration-(--dur-fast)",
+        "sticky top-0 z-50 w-full px-3.5 py-1 min-h-7.5 flex items-center justify-between text-[12px] select-none transition-colors duration-(--dur-fast)",
         styles.container,
         className
       )}
     >
-      <div className="flex items-center gap-2.5 flex-wrap">
+      <div className="flex items-center gap-2 flex-wrap">
         <span className="flex-none flex items-center justify-center">
           {styles.icon}
         </span>
         <span className={cn("px-1.5 py-0.5 rounded-sm text-[10.5px] font-semibold uppercase tracking-wider", styles.badge)}>
           Mode Baca
         </span>
-        <span>
+        <span className="leading-snug">
           <strong>Sambungan ke server terputus.</strong> Menampilkan data dari cache lokal (dimuat:{" "}
-          <span className="font-mono font-medium">{cachedAt}</span>). Semua aksi tulis dinonaktifkan.
+          <span className="font-mono font-medium">{formattedCachedAt}</span>). Semua aksi tulis dinonaktifkan.
         </span>
       </div>
 
@@ -96,7 +114,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
           disabled={isRetrying}
           onClick={onRetry}
           className={cn(
-            "h-5.5 px-2.5 rounded-sm border text-[11px] font-medium cursor-pointer select-none transition-colors disabled:opacity-50 ml-3 flex-none",
+            "h-6 px-2.5 rounded border text-[11px] font-medium cursor-pointer select-none transition-colors disabled:opacity-50 ml-3 flex-none shadow-2xs",
             styles.btn
           )}
         >

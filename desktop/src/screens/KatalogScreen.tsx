@@ -68,7 +68,7 @@ export function KatalogScreen() {
   const [offlineBannerActive, setOfflineBannerActive] = React.useState(true);
   const [offlineVariant, setOfflineVariant] = React.useState<
     "dark-charcoal" | "danger-subtle" | "surface-sunken" | "warning"
-  >("surface-sunken");
+  >("warning");
 
   // Segmented control interactive state
   const [kehadiranVal, setKehadiranVal] = React.useState<KehadiranValue>("hadir");
