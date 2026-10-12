@@ -58,6 +58,15 @@ export const DaftarKegiatanScreen: React.FC = () => {
     };
   }, [semuaKegiatan]);
 
+  // Earliest date in the dataset (equivalent to prototype's tglAwal(db))
+  const tglAwalData = React.useMemo(() => {
+    if (!semuaKegiatan.length) return SIMULATED_TODAY;
+    return semuaKegiatan.reduce(
+      (min, k) => (k.tanggal < min ? k.tanggal : min),
+      SIMULATED_TODAY
+    );
+  }, [semuaKegiatan]);
+
   // Local filter states - user explicit selections (null means default derived from data)
   const [userDari, setUserDari] = React.useState<string | null>(null);
   const [userSampai, setUserSampai] = React.useState<string | null>(null);
@@ -69,17 +78,59 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const [status, setStatus] = React.useState<StatusKegiatan | ''>('');
   const [subjek, setSubjek] = React.useState<string>('');
   const [kelas, setKelas] = React.useState<string>('');
+  const [mapel, setMapel] = React.useState<string>('');
+  const [tempat, setTempat] = React.useState<string>('');
   const [cari, setCari] = React.useState<string>('');
   const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
 
-  // Handle URL query parameter `?filter=perlu_realisasi` or `?filter=perlu`
+  // Sync URL query parameters (?filter, ?subjek, ?kelas, ?jenis, ?status, ?cari, ?mapel, ?tempat, ?dari, ?sampai)
   React.useEffect(() => {
     const filterParam = searchParams.get('filter');
+    const subjekParam = searchParams.get('subjek');
+    const kelasParam = searchParams.get('kelas');
+    const jenisParam = searchParams.get('jenis');
+    const statusParam = searchParams.get('status') as StatusKegiatan | null;
+    const cariParam = searchParams.get('cari');
+    const mapelParam = searchParams.get('mapel');
+    const tempatParam = searchParams.get('tempat');
+    const dariParam = searchParams.get('dari');
+    const sampaiParam = searchParams.get('sampai');
+
+    const hasEntityFilter = Boolean(
+      subjekParam || kelasParam || jenisParam || mapelParam || tempatParam || cariParam
+    );
+
     if (filterParam === 'perlu_realisasi' || filterParam === 'perlu') {
       setCepat('perlu');
+    } else if (filterParam === 'hari' || filterParam === 'minggu' || filterParam === 'datang') {
+      setCepat(filterParam as QuickFilterDaftar);
+    } else {
+      setCepat('');
     }
-  }, [searchParams]);
+
+    setSubjek(subjekParam || '');
+    setKelas(kelasParam || '');
+    setJenis(jenisParam || '');
+    setStatus(statusParam || '');
+    setCari(cariParam || '');
+    setMapel(mapelParam || '');
+    setTempat(tempatParam || '');
+
+    if (dariParam) {
+      setUserDari(dariParam);
+    } else if (hasEntityFilter && tglAwalData) {
+      setUserDari(tglAwalData);
+    } else {
+      setUserDari(null);
+    }
+
+    if (sampaiParam) {
+      setUserSampai(sampaiParam);
+    } else {
+      setUserSampai(null);
+    }
+  }, [searchParams, tglAwalData]);
 
   // Modal Dialog States
   const [modalBatalState, setModalBatalState] = React.useState<{
@@ -137,13 +188,15 @@ export const DaftarKegiatanScreen: React.FC = () => {
           return false;
         }
       }
+      if (mapel && ev.mapel !== mapel) return false;
+      if (tempat && ev.tempat !== tempat) return false;
       if (cari.trim().length > 0) {
         const qLower = cari.trim().toLowerCase();
         if (!ev.nama.toLowerCase().includes(qLower)) return false;
       }
       return true;
     },
-    [jenis, status, subjek, kelas, kelasAnggotaMap, cari]
+    [jenis, status, subjek, kelas, mapel, tempat, kelasAnggotaMap, cari]
   );
 
   // Quick filter counts (calculated on full dataset matching other active filters)
@@ -214,6 +267,8 @@ export const DaftarKegiatanScreen: React.FC = () => {
     (status ? 1 : 0) +
     (subjek ? 1 : 0) +
     (kelas ? 1 : 0) +
+    (mapel ? 1 : 0) +
+    (tempat ? 1 : 0) +
     (cari.trim() ? 1 : 0);
 
   const hasActiveFilters =
@@ -223,27 +278,70 @@ export const DaftarKegiatanScreen: React.FC = () => {
     (dari && dari !== defaultRentang.dari) ||
     (sampai && sampai !== defaultRentang.sampai);
 
+  // Sync toolbar filters to URL search params
+  const handleUpdateParam = React.useCallback(
+    (key: string, val: string | null) => {
+      const next = new URLSearchParams(searchParams);
+      if (val) {
+        next.set(key, val);
+      } else {
+        next.delete(key);
+      }
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
+
+  const handleChangeJenis = (val: string) => {
+    setJenis(val);
+    handleUpdateParam('jenis', val || null);
+  };
+
+  const handleChangeStatus = (val: StatusKegiatan | '') => {
+    setStatus(val);
+    handleUpdateParam('status', val || null);
+  };
+
+  const handleChangeSubjek = (val: string) => {
+    setSubjek(val);
+    handleUpdateParam('subjek', val || null);
+  };
+
+  const handleChangeKelas = (val: string) => {
+    setKelas(val);
+    handleUpdateParam('kelas', val || null);
+  };
+
+  const handleChangeCari = (val: string) => {
+    setCari(val);
+    handleUpdateParam('cari', val.trim() || null);
+  };
+
+  const handleChangeDari = (val: string) => {
+    setUserDari(val);
+    handleUpdateParam('dari', val || null);
+  };
+
+  const handleChangeSampai = (val: string) => {
+    setUserSampai(val);
+    handleUpdateParam('sampai', val || null);
+  };
+
   // Toggle quick filter chip
   const handleToggleCepat = (id: QuickFilterDaftar) => {
+    const next = new URLSearchParams(searchParams);
     if (cepat === id) {
       setCepat('');
-      if (searchParams.get('filter')) {
-        const next = new URLSearchParams(searchParams);
-        next.delete('filter');
-        setSearchParams(next);
-      }
+      next.delete('filter');
     } else {
       setCepat(id);
       if (id === 'perlu') {
-        const next = new URLSearchParams(searchParams);
         next.set('filter', 'perlu_realisasi');
-        setSearchParams(next);
-      } else if (searchParams.get('filter')) {
-        const next = new URLSearchParams(searchParams);
-        next.delete('filter');
-        setSearchParams(next);
+      } else {
+        next.set('filter', id);
       }
     }
+    setSearchParams(next, { replace: true });
   };
 
   // Reset all filters
@@ -254,14 +352,12 @@ export const DaftarKegiatanScreen: React.FC = () => {
     setStatus('');
     setSubjek('');
     setKelas('');
+    setMapel('');
+    setTempat('');
     setCari('');
     setCepat('');
     setSortDesc(true);
-    if (searchParams.get('filter')) {
-      const next = new URLSearchParams(searchParams);
-      next.delete('filter');
-      setSearchParams(next);
-    }
+    setSearchParams({}, { replace: true });
   };
 
   // Widen date range by 1 year past/future
@@ -269,9 +365,16 @@ export const DaftarKegiatanScreen: React.FC = () => {
     const dToday = toDate(SIMULATED_TODAY);
     const dPast = addDays(dToday, -365);
     const dFuture = addDays(dToday, 365);
-    setUserDari(toIso(dPast));
-    setUserSampai(toIso(dFuture));
+    const pastIso = toIso(dPast);
+    const futureIso = toIso(dFuture);
+    setUserDari(pastIso);
+    setUserSampai(futureIso);
     setCepat('');
+    const next = new URLSearchParams(searchParams);
+    next.set('dari', pastIso);
+    next.set('sampai', futureIso);
+    next.delete('filter');
+    setSearchParams(next, { replace: true });
   };
 
   // Action Handlers
@@ -313,22 +416,22 @@ export const DaftarKegiatanScreen: React.FC = () => {
           <DaftarToolbar
             dari={dari}
             sampai={sampai}
-            onChangeDari={(val) => setUserDari(val)}
-            onChangeSampai={(val) => setUserSampai(val)}
+            onChangeDari={handleChangeDari}
+            onChangeSampai={handleChangeSampai}
             rentangMati={Boolean(cepat)}
             jenis={jenis}
-            onChangeJenis={setJenis}
+            onChangeJenis={handleChangeJenis}
             jenisList={jenisList}
             status={status}
-            onChangeStatus={setStatus}
+            onChangeStatus={handleChangeStatus}
             subjek={subjek}
-            onChangeSubjek={setSubjek}
+            onChangeSubjek={handleChangeSubjek}
             subjekList={subjekList}
             kelas={kelas}
-            onChangeKelas={setKelas}
+            onChangeKelas={handleChangeKelas}
             kelasList={kelasList}
             cari={cari}
-            onChangeCari={setCari}
+            onChangeCari={handleChangeCari}
             simulatedToday={SIMULATED_TODAY}
             onNewKegiatan={() => setFormOpen(true)}
           />

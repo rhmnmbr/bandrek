@@ -71,7 +71,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
     const ev = kegiatanList.find((k) => k.id === targetId);
     if (!ev) return null;
     const d = toDate(ev.tanggal);
-    const tgl = `${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]}`;
+    const tgl = `${String(d.getDate()).padStart(2, '0')} ${NAMA_BULAN_PENDEK[d.getMonth()]}`;
     return {
       id: ev.id,
       teks: `${ev.nama} · ${tgl} ${ev.mulai}–${ev.selesai}`,

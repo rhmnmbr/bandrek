@@ -148,24 +148,26 @@ export function formatBulanTahun(d: Date): string {
 }
 
 /**
- * Format tampilan tanggal ringkas (misal: "Rab, 16 Sep 2026")
+ * Format tampilan tanggal ringkas (misal: "Rab, 16 Sep 2026" atau "Rab, 09 Sep 2026")
  */
 export function formatTanggalRingkas(iso: string): string {
   const d = toDate(iso);
   const dow = (d.getDay() + 6) % 7;
   const h = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'][dow];
-  return `${h}, ${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
+  const tgl = String(d.getDate()).padStart(2, '0');
+  return `${h}, ${tgl} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /**
- * Format tampilan tanggal pendek tanpa tahun (misal: "Rab, 16 Sep")
+ * Format tampilan tanggal pendek tanpa tahun (misal: "Rab, 16 Sep" atau "Rab, 09 Sep")
  */
 export function formatTanggalPendek(iso: string): string {
   if (!iso) return '';
   const d = toDate(iso);
   const dow = (d.getDay() + 6) % 7;
   const h = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'][dow];
-  return `${h}, ${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]}`;
+  const tgl = String(d.getDate()).padStart(2, '0');
+  return `${h}, ${tgl} ${NAMA_BULAN_PENDEK[d.getMonth()]}`;
 }
 
 /**
@@ -179,12 +181,13 @@ export function formatTanggalSlash(iso: string): string {
 }
 
 /**
- * Format tanggal dengan bulan pendek dan tahun (misal: "12 Feb 2013")
+ * Format tanggal dengan bulan pendek dan tahun (misal: "12 Feb 2013" atau "09 Feb 2013")
  */
 export function formatTanggalTahun(iso: string): string {
   if (!iso) return '—';
   const d = toDate(iso);
-  return `${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
+  const tgl = String(d.getDate()).padStart(2, '0');
+  return `${tgl} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /**

@@ -96,17 +96,12 @@ assert.equal(nonaktifList.length, totalNonaktif, `Status nonaktif returns ${tota
 const semuaList = filterSubjek(seed.subjek, { status: 'semua' });
 assert.equal(semuaList.length, seed.subjek.length, 'Status semua returns all subjects');
 
-// Filter by Peran
-const pengisiList = filterSubjek(seed.subjek, { status: 'semua', peran: 'Pengisi' });
-assert.ok(pengisiList.length > 0, 'Should find subjects with peran Pengisi');
-assert.ok(pengisiList.every((s) => s.peran === 'Pengisi'), 'All results must have peran Pengisi');
-
 // Filter by Search Query
 const searchByNama = filterSubjek(seed.subjek, { status: 'semua', q: 'Sari' });
 assert.ok(searchByNama.length > 0, 'Should find subject matching name Sari');
 assert.ok(searchByNama.some((s) => s.nama.includes('Sari')), 'Found subject must include Sari');
 
-console.log('✓ Filter by status, peran, and search query verified.\n');
+console.log('✓ Filter by status and search query verified (peran bawaan removed).\n');
 
 // ----------------------------------------------------
 // 4. Test Deletion Integrity Rule (DOMAIN.md §12)

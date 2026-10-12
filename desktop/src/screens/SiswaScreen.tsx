@@ -313,6 +313,34 @@ export function SiswaScreen() {
     [navigate]
   );
 
+  const handleBackFromProfil = useCallback(() => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/master/siswa');
+    }
+  }, [navigate]);
+
+  // Keyboard shortcut Esc when in profil mode
+  useEffect(() => {
+    if (!profilId) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        const target = e.target as HTMLElement;
+        const isInput =
+          target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT';
+        if (!isInput && !dialogState.isOpen) {
+          e.preventDefault();
+          handleBackFromProfil();
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [profilId, dialogState.isOpen, handleBackFromProfil]);
+
   // Global Ctrl+N shortcut for Siswa
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -333,16 +361,7 @@ export function SiswaScreen() {
     return (
       <ProfilSiswaView
         profil={profilData}
-        onBack={() => {
-          if (routeId) {
-            navigate('/master/siswa');
-          } else {
-            const nextParams = new URLSearchParams(searchParams);
-            nextParams.delete('profil');
-            nextParams.delete('id');
-            setSearchParams(nextParams);
-          }
-        }}
+        onBack={handleBackFromProfil}
         onEdit={(id) => {
           if (routeId) {
             navigate(`/master/siswa?edit=${id}`);

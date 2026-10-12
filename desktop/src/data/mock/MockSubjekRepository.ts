@@ -191,7 +191,7 @@ export class MockSubjekRepository implements ISubjekRepository {
         (sb.mapel || [])
           .map((mId) => mockStore.mapel.find((m) => m.id === mId)?.nama)
           .filter(Boolean)
-          .join(', ') || '—';
+          .join(', ');
 
       const inisial =
         sb.nama

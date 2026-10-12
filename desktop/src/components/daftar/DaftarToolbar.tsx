@@ -178,7 +178,7 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
   return (
     <div
       ref={containerRef}
-      className="flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-(--color-canvas) text-[12px] select-none"
+      className="relative z-20 flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-wrap border-b border-(--color-border) bg-(--color-canvas) text-[12px] select-none"
     >
       {/* 1. Date Range: Dari */}
       <div className="relative flex-none">

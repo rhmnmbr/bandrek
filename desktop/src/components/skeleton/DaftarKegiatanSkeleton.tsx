@@ -4,7 +4,7 @@ export function DaftarKegiatanSkeleton({ rowCount = 10 }: { rowCount?: number })
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white overflow-hidden select-none">
       {/* 1. Main Filter Bar Skeleton (Exact match: h-11.5, px-3.5, gap-1.75) */}
-      <div className="flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white">
+      <div className="flex-none px-3.5 pt-2.75 pb-2.25 flex gap-1.75 items-center flex-wrap border-b border-(--color-border) bg-white">
         {/* Date: Dari */}
         <Skeleton className="h-6.5 w-26.5 rounded shrink-0" />
 

@@ -287,8 +287,32 @@ export function SubjekScreen() {
   );
 
   const handleBackFromProfil = useCallback(() => {
-    navigate('/master/subjek');
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/master/subjek');
+    }
   }, [navigate]);
+
+  // Keyboard shortcut Esc when in profil mode (matches DetailKegiatanScreen)
+  useEffect(() => {
+    if (!profilId) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        const target = e.target as HTMLElement;
+        const isInput =
+          target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT';
+        if (!isInput && !dialogState.isOpen) {
+          e.preventDefault();
+          handleBackFromProfil();
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [profilId, dialogState.isOpen, handleBackFromProfil]);
 
   // Keyboard shortcut Ctrl+N
   useEffect(() => {

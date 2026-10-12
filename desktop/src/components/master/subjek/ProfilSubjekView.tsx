@@ -1,5 +1,7 @@
+import { ArrowLeft16Regular } from '@fluentui/react-icons';
 import { KegiatanBadge } from '@/components/ui/badge';
 import { Select } from '@/components/ui/select';
+import { TimePicker } from '@/components/ui/time-picker';
 import type { SubjekProfil, KetersediaanRutinItem } from '@/data/types/master';
 
 interface ProfilSubjekViewProps {
@@ -29,34 +31,24 @@ export function ProfilSubjekView({
   onHapusKetersediaan,
   onToggleAktif,
 }: ProfilSubjekViewProps) {
-  const { subjek, inisial, mapelTeks, kpi, bebanJudul, batasNyaman, beban, terdekat } = profil;
+  const { subjek, inisial, mapelTeks, kpi, bebanJudul, beban, terdekat } = profil;
 
   const kelaminText =
     subjek.kelamin === 'L' ? 'Laki-laki' : subjek.kelamin === 'P' ? 'Perempuan' : '—';
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto bg-(--color-surface) p-4 md:px-5.5 md:py-7.5 flex flex-col gap-4">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex items-center gap-2 flex-wrap shrink-0">
+    <div className="flex-1 min-h-0 overflow-y-auto bg-(--color-surface) pt-3.5 px-4 md:px-5.5 pb-8 flex flex-col gap-3.5">
+      {/* Top Header */}
+      <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+        {/* Back Button (Ghost Icon Button - identical to DetailKegiatanScreen) */}
         <button
           type="button"
           onClick={onBack}
-          title="Kembali ke daftar subjek"
-          className="flex h-6 w-6 items-center justify-center rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-xs cursor-pointer transition-colors"
+          title="Kembali ke Subjek · Esc"
+          className="w-7 h-7 flex-none rounded flex items-center justify-center text-(--color-text-secondary) hover:text-(--color-text) hover:bg-(--color-surface-sunken) active:bg-(--color-surface-alt) cursor-pointer transition-colors"
         >
-          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M10.35 3.65c.2.2.2.5 0 .7L6.21 8.5l4.14 4.15c.2.2.2.5 0 .7-.2.2-.5.2-.7 0l-4.5-4.5c-.2-.2-.2-.5 0-.7l4.5-4.5c.2-.2.5-.2.7 0Z" />
-          </svg>
+          <ArrowLeft16Regular className="text-[16px]" />
         </button>
-
-        <button
-          type="button"
-          onClick={onBack}
-          className="border-none bg-transparent p-0 text-[13px] text-(--color-brand) hover:underline cursor-pointer font-medium"
-        >
-          Subjek
-        </button>
-        <span className="text-[13px] text-(--color-text-muted)">›</span>
 
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EBF3FC] text-[#0C548F] text-[11.5px] font-semibold">
           {inisial}
@@ -74,9 +66,11 @@ export function ProfilSubjekView({
           {subjek.aktif ? 'Aktif' : 'Nonaktif'}
         </span>
 
-        <div className="text-[12.5px] text-(--color-text-muted)">
-          {mapelTeks}
-        </div>
+        {mapelTeks ? (
+          <div className="text-[12.5px] text-(--color-text-muted)">
+            {mapelTeks}
+          </div>
+        ) : null}
 
         <div className="flex-1" />
 
@@ -151,9 +145,6 @@ export function ProfilSubjekView({
             <div className="flex items-center gap-2 mb-2">
               <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-muted) flex-1">
                 {bebanJudul}
-              </div>
-              <div className="text-[11px] text-(--color-text-muted)">
-                batas nyaman {batasNyaman} jam/minggu
               </div>
             </div>
 
@@ -317,20 +308,20 @@ export function ProfilSubjekView({
                       ))}
                     </Select>
 
-                    <input
-                      type="text"
+                    <TimePicker
                       value={k.dari}
-                      onChange={(e) => onUbahKetersediaan(idx, { dari: e.target.value })}
+                      onChange={(val) => onUbahKetersediaan(idx, { dari: val })}
                       placeholder="07:00"
-                      className="w-14 h-6.5 rounded border border-(--color-border-strong) px-1.25 font-mono text-[11.5px] text-(--color-text-primary) focus:outline-none focus:border-(--color-brand)"
+                      density="compact"
+                      className="w-22.5 shrink-0"
                     />
-                    <span className="text-(--color-text-muted)">–</span>
-                    <input
-                      type="text"
+                    <span className="text-(--color-text-muted) select-none shrink-0">–</span>
+                    <TimePicker
                       value={k.sampai}
-                      onChange={(e) => onUbahKetersediaan(idx, { sampai: e.target.value })}
+                      onChange={(val) => onUbahKetersediaan(idx, { sampai: val })}
                       placeholder="12:00"
-                      className="w-14 h-6.5 rounded border border-(--color-border-strong) px-1.25 font-mono text-[11.5px] text-(--color-text-primary) focus:outline-none focus:border-(--color-brand)"
+                      density="compact"
+                      className="w-22.5 shrink-0"
                     />
 
                     <button

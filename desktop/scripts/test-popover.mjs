@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+
+const baseDir = existsSync(resolve(process.cwd(), 'desktop'))
+  ? resolve(process.cwd(), 'desktop')
+  : process.cwd();
 
 console.log('=== TEST SUITE: A2 Popover Kegiatan ===\n');
 
@@ -129,7 +133,7 @@ console.log('  ✓ Cascadia Mono date line formatted properly (e.g. Rab, 16 Sep 
 // 4. Verify Component Code Integrity
 console.log('\nTest 4: Component Code Integrity & Accessibility');
 const popoverCode = readFileSync(
-  resolve('src/components/kalender/KegiatanPopover.tsx'),
+  resolve(baseDir, 'src/components/kalender/KegiatanPopover.tsx'),
   'utf8'
 );
 

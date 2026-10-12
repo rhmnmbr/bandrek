@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+const baseDir = existsSync(resolve(process.cwd(), 'desktop'))
+  ? resolve(process.cwd(), 'desktop')
+  : process.cwd();
+
 console.log('=== TEST SUITE: Phase 5 Step 6 (A8 Realisasi Kegiatan) ===\n');
 
 function menit(hhmm) {
@@ -359,7 +363,7 @@ const resOlahraga = prosesSimpanRealisasi(mockOlahraga, {
 assert.equal(resOlahraga.realisasi.materi, null, 'Non-materi activity must preserve null materi');
 
 // Verify MockRealisasiRepository source code handles null materi
-const mockRepoCode = readFileSync(resolve('src/data/mock/MockRealisasiRepository.ts'), 'utf8');
+const mockRepoCode = readFileSync(resolve(baseDir, 'src/data/mock/MockRealisasiRepository.ts'), 'utf8');
 assert.ok(mockRepoCode.includes("input.materi !== undefined ? input.materi : (existing.materi || null)"), 'MockRealisasiRepository must properly handle null materi');
 assert.ok(mockRepoCode.includes("status: 'terealisasi'"), 'MockRealisasiRepository must set status to terealisasi');
 
@@ -370,7 +374,7 @@ console.log('  ✓ MockRealisasiRepository persistence and state update verified
 // ----------------------------------------------------
 console.log('\nTest 6: Source code and route verification');
 
-const realisasiScreenPath = resolve('src/screens/RealisasiScreen.tsx');
+const realisasiScreenPath = resolve(baseDir, 'src/screens/RealisasiScreen.tsx');
 assert.ok(existsSync(realisasiScreenPath), 'RealisasiScreen.tsx must exist');
 const realisasiCode = readFileSync(realisasiScreenPath, 'utf8');
 
