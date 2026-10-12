@@ -16,6 +16,50 @@ import { mockStore } from './mockStore';
 import { enrichKegiatan, detectScheduleConflicts } from './businessRules';
 import type { RawKegiatanSeed } from './seedData';
 
+function generateRecurringDates(
+  startDateStr: string,
+  frekuensi: 'mingguan' | 'dua_mingguan' | 'bulanan',
+  tipeBerakhir: 'pertemuan' | 'tanggal',
+  totalPertemuan?: number,
+  sampaiTanggal?: string
+): string[] {
+  const dates: string[] = [startDateStr];
+  const maxIterations = 52;
+  const targetCount =
+    tipeBerakhir === 'pertemuan'
+      ? Math.min(maxIterations, Math.max(2, totalPertemuan || 4))
+      : maxIterations;
+
+  const [y, m, d] = startDateStr.split('-').map(Number);
+  const current = new Date(y, m - 1, d);
+
+  while (dates.length < targetCount) {
+    if (frekuensi === 'mingguan') {
+      current.setDate(current.getDate() + 7);
+    } else if (frekuensi === 'dua_mingguan') {
+      current.setDate(current.getDate() + 14);
+    } else if (frekuensi === 'bulanan') {
+      const targetMonth = current.getMonth() + 1;
+      current.setMonth(targetMonth, 1);
+      const daysInMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0).getDate();
+      current.setDate(Math.min(d, daysInMonth));
+    }
+
+    const nextY = current.getFullYear();
+    const nextM = String(current.getMonth() + 1).padStart(2, '0');
+    const nextD = String(current.getDate()).padStart(2, '0');
+    const nextDateStr = `${nextY}-${nextM}-${nextD}`;
+
+    if (tipeBerakhir === 'tanggal' && sampaiTanggal && nextDateStr > sampaiTanggal) {
+      break;
+    }
+
+    dates.push(nextDateStr);
+  }
+
+  return dates;
+}
+
 export class MockKegiatanRepository implements IKegiatanRepository {
   private enrich(raw: RawKegiatanSeed): Kegiatan {
     return enrichKegiatan(
@@ -182,6 +226,52 @@ export class MockKegiatanRepository implements IKegiatanRepository {
   public async create(input: CreateKegiatanInput): Promise<Kegiatan> {
     return mockRunner(
       () => {
+        // Jika pengulangan jadwal aktif, buat serangkaian kegiatan mandiri
+        if (input.pengulangan?.aktif) {
+          const dates = generateRecurringDates(
+            input.tanggal,
+            input.pengulangan.frekuensi,
+            input.pengulangan.tipeBerakhir,
+            input.pengulangan.totalPertemuan,
+            input.pengulangan.sampaiTanggal
+          );
+
+          const seriId = `seri_${Date.now().toString().slice(-6)}`;
+          const createdList: Kegiatan[] = [];
+
+          dates.forEach((tgl, idx) => {
+            const newId = `e_${Date.now().toString().slice(-6)}_${idx + 1}`;
+            const raw: RawKegiatanSeed = {
+              id: newId,
+              nama: input.nama,
+              jenis: input.jenis,
+              mapel: input.mapel || null,
+              materi: input.materi || null,
+              kelas: input.kelas || null,
+              tanggal: tgl,
+              mulai: input.mulai,
+              selesai: input.selesai,
+              sepanjangHari: input.sepanjangHari ?? false,
+              ruangan: input.ruangan,
+              tempatCustom: input.tempatCustom || null,
+              subjek: input.subjek,
+              siswa: input.siswa,
+              catatan: input.catatan || '',
+              status: 'terjadwal',
+              realisasi: null,
+              seriId,
+              urutanSeri: idx + 1,
+              totalSeri: dates.length,
+            };
+
+            mockStore.kegiatan.push(raw);
+            createdList.push(this.enrich(raw));
+          });
+
+          mockStore.persist();
+          return createdList[0];
+        }
+
         const newId = `e_${Date.now().toString().slice(-6)}`;
         const raw: RawKegiatanSeed = {
           id: newId,

@@ -178,6 +178,9 @@ export function enrichKegiatan(
     perluRealisasi,
     telatHari,
     labelStatus,
+    seriId: raw.seriId || null,
+    urutanSeri: raw.urutanSeri || null,
+    totalSeri: raw.totalSeri || null,
   };
 }
 

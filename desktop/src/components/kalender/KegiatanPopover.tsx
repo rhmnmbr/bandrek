@@ -12,6 +12,7 @@ import {
   Dismiss16Regular,
   ChevronDown12Regular,
   Add12Regular,
+  ArrowSync16Regular,
 } from '@fluentui/react-icons';
 import { KegiatanBadge } from '@/components/ui/badge';
 
@@ -112,7 +113,15 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
             >
               {kegiatan.nama}
             </h3>
-            <KegiatanBadge status={kegiatan.status} className="mt-1.5" />
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+              <KegiatanBadge status={kegiatan.status} />
+              {kegiatan.seriId && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium bg-[#F3F2F1] text-[#5C5A58] border border-[#E1DFDD]">
+                  <ArrowSync16Regular className="w-3 h-3 text-(--color-brand)" />
+                  Pertemuan {kegiatan.urutanSeri ?? 1} dari {kegiatan.totalSeri ?? '?'}
+                </span>
+              )}
+            </div>
           </div>
 
           <button

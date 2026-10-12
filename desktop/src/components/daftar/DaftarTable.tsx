@@ -12,6 +12,7 @@ import {
   Eye16Regular,
   Dismiss16Regular,
   ArrowClockwise16Regular,
+  ArrowSync16Regular,
 } from '@fluentui/react-icons';
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover';
 
@@ -170,12 +171,21 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
                 {/* NAMA KEGIATAN */}
                 <div
                   className={cn(
-                    'flex-1 min-w-40 whitespace-nowrap overflow-hidden text-ellipsis pr-2',
+                    'flex-1 min-w-40 whitespace-nowrap overflow-hidden text-ellipsis pr-2 flex items-center gap-1.5',
                     perlu ? 'font-semibold' : 'font-normal',
                     isBatal ? 'line-through text-[#5C5A58]' : 'text-[#242424]'
                   )}
                 >
-                  {ev.nama}
+                  <span className="truncate">{ev.nama}</span>
+                  {ev.seriId && (
+                    <span
+                      title={`Kegiatan berulang: Pertemuan ${ev.urutanSeri ?? 1} dari ${ev.totalSeri ?? '?'}`}
+                      className="inline-flex items-center gap-0.5 px-1.5 py-0.25 rounded text-[10px] font-medium bg-[#F3F2F1] text-[#5C5A58] border border-[#E1DFDD] flex-none"
+                    >
+                      <ArrowSync16Regular className="w-2.75 h-2.75 text-(--color-brand)" />
+                      <span>{ev.urutanSeri ?? 1}/{ev.totalSeri ?? '?'}</span>
+                    </span>
+                  )}
                 </div>
 
                 {/* JENIS */}

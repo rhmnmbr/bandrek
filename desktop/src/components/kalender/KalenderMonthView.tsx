@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ArrowSync16Regular } from '@fluentui/react-icons';
 import { cn } from '@/lib/utils';
 import type { Kegiatan } from '@/data/types';
 import { toDate, NAMA_HARI } from '@/lib/dateUtils';
@@ -135,8 +136,9 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
                             isBatal && 'line-through text-(--color-text-muted)'
                           )}
                         >
-                          <span className="font-mono text-[10px] opacity-85 flex-none">
-                            {k.mulai}
+                          <span className="font-mono text-[10px] opacity-85 flex-none flex items-center gap-0.5">
+                            {k.seriId && <ArrowSync16Regular className="w-2.5 h-2.5 flex-none" />}
+                            <span>{k.mulai}</span>
                           </span>
                           <span className="truncate font-medium">{k.nama}</span>
                         </div>

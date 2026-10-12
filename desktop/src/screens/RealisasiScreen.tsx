@@ -5,6 +5,7 @@ import {
   Warning16Regular,
   Warning12Regular,
   Checkmark16Regular,
+  ArrowSync16Regular,
 } from '@fluentui/react-icons';
 import { KegiatanBadge } from '@/components/ui/badge';
 import {
@@ -673,6 +674,13 @@ export const RealisasiScreen: React.FC = () => {
           label={pilLabel}
         />
 
+        {kegiatan.seriId && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11.5px] font-medium bg-(--color-surface-alt) text-(--color-text-secondary) border border-(--color-border)">
+            <ArrowSync16Regular className="w-3.5 h-3.5 text-(--color-brand)" />
+            Pertemuan {kegiatan.urutanSeri ?? 1} dari {kegiatan.totalSeri ?? '?'}
+          </span>
+        )}
+
         <div className="flex-1" />
 
         {/* Pending Realization Counter Link */}
@@ -736,8 +744,16 @@ export const RealisasiScreen: React.FC = () => {
           {/* Rencana Kegiatan (Context Bar) */}
           <div className="flex-none mx-3.5 mt-3.25 border border-(--color-border) rounded-lg bg-(--color-surface-alt) p-2.5 px-3 flex items-center gap-3.5 text-[12.5px]">
             <div className="flex-none max-w-[65%] leading-snug">
-              <div className="text-[14px] font-semibold text-(--color-text) truncate">
-                {kegiatan.nama}
+              <div className="flex items-center gap-2">
+                <span className="text-[14px] font-semibold text-(--color-text) truncate">
+                  {kegiatan.nama}
+                </span>
+                {kegiatan.seriId && (
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium bg-white text-(--color-text-secondary) border border-(--color-border)">
+                    <ArrowSync16Regular className="w-3 h-3 text-(--color-brand)" />
+                    Pertemuan {kegiatan.urutanSeri ?? 1} dari {kegiatan.totalSeri ?? '?'}
+                  </span>
+                )}
               </div>
               <div className="font-mono text-[11.5px] text-(--color-text-secondary) truncate mt-0.5">
                 {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}

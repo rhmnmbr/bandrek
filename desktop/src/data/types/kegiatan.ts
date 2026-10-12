@@ -75,6 +75,11 @@ export interface Kegiatan {
   jadwalUlangDari?: string | null; // ID kegiatan sebelumnya
   jadwalUlangKe?: string | null; // ID kegiatan hasil jadwal ulang
 
+  // Seri Jadwal Berulang (Recurring Series)
+  seriId?: string | null;
+  urutanSeri?: number | null;
+  totalSeri?: number | null;
+
   // Server-computed fields (UI dilarang menghitung)
   aksiDiizinkan: AksiKegiatan[];
   tempat: string; // Tempat ID (diturunkan dari ruangan)
@@ -156,6 +161,20 @@ export interface DaftarKegiatanFilterParams {
 }
 
 // ==========================================
+// PENGULANGAN JADWAL (RECURRING RULES)
+// ==========================================
+export type FrekuensiPengulangan = 'mingguan' | 'dua_mingguan' | 'bulanan';
+export type TipeBerakhirPengulangan = 'pertemuan' | 'tanggal';
+
+export interface AturanPengulangan {
+  aktif: boolean;
+  frekuensi: FrekuensiPengulangan;
+  tipeBerakhir: TipeBerakhirPengulangan;
+  totalPertemuan?: number; // Jumlah pengulangan (misal 4, 8, 12 pertemuan)
+  sampaiTanggal?: string; // Tanggal batas akhir (YYYY-MM-DD)
+}
+
+// ==========================================
 // INPUTS UNTUK MUTASI
 // ==========================================
 export interface CreateKegiatanInput {
@@ -173,6 +192,7 @@ export interface CreateKegiatanInput {
   subjek: KegiatanSubjekItem[];
   siswa: string[];
   catatan?: string;
+  pengulangan?: AturanPengulangan;
 }
 
 export interface UpdateKegiatanInput extends Partial<CreateKegiatanInput> {}

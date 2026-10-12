@@ -44,6 +44,9 @@ export interface RawKegiatanSeed {
   } | null;
   jadwalUlangDari?: string | null;
   jadwalUlangKe?: string | null;
+  seriId?: string | null;
+  urutanSeri?: number | null;
+  totalSeri?: number | null;
 }
 
 export interface SeedData {

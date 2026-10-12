@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft16Regular, Warning16Regular, Clock16Regular } from '@fluentui/react-icons';
+import {
+  ArrowLeft16Regular,
+  Warning16Regular,
+  Clock16Regular,
+  ArrowSync16Regular,
+} from '@fluentui/react-icons';
 import { KegiatanBadge, KehadiranBadge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/toast';
 import {
@@ -313,6 +318,14 @@ export const DetailKegiatanScreen: React.FC = () => {
     tambahTerkait(semuaKegiatan.find((x) => x.id === kegiatan.jadwalUlangDari));
   }
 
+  if (kegiatan.seriId) {
+    semuaKegiatan
+      .filter((x) => x.id !== kegiatan.id && x.seriId === kegiatan.seriId)
+      .sort((a, b) => (a.tanggal < b.tanggal ? -1 : 1))
+      .slice(0, 4)
+      .forEach((k) => tambahTerkait(k));
+  }
+
   semuaKegiatan
     .filter(
       (x) =>
@@ -399,6 +412,13 @@ export const DetailKegiatanScreen: React.FC = () => {
 
         {/* Activity Status Badge Pill */}
         <KegiatanBadge status={kegiatan.status} />
+
+        {kegiatan.seriId && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11.5px] font-medium bg-(--color-surface-alt) text-(--color-text-secondary) border border-(--color-border)">
+            <ArrowSync16Regular className="w-3.5 h-3.5 text-(--color-brand)" />
+            Pertemuan {kegiatan.urutanSeri ?? 1} dari {kegiatan.totalSeri ?? '?'}
+          </span>
+        )}
 
         <div className="flex-1" />
 
@@ -507,6 +527,15 @@ export const DetailKegiatanScreen: React.FC = () => {
                   <span className="w-15.5 flex-none text-(--color-text-secondary)">Catatan</span>
                   <span className="flex-1 min-w-0 text-(--color-text)">{kegiatan.catatan || '—'}</span>
                 </div>
+                {kegiatan.seriId && (
+                  <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
+                    <span className="w-15.5 flex-none text-(--color-text-secondary)">Pengulangan</span>
+                    <span className="flex-1 min-w-0 text-(--color-text) flex items-center gap-1.5">
+                      <ArrowSync16Regular className="w-3.5 h-3.5 text-(--color-brand)" />
+                      Pertemuan {kegiatan.urutanSeri ?? 1} dari {kegiatan.totalSeri ?? '?'}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Kolom Kanan */}
@@ -808,6 +837,9 @@ export const DetailKegiatanScreen: React.FC = () => {
             subjek: kegiatan.subjek,
             siswa: kegiatan.siswa,
             catatan: kegiatan.catatan || '',
+            seriId: kegiatan.seriId,
+            urutanSeri: kegiatan.urutanSeri,
+            totalSeri: kegiatan.totalSeri,
           }}
           onClose={() => setFormEditOpen(false)}
           onSuccess={(saved) => {

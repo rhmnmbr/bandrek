@@ -296,6 +296,9 @@ export const KalenderScreen: React.FC = () => {
           subjek: kegiatan.subjek,
           siswa: kegiatan.siswa,
           catatan: kegiatan.catatan || '',
+          seriId: kegiatan.seriId,
+          urutanSeri: kegiatan.urutanSeri,
+          totalSeri: kegiatan.totalSeri,
         },
       });
     },

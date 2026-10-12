@@ -4,6 +4,7 @@ import {
   Add16Regular,
   Warning16Regular,
   ChevronDown12Regular,
+  ArrowSync16Regular,
 } from '@fluentui/react-icons';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { useQuery } from '@tanstack/react-query';
@@ -31,8 +32,8 @@ import {
   useUpdateKegiatan,
 } from '@/data/hooks';
 import { repositories } from '@/data/repositories';
-import type { Kegiatan } from '@/data/types';
-import { menit, formatTanggalPendek } from '@/lib/dateUtils';
+import type { Kegiatan, FrekuensiPengulangan, TipeBerakhirPengulangan } from '@/data/types';
+import { menit, formatTanggalPendek, toDate, toIso, addDays } from '@/lib/dateUtils';
 import { BANDREK_EVENTS } from '@/lib/keyboardShortcuts';
 
 export interface FormKegiatanInitialData {
@@ -51,6 +52,9 @@ export interface FormKegiatanInitialData {
   subjek?: Array<{ id: string; peran: string }>;
   siswa?: string[];
   catatan?: string;
+  seriId?: string | null;
+  urutanSeri?: number | null;
+  totalSeri?: number | null;
 }
 
 export interface FormKegiatanPanelProps {
@@ -120,18 +124,51 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     Array<{ kelasId: string; nama: string; count: number }>
   >([]);
 
-  // Default fallbacks if initial data didn't have jenis or subjek
+  // Recurring schedule state (hanya untuk create)
+  const [isRecurring, setIsRecurring] = React.useState<boolean>(false);
+  const [recurringFreq, setRecurringFreq] = React.useState<FrekuensiPengulangan>('mingguan');
+  const [recurringEndType, setRecurringEndType] =
+    React.useState<TipeBerakhirPengulangan>('pertemuan');
+  const [recurringCount, setRecurringCount] = React.useState<number>(4);
+  const [recurringUntilDate, setRecurringUntilDate] = React.useState<string>(() => {
+    if (initialData?.tanggal) {
+      return toIso(addDays(toDate(initialData.tanggal), 28));
+    }
+    return '';
+  });
+
+  React.useEffect(() => {
+    if (tanggal && !recurringUntilDate) {
+      setRecurringUntilDate(toIso(addDays(toDate(tanggal), 28)));
+    }
+  }, [tanggal, recurringUntilDate]);
+
+  const summaryRecurringText = React.useMemo(() => {
+    if (!tanggal) return 'Pilih tanggal mulai kegiatan terlebih dahulu.';
+    const d = toDate(tanggal);
+    const namaHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][d.getDay()];
+
+    if (recurringFreq === 'bulanan') {
+      const tgl = d.getDate();
+      if (recurringEndType === 'pertemuan') {
+        return `Diulang setiap bulan pada tanggal ${tgl} sebanyak ${recurringCount} pertemuan.`;
+      }
+      return `Diulang setiap bulan pada tanggal ${tgl} sampai ${recurringUntilDate ? formatTanggalPendek(recurringUntilDate) : 'tanggal batas'}.`;
+    }
+
+    const intervalTeks = recurringFreq === 'dua_mingguan' ? 'setiap 2 minggu' : 'setiap minggu';
+    if (recurringEndType === 'pertemuan') {
+      return `Diulang ${intervalTeks} pada hari ${namaHari} sebanyak ${recurringCount} pertemuan.`;
+    }
+    return `Diulang ${intervalTeks} pada hari ${namaHari} sampai ${recurringUntilDate ? formatTanggalPendek(recurringUntilDate) : 'tanggal batas'}.`;
+  }, [tanggal, recurringFreq, recurringEndType, recurringCount, recurringUntilDate]);
+
+  // Default fallback if initial data didn't have jenis
   React.useEffect(() => {
     if (!jenis && jenisList.length > 0) {
       setJenis(jenisList[0].id);
     }
   }, [jenis, jenisList]);
-
-  React.useEffect(() => {
-    if (subjek.length === 0 && subjekList.length > 0 && mode === 'create') {
-      setSubjek([{ id: subjekList[0].id, peran: 'Pengisi' }]);
-    }
-  }, [subjek.length, subjekList, mode]);
 
   // Query materi list based on selected mapel
   const { data: materiList = [] } = useMateriList(mapel || '');
@@ -347,17 +384,43 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
         err.selesai = `Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah ${mulai}.`;
       }
     }
-    if (subjek.filter((s) => Boolean(s.id)).length === 0) {
-      err.subjek =
-        'Pilih minimal satu subjek. Gunakan "+ tambah" untuk memilih dari daftar subjek aktif.';
-    }
     if (currentJenisData && currentJenisData.siswaWajib && selectedSiswaIds.length === 0) {
       err.siswa =
         'Pilih minimal satu siswa. Gunakan "+ Dari kelas" untuk menambahkan sekelas sekaligus.';
     }
+    if (mode === 'create' && isRecurring) {
+      if (recurringEndType === 'tanggal') {
+        if (!recurringUntilDate) {
+          err.recurringUntilDate = 'Pilih batas tanggal pengulangan.';
+        } else if (tanggal && toDate(recurringUntilDate) <= toDate(tanggal)) {
+          err.recurringUntilDate = 'Batas tanggal pengulangan harus setelah tanggal mulai kegiatan.';
+        }
+      } else if (recurringEndType === 'pertemuan') {
+        if (!recurringCount || recurringCount < 2 || recurringCount > 52) {
+          err.recurringCount = 'Jumlah pertemuan harus di antara 2 sampai 52 kali.';
+        }
+      }
+    }
 
     return err;
-  }, [nama, jenis, currentJenisData, mapel, materi, tanggal, mulai, selesai, sepanjangHari, subjek, selectedSiswaIds]);
+  }, [
+    nama,
+    jenis,
+    currentJenisData,
+    mapel,
+    materi,
+    tanggal,
+    mulai,
+    selesai,
+    sepanjangHari,
+    subjek,
+    selectedSiswaIds,
+    mode,
+    isRecurring,
+    recurringEndType,
+    recurringUntilDate,
+    recurringCount,
+  ]);
 
   const currentErrors = validateForm();
   const hasErrors = Object.keys(currentErrors).length > 0;
@@ -538,11 +601,25 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             subjek: subjek.map((s) => ({ id: s.id, peran: s.peran as any })),
             siswa: selectedSiswaIds,
             catatan: catatan.trim(),
+            pengulangan: isRecurring
+              ? {
+                  aktif: true,
+                  frekuensi: recurringFreq,
+                  tipeBerakhir: recurringEndType,
+                  totalPertemuan: recurringEndType === 'pertemuan' ? recurringCount : undefined,
+                  sampaiTanggal: recurringEndType === 'tanggal' ? recurringUntilDate : undefined,
+                }
+              : undefined,
           });
 
+          const isRecurringSave = Boolean(isRecurring && savedResult.totalSeri && savedResult.totalSeri > 1);
           showToast({
             message: buatLagi
-              ? `Kegiatan "${savedResult.nama}" disimpan. Form siap untuk kegiatan berikutnya.`
+              ? isRecurringSave
+                ? `${savedResult.totalSeri} kegiatan berulang "${savedResult.nama}" disimpan. Form siap untuk kegiatan berikutnya.`
+                : `Kegiatan "${savedResult.nama}" disimpan. Form siap untuk kegiatan berikutnya.`
+              : isRecurringSave
+              ? `${savedResult.totalSeri} kegiatan berulang "${savedResult.nama}" berhasil dijadwalkan.`
               : `Kegiatan "${savedResult.nama}" berhasil disimpan.`,
             type: 'success',
           });
@@ -555,6 +632,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
           setSelectedSiswaIds([]);
           setCopiedClasses([]);
           setCatatan('');
+          setIsRecurring(false);
           setDicoba(false);
           setTouched({});
           setIsDirty(false);
@@ -598,6 +676,11 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
       subjek,
       selectedSiswaIds,
       catatan,
+      isRecurring,
+      recurringFreq,
+      recurringEndType,
+      recurringCount,
+      recurringUntilDate,
       showToast,
       onSuccess,
       onClose,
@@ -637,7 +720,10 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   const errorSummaryItems: ErrorSummaryItem[] = dicoba
     ? Object.keys(currentErrors).map((k) => ({
         id: k,
-        field: k.charAt(0).toUpperCase() + k.slice(1),
+        field:
+          k === 'recurringUntilDate' || k === 'recurringCount'
+            ? 'Pengulangan'
+            : k.charAt(0).toUpperCase() + k.slice(1),
         message: currentErrors[k],
         onFocusField: () => {
           if (k === 'nama') namaRef.current?.focus();
@@ -699,12 +785,12 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
           </div>
 
           {/* Scrollable Form Body */}
-          <div className="flex-1 min-h-0 overflow-y-auto p-3.5 flex flex-col gap-3">
+          <div className="flex-1 min-h-0 overflow-y-auto p-3 flex flex-col gap-2">
             {/* Server Error Alert Banner */}
             {serverError && (
               <div
                 role="alert"
-                className="rounded-lg border border-(--color-danger) bg-(--color-danger-bg) p-2.5 text-[12.5px] leading-relaxed text-(--color-danger-ink)"
+                className="flex-none rounded-lg border border-(--color-danger) bg-(--color-danger-bg) p-2.5 text-[12.5px] leading-relaxed text-(--color-danger-ink)"
               >
                 <div className="flex items-start gap-1.5 font-semibold">
                   <Warning16Regular className="flex-none mt-0.5" />
@@ -725,14 +811,16 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
             {/* Error Summary Banner */}
             {dicoba && errorSummaryItems.length > 0 && (
-              <ErrorSummary
-                errors={errorSummaryItems}
-                title={`${errorSummaryItems.length} isian perlu diperbaiki sebelum disimpan`}
-              />
+              <div className="flex-none">
+                <ErrorSummary
+                  errors={errorSummaryItems}
+                  title={`${errorSummaryItems.length} isian perlu diperbaiki sebelum disimpan`}
+                />
+              </div>
             )}
 
             {/* 1. Nama Kegiatan */}
-            <div>
+            <div className="flex-none">
               <FormLabel required error={Boolean(dicoba && currentErrors.nama)}>
                 Nama kegiatan
               </FormLabel>
@@ -753,7 +841,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             </div>
 
             {/* 2. Jenis Kegiatan & Tanggal */}
-            <div className="grid grid-cols-[1fr_132px] gap-2.5 items-start">
+            <div className="grid grid-cols-[1fr_132px] gap-2.5 items-start flex-none">
               {/* Jenis Kegiatan */}
               <div className="min-w-0">
                 <div className="h-3.5 mb-1 flex items-center">
@@ -818,7 +906,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             </div>
 
             {/* 3. Waktu & Tempat */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 flex-none">
               <div className="flex items-center justify-between">
                 <span className="text-[11.5px] font-semibold text-[#5C5A58]">WAKTU & TEMPAT</span>
                 <label className="flex items-center gap-1.5 cursor-pointer text-[12px] text-(--color-text-secondary) hover:text-(--color-text) select-none">
@@ -946,9 +1034,137 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               </div>
             </div>
 
+            {/* 3b. Pengulangan Jadwal */}
+            {mode === 'edit' && initialData?.seriId && (
+              <div className="flex-none flex items-center gap-2 p-2 rounded-md bg-(--color-surface-alt) border border-(--color-border) text-[11.5px] text-(--color-text-secondary)">
+                <ArrowSync16Regular className="text-(--color-brand) shrink-0" />
+                <span>
+                  Bagian dari kegiatan berulang (<strong>Pertemuan {initialData.urutanSeri ?? 1} dari {initialData.totalSeri ?? '?'}</strong>). Perubahan disimpan untuk pertemuan ini saja.
+                </span>
+              </div>
+            )}
+
+            {mode === 'create' && (
+              <div
+                className={cn(
+                  'flex-none border border-(--color-border) rounded-md bg-(--color-surface-subtle) transition-all',
+                  isRecurring ? 'p-2.5 flex flex-col gap-2' : 'px-2.5 py-1.5 flex items-center justify-between'
+                )}
+              >
+                <div className="flex items-center">
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={isRecurring}
+                      onChange={(e) => {
+                        setIsRecurring(e.target.checked);
+                        setIsDirty(true);
+                      }}
+                      className="rounded border-(--color-border-strong) text-(--color-brand) focus:ring-(--color-brand) w-3.5 h-3.5 cursor-pointer"
+                    />
+                    <span className="text-[12px] font-semibold text-(--color-text)">
+                      Jadwal berulang
+                    </span>
+                  </label>
+                </div>
+
+                {isRecurring && (
+                  <div className="pt-2 border-t border-(--color-border) flex flex-col gap-2.5 animate-in fade-in-50 duration-150">
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <FormLabel className="text-[11.5px] mb-1">Frekuensi</FormLabel>
+                        <Select
+                          value={recurringFreq}
+                          onValueChange={(val) => {
+                            setRecurringFreq(val as FrekuensiPengulangan);
+                            setIsDirty(true);
+                          }}
+                          options={[
+                            { value: 'mingguan', label: 'Setiap minggu' },
+                            { value: 'dua_mingguan', label: 'Setiap 2 minggu' },
+                            { value: 'bulanan', label: 'Setiap bulan' },
+                          ]}
+                        />
+                      </div>
+
+                      <div>
+                        <FormLabel className="text-[11.5px] mb-1">Batas pengulangan</FormLabel>
+                        <Select
+                          value={recurringEndType}
+                          onValueChange={(val) => {
+                            setRecurringEndType(val as TipeBerakhirPengulangan);
+                            setIsDirty(true);
+                          }}
+                          options={[
+                            { value: 'pertemuan', label: 'Jumlah pertemuan' },
+                            { value: 'tanggal', label: 'Sampai tanggal' },
+                          ]}
+                        />
+                      </div>
+                    </div>
+
+                    {recurringEndType === 'pertemuan' ? (
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <FormLabel className="mb-0 text-[12px] text-(--color-text-secondary) whitespace-nowrap">
+                            Total pertemuan:
+                          </FormLabel>
+                          <input
+                            type="number"
+                            min={2}
+                            max={52}
+                            value={recurringCount}
+                            onChange={(e) => {
+                              const val = Math.max(2, Math.min(52, parseInt(e.target.value) || 2));
+                              setRecurringCount(val);
+                              setIsDirty(true);
+                            }}
+                            className="w-18 h-(--density-control-h) px-2 rounded-md text-[12.5px] bg-white text-(--color-text) border border-(--color-border-strong) text-center focus:border-(--color-brand) focus:outline-none"
+                          />
+                          <span className="text-[12px] text-(--color-text-muted)">kali</span>
+                        </div>
+                        {dicoba && currentErrors.recurringCount && (
+                          <InlineError message={currentErrors.recurringCount} />
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <FormLabel className="mb-0 text-[12px] text-(--color-text-secondary) whitespace-nowrap">
+                            Sampai tanggal:
+                          </FormLabel>
+                          <div className="w-44">
+                            <DatePicker
+                              value={recurringUntilDate}
+                              onChange={(val) => {
+                                setRecurringUntilDate(val);
+                                setIsDirty(true);
+                              }}
+                              formatDisplay="dd/MM/yyyy"
+                              placeholder="Pilih batas tanggal"
+                              className="font-mono text-[12px]"
+                            />
+                          </div>
+                        </div>
+                        {dicoba && currentErrors.recurringUntilDate && (
+                          <InlineError message={currentErrors.recurringUntilDate} />
+                        )}
+                      </div>
+                    )}
+
+                    {/* Ringkasan jadwal pengulangan */}
+                    <div className="text-[11.5px] text-(--color-text-secondary) bg-white p-2 rounded border border-(--color-border) flex items-start gap-1.5 leading-relaxed">
+                      <span className="font-semibold text-(--color-text)">Ringkasan:</span>
+                      <span>{summaryRecurringText}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* 4. Conflict Warnings (Kuning non-blocking) */}
             {conflicts.length > 0 && (
-              <div className="flex flex-col gap-2">
+              <div className="flex-none flex flex-col gap-2">
                 {conflicts.map((item, idx) => (
                   <ConflictWarning
                     key={`${item.tipe}-${item.kegiatanBentrokId}-${idx}`}
@@ -976,7 +1192,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
             {/* 5. Mapel & Materi (Only if jenis mewajibkan materi or mapel is selected) */}
             {(currentJenisData?.materiWajib || mapel) && (
-              <div className="grid grid-cols-2 gap-2.5 items-start">
+              <div className="grid grid-cols-2 gap-2.5 items-start flex-none">
                 {/* Mapel */}
                 <div>
                   <FormLabel required error={Boolean(dicoba && currentErrors.mapel)}>
@@ -1039,8 +1255,8 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             )}
 
             {/* 6. Subjek */}
-            <div className="flex flex-col gap-1.5">
-              <FormLabel required error={Boolean(dicoba && currentErrors.subjek)}>
+            <div className="flex flex-col gap-1.5 flex-none">
+              <FormLabel error={Boolean(dicoba && currentErrors.subjek)}>
                 Subjek
               </FormLabel>
 
@@ -1105,8 +1321,8 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             </div>
 
             {/* 7. Siswa Checklist */}
-            <div className="flex flex-col gap-1.5 flex-1 min-h-60">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-1 flex-1 min-h-[240px]">
+              <div className="flex items-center justify-between flex-none">
                 <FormLabel
                   required={Boolean(currentJenisData?.siswaWajib)}
                   error={Boolean(dicoba && currentErrors.siswa)}
@@ -1169,7 +1385,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
               {/* Copied Classes Chips */}
               {copiedClasses.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1 flex-none">
                   {copiedClasses.map((item) => (
                     <div
                       key={item.kelasId}
@@ -1191,9 +1407,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               )}
 
               {/* Student Search & Checklist Container */}
-              <div className="flex flex-col border border-(--color-border) rounded-md bg-white overflow-hidden text-[12px]">
+              <div className="flex-1 min-h-[200px] flex flex-col border border-(--color-border) rounded-md bg-white overflow-hidden text-[12px]">
                 {/* Search Header */}
-                <div className="p-1.5 border-b border-(--color-border-subtle) bg-(--color-surface-alt) flex items-center gap-2">
+                <div className="p-1.5 border-b border-(--color-border-subtle) bg-(--color-surface-alt) flex items-center gap-2 flex-none">
                   <SearchInput
                     placeholder="Cari nama siswa..."
                     value={searchSiswa}
@@ -1204,7 +1420,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                 </div>
 
                 {/* Bulk Select Toolbar */}
-                <div className="h-6 px-2 border-b border-(--color-border-subtle) bg-(--color-surface) flex items-center justify-between text-[11px] text-(--color-text-muted)">
+                <div className="h-6 px-2 border-b border-(--color-border-subtle) bg-(--color-surface) flex items-center justify-between text-[11px] text-(--color-text-muted) flex-none">
                   <label className="inline-flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="checkbox"
@@ -1230,7 +1446,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                 </div>
 
                 {/* Grouped Checklist */}
-                <div className="max-h-52 overflow-y-auto divide-y divide-(--color-border-subtle)">
+                <div className="flex-1 min-h-[140px] overflow-y-auto divide-y divide-(--color-border-subtle)">
                   {groupedStudents.length === 0 ? (
                     <div className="p-4 text-center text-(--color-text-muted) text-[11.5px]">
                       Tidak ada siswa yang cocok dengan &quot;{searchSiswa}&quot;.
@@ -1284,12 +1500,14 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               </div>
 
               {(dicoba || touched.siswa) && currentErrors.siswa && (
-                <InlineError message={currentErrors.siswa} />
+                <div className="flex-none">
+                  <InlineError message={currentErrors.siswa} />
+                </div>
               )}
             </div>
 
             {/* 8. Catatan Rencana */}
-            <div>
+            <div className="flex-none">
               <FormLabel>Catatan rencana</FormLabel>
               <Textarea
                 rows={2}
@@ -1299,6 +1517,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   markTouched('catatan');
                 }}
                 placeholder="Catatan tambahan (opsional)"
+                className="resize-none"
               />
             </div>
           </div>

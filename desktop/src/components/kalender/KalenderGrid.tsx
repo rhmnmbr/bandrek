@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Add12Regular, Checkmark12Regular, Warning12Regular, ArrowClockwise12Regular } from '@fluentui/react-icons';
+import {
+  Add12Regular,
+  Checkmark12Regular,
+  Warning12Regular,
+  ArrowClockwise12Regular,
+  ArrowSync16Regular,
+} from '@fluentui/react-icons';
 import type { Kegiatan } from '@/data/types';
 import type { LayoutEventItem } from './kalenderLayout';
 import { JAM_AWAL, JAM_AKHIR, SLOT_PX, menit } from '@/lib/dateUtils';
@@ -517,7 +523,12 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                         >
                           {/* Row 1: Time + Status Glyph */}
                           <div className="flex items-center justify-between font-mono text-[10px] leading-tight opacity-90">
-                            <span className="truncate">{ev.jamLabel}</span>
+                            <span className="truncate flex items-center gap-1">
+                              {k.seriId && (
+                                <ArrowSync16Regular className="w-2.75 h-2.75 flex-none" />
+                              )}
+                              <span>{ev.jamLabel}</span>
+                            </span>
                             <span className="flex-none ml-1">
                               {isTerealisasi && (
                                 <Checkmark12Regular className="text-(--color-success-ink)" />
