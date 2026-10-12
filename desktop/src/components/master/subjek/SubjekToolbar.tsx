@@ -1,13 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import type { PeranSubjek } from '@/data/types/master';
 
 interface SubjekToolbarProps {
   totalAktif: number;
   totalNonaktif: number;
   cari: string;
   onCariChange: (val: string) => void;
-  peran: PeranSubjek | 'semua';
-  onPeranChange: (val: PeranSubjek | 'semua') => void;
   status: 'aktif' | 'nonaktif' | 'semua';
   onStatusChange: (val: 'aktif' | 'nonaktif' | 'semua') => void;
   adaFilter: boolean;
@@ -15,32 +12,23 @@ interface SubjekToolbarProps {
   onSubjekBaru: () => void;
 }
 
-const PERAN_LIST: PeranSubjek[] = ['Pengisi', 'Pendamping', 'Wali', 'Support'];
-
 export function SubjekToolbar({
   totalAktif,
   totalNonaktif,
   cari,
   onCariChange,
-  peran,
-  onPeranChange,
   status,
   onStatusChange,
   adaFilter,
   onResetFilter,
   onSubjekBaru,
 }: SubjekToolbarProps) {
-  const [peranOpen, setPeranOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
 
-  const peranRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (peranRef.current && !peranRef.current.contains(e.target as Node)) {
-        setPeranOpen(false);
-      }
       if (statusRef.current && !statusRef.current.contains(e.target as Node)) {
         setStatusOpen(false);
       }
@@ -49,7 +37,6 @@ export function SubjekToolbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const peranLabel = peran !== 'semua' ? `Peran: ${peran}` : 'Peran: semua';
   const statusLabel =
     status === 'nonaktif'
       ? 'Status: Nonaktif'
@@ -98,72 +85,12 @@ export function SubjekToolbar({
           className="flex-1 min-w-[150px] max-w-[280px] h-6.5 rounded border border-(--color-border-strong) bg-(--color-surface) px-2 text-xs text-(--color-text-primary) placeholder:text-(--color-text-placeholder) focus:outline-none focus:border-(--color-brand)"
         />
 
-        {/* Peran Dropdown */}
-        <div ref={peranRef} className="relative shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              setPeranOpen((prev) => !prev);
-              setStatusOpen(false);
-            }}
-            className={`flex h-6.5 items-center justify-between gap-2.5 rounded px-2 text-xs whitespace-nowrap cursor-pointer transition-colors border ${
-              peran !== 'semua'
-                ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand) font-semibold'
-                : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-border-muted)'
-            }`}
-          >
-            <span>{peranLabel}</span>
-            <svg width="12" height="12" viewBox="0 0 16 16" className="shrink-0 text-(--color-text-muted)">
-              <path
-                fill="currentColor"
-                d="M3.15 5.65c.2-.2.5-.2.7 0L8 9.79l4.15-4.14c.2-.2.5-.2.7 0 .2.2.2.5 0 .7l-4.5 4.5c-.2.2-.5.2-.7 0l-4.5-4.5c-.2-.2-.2-.5 0-.7Z"
-              />
-            </svg>
-          </button>
-          {peranOpen && (
-            <div className="absolute left-0 top-[29px] z-12 min-w-full w-max rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5 max-h-65 overflow-y-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  onPeranChange('semua');
-                  setPeranOpen(false);
-                }}
-                className={`w-full text-left px-2.25 py-1.5 rounded border-none text-[12.5px] cursor-pointer whitespace-nowrap transition-colors ${
-                  peran === 'semua'
-                    ? 'bg-(--color-brand-subtle) text-(--color-brand) font-semibold'
-                    : 'bg-transparent text-(--color-text-primary) hover:bg-(--color-surface-hover)'
-                }`}
-              >
-                Peran: semua
-              </button>
-              {PERAN_LIST.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => {
-                    onPeranChange(p);
-                    setPeranOpen(false);
-                  }}
-                  className={`w-full text-left px-2.25 py-1.5 rounded border-none text-[12.5px] cursor-pointer whitespace-nowrap transition-colors ${
-                    peran === p
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand) font-semibold'
-                      : 'bg-transparent text-(--color-text-primary) hover:bg-(--color-surface-hover)'
-                  }`}
-                >
-                  Peran: {p}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* Status Dropdown */}
         <div ref={statusRef} className="relative shrink-0">
           <button
             type="button"
             onClick={() => {
               setStatusOpen((prev) => !prev);
-              setPeranOpen(false);
             }}
             className={`flex h-6.5 items-center justify-between gap-2.5 rounded px-2 text-xs whitespace-nowrap cursor-pointer transition-colors border ${
               status === 'nonaktif'

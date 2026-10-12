@@ -24,13 +24,12 @@ export function SubjekTable({
   return (
     <div className="flex flex-1 min-h-0 flex-col">
       <div className="flex-1 min-h-0 overflow-auto">
-        <div className="flex flex-col min-h-full min-w-[822px] w-full">
+        <div className="flex flex-col min-h-full min-w-[718px] w-full">
           {/* Sticky Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             <div className="w-[210px] shrink-0">NAMA LENGKAP</div>
             <div className="w-[92px] shrink-0">KELAMIN</div>
-            <div className="w-[104px] shrink-0">PERAN</div>
-            <div className="flex-1 min-w-[110px]">MATA PELAJARAN</div>
+            <div className="flex-1 min-w-[120px]">MATA PELAJARAN</div>
             <div className="w-[126px] shrink-0">KONTAK</div>
             <div className="w-[74px] shrink-0 text-right">KEGIATAN</div>
             <div className="w-[78px] shrink-0 pl-2">STATUS</div>
@@ -78,12 +77,9 @@ export function SubjekTable({
                   {kelaminText}
                 </div>
 
-                {/* Peran */}
-                <div className="w-[104px] shrink-0 text-(--color-text-secondary)">{sb.peran}</div>
-
                 {/* Mapel */}
                 <div
-                  className={`flex-1 min-w-[110px] truncate pr-2 ${
+                  className={`flex-1 min-w-[120px] truncate pr-2 ${
                     mp.length > 0 ? 'text-(--color-text-secondary)' : 'text-(--color-text-disabled)'
                   }`}
                 >

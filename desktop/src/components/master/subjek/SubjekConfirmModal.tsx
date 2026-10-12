@@ -46,7 +46,7 @@ export function SubjekConfirmModal({
 
   const kelaminText =
     subjek.kelamin === 'L' ? 'Laki-laki' : subjek.kelamin === 'P' ? 'Perempuan' : '';
-  const subParts = [subjek.peran, kelaminText, subjek.kontak].filter(Boolean);
+  const subParts = [kelaminText, subjek.kontak].filter(Boolean);
   const subText = subParts.join(' · ');
 
   const kegCount = subjek.jumlahKegiatan || 0;

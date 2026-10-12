@@ -75,7 +75,7 @@ export function ProfilSubjekView({
         </span>
 
         <div className="text-[12.5px] text-(--color-text-muted)">
-          {subjek.peran} · {mapelTeks}
+          {mapelTeks}
         </div>
 
         <div className="flex-1" />
@@ -245,10 +245,6 @@ export function ProfilSubjekView({
               DATA SUBJEK
             </div>
             <div className="flex flex-col gap-1.5 text-[12.5px]">
-              <div className="flex justify-between gap-2">
-                <span className="text-(--color-text-muted)">Peran bawaan</span>
-                <span className="text-(--color-text-primary) font-medium">{subjek.peran}</span>
-              </div>
               <div className="flex justify-between gap-2">
                 <span className="text-(--color-text-muted)">Jenis kelamin</span>
                 <span className="text-(--color-text-primary)">{kelaminText}</span>

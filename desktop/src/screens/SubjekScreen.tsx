@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import type { Subjek, PeranSubjek } from '@/data/types/master';
+import type { Subjek } from '@/data/types/master';
 import {
   useSubjekList,
   useSubjekProfil,
@@ -34,7 +34,6 @@ export function SubjekScreen() {
 
   // Filter states
   const [cari, setCari] = useState('');
-  const [peran, setPeran] = useState<PeranSubjek | 'semua'>('semua');
   const [status, setStatus] = useState<'aktif' | 'nonaktif' | 'semua'>('aktif');
 
   // Panel state
@@ -56,7 +55,6 @@ export function SubjekScreen() {
   // Queries
   const { data: subjekList = [], isLoading: isLoadingSubjek } = useSubjekList({
     status,
-    peran,
     q: cari,
   });
 
@@ -83,21 +81,15 @@ export function SubjekScreen() {
   }, [allSubjek, selectedSubjekId]);
 
   // Check if any filter is active
-  const adaFilter = status !== 'aktif' || peran !== 'semua' || Boolean(cari);
+  const adaFilter = status !== 'aktif' || Boolean(cari);
 
   const handleResetFilter = useCallback(() => {
     setCari('');
-    setPeran('semua');
     setStatus('aktif');
   }, []);
 
   const handleOpenNewSubjek = useCallback(() => {
     setSelectedSubjekId(null);
-    setIsPanelOpen(true);
-  }, []);
-
-  const handleSelectSubjek = useCallback((id: string) => {
-    setSelectedSubjekId(id);
     setIsPanelOpen(true);
   }, []);
 
@@ -111,6 +103,18 @@ export function SubjekScreen() {
     }
   }, [searchParams, setSearchParams]);
 
+  const handleSelectSubjek = useCallback(
+    (id: string) => {
+      if (selectedSubjekId === id && isPanelOpen) {
+        handleClosePanel();
+      } else {
+        setSelectedSubjekId(id);
+        setIsPanelOpen(true);
+      }
+    },
+    [selectedSubjekId, isPanelOpen, handleClosePanel]
+  );
+
   const handleSaveForm = useCallback(
     async (formData: SubjekFormData) => {
       try {
@@ -119,7 +123,6 @@ export function SubjekScreen() {
           const created = await createSubjekMutation.mutateAsync({
             nama: formData.nama.trim(),
             kelamin: formData.kelamin as any,
-            peran: formData.peran,
             aktif: formData.aktif,
             mapel: formData.mapel,
             kontak: formData.kontak.trim(),
@@ -136,7 +139,6 @@ export function SubjekScreen() {
             input: {
               nama: formData.nama.trim(),
               kelamin: formData.kelamin as any,
-              peran: formData.peran,
               aktif: formData.aktif,
               mapel: formData.mapel,
               kontak: formData.kontak.trim(),
@@ -384,8 +386,6 @@ export function SubjekScreen() {
         totalNonaktif={totalNonaktif}
         cari={cari}
         onCariChange={setCari}
-        peran={peran}
-        onPeranChange={setPeran}
         status={status}
         onStatusChange={setStatus}
         adaFilter={adaFilter}
@@ -403,8 +403,7 @@ export function SubjekScreen() {
               columns={[
                 { width: 'w-[210px]', headerTitle: 'NAMA LENGKAP' },
                 { width: 'w-[92px]', headerTitle: 'KELAMIN' },
-                { width: 'w-[104px]', headerTitle: 'PERAN' },
-                { width: 'flex-1 min-w-[110px]', isFlex: true, headerTitle: 'MATA PELAJARAN' },
+                { width: 'flex-1 min-w-[120px]', isFlex: true, headerTitle: 'MATA PELAJARAN' },
                 { width: 'w-[126px]', headerTitle: 'KONTAK' },
                 { width: 'w-[74px]', headerTitle: 'KEGIATAN', align: 'right' },
                 { width: 'w-[78px]', headerTitle: 'STATUS' },

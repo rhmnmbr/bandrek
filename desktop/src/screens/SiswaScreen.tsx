@@ -100,11 +100,6 @@ export function SiswaScreen() {
     setIsPanelOpen(true);
   }, []);
 
-  const handleSelectSiswa = useCallback((id: string) => {
-    setSelectedStudentId(id);
-    setIsPanelOpen(true);
-  }, []);
-
   const handleClosePanel = useCallback(() => {
     setIsPanelOpen(false);
     setSelectedStudentId(null);
@@ -114,6 +109,18 @@ export function SiswaScreen() {
       setSearchParams(nextParams);
     }
   }, [searchParams, setSearchParams]);
+
+  const handleSelectSiswa = useCallback(
+    (id: string) => {
+      if (selectedStudentId === id && isPanelOpen) {
+        handleClosePanel();
+      } else {
+        setSelectedStudentId(id);
+        setIsPanelOpen(true);
+      }
+    },
+    [selectedStudentId, isPanelOpen, handleClosePanel]
+  );
 
   const handleSaveForm = useCallback(
     async (formData: SiswaFormData) => {
@@ -395,8 +402,8 @@ export function SiswaScreen() {
             minWidth="min-w-[862px]"
             columns={[
               { width: 'w-59', headerTitle: 'NAMA' },
-              { width: 'w-13', headerTitle: 'JNJ' },
-              { width: 'w-21.5', headerTitle: 'LAHIR' },
+              { width: 'w-11', headerTitle: 'JNJ' },
+              { width: 'w-23.5', headerTitle: 'LAHIR', align: 'right' },
               { width: 'flex-1 min-w-27.5', isFlex: true, headerTitle: 'ASAL SEKOLAH' },
               { width: 'w-29.5', headerTitle: 'WALI' },
               { width: 'w-29.5', headerTitle: 'WHATSAPP' },

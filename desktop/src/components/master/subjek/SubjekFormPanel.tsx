@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Warning16Regular } from '@fluentui/react-icons';
-import { Select } from '@/components/ui/select';
 import type { JenisKelamin } from '@/data/types/common';
-import type { Subjek, PeranSubjek, MataPelajaran } from '@/data/types/master';
+import type { Subjek, MataPelajaran } from '@/data/types/master';
 
 export interface SubjekFormData {
   id?: string;
   nama: string;
   kelamin: JenisKelamin | '';
-  peran: PeranSubjek;
   aktif: boolean;
   mapel: string[];
   kontak: string;
@@ -27,8 +25,6 @@ interface SubjekFormPanelProps {
   onLihatKegiatan: (subjekId: string) => void;
 }
 
-const PERAN_OPTIONS: PeranSubjek[] = ['Pengisi', 'Pendamping', 'Wali', 'Support'];
-
 export function SubjekFormPanel({
   isOpen,
   initialData,
@@ -46,7 +42,6 @@ export function SubjekFormPanel({
   const [form, setForm] = useState<SubjekFormData>({
     nama: '',
     kelamin: '',
-    peran: 'Pengisi',
     aktif: true,
     mapel: [],
     kontak: '',
@@ -65,7 +60,6 @@ export function SubjekFormPanel({
         id: initialData.id,
         nama: initialData.nama,
         kelamin: initialData.kelamin || '',
-        peran: initialData.peran || 'Pengisi',
         aktif: initialData.aktif !== false,
         mapel: (initialData.mapel || []).slice(),
         kontak: initialData.kontak || '',
@@ -74,7 +68,6 @@ export function SubjekFormPanel({
       setForm({
         nama: '',
         kelamin: '',
-        peran: 'Pengisi',
         aktif: true,
         mapel: [],
         kontak: '',
@@ -169,8 +162,8 @@ export function SubjekFormPanel({
         : '—';
 
   const subtitle = isNew
-    ? 'Isi nama dan perannya, lalu simpan'
-    : `${initialData?.peran} · ${kelaminText} · ${initialData?.jumlahKegiatan || 0} kegiatan`;
+    ? 'Isi nama subjek, lalu simpan'
+    : `${kelaminText} · ${initialData?.jumlahKegiatan || 0} kegiatan`;
 
   // Filter available mapels not yet selected
   const activeMapels = mapelList.filter((m) => m.aktif);
@@ -258,57 +251,38 @@ export function SubjekFormPanel({
           )}
         </div>
 
-        {/* Jenis Kelamin & Peran Row */}
-        <div className="flex gap-2.25 items-start shrink-0">
-          {/* Jenis Kelamin Segmented */}
-          <div className="w-[150px] shrink-0 flex flex-col gap-1">
-            <label className="text-[11.5px] text-(--color-text-secondary)">Jenis kelamin</label>
-            <div className="flex h-7 rounded border border-(--color-border-strong) overflow-hidden bg-(--color-surface)">
-              <button
-                type="button"
-                onClick={() =>
-                  setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'L' ? '' : 'L' }))
-                }
-                title={form.kelamin === 'L' ? 'Klik lagi untuk mengosongkan' : 'Laki-laki'}
-                className={`flex-1 border-none text-[11.5px] cursor-pointer transition-colors ${
-                  form.kelamin === 'L'
-                    ? 'bg-(--color-brand) text-white font-semibold'
-                    : 'bg-transparent text-(--color-text-primary) hover:bg-(--color-surface-hover)'
-                }`}
-              >
-                Laki-laki
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'P' ? '' : 'P' }))
-                }
-                title={form.kelamin === 'P' ? 'Klik lagi untuk mengosongkan' : 'Perempuan'}
-                className={`flex-1 border-l border-(--color-border) text-[11.5px] cursor-pointer transition-colors ${
-                  form.kelamin === 'P'
-                    ? 'bg-(--color-brand) text-white font-semibold'
-                    : 'bg-transparent text-(--color-text-primary) hover:bg-(--color-surface-hover)'
-                }`}
-              >
-                Perempuan
-              </button>
-            </div>
-          </div>
-
-          {/* Peran Bawaan */}
-          <div className="flex-1 min-w-0 flex flex-col gap-1">
-            <label className="text-[11.5px] text-(--color-text-secondary)">Peran bawaan</label>
-            <Select
-              value={form.peran}
-              onValueChange={(val) => setForm((prev) => ({ ...prev, peran: val as PeranSubjek }))}
-              placeholder="Pilih peran"
+        {/* Jenis Kelamin */}
+        <div className="flex flex-col gap-1 shrink-0">
+          <label className="text-[11.5px] text-(--color-text-secondary)">Jenis kelamin</label>
+          <div className="flex h-7 w-[150px] rounded border border-(--color-border-strong) overflow-hidden bg-(--color-surface)">
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'L' ? '' : 'L' }))
+              }
+              title={form.kelamin === 'L' ? 'Klik lagi untuk mengosongkan' : 'Laki-laki'}
+              className={`flex-1 border-none text-[11.5px] cursor-pointer transition-colors ${
+                form.kelamin === 'L'
+                  ? 'bg-(--color-brand) text-white font-semibold'
+                  : 'bg-transparent text-(--color-text-primary) hover:bg-(--color-surface-hover)'
+              }`}
             >
-              {PERAN_OPTIONS.map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </Select>
+              Laki-laki
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'P' ? '' : 'P' }))
+              }
+              title={form.kelamin === 'P' ? 'Klik lagi untuk mengosongkan' : 'Perempuan'}
+              className={`flex-1 border-l border-(--color-border) text-[11.5px] cursor-pointer transition-colors ${
+                form.kelamin === 'P'
+                  ? 'bg-(--color-brand) text-white font-semibold'
+                  : 'bg-transparent text-(--color-text-primary) hover:bg-(--color-surface-hover)'
+              }`}
+            >
+              Perempuan
+            </button>
           </div>
         </div>
 

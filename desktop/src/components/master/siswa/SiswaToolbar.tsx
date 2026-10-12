@@ -139,7 +139,7 @@ export function SiswaToolbar({
           <button
             type="button"
             onClick={() => setJenjangOpen((prev) => !prev)}
-            className={`flex h-6.5 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap transition-colors ${
+            className={`flex h-6.5 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap cursor-pointer transition-colors ${
               jenjang !== 'semua'
                 ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
                 : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-text-muted)'
@@ -186,7 +186,7 @@ export function SiswaToolbar({
           <button
             type="button"
             onClick={() => setKelasOpen((prev) => !prev)}
-            className={`flex h-6.5 max-w-42 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap transition-colors ${
+            className={`flex h-6.5 max-w-42 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap cursor-pointer transition-colors ${
               kelasId
                 ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
                 : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-text-muted)'
@@ -256,12 +256,12 @@ export function SiswaToolbar({
           <button
             type="button"
             onClick={() => setStatusOpen((prev) => !prev)}
-            className={`flex h-6.5 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap transition-colors ${
+            className={`flex h-6.5 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap cursor-pointer transition-colors ${
               status === 'nonaktif'
                 ? 'border-(--color-warning) bg-(--color-warning-bg) text-(--color-warning-ink) font-semibold'
                 : status === 'semua'
                   ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                  : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary)'
+                  : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-text-muted)'
             }`}
           >
             <span>{statusLabel}</span>

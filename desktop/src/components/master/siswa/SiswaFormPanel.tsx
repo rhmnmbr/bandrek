@@ -562,6 +562,7 @@ export function SiswaFormPanel({
               }
               placeholder="Pilih"
               error={Boolean(dicoba && errors.jenjang)}
+              className="h-7 text-[13.5px]"
             >
               <option value="">Pilih</option>
               <option value="SD">SD</option>

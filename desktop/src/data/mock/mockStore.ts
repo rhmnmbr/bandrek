@@ -182,6 +182,34 @@ export class MockDataStore {
               adaBaru = true;
             }
           });
+
+          // 4. Pulihkan nomor WhatsApp / kontak jika di storage lama masih mengandung format sensor "xxxx"
+          let phoneSeed = 48271;
+          const gen4 = () => {
+            phoneSeed = (phoneSeed * 16807) % 2147483647;
+            return String(1000 + (phoneSeed % 9000)).padStart(4, '0');
+          };
+          if (this.siswa) {
+            this.siswa.forEach((s) => {
+              if (s.waliWa && s.waliWa.includes('xxxx')) {
+                s.waliWa = s.waliWa.replace(/xxxx/g, () => gen4());
+                adaBaru = true;
+              }
+            });
+          }
+          if (this.subjek) {
+            this.subjek.forEach((sb) => {
+              if ('peran' in sb && sb.peran !== undefined) {
+                delete sb.peran;
+                adaBaru = true;
+              }
+              if (sb.kontak && sb.kontak.includes('xxxx')) {
+                sb.kontak = sb.kontak.replace(/xxxx/g, () => gen4());
+                adaBaru = true;
+              }
+            });
+          }
+
           if (adaBaru) {
             this.persist();
           }

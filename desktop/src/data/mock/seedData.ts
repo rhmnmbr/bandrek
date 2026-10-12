@@ -76,7 +76,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Muhammadiyah 4",
       "waliNama": "Ibu Yuni",
-      "waliWa": "0829-xxxx-1958",
+      "waliWa": "0829-4697-1958",
       "bergabung": "2026-04-02",
       "catatan": ""
     },
@@ -89,7 +89,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SD Muhammadiyah 4",
       "waliNama": "Ibu Tuti",
-      "waliWa": "0835-xxxx-8489",
+      "waliWa": "0835-6676-8489",
       "bergabung": "2026-01-04",
       "catatan": ""
     },
@@ -102,7 +102,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Ibu Nurhayati",
-      "waliWa": "0824-xxxx-9122",
+      "waliWa": "0824-2752-9122",
       "bergabung": "2026-01-19",
       "catatan": ""
     },
@@ -115,7 +115,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 27 Bandung",
       "waliNama": "Ibu Wati",
-      "waliWa": "0840-xxxx-7058",
+      "waliWa": "0840-3385-7058",
       "bergabung": "2026-03-14",
       "catatan": ""
     },
@@ -128,7 +128,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMAN 8 Bandung",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0837-xxxx-1163",
+      "waliWa": "0837-8131-1163",
       "bergabung": "2025-08-02",
       "catatan": ""
     },
@@ -141,7 +141,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Muhammadiyah 4",
       "waliNama": "Ibu Dina",
-      "waliWa": "0866-xxxx-4327",
+      "waliWa": "0866-1569-4327",
       "bergabung": "2026-02-28",
       "catatan": ""
     },
@@ -154,7 +154,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 9 Bandung",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0816-xxxx-3286",
+      "waliWa": "0816-9734-3286",
       "bergabung": "2026-01-26",
       "catatan": ""
     },
@@ -167,7 +167,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 14 Bandung",
       "waliNama": "Ibu Wati",
-      "waliWa": "0872-xxxx-3248",
+      "waliWa": "0872-7395-3248",
       "bergabung": "2026-05-09",
       "catatan": ""
     },
@@ -180,7 +180,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Bapak Herman",
-      "waliWa": "0869-xxxx-8683",
+      "waliWa": "0869-9003-8683",
       "bergabung": "2025-08-28",
       "catatan": ""
     },
@@ -193,7 +193,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMA Pasundan 2",
       "waliNama": "Ibu Lastri",
-      "waliWa": "0811-xxxx-3209",
+      "waliWa": "0811-3793-3209",
       "bergabung": "2025-04-15",
       "catatan": ""
     },
@@ -206,7 +206,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Merdeka 5",
       "waliNama": "Ibu Sri",
-      "waliWa": "0866-xxxx-9709",
+      "waliWa": "0866-7976-9709",
       "bergabung": "2026-05-24",
       "catatan": ""
     },
@@ -219,7 +219,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMP Al-Falah",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0831-xxxx-3335",
+      "waliWa": "0831-3131-3335",
       "bergabung": "2026-07-24",
       "catatan": ""
     },
@@ -232,7 +232,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Kristen Bina Bakti",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0829-xxxx-4017",
+      "waliWa": "0829-7515-4017",
       "bergabung": "2026-01-24",
       "catatan": ""
     },
@@ -245,7 +245,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 2 Cimahi",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0858-xxxx-6175",
+      "waliWa": "0858-6186-6175",
       "bergabung": "2026-06-05",
       "catatan": ""
     },
@@ -258,7 +258,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMP Al-Falah",
       "waliNama": "Bapak Bambang",
-      "waliWa": "0825-xxxx-1695",
+      "waliWa": "0825-3217-1695",
       "bergabung": "2026-01-08",
       "catatan": ""
     },
@@ -271,7 +271,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "",
       "waliNama": "Ibu Sri",
-      "waliWa": "0846-xxxx-1987",
+      "waliWa": "0846-1170-1987",
       "bergabung": "2026-03-27",
       "catatan": ""
     },
@@ -284,7 +284,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMAN 20 Bandung",
       "waliNama": "Bapak Hadi",
-      "waliWa": "0837-xxxx-8032",
+      "waliWa": "0837-3758-8032",
       "bergabung": "2025-04-07",
       "catatan": ""
     },
@@ -297,7 +297,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Pasirkaliki 3",
       "waliNama": "Bapak Herman",
-      "waliWa": "0878-xxxx-5659",
+      "waliWa": "0878-9522-5659",
       "bergabung": "2026-08-19",
       "catatan": ""
     },
@@ -310,7 +310,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 27 Bandung",
       "waliNama": "Ibu Siska",
-      "waliWa": "0866-xxxx-3245",
+      "waliWa": "0866-9611-3245",
       "bergabung": "2026-04-15",
       "catatan": ""
     },
@@ -323,7 +323,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Bapak Slamet",
-      "waliWa": "0827-xxxx-1045",
+      "waliWa": "0827-1630-1045",
       "bergabung": "2026-02-17",
       "catatan": ""
     },
@@ -336,7 +336,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0877-xxxx-3140",
+      "waliWa": "0877-2769-3140",
       "bergabung": "2025-03-05",
       "catatan": ""
     },
@@ -349,7 +349,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0853-xxxx-3126",
+      "waliWa": "0853-7102-3126",
       "bergabung": "2025-01-10",
       "catatan": ""
     },
@@ -362,7 +362,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 2 Cimahi",
       "waliNama": "Ibu Dina",
-      "waliWa": "0867-xxxx-3715",
+      "waliWa": "0867-9929-3715",
       "bergabung": "2026-08-16",
       "catatan": ""
     },
@@ -375,7 +375,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 2 Cimahi",
       "waliNama": "Ibu Nurhayati",
-      "waliWa": "0827-xxxx-3748",
+      "waliWa": "0827-7836-3748",
       "bergabung": "2026-02-14",
       "catatan": ""
     },
@@ -388,7 +388,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMAN 20 Bandung",
       "waliNama": "Ibu Siska",
-      "waliWa": "0834-xxxx-4505",
+      "waliWa": "0834-5045-4505",
       "bergabung": "2025-06-13",
       "catatan": ""
     },
@@ -401,7 +401,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SD Muhammadiyah 4",
       "waliNama": "Bapak Slamet",
-      "waliWa": "0839-xxxx-6839",
+      "waliWa": "0839-4398-6839",
       "bergabung": "2026-02-08",
       "catatan": ""
     },
@@ -414,7 +414,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMA Santa Angela",
       "waliNama": "Bapak Joko",
-      "waliWa": "0874-xxxx-3432",
+      "waliWa": "0874-1796-3432",
       "bergabung": "2025-08-21",
       "catatan": ""
     },
@@ -427,7 +427,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMP Taruna Bakti",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0837-xxxx-5059",
+      "waliWa": "0837-8783-5059",
       "bergabung": "2026-06-28",
       "catatan": ""
     },
@@ -440,7 +440,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Cibeunying 2",
       "waliNama": "Ibu Endang",
-      "waliWa": "0856-xxxx-6086",
+      "waliWa": "0856-7376-6086",
       "bergabung": "2026-04-07",
       "catatan": ""
     },
@@ -453,7 +453,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 9 Bandung",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0875-xxxx-9266",
+      "waliWa": "0875-2776-9266",
       "bergabung": "2026-01-28",
       "catatan": ""
     },
@@ -466,7 +466,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Islam Al-Hikmah",
       "waliNama": "Bapak Slamet",
-      "waliWa": "0834-xxxx-5442",
+      "waliWa": "0834-4813-5442",
       "bergabung": "2026-07-11",
       "catatan": ""
     },
@@ -479,7 +479,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Ibu Dina",
-      "waliWa": "0844-xxxx-5835",
+      "waliWa": "0844-1422-5835",
       "bergabung": "2026-04-09",
       "catatan": ""
     },
@@ -492,7 +492,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 14 Bandung",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0812-xxxx-8966",
+      "waliWa": "0812-9556-8966",
       "bergabung": "2026-07-07",
       "catatan": ""
     },
@@ -505,7 +505,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Ibu Yuni",
-      "waliWa": "0862-xxxx-8518",
+      "waliWa": "0862-1080-8518",
       "bergabung": "2026-05-19",
       "catatan": ""
     },
@@ -518,7 +518,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Ibu Wati",
-      "waliWa": "0857-xxxx-9414",
+      "waliWa": "0857-8953-9414",
       "bergabung": "2026-06-10",
       "catatan": ""
     },
@@ -531,7 +531,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 27 Bandung",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0825-xxxx-2771",
+      "waliWa": "0825-8475-2771",
       "bergabung": "2026-04-27",
       "catatan": ""
     },
@@ -544,7 +544,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Ibu Wati",
-      "waliWa": "0847-xxxx-7746",
+      "waliWa": "0847-6223-7746",
       "bergabung": "2026-06-28",
       "catatan": ""
     },
@@ -557,7 +557,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMAN 3 Bandung",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0828-xxxx-9890",
+      "waliWa": "0828-8115-9890",
       "bergabung": "2025-03-12",
       "catatan": ""
     },
@@ -570,7 +570,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMP Al-Falah",
       "waliNama": "Ibu Lastri",
-      "waliWa": "0864-xxxx-7949",
+      "waliWa": "0864-4723-7949",
       "bergabung": "2026-04-16",
       "catatan": ""
     },
@@ -583,7 +583,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SDN Cibeunying 2",
       "waliNama": "Ibu Endang",
-      "waliWa": "0818-xxxx-9924",
+      "waliWa": "0818-2646-9924",
       "bergabung": "2026-05-11",
       "catatan": ""
     },
@@ -596,7 +596,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Islam Al-Hikmah",
       "waliNama": "Bapak Slamet",
-      "waliWa": "0820-xxxx-5995",
+      "waliWa": "0820-2229-5995",
       "bergabung": "2026-01-27",
       "catatan": ""
     },
@@ -609,7 +609,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0822-xxxx-1873",
+      "waliWa": "0822-4196-1873",
       "bergabung": "2025-03-23",
       "catatan": ""
     },
@@ -622,7 +622,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SD Muhammadiyah 4",
       "waliNama": "Ibu Sri",
-      "waliWa": "0824-xxxx-6038",
+      "waliWa": "0824-2202-6038",
       "bergabung": "2026-02-26",
       "catatan": ""
     },
@@ -635,7 +635,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SDN Merdeka 5",
       "waliNama": "Bapak Herman",
-      "waliWa": "0872-xxxx-8279",
+      "waliWa": "0872-4901-8279",
       "bergabung": "2026-04-08",
       "catatan": ""
     },
@@ -648,7 +648,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 9 Bandung",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0852-xxxx-5918",
+      "waliWa": "0852-1932-5918",
       "bergabung": "2026-08-23",
       "catatan": ""
     },
@@ -661,7 +661,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 27 Bandung",
       "waliNama": "Bapak Joko",
-      "waliWa": "0875-xxxx-7984",
+      "waliWa": "0875-8219-7984",
       "bergabung": "2026-07-16",
       "catatan": ""
     },
@@ -674,7 +674,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Pasirkaliki 3",
       "waliNama": "Bapak Anwar",
-      "waliWa": "0860-xxxx-5294",
+      "waliWa": "0860-3405-5294",
       "bergabung": "2026-03-05",
       "catatan": ""
     },
@@ -687,7 +687,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMA Pasundan 2",
       "waliNama": "Bapak Herman",
-      "waliWa": "0847-xxxx-9403",
+      "waliWa": "0847-4526-9403",
       "bergabung": "2025-03-08",
       "catatan": ""
     },
@@ -700,7 +700,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0871-xxxx-9367",
+      "waliWa": "0871-6113-9367",
       "bergabung": "2026-01-16",
       "catatan": ""
     },
@@ -713,7 +713,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMA Santa Angela",
       "waliNama": "Bapak Anwar",
-      "waliWa": "0845-xxxx-7523",
+      "waliWa": "0845-2045-7523",
       "bergabung": "2025-04-01",
       "catatan": ""
     },
@@ -726,7 +726,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMA Pasundan 2",
       "waliNama": "Bapak Herman",
-      "waliWa": "0819-xxxx-5376",
+      "waliWa": "0819-6918-5376",
       "bergabung": "2025-06-15",
       "catatan": ""
     },
@@ -739,7 +739,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SD Kristen Bina Bakti",
       "waliNama": "Ibu Wati",
-      "waliWa": "0860-xxxx-8643",
+      "waliWa": "0860-3643-8643",
       "bergabung": "2026-07-06",
       "catatan": ""
     },
@@ -752,7 +752,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SD Islam Al-Hikmah",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0873-xxxx-9341",
+      "waliWa": "0873-3249-9341",
       "bergabung": "2026-02-12",
       "catatan": ""
     },
@@ -765,7 +765,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMP Taruna Bakti",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0828-xxxx-5428",
+      "waliWa": "0828-2134-5428",
       "bergabung": "2026-05-14",
       "catatan": ""
     },
@@ -778,7 +778,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0835-xxxx-6425",
+      "waliWa": "0835-8754-6425",
       "bergabung": "2026-03-16",
       "catatan": ""
     },
@@ -791,7 +791,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Bapak Hadi",
-      "waliWa": "0854-xxxx-6516",
+      "waliWa": "0854-7851-6516",
       "bergabung": "2026-08-24",
       "catatan": ""
     },
@@ -804,7 +804,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Merdeka 5",
       "waliNama": "Bapak Rudi",
-      "waliWa": "0878-xxxx-7029",
+      "waliWa": "0878-4456-7029",
       "bergabung": "2026-05-15",
       "catatan": ""
     },
@@ -817,7 +817,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMA Pasundan 2",
       "waliNama": "Ibu Dina",
-      "waliWa": "0830-xxxx-9006",
+      "waliWa": "0830-8606-9006",
       "bergabung": "2025-05-11",
       "catatan": ""
     },
@@ -830,7 +830,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0828-xxxx-3209",
+      "waliWa": "0828-5094-3209",
       "bergabung": "2026-02-23",
       "catatan": ""
     },
@@ -843,7 +843,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Islam Al-Hikmah",
       "waliNama": "Ibu Wati",
-      "waliWa": "0818-xxxx-4507",
+      "waliWa": "0818-9532-4507",
       "bergabung": "2026-06-18",
       "catatan": ""
     },
@@ -856,7 +856,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMA Santa Angela",
       "waliNama": "Bapak Joko",
-      "waliWa": "0859-xxxx-5157",
+      "waliWa": "0859-4466-5157",
       "bergabung": "2025-08-02",
       "catatan": ""
     },
@@ -869,7 +869,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Pasirkaliki 3",
       "waliNama": "Bapak Anwar",
-      "waliWa": "0835-xxxx-6623",
+      "waliWa": "0835-7095-6623",
       "bergabung": "2026-08-22",
       "catatan": ""
     },
@@ -882,7 +882,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Cibeunying 2",
       "waliNama": "Bapak Dedi",
-      "waliWa": "0859-xxxx-1009",
+      "waliWa": "0859-9892-1009",
       "bergabung": "2026-05-12",
       "catatan": ""
     },
@@ -895,7 +895,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 9 Bandung",
       "waliNama": "Bapak Bambang",
-      "waliWa": "0848-xxxx-5090",
+      "waliWa": "0848-3704-5090",
       "bergabung": "2026-03-07",
       "catatan": ""
     },
@@ -908,7 +908,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Cibeunying 2",
       "waliNama": "Ibu Dina",
-      "waliWa": "0835-xxxx-3279",
+      "waliWa": "0835-4049-3279",
       "bergabung": "2026-08-17",
       "catatan": ""
     },
@@ -921,7 +921,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "",
       "waliNama": "Ibu Dina",
-      "waliWa": "0834-xxxx-5266",
+      "waliWa": "0834-6095-5266",
       "bergabung": "2025-04-08",
       "catatan": ""
     },
@@ -934,7 +934,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMP Al-Falah",
       "waliNama": "Ibu Nurhayati",
-      "waliWa": "0826-xxxx-2957",
+      "waliWa": "0826-4758-2957",
       "bergabung": "2026-06-02",
       "catatan": ""
     },
@@ -947,7 +947,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SD Muhammadiyah 4",
       "waliNama": "Ibu Siska",
-      "waliWa": "0871-xxxx-7251",
+      "waliWa": "0871-1355-7251",
       "bergabung": "2026-01-17",
       "catatan": ""
     },
@@ -960,7 +960,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMPN 27 Bandung",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0840-xxxx-1294",
+      "waliWa": "0840-9185-1294",
       "bergabung": "2026-08-26",
       "catatan": ""
     },
@@ -973,7 +973,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Sukajadi 1",
       "waliNama": "Ibu Tuti",
-      "waliWa": "0841-xxxx-7649",
+      "waliWa": "0841-8170-7649",
       "bergabung": "2026-04-01",
       "catatan": ""
     },
@@ -986,7 +986,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SD Islam Al-Hikmah",
       "waliNama": "Ibu Endang",
-      "waliWa": "0831-xxxx-7763",
+      "waliWa": "0831-3415-7763",
       "bergabung": "2026-01-02",
       "catatan": ""
     },
@@ -999,7 +999,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 2 Cimahi",
       "waliNama": "Bapak Anwar",
-      "waliWa": "0879-xxxx-6262",
+      "waliWa": "0879-3177-6262",
       "bergabung": "2026-03-05",
       "catatan": ""
     },
@@ -1012,7 +1012,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "",
       "waliNama": "Bapak Joko",
-      "waliWa": "0862-xxxx-8531",
+      "waliWa": "0862-9460-8531",
       "bergabung": "2026-04-07",
       "catatan": ""
     },
@@ -1025,7 +1025,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMP Taruna Bakti",
       "waliNama": "Bapak Bambang",
-      "waliWa": "0858-xxxx-2645",
+      "waliWa": "0858-8353-2645",
       "bergabung": "2026-05-17",
       "catatan": ""
     },
@@ -1038,7 +1038,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SDN Pasirkaliki 3",
       "waliNama": "Ibu Ratna",
-      "waliWa": "0856-xxxx-3629",
+      "waliWa": "0856-8978-3629",
       "bergabung": "2026-01-04",
       "catatan": ""
     },
@@ -1051,7 +1051,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMAN 20 Bandung",
       "waliNama": "Ibu Sri",
-      "waliWa": "0830-xxxx-9945",
+      "waliWa": "0830-2501-9945",
       "bergabung": "2025-04-03",
       "catatan": ""
     },
@@ -1064,7 +1064,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "",
       "waliNama": "Bapak Slamet",
-      "waliWa": "0853-xxxx-6396",
+      "waliWa": "0853-1039-6396",
       "bergabung": "2025-02-28",
       "catatan": ""
     },
@@ -1077,7 +1077,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMPN 9 Bandung",
       "waliNama": "Ibu Nurhayati",
-      "waliWa": "0865-xxxx-3648",
+      "waliWa": "0865-7457-3648",
       "bergabung": "2026-03-18",
       "catatan": ""
     },
@@ -1090,7 +1090,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "P",
       "asal": "SMP Taruna Bakti",
       "waliNama": "Bapak Hadi",
-      "waliWa": "0843-xxxx-1318",
+      "waliWa": "0843-6102-1318",
       "bergabung": "2026-06-10",
       "catatan": ""
     },
@@ -1103,7 +1103,7 @@ export const INITIAL_SEED: SeedData = {
       "kelamin": "L",
       "asal": "SMP Taruna Bakti",
       "waliNama": "Ibu Siska",
-      "waliWa": "0858-xxxx-9974",
+      "waliWa": "0858-3133-9974",
       "bergabung": "2026-02-10",
       "catatan": ""
     }
@@ -1113,138 +1113,126 @@ export const INITIAL_SEED: SeedData = {
       "id": "U1",
       "nama": "Bu Sari",
       "kelamin": "P",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M4"
       ],
-      "kontak": "0819-xxxx-9220"
+      "kontak": "0819-9692-9220"
     },
     {
       "id": "U2",
       "nama": "Pak Andi",
       "kelamin": "L",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M6",
         "M3"
       ],
-      "kontak": "0845-xxxx-5855"
+      "kontak": "0845-8477-5855"
     },
     {
       "id": "U3",
       "nama": "Bu Rina",
       "kelamin": "P",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M5"
       ],
-      "kontak": "0844-xxxx-5874"
+      "kontak": "0844-1504-5874"
     },
     {
       "id": "U4",
       "nama": "Pak Dedi",
       "kelamin": "L",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M3",
         "M1",
         "M2"
       ],
-      "kontak": "0855-xxxx-3121"
+      "kontak": "0855-3667-3121"
     },
     {
       "id": "U5",
       "nama": "Bu Maya",
       "kelamin": "P",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M2",
         "M1",
         "M4"
       ],
-      "kontak": "0857-xxxx-4536"
+      "kontak": "0857-5690-4536"
     },
     {
       "id": "U6",
       "nama": "Pak Hendra",
       "kelamin": "L",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M1",
         "M4",
         "M2"
       ],
-      "kontak": "0862-xxxx-4641"
+      "kontak": "0862-9809-4641"
     },
     {
       "id": "U7",
       "nama": "Bu Ningsih",
       "kelamin": "P",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M3",
         "M5"
       ],
-      "kontak": "0858-xxxx-1999"
+      "kontak": "0858-1369-1999"
     },
     {
       "id": "U8",
       "nama": "Pak Bagus",
       "kelamin": "L",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M5",
         "M6"
       ],
-      "kontak": "0814-xxxx-7955"
+      "kontak": "0814-3132-7955"
     },
     {
       "id": "U9",
       "nama": "Bu Ratih",
       "kelamin": "P",
-      "peran": "Pengisi",
       "aktif": true,
       "mapel": [
         "M2",
         "M5",
         "M1"
       ],
-      "kontak": "0836-xxxx-2306"
+      "kontak": "0836-4353-2306"
     },
     {
       "id": "U10",
       "nama": "Pak Yudi",
       "kelamin": "L",
-      "peran": "Support",
       "aktif": true,
       "mapel": [],
-      "kontak": "0848-xxxx-3605"
+      "kontak": "0848-5634-3605"
     },
     {
       "id": "U11",
       "nama": "Bu Lilis",
       "kelamin": "P",
-      "peran": "Wali",
       "aktif": true,
       "mapel": [],
-      "kontak": "0840-xxxx-4132"
+      "kontak": "0840-6316-4132"
     },
     {
       "id": "U12",
       "nama": "Pak Surya",
       "kelamin": "L",
-      "peran": "Pendamping",
       "aktif": false,
       "mapel": [],
-      "kontak": "0874-xxxx-5172"
+      "kontak": "0874-8791-5172"
     }
   ],
   "kelas": [

@@ -41,8 +41,8 @@ export function SiswaSkeleton() {
                   <span>NAMA</span>
                   <span>↑</span>
                 </div>
-                <div className="w-13 shrink-0">JNJ</div>
-                <div className="w-21.5 shrink-0">LAHIR</div>
+                <div className="w-11 shrink-0">JNJ</div>
+                <div className="w-23.5 shrink-0 text-right pr-2.5">LAHIR</div>
                 <div className="flex-1 min-w-27.5">ASAL SEKOLAH</div>
                 <div className="w-29.5 shrink-0">WALI</div>
                 <div className="w-29.5 shrink-0">WHATSAPP</div>
@@ -73,12 +73,12 @@ export function SiswaSkeleton() {
                     </div>
 
                     {/* Jenjang */}
-                    <div className="w-13 shrink-0 pr-2">
+                    <div className="w-11 shrink-0 pr-2">
                       <Skeleton className="h-3.5 w-6 rounded shrink-0" />
                     </div>
 
                     {/* Lahir */}
-                    <div className="w-21.5 shrink-0 pr-2">
+                    <div className="w-23.5 shrink-0 pr-2.5 flex justify-end">
                       <Skeleton className="h-3.5 w-16 rounded shrink-0" />
                     </div>
 

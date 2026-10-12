@@ -134,7 +134,7 @@ export interface Subjek {
   id: string;
   nama: string;
   kelamin: JenisKelamin;
-  peran: PeranSubjek;
+  peran?: PeranSubjek;
   aktif: boolean;
   mapel?: string[]; // IDs of MataPelajaran
   kontak?: string;
@@ -157,7 +157,7 @@ export interface SubjekFilterParams {
 export interface CreateSubjekInput {
   nama: string;
   kelamin: JenisKelamin;
-  peran: PeranSubjek;
+  peran?: PeranSubjek;
   aktif?: boolean;
   mapel?: string[];
   kontak?: string;

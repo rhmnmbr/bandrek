@@ -1089,12 +1089,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                           key={s.id}
                           type="button"
                           onClick={() => handleAddSubjek(s.id)}
-                          className="w-full text-left px-2 py-1.5 rounded-sm hover:bg-(--color-surface-alt) text-(--color-text) cursor-pointer flex items-center justify-between"
+                          className="w-full text-left px-2 py-1.5 rounded-sm hover:bg-(--color-surface-alt) text-(--color-text) cursor-pointer flex items-center"
                         >
                           <span className="truncate">{s.nama}</span>
-                          <span className="text-[10.5px] text-(--color-text-muted) font-mono">
-                            {s.peran}
-                          </span>
                         </button>
                       ))}
                     </PopoverPrimitive.Content>
