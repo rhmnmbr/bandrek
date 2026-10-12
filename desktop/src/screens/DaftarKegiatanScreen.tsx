@@ -5,6 +5,7 @@ import {
   useJenisKegiatanList,
   useSubjekList,
   useKelasList,
+  useSiswaList,
 } from '@/data/hooks';
 import type { Kegiatan, StatusKegiatan, QuickFilterDaftar } from '@/data/types/kegiatan';
 import {
@@ -41,6 +42,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const { data: jenisList = [], isLoading: loadingJenis } = useJenisKegiatanList();
   const { data: subjekList = [], isLoading: loadingSubjek } = useSubjekList();
   const { data: kelasList = [], isLoading: loadingKelas } = useKelasList();
+  const { data: siswaList = [] } = useSiswaList({ status: 'semua' });
 
   const isPageLoading = loadingKegiatan || loadingJenis || loadingSubjek || loadingKelas;
 
@@ -81,10 +83,11 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const [mapel, setMapel] = React.useState<string>('');
   const [tempat, setTempat] = React.useState<string>('');
   const [cari, setCari] = React.useState<string>('');
+  const [siswa, setSiswa] = React.useState<string>('');
   const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
 
-  // Sync URL query parameters (?filter, ?subjek, ?kelas, ?jenis, ?status, ?cari, ?mapel, ?tempat, ?dari, ?sampai)
+  // Sync URL query parameters (?filter, ?subjek, ?kelas, ?jenis, ?status, ?cari, ?mapel, ?tempat, ?dari, ?sampai, ?siswa)
   React.useEffect(() => {
     const filterParam = searchParams.get('filter');
     const subjekParam = searchParams.get('subjek');
@@ -94,11 +97,12 @@ export const DaftarKegiatanScreen: React.FC = () => {
     const cariParam = searchParams.get('cari');
     const mapelParam = searchParams.get('mapel');
     const tempatParam = searchParams.get('tempat');
+    const siswaParam = searchParams.get('siswa');
     const dariParam = searchParams.get('dari');
     const sampaiParam = searchParams.get('sampai');
 
     const hasEntityFilter = Boolean(
-      subjekParam || kelasParam || jenisParam || mapelParam || tempatParam || cariParam
+      subjekParam || kelasParam || jenisParam || mapelParam || tempatParam || cariParam || siswaParam
     );
 
     if (filterParam === 'perlu_realisasi' || filterParam === 'perlu') {
@@ -116,6 +120,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
     setCari(cariParam || '');
     setMapel(mapelParam || '');
     setTempat(tempatParam || '');
+    setSiswa(siswaParam || '');
 
     if (dariParam) {
       setUserDari(dariParam);
@@ -182,6 +187,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
       if (jenis && ev.jenis !== jenis) return false;
       if (status && ev.status !== status) return false;
       if (subjek && !ev.subjek.some((s) => s.id === subjek)) return false;
+      if (siswa && !ev.siswa.includes(siswa)) return false;
       if (kelas) {
         const anggota = kelasAnggotaMap.get(kelas) || [];
         if (ev.kelas !== kelas && !ev.siswa.some((sid) => anggota.includes(sid))) {
@@ -192,11 +198,16 @@ export const DaftarKegiatanScreen: React.FC = () => {
       if (tempat && ev.tempat !== tempat) return false;
       if (cari.trim().length > 0) {
         const qLower = cari.trim().toLowerCase();
-        if (!ev.nama.toLowerCase().includes(qLower)) return false;
+        const matchNama = ev.nama.toLowerCase().includes(qLower);
+        const matchSiswa = ev.siswa.some((sid) => {
+          const sw = siswaList.find((s) => s.id === sid);
+          return sw && sw.nama.toLowerCase().includes(qLower);
+        });
+        if (!matchNama && !matchSiswa) return false;
       }
       return true;
     },
-    [jenis, status, subjek, kelas, mapel, tempat, kelasAnggotaMap, cari]
+    [jenis, status, subjek, siswa, kelas, mapel, tempat, kelasAnggotaMap, cari, siswaList]
   );
 
   // Quick filter counts (calculated on full dataset matching other active filters)
@@ -269,6 +280,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
     (kelas ? 1 : 0) +
     (mapel ? 1 : 0) +
     (tempat ? 1 : 0) +
+    (siswa ? 1 : 0) +
     (cari.trim() ? 1 : 0);
 
   const hasActiveFilters =
@@ -310,6 +322,11 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const handleChangeKelas = (val: string) => {
     setKelas(val);
     handleUpdateParam('kelas', val || null);
+  };
+
+  const handleChangeSiswa = (val: string) => {
+    setSiswa(val);
+    handleUpdateParam('siswa', val || null);
   };
 
   const handleChangeCari = (val: string) => {
@@ -354,6 +371,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
     setKelas('');
     setMapel('');
     setTempat('');
+    setSiswa('');
     setCari('');
     setCepat('');
     setSortDesc(true);
@@ -406,6 +424,12 @@ export const DaftarKegiatanScreen: React.FC = () => {
     }
   };
 
+  const activeSiswaObj = React.useMemo(() => {
+    if (!siswa) return null;
+    const s = siswaList.find((item) => item.id === siswa);
+    return s ? { id: s.id, nama: s.nama } : { id: siswa, nama: 'Siswa' };
+  }, [siswa, siswaList]);
+
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white">
       {isPageLoading ? (
@@ -447,6 +471,8 @@ export const DaftarKegiatanScreen: React.FC = () => {
             totalAll={semuaKegiatan.length}
             sortDesc={sortDesc}
             isLoading={false}
+            activeSiswa={activeSiswaObj}
+            onClearSiswa={() => handleChangeSiswa('')}
           />
 
           {/* 3. Table or Empty State */}

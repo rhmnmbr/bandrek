@@ -18,7 +18,7 @@ import { SiswaEmptyState } from '@/components/master/siswa/SiswaEmptyState';
 import { SiswaFormPanel, type SiswaFormData } from '@/components/master/siswa/SiswaFormPanel';
 import { SiswaConfirmModal } from '@/components/master/siswa/SiswaConfirmModal';
 import { ProfilSiswaView } from '@/components/master/siswa/ProfilSiswaView';
-import { MasterTableSkeleton, ProfilSiswaSkeleton, SiswaSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, ProfilSiswaSkeleton, SiswaSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 import { BANDREK_EVENTS, dispatchBandrekEvent } from '@/lib/keyboardShortcuts';
 
 export function SiswaScreen() {
@@ -305,10 +305,10 @@ export function SiswaScreen() {
     [allSiswa, kelasList, ubahAnggotaKelasMutation, showToast]
   );
 
-  // Navigate to daftar kegiatan with search
+  // Navigate to daftar kegiatan filtered by this student
   const handleLihatKegiatan = useCallback(
-    (namaSiswa: string) => {
-      navigate(`/kegiatan?cari=${encodeURIComponent(namaSiswa)}`);
+    (siswaId: string) => {
+      navigate(`/kegiatan?siswa=${encodeURIComponent(siswaId)}`);
     },
     [navigate]
   );
@@ -460,19 +460,26 @@ export function SiswaScreen() {
 
       {/* Right Column: Side Panel Form */}
       {isPanelOpen && (
-        <SiswaFormPanel
-          isOpen={isPanelOpen}
-          initialData={selectedStudent}
-          allSiswa={allSiswa}
-          kelasList={kelasList}
-          onClose={handleClosePanel}
-          onSave={handleSaveForm}
-          onMintaNonaktif={handleMintaNonaktif}
-          onAktifkanKembali={handleAktifkanKembali}
-          onMintaHapus={handleMintaHapus}
-          onUbahKelas={handleUbahKelas}
-          onLihatKegiatan={handleLihatKegiatan}
-        />
+        selectedStudentId && isLoadingAllSiswa && !selectedStudent ? (
+          <div className="flex w-95 shrink-0 flex-col bg-(--color-surface-alt) border-l border-(--color-border) min-h-0 overflow-hidden">
+            <FormPanelSkeleton title="Memuat detail siswa..." />
+          </div>
+        ) : (
+          <SiswaFormPanel
+            key={selectedStudent?.id || 'baru'}
+            isOpen={isPanelOpen}
+            initialData={selectedStudent}
+            allSiswa={allSiswa}
+            kelasList={kelasList}
+            onClose={handleClosePanel}
+            onSave={handleSaveForm}
+            onMintaNonaktif={handleMintaNonaktif}
+            onAktifkanKembali={handleAktifkanKembali}
+            onMintaHapus={handleMintaHapus}
+            onUbahKelas={handleUbahKelas}
+            onLihatKegiatan={handleLihatKegiatan}
+          />
+        )
       )}
 
       {/* Delete / Deactivate Confirm Dialog */}

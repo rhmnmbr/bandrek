@@ -19,7 +19,7 @@ import { SubjekEmptyState } from '@/components/master/subjek/SubjekEmptyState';
 import { SubjekFormPanel, type SubjekFormData } from '@/components/master/subjek/SubjekFormPanel';
 import { SubjekConfirmModal } from '@/components/master/subjek/SubjekConfirmModal';
 import { ProfilSubjekView } from '@/components/master/subjek/ProfilSubjekView';
-import { MasterTableSkeleton, ProfilSubjekSkeleton, SubjekSkeleton } from '@/components/skeleton';
+import { MasterTableSkeleton, ProfilSubjekSkeleton, SubjekSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 
 export function SubjekScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -457,18 +457,27 @@ export function SubjekScreen() {
         </div>
 
         {/* Side Panel Form */}
-        <SubjekFormPanel
-          isOpen={isPanelOpen}
-          initialData={selectedSubjek}
-          allSubjek={allSubjek}
-          mapelList={mapelList}
-          onClose={handleClosePanel}
-          onSave={handleSaveForm}
-          onMintaNonaktif={handleMintaNonaktif}
-          onAktifkanKembali={handleAktifkanKembali}
-          onMintaHapus={handleMintaHapus}
-          onLihatKegiatan={(id) => navigate(`/kegiatan?subjek=${id}`)}
-        />
+        {isPanelOpen && (
+          selectedSubjekId && isLoadingAllSubjek && !selectedSubjek ? (
+            <div className="w-[380px] shrink-0 flex flex-col bg-(--color-surface-subtle) min-h-0 overflow-hidden border-l border-(--color-border)">
+              <FormPanelSkeleton title="Memuat detail subjek..." />
+            </div>
+          ) : (
+            <SubjekFormPanel
+              key={selectedSubjek?.id || 'baru'}
+              isOpen={isPanelOpen}
+              initialData={selectedSubjek}
+              allSubjek={allSubjek}
+              mapelList={mapelList}
+              onClose={handleClosePanel}
+              onSave={handleSaveForm}
+              onMintaNonaktif={handleMintaNonaktif}
+              onAktifkanKembali={handleAktifkanKembali}
+              onMintaHapus={handleMintaHapus}
+              onLihatKegiatan={(id) => navigate(`/kegiatan?subjek=${id}`)}
+            />
+          )
+        )}
       </div>
 
       {/* Confirmation Modal */}

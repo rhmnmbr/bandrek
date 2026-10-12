@@ -18,6 +18,8 @@ export interface DaftarQuickFiltersProps {
   totalAll: number;
   sortDesc: boolean;
   isLoading?: boolean;
+  activeSiswa?: { id: string; nama: string } | null;
+  onClearSiswa?: () => void;
 }
 
 interface ChipConfig {
@@ -43,12 +45,30 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
   totalAll,
   sortDesc,
   isLoading = false,
+  activeSiswa,
+  onClearSiswa,
 }) => {
   return (
     <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white text-[12px] select-none">
       <span className="flex-none text-[11.5px] text-(--color-text-muted) whitespace-nowrap">
         Filter cepat
       </span>
+
+      {activeSiswa && (
+        <div className="flex-none flex items-center h-6 rounded-full border border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold pl-2.5 pr-1 gap-1 text-[11.5px]">
+          <span>Siswa: {activeSiswa.nama}</span>
+          {onClearSiswa && (
+            <button
+              type="button"
+              onClick={onClearSiswa}
+              title="Lepas filter siswa ini"
+              className="w-4 h-4 flex-none rounded-full border-none bg-transparent text-inherit cursor-pointer flex items-center justify-center hover:bg-[#FDE7E9] hover:text-[#9B0C18] transition-colors"
+            >
+              <Dismiss12Regular className="w-2.5 h-2.5" />
+            </button>
+          )}
+        </div>
+      )}
 
       {CHIP_CONFIGS.map((chip) => {
         const count = counts[chip.id];

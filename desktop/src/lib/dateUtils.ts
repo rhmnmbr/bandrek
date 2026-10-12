@@ -181,13 +181,12 @@ export function formatTanggalSlash(iso: string): string {
 }
 
 /**
- * Format tanggal dengan bulan pendek dan tahun (misal: "12 Feb 2013" atau "09 Feb 2013")
+ * Format tanggal dengan bulan pendek dan tahun (misal: "12 Feb 2013" atau "9 Feb 2013")
  */
 export function formatTanggalTahun(iso: string): string {
   if (!iso) return '—';
   const d = toDate(iso);
-  const tgl = String(d.getDate()).padStart(2, '0');
-  return `${tgl} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
+  return `${d.getDate()} ${NAMA_BULAN_PENDEK[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /**

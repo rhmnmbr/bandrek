@@ -31,8 +31,38 @@ interface SiswaFormPanelProps {
   onAktifkanKembali: (siswa: Siswa) => void;
   onMintaHapus: (siswa: Siswa) => void;
   onUbahKelas: (kelasId: string, siswaId: string, tambah: boolean) => void;
-  onLihatKegiatan: (namaSiswa: string) => void;
+  onLihatKegiatan: (siswaId: string, namaSiswa?: string) => void;
   today?: string;
+}
+
+function getInitialFormData(initialData: Siswa | null, today: string): SiswaFormData {
+  if (initialData) {
+    return {
+      id: initialData.id,
+      nama: initialData.nama,
+      jenjang: initialData.jenjang,
+      aktif: initialData.aktif,
+      lahir: initialData.lahir || '',
+      kelamin: initialData.kelamin || '',
+      asal: initialData.asal || '',
+      waliNama: initialData.waliNama || '',
+      waliWa: initialData.waliWa || '',
+      bergabung: initialData.bergabung || today,
+      catatan: initialData.catatan || '',
+    };
+  }
+  return {
+    nama: '',
+    jenjang: '',
+    aktif: true,
+    lahir: '',
+    kelamin: '',
+    asal: '',
+    waliNama: '',
+    waliWa: '',
+    bergabung: today,
+    catatan: '',
+  };
 }
 
 export function SiswaFormPanel({
@@ -51,18 +81,7 @@ export function SiswaFormPanel({
 }: SiswaFormPanelProps) {
   const isNew = !initialData;
 
-  const [form, setForm] = useState<SiswaFormData>({
-    nama: '',
-    jenjang: '',
-    aktif: true,
-    lahir: '',
-    kelamin: '',
-    asal: '',
-    waliNama: '',
-    waliWa: '',
-    bergabung: today,
-    catatan: '',
-  });
+  const [form, setForm] = useState<SiswaFormData>(() => getInitialFormData(initialData, today));
 
   const [dicoba, setDicoba] = useState(false);
   const [calOpen, setCalOpen] = useState<'lahir' | 'gabung' | null>(null);
@@ -198,9 +217,10 @@ export function SiswaFormPanel({
   if (!isOpen) return null;
 
   // Header meta
+  const displayName = initialData?.nama || form.nama;
   const inisial = isNew
     ? '+'
-    : form.nama
+    : displayName
         .trim()
         .split(/\s+/)
         .slice(0, 2)
@@ -288,7 +308,9 @@ export function SiswaFormPanel({
     return (
       <div
         ref={calRef}
-        className="absolute left-0 top-7.5 z-20 w-66.5 rounded-lg border border-(--color-border-strong) bg-(--color-surface) p-2.5 shadow-xl animate-in fade-in-0 duration-100"
+        className={`absolute ${
+          calOpen === 'gabung' ? 'right-0' : 'left-0'
+        } top-7.5 z-20 w-66.5 rounded-lg border border-(--color-border-strong) bg-(--color-surface) p-2.5 shadow-xl animate-in fade-in-0 duration-100`}
       >
         <div className="flex items-center gap-1.5 mb-2">
           <div className="flex-1 text-[13.5px] font-semibold text-(--color-text-primary)">
@@ -466,7 +488,7 @@ export function SiswaFormPanel({
         {/* Tanggal Lahir & Jenis Kelamin */}
         <div className="flex shrink-0 gap-2.25 items-start">
           {/* Tanggal Lahir */}
-          <div className="flex-1 min-w-0 flex flex-col gap-1">
+          <div className="w-36 shrink-0 flex flex-col gap-1">
             <label
               className={`text-[11.5px] ${
                 dicoba && errors.lahir ? 'text-(--color-danger-ink) font-semibold' : 'text-(--color-text-secondary)'
@@ -506,7 +528,7 @@ export function SiswaFormPanel({
           </div>
 
           {/* Jenis Kelamin */}
-          <div className="w-31.5 shrink-0 flex flex-col gap-1">
+          <div className="flex-1 min-w-0 flex flex-col gap-1">
             <label className="text-[11.5px] text-(--color-text-secondary)">Jenis kelamin</label>
             <div className="flex h-7 rounded border border-(--color-border-strong) overflow-hidden bg-(--color-surface)">
               <button
@@ -578,7 +600,7 @@ export function SiswaFormPanel({
           </div>
 
           {/* Tanggal Bergabung */}
-          <div className="flex-1 min-w-0 flex flex-col gap-1">
+          <div className="w-36 shrink-0 flex flex-col gap-1">
             <label className="text-[11.5px] text-(--color-text-secondary)">Tanggal bergabung</label>
             <div className="relative shrink-0">
               <button
@@ -765,7 +787,7 @@ export function SiswaFormPanel({
             </div>
             <button
               type="button"
-              onClick={() => onLihatKegiatan(initialData.nama)}
+              onClick={() => onLihatKegiatan(initialData.id, initialData.nama)}
               className="mt-1.25 border-none bg-transparent p-0 text-xs text-(--color-brand) hover:underline cursor-pointer"
             >
               Lihat kegiatannya di daftar kegiatan

@@ -25,6 +25,26 @@ interface SubjekFormPanelProps {
   onLihatKegiatan: (subjekId: string) => void;
 }
 
+function getInitialSubjekFormData(initialData: Subjek | null): SubjekFormData {
+  if (initialData) {
+    return {
+      id: initialData.id,
+      nama: initialData.nama,
+      kelamin: initialData.kelamin || '',
+      aktif: initialData.aktif !== false,
+      mapel: (initialData.mapel || []).slice(),
+      kontak: initialData.kontak || '',
+    };
+  }
+  return {
+    nama: '',
+    kelamin: '',
+    aktif: true,
+    mapel: [],
+    kontak: '',
+  };
+}
+
 export function SubjekFormPanel({
   isOpen,
   initialData,
@@ -39,13 +59,7 @@ export function SubjekFormPanel({
 }: SubjekFormPanelProps) {
   const isNew = !initialData;
 
-  const [form, setForm] = useState<SubjekFormData>({
-    nama: '',
-    kelamin: '',
-    aktif: true,
-    mapel: [],
-    kontak: '',
-  });
+  const [form, setForm] = useState<SubjekFormData>(() => getInitialSubjekFormData(initialData));
 
   const [dicoba, setDicoba] = useState(false);
   const [menuMapelOpen, setMenuMapelOpen] = useState(false);
@@ -145,9 +159,10 @@ export function SubjekFormPanel({
   if (!isOpen) return null;
 
   // Header display calculations
+  const displayName = initialData?.nama || form.nama;
   const initials = isNew
     ? '+'
-    : form.nama
+    : displayName
         .split(/\s+/)
         .slice(0, 2)
         .map((w) => w[0])
@@ -254,7 +269,7 @@ export function SubjekFormPanel({
         {/* Jenis Kelamin */}
         <div className="flex flex-col gap-1 shrink-0">
           <label className="text-[11.5px] text-(--color-text-secondary)">Jenis kelamin</label>
-          <div className="flex h-7 w-[150px] rounded border border-(--color-border-strong) overflow-hidden bg-(--color-surface)">
+          <div className="flex h-7 w-48 rounded border border-(--color-border-strong) overflow-hidden bg-(--color-surface)">
             <button
               type="button"
               onClick={() =>
