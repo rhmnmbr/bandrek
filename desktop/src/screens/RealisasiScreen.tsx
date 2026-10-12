@@ -702,7 +702,7 @@ export const RealisasiScreen: React.FC = () => {
           type="button"
           onClick={handleSimpan}
           disabled={saveDisabled}
-          title={saveDisabled ? 'Lengkapi status kehadiran dulu' : 'Tandai kegiatan ini terealisasi'}
+          title={saveDisabled ? 'Lengkapi status kehadiran dulu' : 'Tandai kegiatan ini terealisasi · Ctrl S'}
           className={cn(
             'flex-none h-6.5 px-3 rounded border-none font-semibold text-[12.5px] whitespace-nowrap flex items-center gap-1.75 transition-all',
             saveDisabled
@@ -711,7 +711,6 @@ export const RealisasiScreen: React.FC = () => {
           )}
         >
           <span>{mode === 'ubah' ? 'Simpan perubahan' : 'Simpan realisasi'}</span>
-          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
         </button>
       </div>
 

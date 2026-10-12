@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkmark16Regular, Warning16Regular } from '@fluentui/react-icons';
+import { Checkmark16Regular, Warning16Regular, ArrowLeft16Regular } from '@fluentui/react-icons';
 import { useToast } from '@/components/ui/toast';
+import { BandrekCupIcon } from '@/components/ui/bandrek-logo';
 
 export function SetupServerScreen() {
   const navigate = useNavigate();
@@ -72,9 +73,7 @@ export function SetupServerScreen() {
       <div className="w-full max-w-[440px] rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
         {/* Brand Header */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-(--color-brand) text-white font-bold text-lg shadow-sm">
-            B
-          </div>
+          <BandrekCupIcon className="h-9 w-9 text-[#4D5962] shrink-0" />
           <div>
             <h1 className="text-[17px] font-semibold text-(--color-text-primary) leading-tight">
               Pengaturan Alamat Server
@@ -140,10 +139,11 @@ export function SetupServerScreen() {
         <div className="flex items-center justify-between pt-3 border-t border-(--color-border)">
           <button
             type="button"
-            onClick={() => navigate('/kalender')}
-            className="text-xs text-(--color-brand) hover:underline cursor-pointer font-medium"
+            onClick={() => navigate('/login')}
+            className="flex items-center gap-1.5 text-xs text-(--color-brand) hover:underline cursor-pointer font-medium select-none"
           >
-            ← Kembali ke kalender
+            <ArrowLeft16Regular className="w-3.5 h-3.5" />
+            <span>Kembali ke login</span>
           </button>
 
           <button

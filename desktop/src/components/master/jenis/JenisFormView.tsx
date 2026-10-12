@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { Add16Regular } from '@fluentui/react-icons';
 import type { JenisKegiatan, JenisKegiatanWarna } from '@/data/types/master';
 import { JENIS_WARNA, LIST_WARNA } from './palette';
 
@@ -158,7 +159,7 @@ export function JenisFormView({
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[12.5px] font-semibold"
           style={{ backgroundColor: metaWarna.bg, color: metaWarna.ink }}
         >
-          {initialIcon}
+          {isNewJenis ? <Add16Regular className="w-4 h-4" /> : initialIcon}
         </div>
 
         <div className="flex-1 min-w-0">
@@ -377,7 +378,6 @@ export function JenisFormView({
           }`}
         >
           <span>{isNewJenis ? 'Simpan jenis kegiatan' : 'Simpan'}</span>
-          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
         </button>
       </div>
     </div>

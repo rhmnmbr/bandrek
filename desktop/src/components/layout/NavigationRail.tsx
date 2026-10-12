@@ -227,11 +227,13 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
         {/* Master Data Items */}
         {MASTER_NAV_ITEMS.map(renderItem)}
 
-        {/* Separator */}
-        <div className="my-1.5 h-px bg-(--color-border-subtle)" />
-
-        {/* Pengaturan / Pengguna Items */}
-        {SETTINGS_NAV_ITEMS.map(renderItem)}
+        {/* Pengaturan / Pengguna Items (Khusus Admin) */}
+        {isAdmin && (
+          <>
+            <div className="my-1.5 h-px bg-(--color-border-subtle)" />
+            {SETTINGS_NAV_ITEMS.map(renderItem)}
+          </>
+        )}
       </nav>
 
       {/* Flexible Spacer */}

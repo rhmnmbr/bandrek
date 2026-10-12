@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Add16Regular } from '@fluentui/react-icons';
 import { Select } from '@/components/ui/select';
 import type { JenjangPendidikan, JenisKelamin } from '@/data/types/common';
 import type { Siswa, Kelas } from '@/data/types/master';
@@ -414,7 +415,7 @@ export function SiswaFormPanel({
       {/* Panel Header */}
       <div className="flex h-14.5 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5 py-3">
         <div className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-full bg-(--color-brand-subtle) text-[12.5px] font-semibold text-(--color-brand-ink)">
-          {inisial}
+          {isNew ? <Add16Regular className="w-4 h-4" /> : inisial}
         </div>
         <div className="flex-1 min-w-0">
           <div className="truncate text-[15px] font-semibold leading-tight text-(--color-text-primary)">
@@ -876,7 +877,6 @@ export function SiswaFormPanel({
           }`}
         >
           <span>{isNew ? 'Simpan siswa' : 'Simpan'}</span>
-          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
         </button>
       </div>
     </div>

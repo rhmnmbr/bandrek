@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Warning16Regular } from '@fluentui/react-icons';
+import { useNavigate } from 'react-router-dom';
+import { Warning16Regular, LockClosed24Regular, Add16Regular } from '@fluentui/react-icons';
 import type { PeranUser, User } from '@/data/types/auth';
 import {
   useUsersList,
@@ -146,7 +147,7 @@ function UserFormView({
       {/* Header */}
       <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-brand-subtle) text-(--color-brand) text-[12.5px] font-semibold">
-          {initials}
+          {isNewMode ? <Add16Regular className="w-4 h-4" /> : initials}
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-semibold text-(--color-text-primary) leading-tight truncate">
@@ -333,7 +334,6 @@ function UserFormView({
           className="h-6.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer flex items-center gap-1.5"
         >
           <span>{isNewMode ? 'Simpan pengguna' : 'Simpan'}</span>
-          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
         </button>
       </div>
     </div>
@@ -341,8 +341,9 @@ function UserFormView({
 }
 
 export function UserManagementScreen() {
+  const navigate = useNavigate();
   const { data: users = [], isLoading: isLoadingUsers } = useUsersList();
-  const { data: currentSession } = useAuthSession();
+  const { data: currentSession, isLoading: isLoadingSession } = useAuthSession();
   const { showToast } = useToast();
 
   const createUserMutation = useCreateUser();
@@ -480,8 +481,42 @@ export function UserManagementScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewUser]);
 
-  if (isLoadingUsers && !cari) {
+  if ((isLoadingUsers && !cari) || isLoadingSession) {
     return <UserManagementSkeleton />;
+  }
+
+  // Guard: Hanya admin yang berhak mengakses Manajemen Pengguna (DOMAIN.md & B6-izin)
+  const isAdmin = currentSession?.user?.peran === 'admin';
+  if (currentSession && !isAdmin) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center select-none bg-(--color-canvas) h-full">
+        <div className="w-full max-w-md rounded-lg border border-(--color-border-strong) bg-(--color-surface) p-6 shadow-md flex flex-col items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFF3E0] text-[#8A5200]">
+            <LockClosed24Regular className="text-2xl" />
+          </div>
+          <div>
+            <h2 className="text-[17px] font-semibold text-(--color-text-primary)">
+              Akses Terbatas
+            </h2>
+            <div className="mt-1">
+              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-[#EBF3FC] text-[#0C548F] border border-[#C5DCFA]">
+                Peran: {currentSession.user?.peran === 'operator' ? 'Operator' : currentSession.user?.peran}
+              </span>
+            </div>
+            <p className="mt-3 text-xs text-(--color-text-secondary) leading-relaxed">
+              Menu <strong>Manajemen Pengguna</strong> hanya dapat diakses oleh Administrator. Silakan hubungi admin bimbel jika Anda memerlukan penambahan atau perubahan akun.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/kalender')}
+            className="mt-2 h-7.5 px-4 rounded-sm bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-xs font-semibold cursor-pointer transition-colors"
+          >
+            Kembali ke Kalender
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -1477,7 +1477,7 @@ export function KatalogScreen() {
                       });
                     }}
                   >
-                    Simpan <span className="font-mono text-[10px] opacity-75 ml-1">Ctrl+S</span>
+                    Simpan
                   </Button>
                 </div>
               </div>

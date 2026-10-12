@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Warning16Regular } from '@fluentui/react-icons';
+import { Warning16Regular, Add16Regular } from '@fluentui/react-icons';
 import type { JenisKelamin } from '@/data/types/common';
 import type { Subjek, MataPelajaran } from '@/data/types/master';
 
@@ -197,7 +197,7 @@ export function SubjekFormPanel({
       {/* Panel Header */}
       <div className="flex h-15.5 shrink-0 items-center gap-2.5 border-b border-(--color-border) px-3.5 bg-(--color-surface)">
         <div className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-full bg-[#F3EFFA] text-[#5B4394] text-[12.5px] font-semibold">
-          {initials}
+          {isNew ? <Add16Regular className="w-4 h-4" /> : initials}
         </div>
         <div className="flex-1 min-w-0">
           <div className="truncate text-[15px] font-semibold text-(--color-text-primary) leading-snug">
@@ -498,7 +498,6 @@ export function SubjekFormPanel({
           className="flex h-6.5 shrink-0 items-center gap-1.75 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
           <span>{isNew ? 'Simpan subjek' : 'Simpan'}</span>
-          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
         </button>
       </div>
     </div>

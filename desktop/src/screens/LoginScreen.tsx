@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Warning16Regular } from '@fluentui/react-icons';
+import { Warning16Regular, Server16Regular } from '@fluentui/react-icons';
 import { useLogin } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { BandrekLogo } from '@/components/ui/bandrek-logo';
@@ -132,16 +132,14 @@ export function LoginScreen() {
           </div>
         </div>
 
-        {/* Server Info Footer */}
-        <div className="flex items-center justify-between text-[11.5px] text-(--color-text-muted) pt-2 border-t border-(--color-border)">
-          <span className="truncate max-w-[240px]">
-            Server: <span className="font-mono text-[10.5px]">{serverUrl}</span>
-          </span>
+        {/* Server Setting Footer */}
+        <div className="flex items-center justify-center pt-2 border-t border-(--color-border)">
           <Link
             to="/setup-server"
-            className="text-(--color-brand) hover:underline font-medium cursor-pointer whitespace-nowrap ml-2"
+            className="text-[12px] text-(--color-text-muted) hover:text-(--color-brand) hover:underline transition-colors flex items-center gap-1.5 cursor-pointer select-none"
           >
-            Ganti server
+            <Server16Regular className="w-3.5 h-3.5 text-(--color-text-muted)" />
+            <span>Pengaturan server</span>
           </Link>
         </div>
       </div>

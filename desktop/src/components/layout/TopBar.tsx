@@ -71,25 +71,28 @@ export const TopBar: React.FC<TopBarProps> = ({
       {/* Flexible Spacer */}
       <div className="flex-1" />
 
-      {/* Quick Navigation to Dev Utilities (/data and /katalog) */}
-      <div className="hidden lg:flex items-center gap-1 border-r border-(--color-border-subtle) pr-2 mr-1">
-        <Link
-          to="/data"
-          title="Buka panel simulasi data layer (/data)"
-          className="flex h-7 items-center gap-1 rounded px-2 text-[12px] font-medium text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
-        >
-          <Database16Regular className="text-[13px]" />
-          <span>Data Mock</span>
-        </Link>
-        <Link
-          to="/katalog"
-          title="Buka katalog komponen UI (/katalog)"
-          className="flex h-7 items-center gap-1 rounded px-2 text-[12px] font-medium text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
-        >
-          <Color16Regular className="text-[13px]" />
-          <span>Katalog</span>
-        </Link>
-      </div>
+      {/* Quick Navigation to Dev Utilities (/data and /katalog) - disembunyikan sementara */}
+      {/* Set SHOW_DEV_LINKS ke true jika butuh pintasan pengembang di TopBar */}
+      {false && (
+        <div className="hidden lg:flex items-center gap-1 border-r border-(--color-border-subtle) pr-2 mr-1">
+          <Link
+            to="/data"
+            title="Buka panel simulasi data layer (/data)"
+            className="flex h-7 items-center gap-1 rounded px-2 text-[12px] font-medium text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
+          >
+            <Database16Regular className="text-[13px]" />
+            <span>Data Mock</span>
+          </Link>
+          <Link
+            to="/katalog"
+            title="Buka katalog komponen UI (/katalog)"
+            className="flex h-7 items-center gap-1 rounded px-2 text-[12px] font-medium text-(--color-text-secondary) hover:bg-(--color-surface-alt) hover:text-(--color-text) transition-colors"
+          >
+            <Color16Regular className="text-[13px]" />
+            <span>Katalog</span>
+          </Link>
+        </div>
+      )}
 
       {/* Logout Action Button at Top Right Corner */}
       <Link

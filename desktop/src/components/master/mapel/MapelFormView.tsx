@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { Add16Regular } from '@fluentui/react-icons';
 import type { MataPelajaran, Materi } from '@/data/types/master';
 import { MateriTable } from './MateriTable';
 
@@ -297,7 +298,7 @@ export function MapelFormView({
         )}
 
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-brand-subtle) text-[12.5px] font-semibold text-(--color-brand)">
-          {initialIcon}
+          {(isChildMode ? isNewMateri : isNewMapel) ? <Add16Regular className="w-4 h-4" /> : initialIcon}
         </div>
 
         <div className="flex-1 min-w-0">
@@ -562,7 +563,6 @@ export function MapelFormView({
               }`}
             >
               <span>{isNewMateri ? 'Simpan materi' : 'Simpan'}</span>
-              <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
             </button>
           </>
         ) : (
@@ -630,7 +630,6 @@ export function MapelFormView({
               }`}
             >
               <span>{isNewMapel ? 'Simpan mata pelajaran' : 'Simpan'}</span>
-              <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
             </button>
           </>
         )}

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { Add16Regular } from '@fluentui/react-icons';
 import type { Kelas } from '@/data/types/master';
 import type { Siswa } from '@/data/types/master';
 
@@ -208,7 +209,7 @@ export function KelasFormView({
       {/* Panel Header */}
       <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-brand-subtle) text-[12.5px] font-semibold text-(--color-brand)">
-          {inisial}
+          {isNew ? <Add16Regular className="w-4 h-4" /> : inisial}
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-semibold text-(--color-text-primary) leading-tight truncate">
@@ -498,7 +499,6 @@ export function KelasFormView({
           }`}
         >
           <span>{isNew ? 'Simpan kelas' : 'Simpan'}</span>
-          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
         </button>
       </div>
     </div>

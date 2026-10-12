@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Warning16Regular } from '@fluentui/react-icons';
+import { Warning16Regular, Add16Regular } from '@fluentui/react-icons';
 import type { Tempat, Ruangan } from '@/data/types/master';
 import { RuanganTable } from './RuanganTable';
 
@@ -285,7 +285,7 @@ export function TempatFormView({
         )}
 
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-brand-subtle) text-[12.5px] font-semibold text-(--color-brand)">
-          {initialIcon}
+          {(isChildMode ? isNewRuangan : isNewTempat) ? <Add16Regular className="w-4 h-4" /> : initialIcon}
         </div>
 
         <div className="flex-1 min-w-0">
@@ -499,7 +499,6 @@ export function TempatFormView({
               }`}
             >
               <span>{isNewRuangan ? 'Simpan ruangan' : 'Simpan'}</span>
-              <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
             </button>
           </>
         ) : (
@@ -549,7 +548,6 @@ export function TempatFormView({
               }`}
             >
               <span>{isNewTempat ? 'Simpan tempat' : 'Simpan'}</span>
-              <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
             </button>
           </>
         )}
