@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Warning16Regular } from '@fluentui/react-icons';
 import { useLogin } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
+import { BandrekLogo } from '@/components/ui/bandrek-logo';
 
 export function LoginScreen() {
   const navigate = useNavigate();
@@ -52,9 +53,7 @@ export function LoginScreen() {
       <div className="w-full max-w-[400px] rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-(--color-brand) text-white font-bold text-2xl shadow-md">
-            B
-          </div>
+          <BandrekLogo className="h-10 w-auto max-w-[220px] text-[#4D5962] mb-1" />
           <div>
             <h1 className="text-[19px] font-semibold text-(--color-text-primary) tracking-tight">
               Masuk ke Bandrek
