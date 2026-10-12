@@ -24,7 +24,7 @@ interface MatriksGridProps {
     rect: DOMRect
   ) => void;
   onStudentNameClick: (siswa: BarisSiswa) => void;
-  onOpenAnomalyModal: () => void;
+  onOpenAnomalyModal?: () => void;
   filterSuffix?: string;
 }
 
@@ -43,12 +43,11 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
 }) => {
   const {
     namaMapel,
-    jenjang,
     kolom,
     baris,
     sel,
     ringkasanKolom,
-    catatanDiLuarJenjang,
+    catatanDiLuarJenjang = [],
     ambangTertinggal,
   } = data;
 
@@ -75,7 +74,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
       {/* 1. Title & Meta Row */}
       <div className="flex flex-none items-baseline gap-2.5 px-[14px] pb-[9px] pt-1">
         <h1 className="flex-none text-[15px] font-semibold text-[#242424] whitespace-nowrap">
-          {namaMapel} · {jenjang}
+          {namaMapel}
         </h1>
         <div className="flex-1 min-w-0 text-[11.5px] text-[#5C5A58] truncate">
           {kolom.length} materi · {baris.length} siswa{filterSuffix}
@@ -83,11 +82,11 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
       </div>
 
       {/* 2. Anomaly Banner if records outside scope exist */}
-      {catatanDiLuarJenjang.length > 0 && (
+      {catatanDiLuarJenjang.length > 0 && onOpenAnomalyModal && (
         <MatriksAnomalyBanner
           totalSiswa={new Set(catatanDiLuarJenjang.map((c) => c.siswaId)).size}
           namaMapel={namaMapel}
-          jenjang={jenjang}
+          jenjang=""
           onOpenModal={onOpenAnomalyModal}
         />
       )}
@@ -99,7 +98,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
           <div className="flex sticky top-0 z-30 bg-[#FAFAFA] border-b border-[#E1DFDD] text-[10.5px] text-[#424242] select-none">
             {/* Sticky Student Header Col (W: 260px) */}
             <div className="w-[260px] flex-none sticky left-0 z-40 bg-[#FAFAFA] border-r border-b border-[#E1DFDD] h-[34px] flex items-center px-[11px] text-[11px] font-semibold tracking-[0.09em] text-[#5C5A58]">
-              SISWA {jenjang}
+              SISWA
             </div>
 
             {/* Material Columns */}

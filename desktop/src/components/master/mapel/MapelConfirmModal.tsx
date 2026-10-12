@@ -57,7 +57,7 @@ export function MapelConfirmModal({
   const nKegiatan = item.jumlahKegiatan || 0;
   const subText = isMapel
     ? `${(item as MataPelajaran).jumlahMateri || 0} materi · ${nKegiatan} kegiatan`
-    : `${((item as Materi).jenjang || []).join(' · ') || 'tanpa jenjang'} · ${nKegiatan} kegiatan`;
+    : `${nKegiatan} kegiatan`;
 
   const dampakList: string[] = [];
   if (isNonaktif) {

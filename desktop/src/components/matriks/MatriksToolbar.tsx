@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { ChevronDown12Regular } from '@fluentui/react-icons';
-import type { MataPelajaran, Kelas, JenjangPendidikan } from '@/data/types';
+import type { MataPelajaran, Kelas } from '@/data/types';
 
 interface MatriksToolbarProps {
   mapelList: MataPelajaran[];
   selectedMapelId: string;
   onSelectMapel: (id: string) => void;
-  jenjangOptions: Array<{ id: JenjangPendidikan; label: string }>;
-  selectedJenjang: JenjangPendidikan;
-  onSelectJenjang: (jenjang: JenjangPendidikan) => void;
   kelasList: Kelas[];
   selectedKelasId: string;
   onSelectKelas: (id: string) => void;
@@ -28,9 +25,6 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
   mapelList,
   selectedMapelId,
   onSelectMapel,
-  jenjangOptions,
-  selectedJenjang,
-  onSelectJenjang,
   kelasList,
   selectedKelasId,
   onSelectKelas,
@@ -46,7 +40,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
   onToggleBulkMode,
 }) => {
   // Dropdown open states
-  const [openDropdown, setOpenDropdown] = React.useState<'mapel' | 'jenjang' | 'kelas' | null>(null);
+  const [openDropdown, setOpenDropdown] = React.useState<'mapel' | 'kelas' | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Close dropdown on click outside
@@ -61,7 +55,6 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
   }, []);
 
   const currentMapel = mapelList.find((m) => m.id === selectedMapelId);
-  const currentJenjangOption = jenjangOptions.find((j) => j.id === selectedJenjang);
   const currentKelas = kelasList.find((k) => k.id === selectedKelasId);
 
   return (
@@ -134,43 +127,6 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
                     }`}
                   >
                     {m.nama}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Jenjang Pill Selector (Wajib di kiri, 1 jenjang) */}
-        <div className="relative flex-none">
-          <button
-            type="button"
-            onClick={() => setOpenDropdown((prev) => (prev === 'jenjang' ? null : 'jenjang'))}
-            title="Matriks menampilkan satu jenjang sekaligus"
-            className="flex h-[26px] items-center justify-between gap-[10px] rounded border border-[#0F6CBD] bg-[#EBF3FC] pl-2 pr-1.5 text-[12px] font-semibold text-[#0C548F] hover:brightness-95 cursor-pointer whitespace-nowrap"
-          >
-            <span>{currentJenjangOption?.label || selectedJenjang}</span>
-            <ChevronDown12Regular className="text-[#0C548F]" />
-          </button>
-          {openDropdown === 'jenjang' && (
-            <div className="absolute left-0 top-[29px] z-50 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
-              {jenjangOptions.map((j) => {
-                const isSelected = j.id === selectedJenjang;
-                return (
-                  <button
-                    key={j.id}
-                    type="button"
-                    onClick={() => {
-                      onSelectJenjang(j.id);
-                      setOpenDropdown(null);
-                    }}
-                    className={`w-full text-left p-[6px_9px] rounded text-[12.5px] whitespace-nowrap cursor-pointer hover:bg-[#EBF3FC] ${
-                      isSelected
-                        ? 'bg-[#EBF3FC] text-[#0C548F] font-semibold'
-                        : 'bg-white text-[#242424] font-normal'
-                    }`}
-                  >
-                    {j.label}
                   </button>
                 );
               })}

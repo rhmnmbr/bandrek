@@ -232,7 +232,6 @@ export function MapelScreen() {
           const created = await createMateriMutation.mutateAsync({
             mapel: formData.mapel,
             nama: formData.nama.trim(),
-            jenjang: formData.jenjang,
             aktif: formData.aktif,
           });
           showToast({
@@ -245,7 +244,6 @@ export function MapelScreen() {
             id: formData.id,
             input: {
               nama: formData.nama.trim(),
-              jenjang: formData.jenjang,
               aktif: formData.aktif,
             },
           });
@@ -410,7 +408,6 @@ export function MapelScreen() {
                 await createMateriMutation.mutateAsync({
                   mapel: materiItem.mapel,
                   nama: materiItem.nama,
-                  jenjang: materiItem.jenjang,
                   aktif: materiItem.aktif,
                 });
               },

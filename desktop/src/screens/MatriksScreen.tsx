@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/toast';
 import {
   useMapelList,
@@ -17,56 +17,30 @@ import { MatriksGrid } from '@/components/matriks/MatriksGrid';
 import { MatriksLegendBar } from '@/components/matriks/MatriksLegendBar';
 import { MatriksCellPopover } from '@/components/matriks/MatriksCellPopover';
 import { MatriksBulkToolbar } from '@/components/matriks/MatriksBulkToolbar';
-import { MatriksAnomalyModal } from '@/components/matriks/MatriksAnomalyModal';
 import { MatriksEmptyState } from '@/components/matriks/MatriksEmptyState';
 import { MatriksSkeleton } from '@/components/skeleton';
 import type {
-  JenjangPendidikan,
   SelMatriks,
   BarisSiswa,
   KolomMateri,
   TandaiManualInput,
 } from '@/data/types';
 
-const JENJANG_ORDER: JenjangPendidikan[] = ['SD', 'SMP', 'SMA'];
-
 export const MatriksScreen: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { showToast } = useToast();
 
   // Master Data
   const { data: mapelList = [] } = useMapelList();
-  const { data: siswaList = [] } = useSiswaList();
+  const { data: _siswaList = [] } = useSiswaList();
   const { data: kelasList = [] } = useKelasList();
 
   // Filter mapel aktif
   const mapelAktif = React.useMemo(() => mapelList.filter((m) => m.aktif), [mapelList]);
 
-  // Hitung jumlah siswa aktif per jenjang untuk default jenjang (DOMAIN.md §10)
-  const aktifPerJenjang = React.useMemo(() => {
-    const counts: Record<JenjangPendidikan, number> = { SD: 0, SMP: 0, SMA: 0 };
-    for (const s of siswaList) {
-      if (s.aktif && s.jenjang in counts) {
-        counts[s.jenjang]++;
-      }
-    }
-    return counts;
-  }, [siswaList]);
-
-  // Determine default jenjang based on most active students
-  const defaultJenjang: JenjangPendidikan = React.useMemo(() => {
-    return [...JENJANG_ORDER].sort((a, b) => aktifPerJenjang[b] - aktifPerJenjang[a])[0] || 'SD';
-  }, [aktifPerJenjang]);
-
-  // Session-persisted Mapel & Jenjang selection (DOMAIN.md §10)
+  // Session-persisted Mapel selection
   const [selectedMapelId, setSelectedMapelId] = React.useState<string>(() => {
     return sessionStorage.getItem('bandrek:matriks:mapel') || '';
-  });
-
-  const [selectedJenjang, setSelectedJenjang] = React.useState<JenjangPendidikan>(() => {
-    const saved = sessionStorage.getItem('bandrek:matriks:jenjang') as JenjangPendidikan;
-    return saved && JENJANG_ORDER.includes(saved) ? saved : defaultJenjang;
   });
 
   // Ensure selectedMapelId falls back to first active mapel if empty
@@ -81,26 +55,10 @@ export const MatriksScreen: React.FC = () => {
     }
   }, [mapelAktif, selectedMapelId]);
 
-  // Ensure default jenjang is set if empty
-  React.useEffect(() => {
-    if (!selectedJenjang) {
-      setSelectedJenjang(defaultJenjang);
-      sessionStorage.setItem('bandrek:matriks:jenjang', defaultJenjang);
-    }
-  }, [defaultJenjang, selectedJenjang]);
-
-  // Update handlers with session persistence
+  // Update handler with session persistence
   const handleSelectMapel = React.useCallback((id: string) => {
     setSelectedMapelId(id);
     sessionStorage.setItem('bandrek:matriks:mapel', id);
-    setSelectedKeys(new Set());
-    setPopoverState(null);
-  }, []);
-
-  const handleSelectJenjang = React.useCallback((j: JenjangPendidikan) => {
-    setSelectedJenjang(j);
-    sessionStorage.setItem('bandrek:matriks:jenjang', j);
-    setSelectedKelasId('');
     setSelectedKeys(new Set());
     setPopoverState(null);
   }, []);
@@ -117,9 +75,6 @@ export const MatriksScreen: React.FC = () => {
   const [bulkDate, setBulkDate] = React.useState<string>('');
   const [bulkNotes, setBulkNotes] = React.useState<string>('');
 
-  // Anomaly Modal State
-  const [anomalyModalOpen, setAnomalyModalOpen] = React.useState<boolean>(false);
-
   // Cell Popover State
   const [popoverState, setPopoverState] = React.useState<{
     cell: SelMatriks;
@@ -132,16 +87,14 @@ export const MatriksScreen: React.FC = () => {
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (anomalyModalOpen) {
-          setAnomalyModalOpen(false);
-        } else if (popoverState) {
+        if (popoverState) {
           setPopoverState(null);
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [anomalyModalOpen, popoverState]);
+  }, [popoverState]);
 
   // Build filter params for TanStack Query
   const filterParams = React.useMemo(() => {
@@ -155,7 +108,6 @@ export const MatriksScreen: React.FC = () => {
   // Fetch Matrix Data
   const { data: matriksResult, isLoading } = useMatriks(
     selectedMapelId,
-    selectedJenjang,
     filterParams,
     Boolean(selectedMapelId)
   );
@@ -173,19 +125,6 @@ export const MatriksScreen: React.FC = () => {
   }, []);
 
   const hasFilter = Boolean(selectedKelasId || searchQuery.trim());
-
-  // Jenjang Options with active counts
-  const jenjangOptions = React.useMemo(() => {
-    return JENJANG_ORDER.map((j) => ({
-      id: j,
-      label: `${j} · ${aktifPerJenjang[j]} siswa aktif`,
-    }));
-  }, [aktifPerJenjang]);
-
-  // Filter classes by active jenjang
-  const classesForJenjang = React.useMemo(() => {
-    return kelasList.filter((k) => k.jenjang === selectedJenjang);
-  }, [kelasList, selectedJenjang]);
 
   // Bulk Selection Handlers
   const handleToggleCellSelection = React.useCallback((key: string) => {
@@ -436,15 +375,12 @@ export const MatriksScreen: React.FC = () => {
 
   return (
     <div className="flex flex-1 flex-col h-full bg-white overflow-hidden" data-testid="matriks-screen">
-      {/* 1. Main Toolbar with Single-Select Mapel & Jenjang */}
+      {/* 1. Main Toolbar with Single-Select Mapel */}
       <MatriksToolbar
         mapelList={mapelAktif}
         selectedMapelId={selectedMapelId}
         onSelectMapel={handleSelectMapel}
-        jenjangOptions={jenjangOptions}
-        selectedJenjang={selectedJenjang}
-        onSelectJenjang={handleSelectJenjang}
-        kelasList={classesForJenjang}
+        kelasList={kelasList}
         selectedKelasId={selectedKelasId}
         onSelectKelas={setSelectedKelasId}
         searchQuery={searchQuery}
@@ -468,7 +404,6 @@ export const MatriksScreen: React.FC = () => {
         <MatriksEmptyState
           type="tanpa_materi"
           namaMapel={matriksResult.namaMapel}
-          jenjang={selectedJenjang}
           hasFilter={hasFilter}
           onPrimaryAction={() => navigate('/master/mapel')}
           onResetFilter={handleResetFilter}
@@ -477,7 +412,6 @@ export const MatriksScreen: React.FC = () => {
         <MatriksEmptyState
           type="tanpa_siswa"
           namaMapel={matriksResult.namaMapel}
-          jenjang={selectedJenjang}
           hasFilter={hasFilter}
           onPrimaryAction={() => setShowNonaktif(true)}
           onResetFilter={handleResetFilter}
@@ -506,7 +440,6 @@ export const MatriksScreen: React.FC = () => {
             onToggleColumnSelection={handleToggleColumnSelection}
             onCellClick={handleCellClick}
             onStudentNameClick={handleStudentNameClick}
-            onOpenAnomalyModal={() => setAnomalyModalOpen(true)}
             filterSuffix={filterSuffix}
           />
 
@@ -547,17 +480,6 @@ export const MatriksScreen: React.FC = () => {
           onNavigateToKegiatan={handleNavigateToKegiatan}
         />
       )}
-
-      {/* Anomaly Modal */}
-      <MatriksAnomalyModal
-        open={anomalyModalOpen}
-        onClose={() => setAnomalyModalOpen(false)}
-        items={matriksResult.catatanDiLuarJenjang}
-        totalSiswa={new Set(matriksResult.catatanDiLuarJenjang.map((c) => c.siswaId)).size}
-        jenjang={selectedJenjang}
-        namaMapel={matriksResult.namaMapel}
-        onNavigateToKegiatan={handleNavigateToKegiatan}
-      />
     </div>
   );
 };

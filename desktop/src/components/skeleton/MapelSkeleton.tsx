@@ -101,8 +101,7 @@ export function MapelSkeleton() {
               {/* Header */}
               <div className="flex h-6.5 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3 text-[10.5px] font-semibold text-(--color-text-muted)">
                 <div className="w-8 shrink-0">NO</div>
-                <div className="flex-1 min-w-[120px]">NAMA MATERI</div>
-                <div className="w-24 shrink-0">JENJANG</div>
+                <div className="flex-1 min-w-[140px]">NAMA MATERI</div>
                 <div className="w-24 shrink-0">DIPAKAI</div>
                 <div className="w-16 shrink-0">STATUS</div>
                 <div className="w-12 shrink-0" />
@@ -117,15 +116,12 @@ export function MapelSkeleton() {
                   <div className="w-8 shrink-0">
                     <Skeleton className="h-3 w-3 rounded shrink-0" />
                   </div>
-                  <div className="flex-1 min-w-[120px] pr-2">
+                  <div className="flex-1 min-w-[140px] pr-2">
                     <Skeleton
                       className={`h-3.5 rounded shrink-0 ${
                         idx % 3 === 0 ? 'w-28' : idx % 2 === 0 ? 'w-24' : 'w-32'
                       }`}
                     />
-                  </div>
-                  <div className="w-24 shrink-0 pr-2">
-                    <Skeleton className="h-3.5 w-16 rounded shrink-0" />
                   </div>
                   <div className="w-24 shrink-0 pr-2">
                     <Skeleton className="h-3.5 w-16 rounded shrink-0" />

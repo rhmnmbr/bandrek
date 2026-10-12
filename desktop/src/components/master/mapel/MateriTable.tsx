@@ -106,7 +106,7 @@ export function MateriTable({
             <line x1="8" y1="2" x2="8" y2="14" />
             <line x1="2" y1="8" x2="14" y2="8" />
           </svg>
-          <span>+ Materi</span>
+          <span>Materi</span>
         </button>
       </div>
 
@@ -116,8 +116,7 @@ export function MateriTable({
         <div className="flex h-6.5 items-center bg-(--color-surface-alt) border-b border-(--color-border) px-1 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
           <div className="w-5 shrink-0" />
           <div className="w-7.5 shrink-0 text-right pr-2.5">NO</div>
-          <div className="flex-1 min-w-[120px]">NAMA MATERI</div>
-          <div className="w-[106px] shrink-0">JENJANG</div>
+          <div className="flex-1 min-w-[140px]">NAMA MATERI</div>
           <div className="w-24 shrink-0 text-right pr-2.5">DIPAKAI</div>
           <div className="w-[74px] shrink-0">STATUS</div>
           <div className="w-24 shrink-0 text-right pr-2" />
@@ -136,7 +135,6 @@ export function MateriTable({
             : 'none';
 
           const nKegiatan = m.jumlahKegiatan || 0;
-          const jenjangTeks = (m.jenjang || []).join(', ') || '—';
           const isNonaktif = !m.aktif;
 
           return (
@@ -183,18 +181,13 @@ export function MateriTable({
               <div
                 onClick={() => onSelectMateri(m)}
                 title={`Ubah ${m.nama}`}
-                className={`flex-1 min-w-[120px] truncate pr-2 text-[12.5px] cursor-pointer hover:underline ${
+                className={`flex-1 min-w-[140px] truncate pr-2 text-[12.5px] cursor-pointer hover:underline ${
                   isNonaktif
                     ? 'text-(--color-text-muted) line-through'
                     : 'text-(--color-text-primary)'
                 }`}
               >
                 {m.nama}
-              </div>
-
-              {/* Jenjang */}
-              <div className="w-[106px] shrink-0 truncate pr-2 text-xs text-(--color-text-secondary)">
-                {jenjangTeks}
               </div>
 
               {/* Dipakai */}

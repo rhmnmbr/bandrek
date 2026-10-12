@@ -287,7 +287,7 @@ export interface Materi {
   id: string;
   mapel: string; // MataPelajaran ID
   nama: string;
-  jenjang: JenjangPendidikan[]; // Wajib minimal 1
+  jenjang?: JenjangPendidikan[];
   aktif: boolean;
   urutan?: number;
   // Server-computed
@@ -300,7 +300,7 @@ export interface Materi {
 export interface CreateMateriInput {
   mapel: string;
   nama: string;
-  jenjang: JenjangPendidikan[];
+  jenjang?: JenjangPendidikan[];
   aktif?: boolean;
   urutan?: number;
 }

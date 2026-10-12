@@ -1,24 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { repositories } from '../repositories';
-import type { JenjangPendidikan } from '../types/common';
 import type { MatriksFilterParams, TandaiManualInput } from '../types/matriks';
 
 export const matriksKeys = {
   all: ['matriks'] as const,
-  detail: (mapelId: string, jenjang: JenjangPendidikan, filter?: MatriksFilterParams) =>
-    ['matriks', 'detail', mapelId, jenjang, filter] as const,
+  detail: (mapelId: string, filter?: MatriksFilterParams) =>
+    ['matriks', 'detail', mapelId, filter] as const,
 };
 
 export function useMatriks(
   mapelId: string,
-  jenjang: JenjangPendidikan,
   filter?: MatriksFilterParams,
   enabled: boolean = true
 ) {
   return useQuery({
-    queryKey: matriksKeys.detail(mapelId, jenjang, filter),
-    queryFn: () => repositories.matriks.getMatriks(mapelId, jenjang, filter),
-    enabled: enabled && Boolean(mapelId) && Boolean(jenjang),
+    queryKey: matriksKeys.detail(mapelId, filter),
+    queryFn: () => repositories.matriks.getMatriks(mapelId, filter),
+    enabled: enabled && Boolean(mapelId),
   });
 }
 

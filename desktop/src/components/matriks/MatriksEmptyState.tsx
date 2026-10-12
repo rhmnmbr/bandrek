@@ -4,7 +4,6 @@ import { Warning24Regular } from '@fluentui/react-icons';
 interface MatriksEmptyStateProps {
   type: 'tanpa_materi' | 'tanpa_siswa';
   namaMapel: string;
-  jenjang: string;
   hasFilter: boolean;
   onPrimaryAction: () => void;
   onResetFilter: () => void;
@@ -13,7 +12,6 @@ interface MatriksEmptyStateProps {
 export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
   type,
   namaMapel,
-  jenjang,
   hasFilter,
   onPrimaryAction,
   onResetFilter,
@@ -21,14 +19,14 @@ export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
   const isTanpaMateri = type === 'tanpa_materi';
 
   const judul = isTanpaMateri
-    ? 'Belum ada materi untuk lingkup ini'
+    ? 'Belum ada materi untuk mata pelajaran ini'
     : 'Tidak ada siswa yang cocok';
 
   const deskripsi = isTanpaMateri
-    ? `${namaMapel} belum punya materi berjenjang ${jenjang}, jadi belum ada kolom untuk dibandingkan. Tambahkan materi dengan jenjang ${jenjang}, atau pilih jenjang lain.`
+    ? `${namaMapel} belum punya materi aktif, jadi belum ada kolom untuk dibandingkan. Tambahkan materi untuk mata pelajaran ini.`
     : hasFilter
-    ? `Filter kelas atau pencarian menyisakan nol siswa di jenjang ${jenjang}. Lepas filternya, atau centang “Tampilkan siswa nonaktif” kalau yang kamu cari sudah tidak aktif.`
-    : `Belum ada siswa jenjang ${jenjang} yang aktif. Centang “Tampilkan siswa nonaktif” atau pilih jenjang lain.`;
+    ? 'Filter kelas atau pencarian menyisakan nol siswa. Lepas filternya, atau centang “Tampilkan siswa nonaktif” kalau yang kamu cari sudah tidak aktif.'
+    : 'Belum ada siswa yang aktif. Centang “Tampilkan siswa nonaktif”.';
 
   const primaryLabel = isTanpaMateri ? 'Tambah materi' : 'Tampilkan siswa nonaktif';
 

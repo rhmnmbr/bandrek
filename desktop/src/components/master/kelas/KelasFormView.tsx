@@ -1,12 +1,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import type { Kelas } from '@/data/types/master';
 import type { Siswa } from '@/data/types/master';
-import type { JenjangPendidikan } from '@/data/types/common';
 
 export interface KelasFormData {
   id?: string;
   nama: string;
-  jenjang: JenjangPendidikan;
   keterangan: string;
   anggota: string[];
 }
@@ -22,8 +20,6 @@ interface KelasFormViewProps {
   onViewKegiatan?: (kelasId: string) => void;
 }
 
-const JENJANG_OPTIONS: JenjangPendidikan[] = ['SD', 'SMP', 'SMA'];
-
 export function KelasFormView({
   kelas,
   isNew,
@@ -35,7 +31,6 @@ export function KelasFormView({
   onViewKegiatan,
 }: KelasFormViewProps) {
   const [nama, setNama] = useState(kelas?.nama || '');
-  const [jenjang, setJenjang] = useState<JenjangPendidikan | ''>(kelas?.jenjang || '');
   const [keterangan, setKeterangan] = useState(kelas?.keterangan || '');
   const [anggota, setAnggota] = useState<string[]>(kelas?.anggota ? [...kelas.anggota] : []);
   const [dicoba, setDicoba] = useState(false);
@@ -52,12 +47,10 @@ export function KelasFormView({
   useEffect(() => {
     if (kelas) {
       setNama(kelas.nama || '');
-      setJenjang(kelas.jenjang || '');
       setKeterangan(kelas.keterangan || '');
       setAnggota(kelas.anggota ? [...kelas.anggota] : []);
     } else {
       setNama('');
-      setJenjang('');
       setKeterangan('');
       setAnggota([]);
     }
@@ -113,25 +106,17 @@ export function KelasFormView({
       }
     }
 
-    if (!jenjang) {
-      errs.push('Pilih jenjang kelas ini.');
-    }
-
     return errs;
-  }, [nama, jenjang, existingClasses, kelas]);
+  }, [nama, existingClasses, kelas]);
 
   const hasNamaError = dicoba && (!nama.trim() || errors.includes('Nama kelas sudah dipakai.'));
-  const hasJenjangError = dicoba && !jenjang;
 
-  // Filter candidate students for popover
+  // Filter candidate students for popover (any active student not yet added)
   const candidateStudents = useMemo(() => {
     const q = menuCari.trim().toLowerCase();
     const anggotaSet = new Set(anggota);
 
     let list = allSiswa.filter((s) => s.aktif && !anggotaSet.has(s.id));
-    if (jenjang) {
-      list = list.filter((s) => s.jenjang === jenjang);
-    }
     if (q) {
       list = list.filter((s) => s.nama.toLowerCase().includes(q));
     }
@@ -139,16 +124,7 @@ export function KelasFormView({
     return list
       .sort((a, b) => a.nama.localeCompare(b.nama, 'id'))
       .slice(0, 40);
-  }, [allSiswa, anggota, jenjang, menuCari]);
-
-  // Count members outside class jenjang
-  const bedaJenjangCount = useMemo(() => {
-    if (!jenjang) return 0;
-    return anggota.filter((id) => {
-      const s = siswaMap.get(id);
-      return s && s.jenjang && s.jenjang !== jenjang;
-    }).length;
-  }, [anggota, jenjang, siswaMap]);
+  }, [allSiswa, anggota, menuCari]);
 
   // Actions
   const handleAddMember = (siswaId: string) => {
@@ -175,7 +151,6 @@ export function KelasFormView({
       await onSave({
         id: kelas?.id,
         nama: nama.trim(),
-        jenjang: jenjang as JenjangPendidikan,
         keterangan: keterangan.trim(),
         anggota,
       });
@@ -215,7 +190,7 @@ export function KelasFormView({
   const panelJudul = isNew ? 'Kelas baru' : kelas?.nama || '';
   const panelSub = isNew
     ? 'Isi datanya, lalu simpan'
-    : `${kelas?.jenjang || '—'} · ${anggota.length} anggota · ${kelas?.jumlahKegiatan || 0} kegiatan`;
+    : `${anggota.length} anggota · ${kelas?.jumlahKegiatan || 0} kegiatan`;
 
   const simpanDisabled = dicoba && errors.length > 0;
   const bisaHapus = Boolean(kelas?.id && kelas.dapatDihapus);
@@ -262,8 +237,8 @@ export function KelasFormView({
           </div>
         )}
 
-        {/* Nama Kelas (flex 1 1 220px, min-w 190px) */}
-        <div className="flex-[1_1_220px] min-w-[190px] flex flex-col gap-1">
+        {/* Nama Kelas (flex 1 1 240px, min-w 200px) */}
+        <div className="flex-[1_1_240px] min-w-[200px] flex flex-col gap-1">
           <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
             Nama kelas <span className="text-(--color-danger)">*</span>
           </label>
@@ -272,7 +247,7 @@ export function KelasFormView({
             type="text"
             value={nama}
             onChange={(e) => setNama(e.target.value)}
-            placeholder="mis. Kelas SD Sore"
+            placeholder="mis. Kelas Reguler Sore"
             className={`h-7 px-2 text-[13.5px] rounded-sm border bg-(--color-surface) outline-none transition-colors ${
               hasNamaError
                 ? 'border-(--color-danger) focus:border-(--color-danger)'
@@ -287,46 +262,8 @@ export function KelasFormView({
           )}
         </div>
 
-        {/* Jenjang Segmented (flex 0 0 168px, min-w 168px) */}
-        <div className="flex-[0_0_168px] min-w-[168px] flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
-            Jenjang <span className="text-(--color-danger)">*</span>
-          </label>
-          <div
-            className={`flex h-7 rounded-sm border overflow-hidden transition-colors ${
-              hasJenjangError ? 'border-(--color-danger)' : 'border-(--color-border)'
-            }`}
-          >
-            {JENJANG_OPTIONS.map((j, i) => {
-              const isSelected = jenjang === j;
-              return (
-                <button
-                  key={j}
-                  type="button"
-                  onClick={() => setJenjang(j)}
-                  className={`flex-1 min-w-0 text-[11.5px] cursor-pointer transition-colors ${
-                    i > 0 ? 'border-l border-(--color-border)' : ''
-                  } ${
-                    isSelected
-                      ? 'bg-(--color-brand) text-white font-semibold'
-                      : 'bg-(--color-surface) text-(--color-text-primary) font-normal hover:bg-(--color-surface-alt)'
-                  }`}
-                >
-                  {j}
-                </button>
-              );
-            })}
-          </div>
-          {hasJenjangError && (
-            <div className="text-[11px] text-(--color-danger) flex items-center gap-1 leading-tight">
-              <span>⚠</span>
-              <span>Pilih jenjang kelas ini.</span>
-            </div>
-          )}
-        </div>
-
-        {/* Keterangan (flex 1 1 240px, min-w 200px) */}
-        <div className="flex-[1_1_240px] min-w-[200px] flex flex-col gap-1">
+        {/* Keterangan (flex 1 1 280px, min-w 220px) */}
+        <div className="flex-[1_1_280px] min-w-[220px] flex flex-col gap-1">
           <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
             Keterangan
           </label>
@@ -351,7 +288,7 @@ export function KelasFormView({
               <button
                 type="button"
                 onClick={() => setMenuOpen(!menuOpen)}
-                title={jenjang ? `Tambah siswa jenjang ${jenjang}` : 'Tambah siswa'}
+                title="Tambah siswa"
                 className="h-5.5 px-2 border border-(--color-border) rounded-sm bg-(--color-surface) text-(--color-brand) text-[11.5px] font-medium inline-flex items-center gap-1 hover:bg-(--color-brand-subtle) transition-colors cursor-pointer"
               >
                 <svg
@@ -370,16 +307,16 @@ export function KelasFormView({
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 top-6.5 z-20 w-[250px] rounded-md border border-(--color-border) bg-(--color-surface) p-1.5 shadow-lg flex flex-col gap-1">
+                <div className="absolute right-0 top-6.5 z-20 w-[260px] rounded-md border border-(--color-border) bg-(--color-surface) p-1.5 shadow-lg flex flex-col gap-1">
                   <input
                     ref={searchInputRef}
                     type="text"
                     value={menuCari}
                     onChange={(e) => setMenuCari(e.target.value)}
-                    placeholder={jenjang ? `Cari siswa ${jenjang}` : 'Cari siswa'}
+                    placeholder="Cari siswa"
                     className="h-6.5 px-2 text-xs rounded-sm border border-(--color-border) bg-(--color-surface) outline-none focus:border-(--color-brand)"
                   />
-                  <div className="max-h-[186px] overflow-y-auto overflow-x-hidden flex flex-col gap-0.5">
+                  <div className="max-h-[200px] overflow-y-auto overflow-x-hidden flex flex-col gap-0.5">
                     {candidateStudents.map((s) => (
                       <button
                         key={s.id}
@@ -388,16 +325,21 @@ export function KelasFormView({
                           handleAddMember(s.id);
                         }}
                         title="Masukkan ke kelas ini"
-                        className="w-full text-left px-2 py-1.5 rounded-sm border-none bg-transparent hover:bg-(--color-brand-subtle) text-[12.5px] text-(--color-text-primary) truncate cursor-pointer transition-colors"
+                        className="flex h-7.5 shrink-0 items-center justify-between gap-1.5 w-full text-left px-2 rounded-sm border-none bg-transparent hover:bg-(--color-brand-subtle) text-[12.5px] text-(--color-text-primary) cursor-pointer transition-colors"
                       >
-                        {s.nama} · {s.jenjang}
+                        <span className="truncate flex-1 min-w-0">{s.nama}</span>
+                        {s.jenjang && (
+                          <span className="shrink-0 text-[11px] text-(--color-text-muted)">
+                            {s.jenjang}
+                          </span>
+                        )}
                       </button>
                     ))}
                     {candidateStudents.length === 0 && (
-                      <div className="p-2 text-xs text-(--color-text-muted) leading-relaxed">
+                      <div className="p-3 text-center text-xs text-(--color-text-muted) leading-relaxed">
                         {menuCari.trim()
                           ? 'Tidak ada siswa aktif yang cocok.'
-                          : 'Semua siswa aktif jenjang ini sudah tergabung.'}
+                          : 'Semua siswa aktif sudah tergabung.'}
                       </div>
                     )}
                   </div>
@@ -410,7 +352,6 @@ export function KelasFormView({
           <div className="border border-(--color-border) rounded-sm bg-(--color-surface) max-h-[206px] overflow-y-auto overflow-x-hidden">
             {anggota.map((id, i) => {
               const s = siswaMap.get(id);
-              const isBeda = Boolean(jenjang && s?.jenjang && s.jenjang !== jenjang);
               const isMati = s?.aktif === false;
               const displayName = s?.nama || id;
 
@@ -430,16 +371,15 @@ export function KelasFormView({
                   </span>
 
                   {/* Meta badge */}
-                  {isMati && (
+                  {isMati ? (
                     <span className="shrink-0 text-[11px] text-(--color-text-muted) whitespace-nowrap">
                       nonaktif
                     </span>
-                  )}
-                  {!isMati && isBeda && (
-                    <span className="shrink-0 text-[11px] font-medium text-(--color-warning-fg) whitespace-nowrap">
-                      {s?.jenjang}
+                  ) : s?.jenjang ? (
+                    <span className="shrink-0 text-[11px] text-(--color-text-muted) whitespace-nowrap">
+                      {s.jenjang}
                     </span>
-                  )}
+                  ) : null}
 
                   {/* Remove Button */}
                   <button
@@ -474,18 +414,9 @@ export function KelasFormView({
 
           {/* Member Note */}
           <div className="text-[11px] text-(--color-text-muted) leading-snug">
-            {anggota.length > 0 ? (
-              <>
-                {bedaJenjangCount > 0 && (
-                  <span className="text-(--color-warning-fg)">
-                    {bedaJenjangCount} anggota di luar jenjang kelas (tetap boleh).{' '}
-                  </span>
-                )}
-                Mengeluarkan anggota tidak menghapus riwayat kehadirannya.
-              </>
-            ) : (
-              'Kelas kosong tetap bisa disimpan dan diisi nanti.'
-            )}
+            {anggota.length > 0
+              ? 'Mengeluarkan anggota tidak menghapus riwayat kehadirannya.'
+              : 'Kelas kosong tetap bisa disimpan dan diisi nanti.'}
           </div>
         </div>
 

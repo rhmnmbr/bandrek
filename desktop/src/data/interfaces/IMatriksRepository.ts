@@ -1,4 +1,3 @@
-import type { JenjangPendidikan } from '../types/common';
 import type {
   MatriksBelajarResult,
   MatriksFilterParams,
@@ -9,7 +8,6 @@ import type {
 export interface IMatriksRepository {
   getMatriks(
     mapelId: string,
-    jenjang: JenjangPendidikan,
     filter?: MatriksFilterParams
   ): Promise<MatriksBelajarResult>;
   tandaiManual(input: TandaiManualInput): Promise<CeklisManual>;

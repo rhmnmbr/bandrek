@@ -12,7 +12,6 @@
  * ============================================================================
  */
 
-import type { JenjangPendidikan } from '../types/common';
 import type {
   Kegiatan,
   RawStatusKegiatan,
@@ -287,7 +286,6 @@ export function detectScheduleConflicts(
 
 export function computeMatriksBelajar(
   mapelId: string,
-  jenjang: JenjangPendidikan,
   filter: MatriksFilterParams = {},
   allMateri: Materi[],
   allSiswa: Siswa[],
@@ -301,9 +299,9 @@ export function computeMatriksBelajar(
   const mapel = allMapel.find((m) => m.id === mapelId);
   const namaMapel = mapel ? mapel.nama : 'Mata Pelajaran';
 
-  // 1. Kolom = materi dari mapel itu yang jenjangnya cocok, berurutan
+  // 1. Kolom = materi dari mapel itu, berurutan
   const matchingMateri = allMateri
-    .filter((m) => m.mapel === mapelId && m.jenjang.includes(jenjang) && m.aktif)
+    .filter((m) => m.mapel === mapelId && m.aktif)
     .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0));
 
   const kolom: KolomMateri[] = matchingMateri.map((m, idx) => ({
@@ -316,8 +314,8 @@ export function computeMatriksBelajar(
 
   const materiIdsSet = new Set(kolom.map((k) => k.id));
 
-  // 2. Baris = siswa dengan jenjang cocok
-  let candidateSiswa = allSiswa.filter((s) => s.jenjang === jenjang);
+  // 2. Baris = semua siswa
+  let candidateSiswa = [...allSiswa];
 
   if (!filter.tampilkanNonaktif) {
     candidateSiswa = candidateSiswa.filter((s) => s.aktif);
@@ -597,56 +595,8 @@ export function computeMatriksBelajar(
     }
   }
 
-  // 9. Catatan di Luar Jenjang (DOMAIN.md §10)
-  // Kalau ada siswa yang tampil punya kehadiran atau ceklis di materi yang jenjangnya tidak cocok
+  // 9. Catatan di Luar Jenjang (ditiadakan karena materi tidak lagi terikat jenjang)
   const catatanDiLuarJenjang: CatatanDiLuarJenjang[] = [];
-  const materiLuar = allMateri.filter((t) => t.mapel === mapelId && !t.jenjang.includes(jenjang));
-
-  for (const sw of candidateSiswa) {
-    for (const t of materiLuar) {
-      // 1. Cek kehadiran di kegiatan terealisasi
-      const hadirKeg = allKegiatan.find(
-        (k) =>
-          k.status !== 'dibatalkan' &&
-          k.status !== 'dijadwal-ulang' &&
-          (k.realisasi?.materi === t.id || (!k.realisasi?.materi && k.materi === t.id)) &&
-          k.realisasi?.kehadiran?.[sw.id] === 'hadir'
-      );
-
-      // 2. Cek ceklis manual
-      const manualCheck = allCeklisManual.find(
-        (cm) => cm.siswa === sw.id && cm.materi === t.id
-      );
-
-      if (hadirKeg) {
-        catatanDiLuarJenjang.push({
-          siswaId: sw.id,
-          siswaNama: sw.nama,
-          siswaJenjang: sw.jenjang,
-          materiId: t.id,
-          materiNama: t.nama,
-          materiJenjang: t.jenjang,
-          tipe: 'realisasi',
-          sumber: `Hadir di “${hadirKeg.nama}” · ${hadirKeg.tanggal}`,
-          kegiatanId: hadirKeg.id,
-          tanggal: hadirKeg.tanggal,
-        });
-      } else if (manualCheck) {
-        catatanDiLuarJenjang.push({
-          siswaId: sw.id,
-          siswaNama: sw.nama,
-          siswaJenjang: sw.jenjang,
-          materiId: t.id,
-          materiNama: t.nama,
-          materiJenjang: t.jenjang,
-          tipe: 'ceklis_manual',
-          sumber: `Ceklis manual oleh ${manualCheck.oleh} · ${manualCheck.dicatat}`,
-          kegiatanId: null,
-          tanggal: manualCheck.tanggal,
-        });
-      }
-    }
-  }
 
   // 10. Menunggu Realisasi (kegiatan dengan status 'belum')
   const menungguRealisasiCount = allKegiatan.filter((k) => k.status === 'belum').length;
@@ -654,7 +604,6 @@ export function computeMatriksBelajar(
   return {
     mapelId,
     namaMapel,
-    jenjang,
     kolom,
     baris,
     sel,

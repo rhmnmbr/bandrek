@@ -17,9 +17,6 @@ export function MatriksSkeleton() {
         {/* Mapel Pill */}
         <Skeleton className="h-[26px] w-28 rounded shrink-0" />
 
-        {/* Jenjang Pill */}
-        <Skeleton className="h-[26px] w-38 rounded shrink-0" />
-
         {/* Vertical Divider */}
         <div className="h-5 w-px flex-none bg-(--color-border)" />
 
@@ -64,14 +61,7 @@ export function MatriksSkeleton() {
         <Skeleton className="h-3 w-40 rounded shrink-0" />
       </div>
 
-      {/* 5. Anomaly Banner Placeholder */}
-      <div className="flex flex-none items-center gap-2 rounded-md border border-(--color-border) bg-(--color-surface-alt) p-[6px_10px] mx-[14px] mb-[9px]">
-        <Skeleton className="size-4 rounded-xs shrink-0" />
-        <Skeleton className="h-3 flex-1 rounded" />
-        <Skeleton className="h-[22px] w-24 rounded shrink-0" />
-      </div>
-
-      {/* 6. Grid Table Container (Sticky Header, Sticky Left, Sticky Right, Sticky Bottom) */}
+      {/* 5. Grid Table Container (Sticky Header, Sticky Left, Sticky Right, Sticky Bottom) */}
       <div className="flex-1 min-h-0 overflow-auto bg-white">
         <div className="flex flex-col min-w-min min-h-full">
           {/* Header Row (H: 34px) */}

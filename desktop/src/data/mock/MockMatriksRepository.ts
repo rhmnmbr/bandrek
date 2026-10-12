@@ -1,5 +1,4 @@
 import type { IMatriksRepository } from '../interfaces/IMatriksRepository';
-import type { JenjangPendidikan } from '../types/common';
 import type {
   MatriksBelajarResult,
   MatriksFilterParams,
@@ -14,13 +13,11 @@ import { computeMatriksBelajar } from './businessRules';
 export class MockMatriksRepository implements IMatriksRepository {
   public async getMatriks(
     mapelId: string,
-    jenjang: JenjangPendidikan,
     filter: MatriksFilterParams = {}
   ): Promise<MatriksBelajarResult> {
     return mockRunner(() => {
       return computeMatriksBelajar(
         mapelId,
-        jenjang,
         filter,
         mockStore.materi,
         mockStore.siswa,

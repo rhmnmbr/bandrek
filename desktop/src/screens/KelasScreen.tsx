@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import type { JenjangPendidikan } from '@/data/types/common';
 import {
   useKelasList,
   useCreateKelas,
@@ -26,7 +25,6 @@ export function KelasScreen() {
 
   // Filters
   const [cari, setCari] = useState('');
-  const [jenjang, setJenjang] = useState<JenjangPendidikan | 'semua'>('semua');
 
   // Modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -34,7 +32,6 @@ export function KelasScreen() {
   // Queries
   const { data: allKelas = [], isLoading: isLoadingAllKelas } = useKelasList();
   const { data: filteredKelas = [], isLoading: isLoadingFilteredKelas } = useKelasList({
-    jenjang,
     q: cari,
   });
   const { data: allSiswa = [] } = useSiswaList({ status: 'semua' });
@@ -50,7 +47,7 @@ export function KelasScreen() {
     return allKelas.reduce((sum, k) => sum + (k.anggota?.length || 0), 0);
   }, [allKelas]);
 
-  const adaFilter = Boolean(cari || jenjang !== 'semua');
+  const adaFilter = Boolean(cari);
 
   // Selected kelas logic
   const selectedKelas = useMemo(() => {
@@ -94,7 +91,6 @@ export function KelasScreen() {
 
   const handleResetFilter = useCallback(() => {
     setCari('');
-    setJenjang('semua');
   }, []);
 
   const handleCancel = useCallback(() => {
@@ -114,7 +110,6 @@ export function KelasScreen() {
           // Create
           const created = await createMutation.mutateAsync({
             nama: formData.nama.trim(),
-            jenjang: formData.jenjang,
             keterangan: formData.keterangan.trim(),
             anggota: formData.anggota,
           });
@@ -129,7 +124,6 @@ export function KelasScreen() {
             id: formData.id,
             input: {
               nama: formData.nama.trim(),
-              jenjang: formData.jenjang,
               keterangan: formData.keterangan.trim(),
               anggota: formData.anggota,
             },
@@ -164,7 +158,6 @@ export function KelasScreen() {
             try {
               const restored = await createMutation.mutateAsync({
                 nama: deleted.nama,
-                jenjang: deleted.jenjang,
                 keterangan: deleted.keterangan,
                 anggota: deleted.anggota,
               });
@@ -217,15 +210,13 @@ export function KelasScreen() {
 
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
-      {/* Left Column (336px) */}
-      <div className="flex flex-col w-[336px] flex-[0_0_336px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
+      {/* Left Column (288px) */}
+      <div className="flex flex-col w-[288px] flex-[0_0_288px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
         <KelasToolbar
           totalKelas={totalKelas}
           totalKeanggotaan={totalKeanggotaan}
           cari={cari}
           onCariChange={setCari}
-          jenjang={jenjang}
-          onJenjangChange={setJenjang}
           adaFilter={adaFilter}
           onResetFilter={handleResetFilter}
           onKelasBaru={handleNewKelas}
@@ -235,9 +226,8 @@ export function KelasScreen() {
           <MasterTableSkeleton
             rowCount={8}
             columns={[
-              { width: 'flex-1 min-w-[120px]', isFlex: true, headerTitle: 'NAMA KELAS' },
-              { width: 'w-[66px]', headerTitle: 'JENJANG' },
-              { width: 'w-[54px]', headerTitle: 'SISWA', align: 'right' },
+              { width: 'flex-1 min-w-[140px]', isFlex: true, headerTitle: 'NAMA KELAS' },
+              { width: 'w-[64px]', headerTitle: 'SISWA', align: 'right' },
             ]}
           />
         ) : filteredKelas.length > 0 ? (

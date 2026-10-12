@@ -61,11 +61,10 @@ export function DataLayerScreen() {
 
   // Matriks query
   const [selectedMapel, setSelectedMapel] = React.useState('M1'); // Matematika
-  const [selectedJenjang, setSelectedJenjang] = React.useState<'SD' | 'SMP' | 'SMA'>('SD');
   const {
     data: matriksData,
     isLoading: loadingMatriks,
-  } = useMatriks(selectedMapel, selectedJenjang);
+  } = useMatriks(selectedMapel);
 
   // Bentrok checker mutation
   const cekBentrokMutation = useCekBentrok();
@@ -491,18 +490,6 @@ export function DataLayerScreen() {
                   options={mapelList?.map((m) => ({ value: m.id, label: m.nama })) || []}
                 />
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[12px] text-(--color-text-secondary)">Jenjang:</span>
-                <Select
-                  value={selectedJenjang}
-                  onValueChange={(val: string) => setSelectedJenjang(val as 'SD' | 'SMP' | 'SMA')}
-                  options={[
-                    { value: 'SD', label: 'SD' },
-                    { value: 'SMP', label: 'SMP' },
-                    { value: 'SMA', label: 'SMA' },
-                  ]}
-                />
-              </div>
             </div>
           </div>
 
@@ -517,7 +504,7 @@ export function DataLayerScreen() {
                 <div className="p-3 rounded-lg border border-(--color-border-subtle) bg-(--color-surface-alt)">
                   <div className="text-[11px] text-(--color-text-muted)">Cakupan Matriks</div>
                   <div className="text-[16px] font-semibold text-(--color-text) mt-0.5">
-                    {matriksData?.namaMapel} · {matriksData?.jenjang}
+                    {matriksData?.namaMapel}
                   </div>
                   <div className="text-[11px] text-(--color-text-secondary) mt-0.5">
                     {matriksData?.kolom.length} materi · {matriksData?.baris.length} siswa

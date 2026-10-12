@@ -77,7 +77,7 @@ export interface KolomMateri {
   id: string;
   mapelId: string;
   nama: string;
-  jenjang: JenjangPendidikan[];
+  jenjang?: JenjangPendidikan[];
   urutan: number;
 }
 
@@ -134,7 +134,7 @@ export interface MatriksFilterParams {
 export interface MatriksBelajarResult {
   mapelId: string;
   namaMapel: string;
-  jenjang: JenjangPendidikan;
+  jenjang?: JenjangPendidikan;
   kolom: KolomMateri[];
   baris: BarisSiswa[];
   sel: Record<string, Record<string, SelMatriks>>; // [siswaId][materiId]

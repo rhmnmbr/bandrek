@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import type { MataPelajaran, Materi } from '@/data/types/master';
-import type { JenjangPendidikan } from '@/data/types/common';
 import { MateriTable } from './MateriTable';
 
 export interface MapelFormData {
@@ -13,7 +12,6 @@ export interface MateriFormData {
   id?: string;
   mapel: string;
   nama: string;
-  jenjang: JenjangPendidikan[];
   aktif: boolean;
   urutan?: number;
 }
@@ -38,8 +36,6 @@ interface MapelFormViewProps {
   onCancel: () => void;
   onViewKegiatan?: (mapelId: string) => void;
 }
-
-const JENJANG_OPTIONS: JenjangPendidikan[] = ['SD', 'SMP', 'SMA'];
 
 export function MapelFormView({
   mapel,
@@ -70,9 +66,6 @@ export function MapelFormView({
 
   // Materi Form State
   const [namaMateri, setNamaMateri] = useState(activeMateri?.nama || '');
-  const [jenjangMateri, setJenjangMateri] = useState<JenjangPendidikan[]>(
-    activeMateri?.jenjang ? [...activeMateri.jenjang] : ['SD', 'SMP', 'SMA']
-  );
   const [aktifMateri, setAktifMateri] = useState(activeMateri?.aktif ?? true);
   const [materiDicoba, setMateriDicoba] = useState(false);
 
@@ -96,11 +89,9 @@ export function MapelFormView({
   useEffect(() => {
     if (activeMateri) {
       setNamaMateri(activeMateri.nama || '');
-      setJenjangMateri(activeMateri.jenjang ? [...activeMateri.jenjang] : []);
       setAktifMateri(activeMateri.aktif ?? true);
     } else {
       setNamaMateri('');
-      setJenjangMateri(['SD', 'SMP', 'SMA']);
       setAktifMateri(true);
     }
     setMateriDicoba(false);
@@ -153,12 +144,8 @@ export function MapelFormView({
       }
     }
 
-    if (jenjangMateri.length === 0) {
-      errs.push('Pilih minimal satu jenjang untuk materi ini.');
-    }
-
     return errs;
-  }, [namaMateri, materiList, activeMateri, jenjangMateri]);
+  }, [namaMateri, materiList, activeMateri]);
 
   const hasMapelNamaError =
     mapelDicoba &&
@@ -168,15 +155,6 @@ export function MapelFormView({
     materiDicoba &&
     (!namaMateri.trim() ||
       materiErrors.includes('Nama materi sudah dipakai di mata pelajaran ini.'));
-
-  const hasMateriJenjangError = materiDicoba && jenjangMateri.length === 0;
-
-  // Toggle Jenjang selection for Materi
-  const handleToggleJenjang = (j: JenjangPendidikan) => {
-    setJenjangMateri((prev) =>
-      prev.includes(j) ? prev.filter((item) => item !== j) : [...prev, j]
-    );
-  };
 
   // Submit Handler
   const handleSubmit = async () => {
@@ -195,7 +173,6 @@ export function MapelFormView({
           id: activeMateri?.id,
           mapel: mapel.id,
           nama: namaMateri.trim(),
-          jenjang: jenjangMateri,
           aktif: aktifMateri,
           urutan: activeMateri?.urutan,
         });
@@ -365,8 +342,8 @@ export function MapelFormView({
              CHILD MODE: MATERI FORM
              ======================================================== */
           <>
-            {/* Nama Materi (flex 1 1 260px, min-w 220px) */}
-            <div className="flex-[1_1_260px] min-w-[220px] flex flex-col gap-1">
+            {/* Nama Materi (flex 1 1 100%, min-w 220px) */}
+            <div className="flex-[1_1_100%] min-w-[220px] flex flex-col gap-1">
               <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
                 Nama materi <span className="text-(--color-danger)">*</span>
               </label>
@@ -390,48 +367,6 @@ export function MapelFormView({
                   </span>
                 </div>
               )}
-            </div>
-
-            {/* Jenjang Segmented Multi-Select (flex 0 0 210px, min-w 210px) */}
-            <div className="flex-[0_0_210px] min-w-[210px] flex flex-col gap-1">
-              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
-                Berlaku untuk jenjang <span className="text-(--color-danger)">*</span>
-              </label>
-              <div
-                className={`flex h-7 rounded-sm border overflow-hidden transition-colors ${
-                  hasMateriJenjangError ? 'border-(--color-danger)' : 'border-(--color-border)'
-                }`}
-              >
-                {JENJANG_OPTIONS.map((j, i) => {
-                  const isSelected = jenjangMateri.includes(j);
-                  return (
-                    <button
-                      key={j}
-                      type="button"
-                      onClick={() => handleToggleJenjang(j)}
-                      title={`Klik untuk ${isSelected ? 'menghapus' : 'menambahkan'} jenjang ${j}`}
-                      className={`flex-1 min-w-0 text-[11.5px] cursor-pointer transition-colors ${
-                        i > 0 ? 'border-l border-(--color-border)' : ''
-                      } ${
-                        isSelected
-                          ? 'bg-(--color-brand) text-white font-semibold'
-                          : 'bg-(--color-surface) text-(--color-text-primary) font-normal hover:bg-(--color-surface-alt)'
-                      }`}
-                    >
-                      {j}
-                    </button>
-                  );
-                })}
-              </div>
-              {hasMateriJenjangError && (
-                <div className="text-[11px] text-(--color-danger) flex items-center gap-1 leading-tight">
-                  <span>⚠</span>
-                  <span>Pilih minimal satu jenjang.</span>
-                </div>
-              )}
-              <div className="text-[11px] text-(--color-text-muted) leading-snug">
-                Jenjang yang tidak dicentang tampil sebagai “tidak berlaku” dan tidak dihitung di cakupan matriks.
-              </div>
             </div>
 
             {/* Switch Aktif Materi */}
