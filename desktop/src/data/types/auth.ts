@@ -11,6 +11,7 @@ export interface User {
   peran: PeranUser;
   aktif: boolean;
   dibuatPada?: string;
+  password?: string;
 }
 
 export interface AuthSession {
@@ -38,4 +39,9 @@ export interface UpdateUserInput {
   password?: string;
   peran?: PeranUser;
   aktif?: boolean;
+}
+
+export interface ChangePasswordInput {
+  kataSandiLama: string;
+  kataSandiBaru: string;
 }

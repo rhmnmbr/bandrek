@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import {
@@ -22,10 +23,14 @@ import {
   PersonSettings20Regular,
   PersonSettings20Filled,
   Warning16Regular,
+  LockClosed16Regular,
+  ArrowExit16Regular,
 } from '@fluentui/react-icons';
 import { usePerluRealisasiCount } from '@/data/hooks';
-import { useAuthSession } from '@/data/hooks/useAuth';
+import { useAuthSession, useLogout } from '@/data/hooks/useAuth';
 import { BandrekLogo, BandrekCupIcon } from '@/components/ui/bandrek-logo';
+import { UbahKataSandiModal } from './UbahKataSandiModal';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 
 export interface NavigationRailProps {
   collapsed: boolean;
@@ -128,6 +133,9 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
   const location = useLocation();
   const { data: perluCount = 0 } = usePerluRealisasiCount();
   const { data: session } = useAuthSession();
+  const logoutMutation = useLogout();
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const isAdmin = session?.user?.peran === 'admin';
   const userName = session?.user?.nama || 'Administrator';
@@ -270,42 +278,109 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
         </button>
       )}
 
-      {/* User Session Profile Card at Bottom */}
+      {/* User Session Profile Card at Bottom (Pojok Kiri Bawah) */}
       <div className="flex items-center border-t border-(--color-border-subtle) pt-2 mt-auto">
-        <div
-          title={`Akun: ${userName} (${isAdmin ? 'Administrator' : 'Operator'})`}
-          className="flex h-10 items-center select-none w-full gap-2 px-0.5 cursor-default"
-        >
-          <span
-            className={cn(
-              'flex h-7.5 w-7.5 flex-none items-center justify-center rounded-full text-[11px] font-bold border transition-all',
-              isAdmin
-                ? 'bg-[#F3EFFA] text-[#5B4394] border-[#D3C8E8]'
-                : 'bg-[#EBF3FC] text-[#0C548F] border-[#C5DCFA]'
-            )}
-          >
-            {userInitials}
-          </span>
-          <div
-            className={cn(
-              'flex flex-col justify-center whitespace-nowrap min-w-0 flex-none transition-opacity duration-150 ease-in-out',
-              collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
-            )}
-          >
-            <span className="truncate text-[12.5px] font-medium text-(--color-text) leading-[16px]">
-              {userName}
-            </span>
-            <span
+        <Popover open={isProfileMenuOpen} onOpenChange={setIsProfileMenuOpen}>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              title={`Akun: ${userName} (${isAdmin ? 'Administrator' : 'Operator'})`}
               className={cn(
-                'text-[10px] font-semibold uppercase tracking-wider leading-[13px] mt-0.5',
-                isAdmin ? 'text-[#5B4394]' : 'text-[#0C548F]'
+                'group flex h-10 items-center select-none w-full gap-2 px-0.5 rounded text-left transition-colors cursor-pointer border-none bg-transparent',
+                'hover:bg-(--color-surface-alt) active:bg-(--color-surface-sunken)',
+                isProfileMenuOpen && 'bg-(--color-surface-alt)'
               )}
             >
-              {isAdmin ? 'Administrator' : 'Operator'}
-            </span>
-          </div>
-        </div>
+              <span
+                className={cn(
+                  'flex h-7.5 w-7.5 flex-none items-center justify-center rounded-full text-[11px] font-bold border transition-all',
+                  isAdmin
+                    ? 'bg-[#F3EFFA] text-[#5B4394] border-[#D3C8E8]'
+                    : 'bg-[#EBF3FC] text-[#0C548F] border-[#C5DCFA]'
+                )}
+              >
+                {userInitials}
+              </span>
+              <div
+                className={cn(
+                  'flex flex-col justify-center whitespace-nowrap min-w-0 flex-1 transition-opacity duration-150 ease-in-out',
+                  collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                )}
+              >
+                <span className="truncate text-[12.5px] font-medium text-(--color-text) leading-[16px]">
+                  {userName}
+                </span>
+                <span
+                  className={cn(
+                    'text-[10px] font-semibold uppercase tracking-wider leading-[13px] mt-0.5',
+                    isAdmin ? 'text-[#5B4394]' : 'text-[#0C548F]'
+                  )}
+                >
+                  {isAdmin ? 'Administrator' : 'Operator'}
+                </span>
+              </div>
+            </button>
+          </PopoverTrigger>
+
+          <PopoverContent
+            side="top"
+            align="start"
+            sideOffset={8}
+            className="w-56 p-1 rounded-lg border border-(--color-border-strong) bg-(--color-surface) shadow-xl select-none"
+          >
+            <div className="flex items-center justify-between gap-2 px-2.5 py-2 border-b border-(--color-border-subtle) mb-1">
+              <span className="text-[13px] font-semibold text-(--color-text-primary) truncate">
+                {userName}
+              </span>
+              <span
+                className={cn(
+                  'inline-flex shrink-0 items-center px-1.5 py-0.5 rounded-full text-[9.5px] font-semibold border',
+                  isAdmin
+                    ? 'border-[#8764B8] bg-[#F3EFFA] text-[#5B4394]'
+                    : 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand)'
+                )}
+              >
+                {isAdmin ? 'Admin' : 'Operator'}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProfileMenuOpen(false);
+                  setIsChangePasswordOpen(true);
+                }}
+                className="flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-[12.5px] text-(--color-text-primary) hover:bg-(--color-surface-alt) hover:text-(--color-brand) transition-colors cursor-pointer border-none bg-transparent text-left"
+              >
+                <LockClosed16Regular className="w-4 h-4 text-(--color-text-muted)" />
+                <span>Ubah kata sandi</span>
+              </button>
+
+              <div className="my-1 h-px bg-(--color-border-subtle)" />
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProfileMenuOpen(false);
+                  logoutMutation.mutate();
+                  navigate('/login');
+                }}
+                className="flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-[12.5px] text-(--color-danger) hover:bg-(--color-danger-subtle) transition-colors cursor-pointer border-none bg-transparent text-left"
+              >
+                <ArrowExit16Regular className="w-4 h-4" />
+                <span>Keluar</span>
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
+
+      {/* Modal Ubah Kata Sandi */}
+      <UbahKataSandiModal
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+      />
     </aside>
   );
 };

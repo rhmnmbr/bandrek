@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Warning16Regular } from '@fluentui/react-icons';
-import type { PeranUser } from '@/data/types/auth';
+import type { PeranUser, User } from '@/data/types/auth';
 import {
   useUsersList,
   useAuthSession,
@@ -9,6 +9,336 @@ import {
 } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { MasterTableSkeleton, FormPanelSkeleton, UserManagementSkeleton } from '@/components/skeleton';
+
+export interface UserFormData {
+  nama: string;
+  username: string;
+  password?: string;
+  peran: PeranUser;
+  aktif?: boolean;
+}
+
+interface UserFormViewProps {
+  user: User | null;
+  isNewMode: boolean;
+  users: User[];
+  currentUserId?: string;
+  onSave: (data: UserFormData) => Promise<void>;
+  onToggleAktif: () => void;
+  onCancel: () => void;
+}
+
+function UserFormView({
+  user,
+  isNewMode,
+  users,
+  currentUserId,
+  onSave,
+  onToggleAktif,
+  onCancel,
+}: UserFormViewProps) {
+  // Local form state initialized directly from props (reset cleanly on key change)
+  const [nama, setNama] = useState(user?.nama || '');
+  const [username, setUsername] = useState(user?.username || '');
+  const [password, setPassword] = useState('');
+  const [peran, setPeran] = useState<PeranUser>(user?.peran || 'operator');
+  const aktif = user?.aktif ?? true;
+  const [dicoba, setDicoba] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const namaInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isNewMode) {
+      setTimeout(() => namaInputRef.current?.focus(), 50);
+    }
+  }, [isNewMode]);
+
+  // Validation
+  const errors = useMemo(() => {
+    const errs: string[] = [];
+    if (!nama.trim()) errs.push('Isi nama lengkap pengguna.');
+    if (!username.trim()) errs.push('Isi nama pengguna (username).');
+    else {
+      const isDuplicate = users.some(
+        (u) =>
+          u.id !== user?.id &&
+          u.username.toLowerCase() === username.trim().toLowerCase()
+      );
+      if (isDuplicate) errs.push('Nama pengguna (username) sudah dipakai.');
+    }
+
+    if (isNewMode && !password) {
+      errs.push('Isi kata sandi untuk pengguna baru.');
+    }
+
+    // Protection: Last active admin
+    const activeAdmins = users.filter((u) => u.peran === 'admin' && u.aktif);
+    if (
+      user &&
+      user.peran === 'admin' &&
+      activeAdmins.length === 1 &&
+      (!aktif || peran !== 'admin')
+    ) {
+      errs.push('Harus ada minimal satu akun admin yang aktif.');
+    }
+
+    return errs;
+  }, [nama, username, password, peran, aktif, isNewMode, users, user]);
+
+  const hasNamaError = dicoba && !nama.trim();
+  const hasUsernameError =
+    dicoba &&
+    (!username.trim() ||
+      errors.includes('Nama pengguna (username) sudah dipakai.'));
+  const hasPasswordError = dicoba && isNewMode && !password;
+
+  const handleSubmit = useCallback(async () => {
+    setDicoba(true);
+    if (errors.length > 0) {
+      if (hasNamaError) namaInputRef.current?.focus();
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await onSave({
+        nama: nama.trim(),
+        username: username.trim().toLowerCase(),
+        ...(password ? { password } : {}),
+        peran,
+        aktif,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [errors, hasNamaError, onSave, nama, username, password, peran, aktif]);
+
+  // Keyboard shortcut Ctrl+S and Escape
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        handleSubmit();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onCancel();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSubmit, onCancel]);
+
+  const initials = isNewMode
+    ? '+'
+    : (user?.nama || '?')
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w[0])
+        .join('')
+        .toUpperCase();
+
+  const isCurrentLoggedInUser = currentUserId === user?.id;
+
+  return (
+    <div className="flex flex-1 min-h-0 flex-col bg-(--color-surface-alt)">
+      {/* Header */}
+      <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-brand-subtle) text-(--color-brand) text-[12.5px] font-semibold">
+          {initials}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[15px] font-semibold text-(--color-text-primary) leading-tight truncate">
+            {isNewMode ? 'Pengguna baru' : user?.nama}
+          </div>
+          <div className="text-[11.5px] text-(--color-text-muted) leading-snug truncate">
+            {isNewMode
+              ? 'Isi akun operator bimbel baru'
+              : `${user?.peran === 'admin' ? 'Administrator' : 'Operator'} · ${
+                  user?.aktif ? 'Aktif' : 'Nonaktif'
+                }`}
+          </div>
+        </div>
+      </div>
+
+      {/* Form Body */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-3.5 flex flex-col gap-3">
+        {dicoba && errors.length > 0 && (
+          <div className="rounded-md border border-(--color-danger) bg-(--color-danger-subtle) p-2 text-xs leading-relaxed text-(--color-danger-fg)">
+            <div className="font-semibold flex items-center gap-1.5">
+              <Warning16Regular className="w-4 h-4 shrink-0" />
+              <span>Belum bisa disimpan — {errors.length} hal perlu dibereskan:</span>
+            </div>
+            <ul className="mt-1 list-disc pl-6 space-y-0.5">
+              {errors.map((err, i) => (
+                <li key={i}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Nama Lengkap */}
+        <div className="flex flex-col gap-1">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            Nama lengkap <span className="text-(--color-danger)">*</span>
+          </label>
+          <input
+            ref={namaInputRef}
+            type="text"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            placeholder="mis. Budi Santoso"
+            className={`h-7 px-2 text-[13.5px] rounded-sm border bg-(--color-surface) outline-none transition-colors ${
+              hasNamaError
+                ? 'border-(--color-danger) focus:border-(--color-danger)'
+                : 'border-(--color-border) focus:border-(--color-brand)'
+            }`}
+          />
+        </div>
+
+        {/* Username */}
+        <div className="flex flex-col gap-1">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            Nama pengguna (username) <span className="text-(--color-danger)">*</span>
+          </label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            disabled={!isNewMode}
+            placeholder="mis. budi"
+            className={`h-7 px-2 text-[13.5px] font-mono rounded-sm border bg-(--color-surface) outline-none transition-colors ${
+              hasUsernameError
+                ? 'border-(--color-danger) focus:border-(--color-danger)'
+                : 'border-(--color-border) focus:border-(--color-brand)'
+            } ${!isNewMode ? 'bg-(--color-surface-disabled) cursor-not-allowed opacity-75' : ''}`}
+          />
+          {!isNewMode && (
+            <span className="text-[10.5px] text-(--color-text-muted)">
+              Username tidak dapat diubah setelah dibuat.
+            </span>
+          )}
+        </div>
+
+        {/* Kata Sandi */}
+        <div className="flex flex-col gap-1">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            Kata sandi {isNewMode && <span className="text-(--color-danger)">*</span>}
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={
+              isNewMode
+                ? 'Kata sandi akun'
+                : 'Kosongkan jika tidak ingin mengubah sandi'
+            }
+            className={`h-7 px-2 text-[13.5px] rounded-sm border bg-(--color-surface) outline-none transition-colors ${
+              hasPasswordError
+                ? 'border-(--color-danger) focus:border-(--color-danger)'
+                : 'border-(--color-border) focus:border-(--color-brand)'
+            }`}
+          />
+        </div>
+
+        {/* Peran Segmented Control */}
+        <div className="flex flex-col gap-1">
+          <label className="text-[11.5px] text-(--color-text-secondary) min-h-[18px]">
+            Peran hak akses
+          </label>
+          <div className="flex border border-(--color-border) rounded-sm overflow-hidden h-7">
+            <button
+              type="button"
+              onClick={() => setPeran('operator')}
+              className={`flex-1 text-[12px] cursor-pointer border-none ${
+                peran === 'operator'
+                  ? 'bg-(--color-brand) text-white font-semibold'
+                  : 'bg-(--color-surface) text-(--color-text-primary) hover:bg-(--color-surface-alt)'
+              }`}
+            >
+              Operator
+            </button>
+            <button
+              type="button"
+              onClick={() => setPeran('admin')}
+              className={`flex-1 text-[12px] cursor-pointer border-none border-l border-(--color-border) ${
+                peran === 'admin'
+                  ? 'bg-(--color-brand) text-white font-semibold'
+                  : 'bg-(--color-surface) text-(--color-text-primary) hover:bg-(--color-surface-alt)'
+              }`}
+            >
+              Admin
+            </button>
+          </div>
+          <div className="text-[11px] text-(--color-text-muted) leading-snug">
+            Admin dapat mengelola data pengguna dan konfigurasi server.
+          </div>
+        </div>
+
+        {/* Info Box */}
+        {!isNewMode && user && (
+          <div className="rounded-md border border-(--color-border) bg-(--color-surface) p-2.5 text-xs text-(--color-text-secondary)">
+            <div className="text-[10.5px] font-semibold text-(--color-text-muted) tracking-wider">
+              INFORMASI AKUN
+            </div>
+            <div className="mt-1">
+              Dibuat pada: <span className="font-mono">{user.dibuatPada || '—'}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Panel Footer */}
+      <div className="flex h-11 shrink-0 items-center gap-2 border-t border-(--color-border) bg-(--color-surface) px-3.5">
+        {!isNewMode && user && (
+          <button
+            type="button"
+            onClick={onToggleAktif}
+            disabled={isCurrentLoggedInUser}
+            title={
+              isCurrentLoggedInUser
+                ? 'Tidak bisa menonaktifkan akun yang sedang digunakan'
+                : user.aktif
+                ? 'Nonaktifkan akun'
+                : 'Aktifkan kembali akun'
+            }
+            className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] ${
+              isCurrentLoggedInUser
+                ? 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
+                : user.aktif
+                ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
+                : 'bg-transparent text-[#2E7D32] hover:bg-[#E8F5E9] cursor-pointer'
+            }`}
+          >
+            {user.aktif ? 'Nonaktifkan' : 'Aktifkan kembali'}
+          </button>
+        )}
+
+        <div className="flex-1 min-w-[6px]" />
+
+        <button
+          type="button"
+          onClick={onCancel}
+          className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer"
+        >
+          Batal
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="h-6.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer flex items-center gap-1.5"
+        >
+          <span>{isNewMode ? 'Simpan pengguna' : 'Simpan'}</span>
+          <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function UserManagementScreen() {
   const { data: users = [], isLoading: isLoadingUsers } = useUsersList();
@@ -23,17 +353,6 @@ export function UserManagementScreen() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isNewMode, setIsNewMode] = useState(false);
 
-  // Form State
-  const [nama, setNama] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [peran, setPeran] = useState<PeranUser>('operator');
-  const [aktif, setAktif] = useState(true);
-  const [dicoba, setDicoba] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const namaInputRef = useRef<HTMLInputElement>(null);
-
   // Filtered users
   const filteredUsers = useMemo(() => {
     let res = [...users];
@@ -47,117 +366,45 @@ export function UserManagementScreen() {
     return res.sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
   }, [users, cari]);
 
-  // Selected User
-  const selectedUser = useMemo(() => {
+  // Selected User: stable synchronous resolution without race condition intermediate states
+  const effectiveUserId = useMemo(() => {
     if (isNewMode) return null;
-    if (selectedUserId) {
-      return users.find((u) => u.id === selectedUserId) || null;
+    if (selectedUserId && users.some((u) => u.id === selectedUserId)) {
+      return selectedUserId;
     }
-    return filteredUsers[0] || null;
-  }, [users, selectedUserId, isNewMode, filteredUsers]);
+    return filteredUsers[0]?.id ?? null;
+  }, [isNewMode, selectedUserId, users, filteredUsers]);
 
-  // Auto select first user
-  useEffect(() => {
-    if (!isNewMode && !selectedUserId && filteredUsers.length > 0) {
-      setSelectedUserId(filteredUsers[0].id);
-    }
-  }, [isNewMode, selectedUserId, filteredUsers]);
-
-  // Sync form state when selection changes
-  useEffect(() => {
-    if (isNewMode) {
-      setNama('');
-      setUsername('');
-      setPassword('');
-      setPeran('operator');
-      setAktif(true);
-      setDicoba(false);
-      setTimeout(() => namaInputRef.current?.focus(), 50);
-    } else if (selectedUser) {
-      setNama(selectedUser.nama);
-      setUsername(selectedUser.username);
-      setPassword('');
-      setPeran(selectedUser.peran);
-      setAktif(selectedUser.aktif);
-      setDicoba(false);
-    }
-  }, [selectedUser, isNewMode]);
-
-  // Validation
-  const errors = useMemo(() => {
-    const errs: string[] = [];
-    if (!nama.trim()) errs.push('Isi nama lengkap pengguna.');
-    if (!username.trim()) errs.push('Isi nama pengguna (username).');
-    else {
-      const isDuplicate = users.some(
-        (u) =>
-          u.id !== selectedUser?.id &&
-          u.username.toLowerCase() === username.trim().toLowerCase()
-      );
-      if (isDuplicate) errs.push('Nama pengguna (username) sudah dipakai.');
-    }
-
-    if (isNewMode && !password) {
-      errs.push('Isi kata sandi untuk pengguna baru.');
-    }
-
-    // Protection: Last active admin
-    const activeAdmins = users.filter((u) => u.peran === 'admin' && u.aktif);
-    if (
-      selectedUser &&
-      selectedUser.peran === 'admin' &&
-      activeAdmins.length === 1 &&
-      (!aktif || peran !== 'admin')
-    ) {
-      errs.push('Harus ada minimal satu akun admin yang aktif.');
-    }
-
-    return errs;
-  }, [nama, username, password, peran, aktif, isNewMode, users, selectedUser]);
-
-  const hasNamaError = dicoba && !nama.trim();
-  const hasUsernameError =
-    dicoba &&
-    (!username.trim() ||
-      errors.includes('Nama pengguna (username) sudah dipakai.'));
-  const hasPasswordError =
-    dicoba && isNewMode && !password;
+  const selectedUser = useMemo(() => {
+    if (!effectiveUserId) return null;
+    return users.find((u) => u.id === effectiveUserId) ?? null;
+  }, [users, effectiveUserId]);
 
   // Handlers
-  const handleNewUser = () => {
+  const handleNewUser = useCallback(() => {
     setIsNewMode(true);
     setSelectedUserId(null);
-  };
+  }, []);
 
-  const handleSelectUser = (id: string) => {
+  const handleSelectUser = useCallback((id: string) => {
     setIsNewMode(false);
     setSelectedUserId(id);
-  };
+  }, []);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     if (isNewMode) {
       setIsNewMode(false);
-      if (filteredUsers.length > 0) {
-        setSelectedUserId(filteredUsers[0].id);
-      }
     }
-  };
+  }, [isNewMode]);
 
-  const handleSubmit = async () => {
-    setDicoba(true);
-    if (errors.length > 0) {
-      if (hasNamaError) namaInputRef.current?.focus();
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
+  const handleSaveUser = useCallback(
+    async (formData: UserFormData) => {
       if (isNewMode) {
         const created = await createUserMutation.mutateAsync({
-          nama: nama.trim(),
-          username: username.trim().toLowerCase(),
-          password,
-          peran,
+          nama: formData.nama,
+          username: formData.username,
+          password: formData.password || '',
+          peran: formData.peran,
         });
         showToast({
           type: 'success',
@@ -169,10 +416,10 @@ export function UserManagementScreen() {
         await updateUserMutation.mutateAsync({
           id: selectedUser.id,
           input: {
-            nama: nama.trim(),
-            peran,
-            aktif,
-            ...(password ? { password } : {}),
+            nama: formData.nama,
+            peran: formData.peran,
+            aktif: formData.aktif,
+            ...(formData.password ? { password: formData.password } : {}),
           },
         });
         showToast({
@@ -180,15 +427,9 @@ export function UserManagementScreen() {
           message: 'Perubahan akun disimpan.',
         });
       }
-    } catch (err: any) {
-      showToast({
-        type: 'error',
-        message: err?.message || 'Gagal menyimpan akun.',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    },
+    [isNewMode, selectedUser, createUserMutation, updateUserMutation, showToast]
+  );
 
   const handleToggleAktif = useCallback(() => {
     if (!selectedUser) return;
@@ -227,37 +468,17 @@ export function UserManagementScreen() {
     );
   }, [selectedUser, currentSession, updateUserMutation, showToast]);
 
-  // Keyboard shortcut Ctrl+N and Ctrl+S
+  // Keyboard shortcut Ctrl+N on screen level
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
         e.preventDefault();
         handleNewUser();
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        handleSubmit();
-      } else if (e.key === 'Escape') {
-        if (isNewMode) {
-          e.preventDefault();
-          handleCancel();
-        }
       }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isNewMode, errors, handleSubmit]);
-
-  const initials = isNewMode
-    ? '+'
-    : (selectedUser?.nama || '?')
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((w) => w[0])
-        .join('')
-        .toUpperCase();
-
-  const isCurrentLoggedInUser = currentSession?.user?.id === selectedUser?.id;
+  }, [handleNewUser]);
 
   if (isLoadingUsers && !cari) {
     return <UserManagementSkeleton />;
@@ -325,82 +546,82 @@ export function UserManagementScreen() {
                 <div className="w-[80px] shrink-0 text-right pr-2">STATUS</div>
               </div>
 
-            {filteredUsers.map((u) => {
-              const isSelected = !isNewMode && selectedUser?.id === u.id;
-              const isCurrentUser = currentSession?.user?.id === u.id;
+              {filteredUsers.map((u) => {
+                const isSelected = !isNewMode && effectiveUserId === u.id;
+                const isCurrentUser = currentSession?.user?.id === u.id;
 
-              return (
-                <div
-                  key={u.id}
-                  onClick={() => handleSelectUser(u.id)}
-                  title={u.nama}
-                  className={`flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
-                    isSelected
-                      ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
-                      : 'bg-(--color-surface) hover:bg-(--color-surface-alt)'
-                  }`}
-                >
-                  {/* Nama & Avatar */}
-                  <div className="flex-1 min-w-[160px] flex items-center gap-2 truncate pr-2">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--color-brand-subtle) text-(--color-brand) text-[10.5px] font-semibold">
-                      {u.nama
-                        .split(/\s+/)
-                        .slice(0, 2)
-                        .map((w) => w[0])
-                        .join('')
-                        .toUpperCase()}
-                    </div>
-                    <span
-                      className={`truncate ${
-                        isSelected
-                          ? 'font-semibold text-(--color-text-primary)'
-                          : 'font-normal text-(--color-text-primary)'
-                      } ${!u.aktif ? 'text-(--color-text-muted) line-through' : ''}`}
-                    >
-                      {u.nama}
-                    </span>
-                    {isCurrentUser && (
-                      <span className="text-[10px] bg-(--color-brand-subtle) text-(--color-brand) font-semibold px-1 rounded">
-                        Anda
+                return (
+                  <div
+                    key={u.id}
+                    onClick={() => handleSelectUser(u.id)}
+                    title={u.nama}
+                    className={`flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
+                      isSelected
+                        ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
+                        : 'bg-(--color-surface) hover:bg-(--color-surface-alt)'
+                    }`}
+                  >
+                    {/* Nama & Avatar */}
+                    <div className="flex-1 min-w-[160px] flex items-center gap-2 truncate pr-2">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--color-brand-subtle) text-(--color-brand) text-[10.5px] font-semibold">
+                        {u.nama
+                          .split(/\s+/)
+                          .slice(0, 2)
+                          .map((w) => w[0])
+                          .join('')
+                          .toUpperCase()}
+                      </div>
+                      <span
+                        className={`truncate ${
+                          isSelected
+                            ? 'font-semibold text-(--color-text-primary)'
+                            : 'font-normal text-(--color-text-primary)'
+                        } ${!u.aktif ? 'text-(--color-text-muted) line-through' : ''}`}
+                      >
+                        {u.nama}
                       </span>
-                    )}
-                  </div>
+                      {isCurrentUser && (
+                        <span className="text-[10px] bg-(--color-brand-subtle) text-(--color-brand) font-semibold px-1 rounded">
+                          Anda
+                        </span>
+                      )}
+                    </div>
 
-                  {/* Username */}
-                  <div className="w-[120px] shrink-0 text-xs font-mono text-(--color-text-secondary) truncate pr-2">
-                    {u.username}
-                  </div>
+                    {/* Username */}
+                    <div className="w-[120px] shrink-0 text-xs font-mono text-(--color-text-secondary) truncate pr-2">
+                      {u.username}
+                    </div>
 
-                  {/* Peran Pill */}
-                  <div className="w-[90px] shrink-0 pr-2">
-                    <span
-                      className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
-                        u.peran === 'admin'
-                          ? 'border-[#8764B8] bg-[#F3EFFA] text-[#5B4394]'
-                          : 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand)'
-                      }`}
-                    >
-                      {u.peran === 'admin' ? 'Admin' : 'Operator'}
-                    </span>
-                  </div>
+                    {/* Peran Pill */}
+                    <div className="w-[90px] shrink-0 pr-2">
+                      <span
+                        className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
+                          u.peran === 'admin'
+                            ? 'border-[#8764B8] bg-[#F3EFFA] text-[#5B4394]'
+                            : 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand)'
+                        }`}
+                      >
+                        {u.peran === 'admin' ? 'Admin' : 'Operator'}
+                      </span>
+                    </div>
 
-                  {/* Status */}
-                  <div className="w-[80px] shrink-0 text-right pr-2">
-                    <span
-                      className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
-                        u.aktif
-                          ? 'border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]'
-                          : 'border-(--color-border) bg-(--color-surface-alt) text-(--color-text-muted)'
-                      }`}
-                    >
-                      {u.aktif ? 'Aktif' : 'Nonaktif'}
-                    </span>
+                    {/* Status */}
+                    <div className="w-[80px] shrink-0 text-right pr-2">
+                      <span
+                        className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
+                          u.aktif
+                            ? 'border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]'
+                            : 'border-(--color-border) bg-(--color-surface-alt) text-(--color-text-muted)'
+                        }`}
+                      >
+                        {u.aktif ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
         )}
 
         {/* Footer */}
@@ -414,201 +635,16 @@ export function UserManagementScreen() {
         {isLoadingUsers ? (
           <FormPanelSkeleton title="Memuat pengguna..." />
         ) : selectedUser || isNewMode ? (
-          <div className="flex flex-1 min-h-0 flex-col bg-(--color-surface-alt)">
-            {/* Header */}
-            <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-brand-subtle) text-(--color-brand) text-[12.5px] font-semibold">
-                {initials}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-semibold text-(--color-text-primary) leading-tight truncate">
-                  {isNewMode ? 'Pengguna baru' : selectedUser?.nama}
-                </div>
-                <div className="text-[11.5px] text-(--color-text-muted) leading-snug truncate">
-                  {isNewMode
-                    ? 'Isi akun operator bimbel baru'
-                    : `${selectedUser?.peran === 'admin' ? 'Administrator' : 'Operator'} · ${
-                        selectedUser?.aktif ? 'Aktif' : 'Nonaktif'
-                      }`}
-                </div>
-              </div>
-            </div>
-
-            {/* Form Body */}
-            <div className="flex-1 min-h-0 overflow-y-auto p-3.5 flex flex-col gap-3">
-              {dicoba && errors.length > 0 && (
-                <div className="rounded-md border border-(--color-danger) bg-(--color-danger-subtle) p-2 text-xs leading-relaxed text-(--color-danger-fg)">
-                  <div className="font-semibold flex items-center gap-1.5">
-                    <Warning16Regular className="w-4 h-4 shrink-0" />
-                    <span>Belum bisa disimpan — {errors.length} hal perlu dibereskan:</span>
-                  </div>
-                  <ul className="mt-1 list-disc pl-6 space-y-0.5">
-                    {errors.map((err, i) => (
-                      <li key={i}>{err}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Nama Lengkap */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
-                  Nama lengkap <span className="text-(--color-danger)">*</span>
-                </label>
-                <input
-                  ref={namaInputRef}
-                  type="text"
-                  value={nama}
-                  onChange={(e) => setNama(e.target.value)}
-                  placeholder="mis. Budi Santoso"
-                  className={`h-7 px-2 text-[13.5px] rounded-sm border bg-(--color-surface) outline-none transition-colors ${
-                    hasNamaError
-                      ? 'border-(--color-danger) focus:border-(--color-danger)'
-                      : 'border-(--color-border) focus:border-(--color-brand)'
-                  }`}
-                />
-              </div>
-
-              {/* Username */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
-                  Nama pengguna (username) <span className="text-(--color-danger)">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  disabled={!isNewMode}
-                  placeholder="mis. budi"
-                  className={`h-7 px-2 text-[13.5px] font-mono rounded-sm border bg-(--color-surface) outline-none transition-colors ${
-                    hasUsernameError
-                      ? 'border-(--color-danger) focus:border-(--color-danger)'
-                      : 'border-(--color-border) focus:border-(--color-brand)'
-                  } ${!isNewMode ? 'bg-(--color-surface-disabled) cursor-not-allowed opacity-75' : ''}`}
-                />
-                {!isNewMode && (
-                  <span className="text-[10.5px] text-(--color-text-muted)">
-                    Username tidak dapat diubah setelah dibuat.
-                  </span>
-                )}
-              </div>
-
-              {/* Kata Sandi */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
-                  Kata sandi {isNewMode && <span className="text-(--color-danger)">*</span>}
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder={
-                    isNewMode
-                      ? 'Kata sandi akun'
-                      : 'Kosongkan jika tidak ingin mengubah sandi'
-                  }
-                  className={`h-7 px-2 text-[13.5px] rounded-sm border bg-(--color-surface) outline-none transition-colors ${
-                    hasPasswordError
-                      ? 'border-(--color-danger) focus:border-(--color-danger)'
-                      : 'border-(--color-border) focus:border-(--color-brand)'
-                  }`}
-                />
-              </div>
-
-              {/* Peran Segmented Control */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[11.5px] text-(--color-text-secondary) min-h-[18px]">
-                  Peran hak akses
-                </label>
-                <div className="flex border border-(--color-border) rounded-sm overflow-hidden h-7">
-                  <button
-                    type="button"
-                    onClick={() => setPeran('operator')}
-                    className={`flex-1 text-[12px] cursor-pointer transition-colors border-none ${
-                      peran === 'operator'
-                        ? 'bg-(--color-brand) text-white font-semibold'
-                        : 'bg-(--color-surface) text-(--color-text-primary) hover:bg-(--color-surface-alt)'
-                    }`}
-                  >
-                    Operator
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPeran('admin')}
-                    className={`flex-1 text-[12px] cursor-pointer transition-colors border-none border-l border-(--color-border) ${
-                      peran === 'admin'
-                        ? 'bg-(--color-brand) text-white font-semibold'
-                        : 'bg-(--color-surface) text-(--color-text-primary) hover:bg-(--color-surface-alt)'
-                    }`}
-                  >
-                    Admin
-                  </button>
-                </div>
-                <div className="text-[11px] text-(--color-text-muted) leading-snug">
-                  Admin dapat mengelola data pengguna dan konfigurasi server.
-                </div>
-              </div>
-
-              {/* Info Box */}
-              {!isNewMode && selectedUser && (
-                <div className="rounded-md border border-(--color-border) bg-(--color-surface) p-2.5 text-xs text-(--color-text-secondary)">
-                  <div className="text-[10.5px] font-semibold text-(--color-text-muted) tracking-wider">
-                    INFORMASI AKUN
-                  </div>
-                  <div className="mt-1">
-                    Dibuat pada: <span className="font-mono">{selectedUser.dibuatPada || '—'}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Panel Footer */}
-            <div className="flex h-11 shrink-0 items-center gap-2 border-t border-(--color-border) bg-(--color-surface) px-3.5">
-              {!isNewMode && selectedUser && (
-                <button
-                  type="button"
-                  onClick={handleToggleAktif}
-                  disabled={isCurrentLoggedInUser}
-                  title={
-                    isCurrentLoggedInUser
-                      ? 'Tidak bisa menonaktifkan akun yang sedang digunakan'
-                      : selectedUser.aktif
-                      ? 'Nonaktifkan akun'
-                      : 'Aktifkan kembali akun'
-                  }
-                  className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
-                    isCurrentLoggedInUser
-                      ? 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
-                      : selectedUser.aktif
-                      ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
-                      : 'bg-transparent text-[#2E7D32] hover:bg-[#E8F5E9] cursor-pointer'
-                  }`}
-                >
-                  {selectedUser.aktif ? 'Nonaktifkan' : 'Aktifkan kembali'}
-                </button>
-              )}
-
-              <div className="flex-1 min-w-[6px]" />
-
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
-              >
-                Batal
-              </button>
-
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="h-6.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer transition-colors flex items-center gap-1.5"
-              >
-                <span>{isNewMode ? 'Simpan pengguna' : 'Simpan'}</span>
-                <span className="font-mono text-[10px] opacity-75">Ctrl S</span>
-              </button>
-            </div>
-          </div>
+          <UserFormView
+            key={isNewMode ? 'user-baru' : `user-${selectedUser?.id}`}
+            user={selectedUser}
+            isNewMode={isNewMode}
+            users={users}
+            currentUserId={currentSession?.user?.id}
+            onSave={handleSaveUser}
+            onToggleAktif={handleToggleAktif}
+            onCancel={handleCancel}
+          />
         ) : (
           <div className="flex flex-1 items-center justify-center p-6 text-center text-(--color-text-secondary)">
             <div>

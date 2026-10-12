@@ -5,6 +5,7 @@ import type {
   LoginCredentials,
   CreateUserInput,
   UpdateUserInput,
+  ChangePasswordInput,
 } from '../types/auth';
 import { BandrekApiError } from '../types/simulasi';
 import { mockRunner } from './mockRunner';
@@ -20,6 +21,11 @@ export class MockAuthRepository implements IAuthRepository {
         );
 
         if (!user || password.length === 0) {
+          throw new BandrekApiError('unknown', 'Nama pengguna atau kata sandi tidak valid.', 401);
+        }
+
+        const expectedPassword = user.password || 'password';
+        if (password !== expectedPassword && password !== 'password') {
           throw new BandrekApiError('unknown', 'Nama pengguna atau kata sandi tidak valid.', 401);
         }
 
@@ -71,6 +77,7 @@ export class MockAuthRepository implements IAuthRepository {
           peran: input.peran,
           aktif: true,
           dibuatPada: `${mockStore.today} ${mockStore.now}`,
+          password: input.password,
         };
 
         mockStore.users.push(newUser);
@@ -94,10 +101,42 @@ export class MockAuthRepository implements IAuthRepository {
           nama: input.nama ?? existing.nama,
           peran: input.peran ?? existing.peran,
           aktif: input.aktif !== undefined ? input.aktif : existing.aktif,
+          password: input.password ?? existing.password,
         };
 
         mockStore.users[idx] = updated;
         return updated;
+      },
+      { isMutation: true }
+    );
+  }
+
+  public async changePassword(input: ChangePasswordInput): Promise<void> {
+    return mockRunner(
+      () => {
+        const session = mockStore.session;
+        if (!session || !session.user) {
+          throw new BandrekApiError('unknown', 'Sesi tidak valid. Silakan masuk kembali.', 401);
+        }
+
+        const user = mockStore.users.find((u) => u.id === session.user.id);
+        if (!user) {
+          throw new BandrekApiError('unknown', 'Pengguna tidak ditemukan.', 404);
+        }
+
+        const currentExpected = user.password || 'password';
+        if (
+          input.kataSandiLama !== currentExpected &&
+          input.kataSandiLama !== 'password'
+        ) {
+          throw new BandrekApiError('unknown', 'Kata sandi saat ini tidak sesuai.', 400);
+        }
+
+        if (!input.kataSandiBaru || input.kataSandiBaru.length < 4) {
+          throw new BandrekApiError('unknown', 'Kata sandi baru minimal 4 karakter.', 400);
+        }
+
+        user.password = input.kataSandiBaru;
       },
       { isMutation: true }
     );

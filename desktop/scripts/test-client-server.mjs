@@ -50,32 +50,40 @@ assert.ok(
 console.log('✓ All 9 Client-Server component and screen files exist and are correctly routed in App.tsx.\n');
 
 // ----------------------------------------------------
-// 2. TopBar Integration & User Role Display
+// 2. NavigationRail & TopBar User Profile and Navigation
 // ----------------------------------------------------
-console.log('Test 2: Verify TopBar User Profile and Admin Navigation');
+console.log('Test 2: Verify NavigationRail User Profile Popover and TopBar Logout');
+const navRailContent = readFileSync(
+  resolve(baseDir, 'src/components/layout/NavigationRail.tsx'),
+  'utf8'
+);
 const topBarContent = readFileSync(
   resolve(baseDir, 'src/components/layout/TopBar.tsx'),
   'utf8'
 );
 
 assert.ok(
-  topBarContent.includes('useAuthSession'),
-  'TopBar must consume useAuthSession hook'
+  navRailContent.includes('useAuthSession'),
+  'NavigationRail must consume useAuthSession hook'
 );
 assert.ok(
-  topBarContent.includes('/pengaturan/pengguna'),
-  'TopBar must provide link to /pengaturan/pengguna for admin users'
+  navRailContent.includes('/pengaturan/pengguna'),
+  'NavigationRail must provide link to /pengaturan/pengguna for admin users'
+);
+assert.ok(
+  navRailContent.includes('Ubah kata sandi') && navRailContent.includes('UbahKataSandiModal'),
+  'NavigationRail must provide Ubah kata sandi action and modal'
+);
+assert.ok(
+  navRailContent.includes('Administrator') && navRailContent.includes('Operator'),
+  'NavigationRail must distinguish Administrator and Operator roles'
 );
 assert.ok(
   topBarContent.includes('/login'),
   'TopBar must provide logout action linking to /login'
 );
-assert.ok(
-  topBarContent.includes('Admin') && topBarContent.includes('Operator'),
-  'TopBar must distinguish Admin and Operator role badges'
-);
 
-console.log('✓ TopBar correctly reflects user session, role pill, admin link, and logout action.\n');
+console.log('✓ NavigationRail correctly reflects user session, popover profile menu, password change, and TopBar logout action.\n');
 
 // ----------------------------------------------------
 // 3. Setup Server Screen Logic & Validation

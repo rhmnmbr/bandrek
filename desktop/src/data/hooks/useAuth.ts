@@ -62,3 +62,15 @@ export function useUpdateUser() {
     },
   });
 }
+
+export function useChangePassword() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { kataSandiLama: string; kataSandiBaru: string }) =>
+      repositories.auth.changePassword(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: authKeys.session });
+    },
+  });
+}
+
