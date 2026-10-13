@@ -340,7 +340,7 @@ export function JenisFormView({
             onClick={onDelete}
             disabled={!bisaHapus}
             title={hapusTitle}
-            className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
+            className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
               bisaHapus
                 ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
                 : 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
@@ -355,7 +355,7 @@ export function JenisFormView({
         <button
           type="button"
           onClick={onCancel}
-          className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
+          className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
         >
           Batal
         </button>
@@ -371,9 +371,9 @@ export function JenisFormView({
               ? 'Tambahkan jenis kegiatan ini'
               : 'Simpan perubahan'
           }
-          className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
+          className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
             simpanDisabled || isSubmitting
-              ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
+              ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
               : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
           }`}
         >

@@ -655,10 +655,10 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
           <button
             type="button"
             onClick={onNewKegiatan}
-            title="Buat kegiatan baru (Ctrl+N)"
-            className="flex-none h-6.5 px-2.75 rounded bg-(--color-brand) text-white font-medium text-[12px] flex items-center gap-1 hover:bg-(--color-brand-pressed) transition-colors cursor-pointer shadow-xs whitespace-nowrap"
+            title="Tambah kegiatan baru · Ctrl+N"
+            className="flex-none h-6.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
           >
-            <Add16Regular className="text-[13px]" />
+            <Add16Regular className="w-3.5 h-3.5 shrink-0" />
             <span>Kegiatan baru</span>
           </button>
         )}

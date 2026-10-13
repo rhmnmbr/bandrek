@@ -290,21 +290,10 @@ export function KelasFormView({
                 type="button"
                 onClick={() => setMenuOpen(!menuOpen)}
                 title="Tambah siswa"
-                className="h-5.5 px-2 border border-(--color-border) rounded-sm bg-(--color-surface) text-(--color-brand) text-[11.5px] font-medium inline-flex items-center gap-1 hover:bg-(--color-brand-subtle) transition-colors cursor-pointer"
+                className="h-6 px-2 border border-(--color-border) rounded bg-(--color-surface) text-(--color-brand) text-[11.5px] font-medium inline-flex items-center gap-1 hover:bg-(--color-brand-subtle) transition-colors cursor-pointer"
               >
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="shrink-0"
-                >
-                  <line x1="8" y1="3" x2="8" y2="13" />
-                  <line x1="3" y1="8" x2="13" y2="8" />
-                </svg>
-                Tambah siswa
+                <Add16Regular className="w-3.5 h-3.5 shrink-0" />
+                <span>Tambah siswa</span>
               </button>
 
               {menuOpen && (
@@ -461,7 +450,7 @@ export function KelasFormView({
             onClick={onDelete}
             disabled={!bisaHapus}
             title={hapusTitle}
-            className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
+            className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
               bisaHapus
                 ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
                 : 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
@@ -476,7 +465,7 @@ export function KelasFormView({
         <button
           type="button"
           onClick={onCancel}
-          className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
+          className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
         >
           Batal
         </button>
@@ -492,9 +481,9 @@ export function KelasFormView({
               ? 'Tambahkan kelas ini'
               : 'Simpan perubahan'
           }
-          className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
+          className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center justify-center gap-1.5 transition-colors ${
             simpanDisabled || isSubmitting
-              ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
+              ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
               : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
           }`}
         >

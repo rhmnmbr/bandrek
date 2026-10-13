@@ -1,3 +1,5 @@
+import { Add16Regular } from '@fluentui/react-icons';
+
 interface TempatToolbarProps {
   totalTempat: number;
   totalRuangan: number;
@@ -29,19 +31,9 @@ export function TempatToolbar({
           type="button"
           onClick={onTempatBaru}
           title="Tambah tempat baru · Ctrl+N"
-          className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
+          className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-          >
-            <line x1="8" y1="2" x2="8" y2="14" />
-            <line x1="2" y1="8" x2="14" y2="8" />
-          </svg>
+          <Add16Regular className="w-3.5 h-3.5 shrink-0" />
           <span>Tempat baru</span>
         </button>
       </div>

@@ -305,7 +305,7 @@ function UserFormView({
                 ? 'Nonaktifkan akun'
                 : 'Aktifkan kembali akun'
             }
-            className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] ${
+            className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
               isCurrentLoggedInUser
                 ? 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
                 : user.aktif
@@ -322,7 +322,7 @@ function UserFormView({
         <button
           type="button"
           onClick={onCancel}
-          className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer"
+          className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
         >
           Batal
         </button>
@@ -331,7 +331,7 @@ function UserFormView({
           type="button"
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="h-6.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer flex items-center gap-1.5"
+          className="h-6.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
         >
           <span>{isNewMode ? 'Simpan pengguna' : 'Simpan'}</span>
         </button>
@@ -510,7 +510,7 @@ export function UserManagementScreen() {
           <button
             type="button"
             onClick={() => navigate('/kalender')}
-            className="mt-2 h-7.5 px-4 rounded-sm bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-xs font-semibold cursor-pointer transition-colors"
+            className="mt-2 h-7.5 px-4 rounded bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-xs font-semibold cursor-pointer transition-colors"
           >
             Kembali ke Kalender
           </button>
@@ -534,9 +534,10 @@ export function UserManagementScreen() {
               type="button"
               onClick={handleNewUser}
               title="Tambah pengguna baru · Ctrl+N"
-              className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded-sm border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
+              className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
             >
-              <span>+ Pengguna baru</span>
+              <Add16Regular className="w-3.5 h-3.5 shrink-0" />
+              <span>Pengguna baru</span>
             </button>
           </div>
 
@@ -552,7 +553,7 @@ export function UserManagementScreen() {
               <button
                 type="button"
                 onClick={() => setCari('')}
-                className="flex h-6.5 shrink-0 items-center px-2 border-none bg-transparent text-(--color-brand) text-xs cursor-pointer rounded-sm hover:bg-(--color-brand-subtle) whitespace-nowrap transition-colors"
+                className="flex h-6.5 shrink-0 items-center px-2 border-none bg-transparent text-(--color-brand) text-xs cursor-pointer rounded hover:bg-(--color-brand-subtle) whitespace-nowrap transition-colors"
               >
                 Reset filter
               </button>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Materi } from '@/data/types/master';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ReOrderDotsVertical16Regular } from '@fluentui/react-icons';
+import { ReOrderDotsVertical16Regular, Add16Regular } from '@fluentui/react-icons';
 
 interface MateriTableProps {
   mapelNama: string;
@@ -103,23 +103,13 @@ export function MateriTable({
           onClick={onNewMateri}
           disabled={isLoading}
           title={`Tambah materi di ${mapelNama}`}
-          className={`flex h-5.75 shrink-0 items-center gap-1 px-2.25 rounded-sm border border-(--color-border) bg-(--color-surface) text-[11.5px] font-medium transition-colors ${
+          className={`flex h-6 shrink-0 items-center gap-1 px-2 rounded border border-(--color-border) bg-(--color-surface) text-[11.5px] font-medium transition-colors ${
             isLoading
               ? 'opacity-50 cursor-not-allowed text-(--color-text-muted)'
               : 'text-(--color-brand) hover:bg-(--color-brand-subtle) cursor-pointer'
           }`}
         >
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <line x1="8" y1="2" x2="8" y2="14" />
-            <line x1="2" y1="8" x2="14" y2="8" />
-          </svg>
+          <Add16Regular className="w-3.5 h-3.5 shrink-0" />
           <span>Materi</span>
         </button>
       </div>

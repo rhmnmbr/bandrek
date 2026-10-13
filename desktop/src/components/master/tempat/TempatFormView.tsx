@@ -276,7 +276,7 @@ export function TempatFormView({
             type="button"
             onClick={onBackToTempat}
             title={`Kembali ke ${tempat?.nama || 'tempat'}`}
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border border-(--color-border) bg-(--color-surface) text-(--color-text-secondary) hover:bg-(--color-surface-alt) transition-colors cursor-pointer"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded border border-(--color-border) bg-(--color-surface) text-(--color-text-secondary) hover:bg-(--color-surface-alt) transition-colors cursor-pointer"
           >
             <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
               <path d="M10.35 3.65c.2.2.2.5 0 .7L6.21 8.5l4.14 4.15c.2.2.2.5 0 .7-.2.2-.5.2-.7 0l-4.5-4.5c-.2-.2-.2-.5 0-.7l4.5-4.5c.2-.2.5-.2.7 0Z" />
@@ -461,7 +461,7 @@ export function TempatFormView({
                 onClick={() => onDeleteRuangan(activeRuangan)}
                 disabled={!bisaHapusRuangan}
                 title={hapusRuanganTitle}
-                className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
+                className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
                   bisaHapusRuangan
                     ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
                     : 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
@@ -476,7 +476,7 @@ export function TempatFormView({
             <button
               type="button"
               onClick={onBackToTempat}
-              className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
+              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
             >
               Batal
             </button>
@@ -492,9 +492,9 @@ export function TempatFormView({
                   ? 'Tambahkan ruangan ini'
                   : 'Simpan perubahan'
               }
-              className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
                 simpanDisabled || isSubmitting
-                  ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
+                  ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
                   : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
               }`}
             >
@@ -510,7 +510,7 @@ export function TempatFormView({
                 onClick={onDeleteTempat}
                 disabled={!bisaHapusTempat}
                 title={hapusTempatTitle}
-                className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
+                className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
                   bisaHapusTempat
                     ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
                     : 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
@@ -525,7 +525,7 @@ export function TempatFormView({
             <button
               type="button"
               onClick={onCancel}
-              className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
+              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
             >
               Batal
             </button>
@@ -541,9 +541,9 @@ export function TempatFormView({
                   ? 'Tambahkan tempat ini'
                   : 'Simpan perubahan'
               }
-              className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
                 simpanDisabled || isSubmitting
-                  ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
+                  ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
                   : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
               }`}
             >

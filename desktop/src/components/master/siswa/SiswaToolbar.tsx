@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Add16Regular } from '@fluentui/react-icons';
 import type { JenjangPendidikan } from '@/data/types/common';
 import type { Kelas } from '@/data/types/master';
 
@@ -96,19 +97,8 @@ export function SiswaToolbar({
           title="Tambah siswa baru · Ctrl+N"
           className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            className="shrink-0 relative top-px"
-          >
-            <line x1="8" y1="3" x2="8" y2="13" />
-            <line x1="3" y1="8" x2="13" y2="8" />
-          </svg>
-          Siswa baru
+          <Add16Regular className="w-3.5 h-3.5 shrink-0" />
+          <span>Siswa baru</span>
         </button>
       </div>
 

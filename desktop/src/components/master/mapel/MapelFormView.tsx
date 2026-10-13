@@ -284,7 +284,7 @@ export function MapelFormView({
             type="button"
             onClick={onBackToMapel}
             title={`Kembali ke ${mapel?.nama || 'mata pelajaran'}`}
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border border-(--color-border) bg-(--color-surface) text-(--color-text-secondary) hover:bg-(--color-surface-alt) transition-colors cursor-pointer"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded border border-(--color-border) bg-(--color-surface) text-(--color-text-secondary) hover:bg-(--color-surface-alt) transition-colors cursor-pointer"
           >
             <svg
               width="10"
@@ -511,7 +511,7 @@ export function MapelFormView({
                       ? 'Sembunyikan dari kolom matriks tanpa menghapus riwayat'
                       : 'Munculkan lagi di matriks belajar'
                   }
-                  className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] font-medium bg-transparent cursor-pointer transition-colors ${
+                  className={`h-6.5 px-2.5 rounded border-none text-[12.5px] font-medium bg-transparent cursor-pointer transition-colors ${
                     activeMateri.aktif
                       ? 'text-(--color-warning-fg) hover:bg-(--color-warning-subtle)'
                       : 'text-[#2E7D32] hover:bg-[#E8F5E9]'
@@ -524,7 +524,7 @@ export function MapelFormView({
                   onClick={() => onDeleteMateri(activeMateri)}
                   disabled={!bisaHapusMateri}
                   title={hapusMateriTitle}
-                  className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
+                  className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
                     bisaHapusMateri
                       ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
                       : 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
@@ -540,7 +540,7 @@ export function MapelFormView({
             <button
               type="button"
               onClick={onBackToMapel}
-              className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
+              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
             >
               Batal
             </button>
@@ -556,9 +556,9 @@ export function MapelFormView({
                   ? 'Tambahkan materi ini'
                   : 'Simpan perubahan'
               }
-              className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
                 simpanDisabled || isSubmitting
-                  ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
+                  ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
                   : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
               }`}
             >
@@ -578,7 +578,7 @@ export function MapelFormView({
                       ? 'Sembunyikan dari pemilih tanpa menghapus riwayat'
                       : 'Munculkan lagi di pemilih'
                   }
-                  className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] font-medium bg-transparent cursor-pointer transition-colors ${
+                  className={`h-6.5 px-2.5 rounded border-none text-[12.5px] font-medium bg-transparent cursor-pointer transition-colors ${
                     mapel.aktif
                       ? 'text-(--color-warning-fg) hover:bg-(--color-warning-subtle)'
                       : 'text-[#2E7D32] hover:bg-[#E8F5E9]'
@@ -591,7 +591,7 @@ export function MapelFormView({
                   onClick={onDeleteMapel}
                   disabled={!bisaHapusMapel}
                   title={hapusMapelTitle}
-                  className={`h-6.5 px-2.5 rounded-sm border-none text-[12.5px] transition-colors ${
+                  className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
                     bisaHapusMapel
                       ? 'bg-transparent text-(--color-danger) hover:bg-(--color-danger-subtle) cursor-pointer'
                       : 'bg-transparent text-(--color-text-disabled) cursor-not-allowed'
@@ -607,7 +607,7 @@ export function MapelFormView({
             <button
               type="button"
               onClick={onCancel}
-              className="h-6.5 px-3 rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
+              className="h-6.5 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12.5px] font-medium cursor-pointer transition-colors"
             >
               Batal
             </button>
@@ -623,9 +623,9 @@ export function MapelFormView({
                   ? 'Tambahkan mata pelajaran ini'
                   : 'Simpan perubahan'
               }
-              className={`h-6.5 px-3 rounded-sm border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
+              className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
                 simpanDisabled || isSubmitting
-                  ? 'bg-(--color-surface-disabled) text-(--color-text-disabled) cursor-not-allowed'
+                  ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
                   : 'bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white cursor-pointer'
               }`}
             >
