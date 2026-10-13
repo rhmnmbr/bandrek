@@ -79,6 +79,7 @@ export interface KolomMateri {
   nama: string;
   jenjang?: JenjangPendidikan[];
   urutan: number;
+  terakhirDijadwalkan?: string | null;
 }
 
 export interface BarisSiswa {
@@ -86,6 +87,7 @@ export interface BarisSiswa {
   nama: string;
   jenjang: JenjangPendidikan;
   aktif: boolean;
+  daftarKelasIds?: string[];
   daftarKelasNama?: string[];
 }
 

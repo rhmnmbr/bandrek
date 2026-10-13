@@ -307,13 +307,26 @@ export function computeMatriksBelajar(
     .filter((m) => m.mapel === mapelId && m.aktif)
     .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0));
 
-  const kolom: KolomMateri[] = matchingMateri.map((m, idx) => ({
-    id: m.id,
-    mapelId: m.mapel,
-    nama: m.nama,
-    jenjang: m.jenjang,
-    urutan: idx + 1,
-  }));
+  const kolom: KolomMateri[] = matchingMateri.map((m, idx) => {
+    const matchingKegiatan = allKegiatan
+      .filter(
+        (k) =>
+          (k.materi === m.id || k.realisasi?.materi === m.id) &&
+          k.status !== 'dibatalkan' &&
+          k.status !== 'dijadwal-ulang'
+      )
+      .sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+    const latestDate = matchingKegiatan.length > 0 ? matchingKegiatan[0].tanggal : null;
+
+    return {
+      id: m.id,
+      mapelId: m.mapel,
+      nama: m.nama,
+      jenjang: m.jenjang,
+      urutan: idx + 1,
+      terakhirDijadwalkan: latestDate,
+    };
+  });
 
   const materiIdsSet = new Set(kolom.map((k) => k.id));
 
@@ -341,13 +354,14 @@ export function computeMatriksBelajar(
   candidateSiswa.sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
 
   const baris: BarisSiswa[] = candidateSiswa.map((s) => {
-    const classes = allKelas.filter((k) => k.anggota.includes(s.id)).map((k) => k.nama);
+    const matchingClasses = allKelas.filter((k) => k.anggota.includes(s.id));
     return {
       id: s.id,
       nama: s.nama,
       jenjang: s.jenjang,
       aktif: s.aktif,
-      daftarKelasNama: classes,
+      daftarKelasIds: matchingClasses.map((k) => k.id),
+      daftarKelasNama: matchingClasses.map((k) => k.nama),
     };
   });
 
@@ -616,6 +630,107 @@ export function computeMatriksBelajar(
     materiPalingTertinggal,
     catatanDiLuarJenjang,
     menungguRealisasiCount,
+  };
+}
+
+export function filterMatriksBelajarResult(
+  base: MatriksBelajarResult,
+  filter: MatriksFilterParams = {}
+): MatriksBelajarResult {
+  const { tampilkanNonaktif = false, kelasId, q } = filter;
+  const qLower = q?.trim().toLowerCase() ?? '';
+
+  const baris = base.baris.filter((s) => {
+    if (!tampilkanNonaktif && !s.aktif) return false;
+    if (kelasId && !s.daftarKelasIds?.includes(kelasId)) return false;
+    if (qLower.length > 0 && !s.nama.toLowerCase().includes(qLower)) return false;
+    return true;
+  });
+
+  const barisIdSet = new Set(baris.map((b) => b.id));
+  const totalSiswaTampil = baris.length;
+  const ringkasanKolom: Record<string, RingkasanKolomMateri> = {};
+
+  for (const m of base.kolom) {
+    let menerima = 0;
+    for (const s of baris) {
+      const cellState = base.sel[s.id]?.[m.id]?.keadaan;
+      if (cellState === 'tersampaikan' || cellState === 'selesai_manual') {
+        menerima += 1;
+      }
+    }
+    ringkasanKolom[m.id] = {
+      materiId: m.id,
+      menerimaCount: menerima,
+      totalSiswa: totalSiswaTampil,
+      persentase: totalSiswaTampil > 0 ? Math.round((menerima / totalSiswaTampil) * 100) : 0,
+    };
+  }
+
+  const siswaTertinggal = base.siswaTertinggal.filter((st) => barisIdSet.has(st.siswaId));
+
+  let materiPalingTertinggal: MateriPalingTertinggal | null = null;
+  if (base.kolom.length > 0 && totalSiswaTampil > 0) {
+    const list = base.kolom.map((m) => {
+      const stat = ringkasanKolom[m.id];
+      const belumCount = totalSiswaTampil - stat.menerimaCount;
+      return {
+        materiId: m.id,
+        nama: m.nama,
+        urutan: m.urutan,
+        belumCount,
+        latestDate: m.terakhirDijadwalkan ?? null,
+      };
+    });
+
+    const merata = list.every((item) => item.belumCount === list[0].belumCount);
+
+    list.sort((a, b) => {
+      if (b.belumCount !== a.belumCount) return b.belumCount - a.belumCount;
+      if (a.latestDate !== b.latestDate) {
+        if (!a.latestDate) return -1;
+        if (!b.latestDate) return 1;
+        return a.latestDate.localeCompare(b.latestDate);
+      }
+      return a.urutan - b.urutan;
+    });
+
+    const top = list[0];
+    if (top) {
+      if (merata && top.belumCount === 0) {
+        materiPalingTertinggal = {
+          materiId: '',
+          nama: 'Semua tuntas',
+          belumMenerimaCount: 0,
+          terakhirDijadwalkan: null,
+          alasan: 'Semua materi telah tersampaikan ke seluruh siswa',
+        };
+      } else if (merata) {
+        materiPalingTertinggal = {
+          materiId: '',
+          nama: 'Semua merata',
+          belumMenerimaCount: top.belumCount,
+          terakhirDijadwalkan: null,
+          alasan: `tiap materi belum diterima ${top.belumCount} siswa`,
+        };
+      } else if (top.belumCount > 0) {
+        materiPalingTertinggal = {
+          materiId: top.materiId,
+          nama: top.nama,
+          belumMenerimaCount: top.belumCount,
+          terakhirDijadwalkan: top.latestDate,
+          alasan: `belum diterima ${top.belumCount} dari ${totalSiswaTampil} siswa`,
+        };
+      }
+    }
+  }
+
+  return {
+    ...base,
+    baris,
+    ringkasanKolom,
+    siswaTertinggal,
+    materiPalingTertinggal,
   };
 }
 

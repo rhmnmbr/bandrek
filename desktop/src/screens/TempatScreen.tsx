@@ -21,7 +21,7 @@ import {
   type RuanganFormData,
 } from '@/components/master/tempat/TempatFormView';
 import { TempatConfirmModal } from '@/components/master/tempat/TempatConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton, TempatSkeleton } from '@/components/skeleton';
+import { TempatSkeleton } from '@/components/skeleton';
 
 export function TempatScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -49,7 +49,7 @@ export function TempatScreen() {
 
   // Queries
   const { data: allTempat = [], isLoading: isLoadingAllTempat } = useTempatList();
-  const { data: filteredTempat = [], isLoading: isLoadingFilteredTempat } = useTempatList({
+  const { data: filteredTempat = [] } = useTempatList({
     q: cari,
   });
 
@@ -317,7 +317,7 @@ export function TempatScreen() {
   }, [selectedRuanganId, isNewRuangan, handleNewRuangan, handleNewTempat]);
 
   // Full page Tempat Skeleton during initial page loading
-  if (isLoadingAllTempat || isLoadingFilteredTempat) {
+  if (isLoadingAllTempat) {
     return <TempatSkeleton />;
   }
 
@@ -335,15 +335,7 @@ export function TempatScreen() {
           onTempatBaru={handleNewTempat}
         />
 
-        {isLoadingFilteredTempat ? (
-          <MasterTableSkeleton
-            rowCount={8}
-            columns={[
-              { width: 'flex-1 min-w-[140px]', isFlex: true, headerTitle: 'TEMPAT' },
-              { width: 'w-[74px]', headerTitle: 'RUANGAN', align: 'right' },
-            ]}
-          />
-        ) : filteredTempat.length > 0 ? (
+        {filteredTempat.length > 0 ? (
           <TempatTable
             tempatList={filteredTempat}
             selectedId={selectedTempatId}
@@ -361,9 +353,7 @@ export function TempatScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {isLoadingAllTempat || isLoadingFilteredTempat ? (
-          <FormPanelSkeleton title="Memuat detail tempat & ruangan..." />
-        ) : selectedTempat || isBaruMode ? (
+        {selectedTempat || isBaruMode ? (
           <TempatFormView
             key={
               isNewRuangan

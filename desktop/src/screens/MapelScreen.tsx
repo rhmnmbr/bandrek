@@ -22,7 +22,7 @@ import {
   type MateriFormData,
 } from '@/components/master/mapel/MapelFormView';
 import { MapelConfirmModal } from '@/components/master/mapel/MapelConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton, MapelSkeleton } from '@/components/skeleton';
+import { MapelSkeleton } from '@/components/skeleton';
 
 export function MapelScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -53,7 +53,7 @@ export function MapelScreen() {
 
   // Queries
   const { data: allMapel = [], isLoading: isLoadingAllMapel } = useMapelList();
-  const { data: filteredMapel = [], isLoading: isLoadingFilteredMapel } = useMapelList({
+  const { data: filteredMapel = [] } = useMapelList({
     status,
     q: cari,
   });
@@ -462,7 +462,7 @@ export function MapelScreen() {
   }, [selectedMateriId, isNewMateri, handleNewMateri, handleNewMapel]);
 
   // Full page Mapel Skeleton during initial page loading
-  if (isLoadingAllMapel || isLoadingFilteredMapel) {
+  if (isLoadingAllMapel) {
     return <MapelSkeleton />;
   }
 
@@ -482,15 +482,7 @@ export function MapelScreen() {
           onMapelBaru={handleNewMapel}
         />
 
-        {isLoadingFilteredMapel ? (
-          <MasterTableSkeleton
-            rowCount={8}
-            columns={[
-              { width: 'flex-1 min-w-[150px]', isFlex: true, headerTitle: 'MATA PELAJARAN' },
-              { width: 'w-[74px]', headerTitle: 'MATERI', align: 'right' },
-            ]}
-          />
-        ) : filteredMapel.length > 0 ? (
+        {filteredMapel.length > 0 ? (
           <MapelTable
             mapelList={filteredMapel}
             selectedId={selectedMapelId}
@@ -508,9 +500,7 @@ export function MapelScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {isLoadingAllMapel || isLoadingFilteredMapel ? (
-          <FormPanelSkeleton title="Memuat detail mata pelajaran..." />
-        ) : selectedMapel || isBaruMode ? (
+        {selectedMapel || isBaruMode ? (
           <MapelFormView
             key={
               isNewMateri

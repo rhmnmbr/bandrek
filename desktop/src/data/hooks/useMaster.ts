@@ -31,15 +31,46 @@ import type {
 // ==========================================
 export const siswaKeys = {
   all: ['siswa'] as const,
-  list: (filter?: SiswaFilterParams) => ['siswa', 'list', filter] as const,
+  list: () => ['siswa', 'list'] as const,
   detail: (id: string) => ['siswa', 'detail', id] as const,
   profil: (id: string) => ['siswa', 'profil', id] as const,
 };
 
 export function useSiswaList(filter?: SiswaFilterParams) {
+  const status = filter?.status ?? 'aktif';
+  const jenjang = filter?.jenjang ?? 'semua';
+  const kelasId = filter?.kelasId;
+  const q = filter?.q;
+  const desc = filter?.desc ?? false;
+
   return useQuery({
-    queryKey: siswaKeys.list(filter),
-    queryFn: () => repositories.siswa.getAll(filter),
+    queryKey: siswaKeys.list(),
+    queryFn: () => repositories.siswa.getAll({ status: 'semua' }),
+    select: (allSiswa) => {
+      const qLower = q?.trim().toLowerCase() ?? '';
+      return allSiswa
+        .filter((s) => {
+          if (status === 'aktif' && !s.aktif) return false;
+          if (status === 'nonaktif' && s.aktif) return false;
+          if (jenjang !== 'semua' && s.jenjang !== jenjang) return false;
+
+          if (kelasId === '-') {
+            if ((s.daftarKelas?.length ?? 0) > 0) return false;
+          } else if (kelasId) {
+            if (!s.daftarKelas?.includes(kelasId)) return false;
+          }
+
+          if (qLower.length > 0) {
+            const matchNama = s.nama.toLowerCase().includes(qLower);
+            const matchAsal = s.asal?.toLowerCase().includes(qLower);
+            const matchWali = s.waliNama?.toLowerCase().includes(qLower);
+            if (!matchNama && !matchAsal && !matchWali) return false;
+          }
+
+          return true;
+        })
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id') * (desc ? -1 : 1));
+    },
   });
 }
 
@@ -99,15 +130,37 @@ export function useDeleteSiswa() {
 // ==========================================
 export const subjekKeys = {
   all: ['subjek'] as const,
-  list: (filter?: SubjekFilterParams) => ['subjek', 'list', filter] as const,
+  list: () => ['subjek', 'list'] as const,
   detail: (id: string) => ['subjek', 'detail', id] as const,
   profil: (id: string) => ['subjek', 'profil', id] as const,
 };
 
 export function useSubjekList(filter?: SubjekFilterParams) {
+  const status = filter?.status ?? 'aktif';
+  const aktifOnly = filter?.aktifOnly ?? false;
+  const peran = filter?.peran ?? 'semua';
+  const q = filter?.q;
+  const effectiveStatus = aktifOnly ? 'aktif' : status;
+
   return useQuery({
-    queryKey: subjekKeys.list(filter),
-    queryFn: () => repositories.subjek.getAll(filter),
+    queryKey: subjekKeys.list(),
+    queryFn: () => repositories.subjek.getAll({ status: 'semua' }),
+    select: (allSubjek) => {
+      const qLower = q?.trim().toLowerCase() ?? '';
+      return allSubjek
+        .filter((s) => {
+          if (effectiveStatus === 'aktif' && !s.aktif) return false;
+          if (effectiveStatus === 'nonaktif' && s.aktif) return false;
+          if (peran !== 'semua' && s.peran !== peran) return false;
+          if (qLower.length > 0) {
+            const matchNama = s.nama.toLowerCase().includes(qLower);
+            const matchKontak = s.kontak?.toLowerCase().includes(qLower);
+            if (!matchNama && !matchKontak) return false;
+          }
+          return true;
+        })
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    },
   });
 }
 
@@ -209,14 +262,31 @@ export function useHapusKetersediaanSubjek() {
 // ==========================================
 export const kelasKeys = {
   all: ['kelas'] as const,
-  list: (filter?: KelasFilterParams) => ['kelas', 'list', filter] as const,
+  list: () => ['kelas', 'list'] as const,
   detail: (id: string) => ['kelas', 'detail', id] as const,
 };
 
 export function useKelasList(filter?: KelasFilterParams) {
+  const jenjang = filter?.jenjang ?? 'semua';
+  const q = filter?.q;
+
   return useQuery({
-    queryKey: kelasKeys.list(filter),
-    queryFn: () => repositories.kelas.getAll(filter),
+    queryKey: kelasKeys.list(),
+    queryFn: () => repositories.kelas.getAll(),
+    select: (allKelas) => {
+      const qLower = q?.trim().toLowerCase() ?? '';
+      return allKelas
+        .filter((k) => {
+          if (jenjang !== 'semua' && k.jenjang !== jenjang) return false;
+          if (qLower.length > 0) {
+            const matchNama = k.nama.toLowerCase().includes(qLower);
+            const matchKet = k.keterangan?.toLowerCase().includes(qLower);
+            if (!matchNama && !matchKet) return false;
+          }
+          return true;
+        })
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    },
   });
 }
 
@@ -290,16 +360,30 @@ export function useDeleteKelas() {
 // ==========================================
 export const mapelKeys = {
   all: ['mapel'] as const,
-  list: (filter?: MapelFilterParams) => ['mapel', 'list', filter] as const,
+  list: () => ['mapel', 'list'] as const,
   detail: (id: string) => ['mapel', 'detail', id] as const,
   materiByMapel: (mapelId: string) => ['mapel', 'materi', mapelId] as const,
   allMateri: ['mapel', 'materi', 'all'] as const,
 };
 
 export function useMapelList(filter?: MapelFilterParams) {
+  const status = filter?.status ?? 'semua';
+  const q = filter?.q;
+
   return useQuery({
-    queryKey: mapelKeys.list(filter),
-    queryFn: () => repositories.mapel.getAll(filter),
+    queryKey: mapelKeys.list(),
+    queryFn: () => repositories.mapel.getAll({ status: 'semua' }),
+    select: (allMapel) => {
+      const qLower = q?.trim().toLowerCase() ?? '';
+      return allMapel
+        .filter((m) => {
+          if (status === 'aktif' && !m.aktif) return false;
+          if (status === 'nonaktif' && m.aktif) return false;
+          if (qLower.length > 0 && !m.nama.toLowerCase().includes(qLower)) return false;
+          return true;
+        })
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    },
   });
 }
 
@@ -413,16 +497,27 @@ export function useReorderMateri() {
 // ==========================================
 export const tempatKeys = {
   all: ['tempat'] as const,
-  list: (filter?: TempatFilterParams) => ['tempat', 'list', filter] as const,
+  list: () => ['tempat', 'list'] as const,
   detail: (id: string) => ['tempat', 'detail', id] as const,
   ruanganAll: ['tempat', 'ruangan', 'all'] as const,
   ruanganByTempat: (tempatId: string) => ['tempat', 'ruangan', tempatId] as const,
 };
 
 export function useTempatList(filter?: TempatFilterParams) {
+  const q = filter?.q;
+
   return useQuery({
-    queryKey: tempatKeys.list(filter),
-    queryFn: () => repositories.tempat.getAll(filter),
+    queryKey: tempatKeys.list(),
+    queryFn: () => repositories.tempat.getAll(),
+    select: (allTempat) => {
+      const qLower = q?.trim().toLowerCase() ?? '';
+      return allTempat
+        .filter((t) => {
+          if (qLower.length > 0 && !t.nama.toLowerCase().includes(qLower)) return false;
+          return true;
+        })
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    },
   });
 }
 
@@ -520,14 +615,25 @@ export function useDeleteRuangan() {
 // ==========================================
 export const jenisKegiatanKeys = {
   all: ['jenis-kegiatan'] as const,
-  list: (filter?: JenisKegiatanFilterParams) => ['jenis-kegiatan', 'list', filter] as const,
+  list: () => ['jenis-kegiatan', 'list'] as const,
   detail: (id: string) => ['jenis-kegiatan', 'detail', id] as const,
 };
 
 export function useJenisKegiatanList(filter?: JenisKegiatanFilterParams) {
+  const q = filter?.q;
+
   return useQuery({
-    queryKey: jenisKegiatanKeys.list(filter),
-    queryFn: () => repositories.jenisKegiatan.getAll(filter),
+    queryKey: jenisKegiatanKeys.list(),
+    queryFn: () => repositories.jenisKegiatan.getAll(),
+    select: (allJenis) => {
+      const qLower = q?.trim().toLowerCase() ?? '';
+      return allJenis
+        .filter((j) => {
+          if (qLower.length > 0 && !j.nama.toLowerCase().includes(qLower)) return false;
+          return true;
+        })
+        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    },
   });
 }
 

@@ -18,7 +18,7 @@ import { SiswaEmptyState } from '@/components/master/siswa/SiswaEmptyState';
 import { SiswaFormPanel, type SiswaFormData } from '@/components/master/siswa/SiswaFormPanel';
 import { SiswaConfirmModal } from '@/components/master/siswa/SiswaConfirmModal';
 import { ProfilSiswaView } from '@/components/master/siswa/ProfilSiswaView';
-import { MasterTableSkeleton, ProfilSiswaSkeleton, SiswaSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { ProfilSiswaSkeleton, SiswaSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 import { BANDREK_EVENTS, dispatchBandrekEvent } from '@/lib/keyboardShortcuts';
 
 export function SiswaScreen() {
@@ -55,7 +55,7 @@ export function SiswaScreen() {
   });
 
   // Queries
-  const { data: siswaList = [], isLoading: isLoadingSiswa } = useSiswaList({
+  const { data: siswaList = [] } = useSiswaList({
     status,
     jenjang,
     kelasId,
@@ -389,7 +389,7 @@ export function SiswaScreen() {
   }
 
   // Full page Siswa Skeleton during initial page loading
-  if (isLoadingSiswa || isLoadingAllSiswa || isLoadingKelas) {
+  if (isLoadingAllSiswa || isLoadingKelas) {
     return <SiswaSkeleton />;
   }
 
@@ -415,22 +415,7 @@ export function SiswaScreen() {
           onSiswaBaru={handleOpenNewSiswa}
         />
 
-        {isLoadingSiswa ? (
-          <MasterTableSkeleton
-            rowCount={10}
-            minWidth="min-w-[862px]"
-            columns={[
-              { width: 'w-59', headerTitle: 'NAMA' },
-              { width: 'w-11', headerTitle: 'JNJ' },
-              { width: 'w-23.5', headerTitle: 'LAHIR', align: 'right' },
-              { width: 'flex-1 min-w-27.5', isFlex: true, headerTitle: 'ASAL SEKOLAH' },
-              { width: 'w-29.5', headerTitle: 'WALI' },
-              { width: 'w-29.5', headerTitle: 'WHATSAPP' },
-              { width: 'w-10', headerTitle: 'KEG', align: 'right' },
-              { width: 'w-18.5', headerTitle: 'STATUS' },
-            ]}
-          />
-        ) : siswaList.length > 0 ? (
+        {siswaList.length > 0 ? (
           <SiswaTable
             siswaList={siswaList}
             selectedId={isPanelOpen ? selectedStudentId : null}

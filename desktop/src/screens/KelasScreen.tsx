@@ -13,7 +13,7 @@ import { KelasTable } from '@/components/master/kelas/KelasTable';
 import { KelasEmptyState } from '@/components/master/kelas/KelasEmptyState';
 import { KelasFormView, type KelasFormData } from '@/components/master/kelas/KelasFormView';
 import { KelasConfirmModal } from '@/components/master/kelas/KelasConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton, KelasSkeleton } from '@/components/skeleton';
+import { KelasSkeleton } from '@/components/skeleton';
 
 export function KelasScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -31,7 +31,7 @@ export function KelasScreen() {
 
   // Queries
   const { data: allKelas = [], isLoading: isLoadingAllKelas } = useKelasList();
-  const { data: filteredKelas = [], isLoading: isLoadingFilteredKelas } = useKelasList({
+  const { data: filteredKelas = [] } = useKelasList({
     q: cari,
   });
   const { data: allSiswa = [] } = useSiswaList({ status: 'semua' });
@@ -204,7 +204,7 @@ export function KelasScreen() {
   }, [handleNewKelas]);
 
   // Full page Kelas Skeleton during initial page loading
-  if (isLoadingAllKelas || isLoadingFilteredKelas) {
+  if (isLoadingAllKelas) {
     return <KelasSkeleton />;
   }
 
@@ -222,15 +222,7 @@ export function KelasScreen() {
           onKelasBaru={handleNewKelas}
         />
 
-        {isLoadingFilteredKelas ? (
-          <MasterTableSkeleton
-            rowCount={8}
-            columns={[
-              { width: 'flex-1 min-w-[140px]', isFlex: true, headerTitle: 'NAMA KELAS' },
-              { width: 'w-[64px]', headerTitle: 'SISWA', align: 'right' },
-            ]}
-          />
-        ) : filteredKelas.length > 0 ? (
+        {filteredKelas.length > 0 ? (
           <KelasTable
             kelasList={filteredKelas}
             selectedId={selectedId}
@@ -248,9 +240,7 @@ export function KelasScreen() {
 
       {/* Right Column (flex-1) */}
       <div className="flex flex-1 min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface)">
-        {isLoadingAllKelas || isLoadingFilteredKelas ? (
-          <FormPanelSkeleton title="Memuat detail kelas..." />
-        ) : selectedKelas || isBaruMode ? (
+        {selectedKelas || isBaruMode ? (
           <KelasFormView
             key={isBaruMode ? 'baru' : selectedKelas?.id}
             kelas={selectedKelas}

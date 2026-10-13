@@ -16,7 +16,7 @@ import {
   type JenisKegiatanFormData,
 } from '@/components/master/jenis/JenisFormView';
 import { JenisConfirmModal } from '@/components/master/jenis/JenisConfirmModal';
-import { MasterTableSkeleton, FormPanelSkeleton, JenisKegiatanSkeleton } from '@/components/skeleton';
+import { JenisKegiatanSkeleton } from '@/components/skeleton';
 
 export function JenisKegiatanScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -34,7 +34,7 @@ export function JenisKegiatanScreen() {
 
   // Queries
   const { data: allJenis = [], isLoading: isLoadingAllJenis } = useJenisKegiatanList();
-  const { data: filteredJenis = [], isLoading: isLoadingFilteredJenis } = useJenisKegiatanList({
+  const { data: filteredJenis = [] } = useJenisKegiatanList({
     q: cari,
   });
 
@@ -243,7 +243,7 @@ export function JenisKegiatanScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewJenis]);
 
-  if ((isLoadingAllJenis || isLoadingFilteredJenis) && !adaFilter) {
+  if (isLoadingAllJenis) {
     return <JenisKegiatanSkeleton />;
   }
 
@@ -260,17 +260,7 @@ export function JenisKegiatanScreen() {
           onJenisBaru={handleNewJenis}
         />
 
-        {isLoadingFilteredJenis ? (
-          <MasterTableSkeleton
-            rowCount={8}
-            columns={[
-              { width: 'flex-1 min-w-[140px]', isFlex: true, headerTitle: 'JENIS KEGIATAN' },
-              { width: 'w-[104px]', headerTitle: 'MATERI' },
-              { width: 'w-[100px]', headerTitle: 'SISWA' },
-              { width: 'w-[84px]', headerTitle: 'KEGIATAN', align: 'right' },
-            ]}
-          />
-        ) : filteredJenis.length > 0 ? (
+        {filteredJenis.length > 0 ? (
           <JenisTable
             jenisList={filteredJenis}
             selectedId={selectedJenisId}
@@ -290,9 +280,7 @@ export function JenisKegiatanScreen() {
 
       {/* Right Column (352px sidebar form panel) */}
       <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
-        {isLoadingAllJenis || isLoadingFilteredJenis ? (
-          <FormPanelSkeleton title="Memuat detail jenis kegiatan..." />
-        ) : selectedJenis || isBaruMode ? (
+        {selectedJenis || isBaruMode ? (
           <JenisFormView
             key={isBaruMode ? 'jenis-baru' : `jenis-${selectedJenis?.id}`}
             jenis={selectedJenis}

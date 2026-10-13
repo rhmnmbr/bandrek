@@ -6,7 +6,7 @@ import {
   Person16Regular,
   PersonBoard16Regular,
 } from '@fluentui/react-icons';
-import { repositories } from '@/data/repositories';
+import { useSiswaList, useSubjekList, useKegiatanDaftar } from '@/data/hooks';
 import type { Siswa, Subjek, Kegiatan } from '@/data/types';
 
 export interface QuickSearchModalProps {
@@ -31,9 +31,13 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = React.useState('');
-  const [results, setResults] = React.useState<SearchItem[]>([]);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // Use pre-cached master data from TanStack Query
+  const { data: allSiswa = [] } = useSiswaList({ status: 'semua' });
+  const { data: allSubjek = [] } = useSubjekList({ status: 'semua' });
+  const { data: allKegiatan = [] } = useKegiatanDaftar({});
 
   const currentTitle =
     location.pathname.startsWith('/kegiatan')
@@ -72,86 +76,79 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
     }
   }, [isOpen]);
 
-  // Perform search across mock repositories
-  React.useEffect(() => {
-    if (!isOpen) return;
+  // Synchronous client-side search across loaded datasets
+  const results = React.useMemo<SearchItem[]>(() => {
+    if (!isOpen) return [];
     const q = query.trim().toLowerCase();
-    if (!q) {
-      setResults([]);
-      setSelectedIndex(0);
-      return;
+    if (!q) return [];
+
+    const items: SearchItem[] = [];
+
+    // Siswa matches
+    const matchedSiswa = allSiswa
+      .filter(
+        (s: Siswa) =>
+          s.nama.toLowerCase().includes(q) ||
+          (s.asal && s.asal.toLowerCase().includes(q)) ||
+          s.jenjang.toLowerCase().includes(q)
+      )
+      .slice(0, 5);
+
+    for (const s of matchedSiswa) {
+      items.push({
+        type: 'siswa',
+        data: s,
+        label: s.nama,
+        sub: `${s.jenjang}${s.asal ? ` · ${s.asal}` : ''}`,
+        url: `/master/siswa?id=${s.id}`,
+      });
     }
 
-    Promise.all([
-      repositories.siswa.getAll(),
-      repositories.subjek.getAll(),
-      repositories.kegiatan.getDaftar({}),
-    ]).then(([allSiswa, allSubjek, allKegiatan]) => {
-      const items: SearchItem[] = [];
+    // Subjek matches
+    const matchedSubjek = allSubjek
+      .filter((sub: Subjek) => sub.nama.toLowerCase().includes(q))
+      .slice(0, 5);
 
-      // Siswa matches
-      const matchedSiswa = allSiswa
-        .filter(
-          (s: Siswa) =>
-            s.nama.toLowerCase().includes(q) ||
-            (s.asal && s.asal.toLowerCase().includes(q)) ||
-            s.jenjang.toLowerCase().includes(q)
-        )
-        .slice(0, 5);
+    for (const sub of matchedSubjek) {
+      items.push({
+        type: 'subjek',
+        data: sub,
+        label: sub.nama,
+        sub: `${sub.peran} · ${sub.kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}`,
+        url: `/master/subjek?id=${sub.id}`,
+      });
+    }
 
-      for (const s of matchedSiswa) {
-        items.push({
-          type: 'siswa',
-          data: s,
-          label: s.nama,
-          sub: `${s.jenjang}${s.asal ? ` · ${s.asal}` : ''}`,
-          url: `/master/siswa?id=${s.id}`,
-        });
-      }
+    // Kegiatan matches
+    const matchedKegiatan = allKegiatan
+      .filter(
+        (k: Kegiatan) =>
+          k.nama.toLowerCase().includes(q) ||
+          k.namaMapel?.toLowerCase().includes(q) ||
+          k.namaMateri?.toLowerCase().includes(q) ||
+          k.pengisiUtama?.nama.toLowerCase().includes(q)
+      )
+      .slice(0, 8);
 
-      // Subjek matches
-      const matchedSubjek = allSubjek
-        .filter((sub: Subjek) => sub.nama.toLowerCase().includes(q))
-        .slice(0, 5);
+    for (const k of matchedKegiatan) {
+      const pengisi = k.pengisiUtama ? k.pengisiUtama.nama : 'Tanpa pengisi';
+      items.push({
+        type: 'kegiatan',
+        data: k,
+        label: k.nama,
+        sub: `${k.mulai}–${k.selesai} · ${k.namaRuangan} · ${pengisi}`,
+        url: `/kegiatan/${k.id}`,
+        tanggal: k.tanggal.slice(5), // e.g. "09-16"
+        status: k.status,
+      });
+    }
 
-      for (const sub of matchedSubjek) {
-        items.push({
-          type: 'subjek',
-          data: sub,
-          label: sub.nama,
-          sub: `${sub.peran} · ${sub.kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}`,
-          url: `/master/subjek?id=${sub.id}`,
-        });
-      }
+    return items;
+  }, [isOpen, query, allSiswa, allSubjek, allKegiatan]);
 
-      // Kegiatan matches
-      const matchedKegiatan = allKegiatan
-        .filter(
-          (k: Kegiatan) =>
-            k.nama.toLowerCase().includes(q) ||
-            k.namaMapel?.toLowerCase().includes(q) ||
-            k.namaMateri?.toLowerCase().includes(q) ||
-            k.pengisiUtama?.nama.toLowerCase().includes(q)
-        )
-        .slice(0, 8);
-
-      for (const k of matchedKegiatan) {
-        const pengisi = k.pengisiUtama ? k.pengisiUtama.nama : 'Tanpa pengisi';
-        items.push({
-          type: 'kegiatan',
-          data: k,
-          label: k.nama,
-          sub: `${k.mulai}–${k.selesai} · ${k.namaRuangan} · ${pengisi}`,
-          url: `/kegiatan/${k.id}`,
-          tanggal: k.tanggal.slice(5), // e.g. "09-16"
-          status: k.status,
-        });
-      }
-
-      setResults(items);
-      setSelectedIndex(0);
-    });
-  }, [query, isOpen]);
+  React.useEffect(() => {
+    setSelectedIndex(0);
+  }, [results]);
 
   // Keyboard navigation inside modal
   const handleKeyDown = (e: React.KeyboardEvent) => {

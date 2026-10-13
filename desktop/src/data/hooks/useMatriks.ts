@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { repositories } from '../repositories';
+import { filterMatriksBelajarResult } from '../mock/businessRules';
 import type { MatriksFilterParams, TandaiManualInput } from '../types/matriks';
 
 export const matriksKeys = {
   all: ['matriks'] as const,
-  detail: (mapelId: string, filter?: MatriksFilterParams) =>
-    ['matriks', 'detail', mapelId, filter] as const,
+  detail: (mapelId: string) => ['matriks', 'detail', mapelId] as const,
 };
 
 export function useMatriks(
@@ -14,8 +14,9 @@ export function useMatriks(
   enabled: boolean = true
 ) {
   return useQuery({
-    queryKey: matriksKeys.detail(mapelId, filter),
-    queryFn: () => repositories.matriks.getMatriks(mapelId, filter),
+    queryKey: matriksKeys.detail(mapelId),
+    queryFn: () => repositories.matriks.getMatriks(mapelId, { tampilkanNonaktif: true }),
+    select: (data) => filterMatriksBelajarResult(data, filter),
     enabled: enabled && Boolean(mapelId),
   });
 }

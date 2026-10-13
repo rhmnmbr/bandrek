@@ -19,7 +19,7 @@ import { SubjekEmptyState } from '@/components/master/subjek/SubjekEmptyState';
 import { SubjekFormPanel, type SubjekFormData } from '@/components/master/subjek/SubjekFormPanel';
 import { SubjekConfirmModal } from '@/components/master/subjek/SubjekConfirmModal';
 import { ProfilSubjekView } from '@/components/master/subjek/ProfilSubjekView';
-import { MasterTableSkeleton, ProfilSubjekSkeleton, SubjekSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { ProfilSubjekSkeleton, SubjekSkeleton, FormPanelSkeleton } from '@/components/skeleton';
 
 export function SubjekScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -53,7 +53,7 @@ export function SubjekScreen() {
   });
 
   // Queries
-  const { data: subjekList = [], isLoading: isLoadingSubjek } = useSubjekList({
+  const { data: subjekList = [] } = useSubjekList({
     status,
     q: cari,
   });
@@ -398,7 +398,7 @@ export function SubjekScreen() {
   }
 
   // Full page Subjek Skeleton during initial page loading
-  if (isLoadingSubjek || isLoadingAllSubjek || isLoadingMapel) {
+  if (isLoadingAllSubjek || isLoadingMapel) {
     return <SubjekSkeleton />;
   }
 
@@ -421,19 +421,7 @@ export function SubjekScreen() {
       <div className="flex flex-1 min-h-0 bg-(--color-surface)">
         {/* Table View */}
         <div className="flex-1 min-w-0 flex flex-col">
-          {isLoadingSubjek ? (
-            <MasterTableSkeleton
-              rowCount={10}
-              columns={[
-                { width: 'w-[210px]', headerTitle: 'NAMA LENGKAP' },
-                { width: 'w-[92px]', headerTitle: 'KELAMIN' },
-                { width: 'flex-1 min-w-[120px]', isFlex: true, headerTitle: 'MATA PELAJARAN' },
-                { width: 'w-[126px]', headerTitle: 'KONTAK' },
-                { width: 'w-[74px]', headerTitle: 'KEGIATAN', align: 'right' },
-                { width: 'w-[78px]', headerTitle: 'STATUS' },
-              ]}
-            />
-          ) : subjekList.length > 0 ? (
+          {subjekList.length > 0 ? (
             <SubjekTable
               subjekList={subjekList}
               selectedId={selectedSubjekId}
