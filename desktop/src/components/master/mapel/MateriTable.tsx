@@ -14,7 +14,7 @@ interface MateriTableProps {
 }
 
 export function MateriTable({
-  mapelNama,
+  mapelNama: _mapelNama,
   materiList,
   isLoading = false,
   jumlahMateri,

@@ -12,7 +12,7 @@ interface RuanganTableProps {
 }
 
 export function RuanganTable({
-  tempatNama,
+  tempatNama: _tempatNama,
   ruanganList,
   isLoading = false,
   jumlahRuangan,

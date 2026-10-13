@@ -41,7 +41,6 @@ export function SubjekTable({
             const mp = (sb.mapel || []).map((id) => mapelMap.get(id) || id).filter(Boolean);
             const kelaminText =
               sb.kelamin === 'L' ? 'Laki-laki' : sb.kelamin === 'P' ? 'Perempuan' : '—';
-            const rowTitle = `${sb.nama} · ${sb.jumlahKegiatan || 0} kegiatan`;
 
             return (
               <div

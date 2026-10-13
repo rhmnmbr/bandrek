@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import type { QuickFilterDaftar } from '@/data/types/kegiatan';
-import { Warning12Regular, Dismiss12Regular } from '@fluentui/react-icons';
+import {
+  Warning12Regular,
+  Dismiss12Regular,
+  TableSimple16Regular,
+  GridKanban16Regular,
+} from '@fluentui/react-icons';
 
 export interface DaftarQuickFiltersProps {
   activeCepat: QuickFilterDaftar | '';
@@ -24,6 +29,8 @@ export interface DaftarQuickFiltersProps {
   onClearMapel?: () => void;
   activeTempat?: { id: string; nama: string } | null;
   onClearTempat?: () => void;
+  viewMode?: 'tabel' | 'kanban';
+  onChangeViewMode?: (mode: 'tabel' | 'kanban') => void;
 }
 
 interface ChipConfig {
@@ -55,6 +62,8 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
   onClearMapel,
   activeTempat,
   onClearTempat,
+  viewMode = 'tabel',
+  onChangeViewMode,
 }) => {
   return (
     <div className="flex-none px-3.5 py-2.25 flex gap-1.75 items-center flex-nowrap overflow-x-auto border-b border-(--color-border) bg-white text-[12px] select-none">
@@ -211,6 +220,43 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
             </>
           )}
         </span>
+
+        {onChangeViewMode && (
+          <div className="flex items-center rounded border border-(--color-border) bg-(--color-surface-sunken) p-0.5 ml-1">
+            <button
+              type="button"
+              onClick={() => {
+                if (viewMode !== 'tabel') onChangeViewMode('tabel');
+              }}
+              className={cn(
+                'flex items-center gap-1 h-5 px-1.5 rounded-xs text-[11px] cursor-pointer border-none select-none',
+                viewMode === 'tabel'
+                  ? 'bg-white text-(--color-text-primary) shadow-2xs font-semibold'
+                  : 'bg-transparent text-(--color-text-muted) hover:text-(--color-text-primary) font-medium'
+              )}
+              title="Tampilan Tabel"
+            >
+              <TableSimple16Regular className="w-3.5 h-3.5" />
+              <span>Tabel</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (viewMode !== 'kanban') onChangeViewMode('kanban');
+              }}
+              className={cn(
+                'flex items-center gap-1 h-5 px-1.5 rounded-xs text-[11px] cursor-pointer border-none select-none',
+                viewMode === 'kanban'
+                  ? 'bg-white text-(--color-text-primary) shadow-2xs font-semibold'
+                  : 'bg-transparent text-(--color-text-muted) hover:text-(--color-text-primary) font-medium'
+              )}
+              title="Tampilan Papan Kanban"
+            >
+              <GridKanban16Regular className="w-3.5 h-3.5" />
+              <span>Papan</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

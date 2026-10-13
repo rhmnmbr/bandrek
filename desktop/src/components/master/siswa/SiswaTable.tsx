@@ -51,10 +51,6 @@ export function SiswaTable({
           {/* Table Body */}
           {siswaList.map((sw) => {
             const isDipilih = selectedId === sw.id;
-            const rowTitle =
-              (sw.daftarKelasDetail || []).length > 0
-                ? `${sw.nama} · ${(sw.daftarKelasDetail || []).map((k) => k.nama).join(', ')}`
-                : `${sw.nama} · belum masuk kelas mana pun`;
 
             return (
               <div

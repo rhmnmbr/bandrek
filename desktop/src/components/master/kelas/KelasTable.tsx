@@ -27,7 +27,6 @@ export function KelasTable({
           {kelasList.map((k) => {
             const isDipilih = selectedId === k.id;
             const jumlahSiswa = (k.anggota || []).length;
-            const rowTitle = `${k.nama} · ${jumlahSiswa} siswa`;
 
             return (
               <div

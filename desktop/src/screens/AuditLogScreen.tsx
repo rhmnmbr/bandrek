@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Select, type SelectOption } from '@/components/ui/select';
 import { useAuthSession } from '@/data/hooks/useAuth';
 import { MOCK_AUDIT_LOGS } from '@/data/mocks/auditLog';
-import type { AuditLogItem, AuditAksi, AuditKategori } from '@/data/types/auditLog';
+import type { AuditAksi, AuditKategori } from '@/data/types/auditLog';
 import { AuditLogSkeleton } from '@/components/skeleton/AuditLogSkeleton';
 
 const KATEGORI_OPTIONS: SelectOption[] = [

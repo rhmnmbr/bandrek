@@ -22,6 +22,7 @@ import { useToast } from '@/components/ui/toast';
 import { DaftarToolbar } from '@/components/daftar/DaftarToolbar';
 import { DaftarQuickFilters } from '@/components/daftar/DaftarQuickFilters';
 import { DaftarTable } from '@/components/daftar/DaftarTable';
+import { DaftarKanban } from '@/components/daftar/DaftarKanban';
 import { DaftarEmptyState } from '@/components/daftar/DaftarEmptyState';
 import { DaftarKegiatanSkeleton } from '@/components/skeleton';
 
@@ -90,6 +91,10 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const [siswa, setSiswa] = React.useState<string>('');
   const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
+  const [viewMode, setViewMode] = React.useState<'tabel' | 'kanban'>(() => {
+    const v = searchParams.get('view');
+    return v === 'kanban' ? 'kanban' : 'tabel';
+  });
 
   // Sync URL query parameters (?filter, ?subjek, ?kelas, ?jenis, ?status, ?cari, ?mapel, ?tempat, ?dari, ?sampai, ?siswa)
   React.useEffect(() => {
@@ -358,6 +363,19 @@ export const DaftarKegiatanScreen: React.FC = () => {
     handleUpdateParam('sampai', val || null);
   };
 
+  const handleChangeViewMode = (mode: 'tabel' | 'kanban') => {
+    setViewMode(mode);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (mode === 'kanban') {
+        next.set('view', 'kanban');
+      } else {
+        next.delete('view');
+      }
+      return next;
+    }, { replace: true });
+  };
+
   // Toggle quick filter chip
   const handleToggleCepat = (id: QuickFilterDaftar) => {
     const next = new URLSearchParams(searchParams);
@@ -503,23 +521,36 @@ export const DaftarKegiatanScreen: React.FC = () => {
             onClearMapel={() => handleChangeMapel('')}
             activeTempat={activeTempatObj}
             onClearTempat={() => handleChangeTempat('')}
+            viewMode={viewMode}
+            onChangeViewMode={handleChangeViewMode}
           />
 
-          {/* 3. Table or Empty State */}
+          {/* 3. Table or Kanban or Empty State */}
           {filteredKegiatan.length > 0 ? (
-            <DaftarTable
-              kegiatanList={filteredKegiatan}
-              simulatedToday={SIMULATED_TODAY}
-              dari={dari}
-              sampai={sampai}
-              activeCepat={cepat}
-              sortDesc={sortDesc}
-              onToggleSort={() => setSortDesc((prev) => !prev)}
-              onOpenDetail={handleOpenDetail}
-              onIsiRealisasi={handleIsiRealisasi}
-              onJadwalUlang={handleJadwalUlang}
-              onBatalkan={handleBatalkan}
-            />
+            viewMode === 'kanban' ? (
+              <DaftarKanban
+                kegiatanList={filteredKegiatan}
+                simulatedToday={SIMULATED_TODAY}
+                onOpenDetail={handleOpenDetail}
+                onIsiRealisasi={handleIsiRealisasi}
+                onJadwalUlang={handleJadwalUlang}
+                onBatalkan={handleBatalkan}
+              />
+            ) : (
+              <DaftarTable
+                kegiatanList={filteredKegiatan}
+                simulatedToday={SIMULATED_TODAY}
+                dari={dari}
+                sampai={sampai}
+                activeCepat={cepat}
+                sortDesc={sortDesc}
+                onToggleSort={() => setSortDesc((prev) => !prev)}
+                onOpenDetail={handleOpenDetail}
+                onIsiRealisasi={handleIsiRealisasi}
+                onJadwalUlang={handleJadwalUlang}
+                onBatalkan={handleBatalkan}
+              />
+            )
           ) : (
             <DaftarEmptyState
               hasFilters={activeDropdownCount > 0 || Boolean(cepat)}
