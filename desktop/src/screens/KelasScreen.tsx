@@ -13,6 +13,7 @@ import { KelasTable } from '@/components/master/kelas/KelasTable';
 import { KelasEmptyState } from '@/components/master/kelas/KelasEmptyState';
 import { KelasFormView, type KelasFormData } from '@/components/master/kelas/KelasFormView';
 import { KelasConfirmModal } from '@/components/master/kelas/KelasConfirmModal';
+import { PeopleTeam24Regular } from '@fluentui/react-icons';
 import { KelasSkeleton } from '@/components/skeleton';
 
 export function KelasScreen() {
@@ -254,8 +255,10 @@ export function KelasScreen() {
           />
         ) : (
           <div className="flex flex-1 items-center justify-center p-6 text-center text-(--color-text-secondary)">
-            <div>
-              <div className="text-[22px] text-(--color-text-disabled) mb-2">◇</div>
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+                <PeopleTeam24Regular className="w-6 h-6" />
+              </div>
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat kelas
               </div>

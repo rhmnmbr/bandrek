@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CalendarLtr24Regular, Search24Regular } from '@fluentui/react-icons';
 import { formatTanggalPendek } from '@/lib/dateUtils';
 
 export interface DaftarEmptyStateProps {
@@ -68,8 +69,14 @@ export const DaftarEmptyState: React.FC<DaftarEmptyStateProps> = ({
 
   return (
     <div className="flex-1 min-h-0 flex items-center justify-center p-6 bg-white select-none">
-      <div className="max-w-115 text-center">
-        <div className="text-[22px] text-(--color-text-muted) mb-2">◇</div>
+      <div className="max-w-115 text-center flex flex-col items-center">
+        <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+          {hasFilters ? (
+            <Search24Regular className="w-6 h-6" />
+          ) : (
+            <CalendarLtr24Regular className="w-6 h-6" />
+          )}
+        </div>
         <h3 className="text-[15px] font-semibold text-(--color-text) mb-1.25">
           {judul}
         </h3>

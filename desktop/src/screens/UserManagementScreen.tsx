@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Warning16Regular, LockClosed24Regular, Add16Regular } from '@fluentui/react-icons';
+import { Warning16Regular, LockClosed24Regular, Add16Regular, Person24Regular, Search24Regular } from '@fluentui/react-icons';
 import type { PeranUser, User } from '@/data/types/auth';
 import {
   useUsersList,
@@ -581,80 +581,109 @@ export function UserManagementScreen() {
                 <div className="w-[80px] shrink-0 text-right pr-2">STATUS</div>
               </div>
 
-              {filteredUsers.map((u) => {
-                const isSelected = !isNewMode && effectiveUserId === u.id;
-                const isCurrentUser = currentSession?.user?.id === u.id;
-
-                return (
-                  <div
-                    key={u.id}
-                    onClick={() => handleSelectUser(u.id)}
-                    title={u.nama}
-                    className={`flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
-                      isSelected
-                        ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
-                        : 'bg-(--color-surface) hover:bg-(--color-surface-alt)'
-                    }`}
-                  >
-                    {/* Nama & Avatar */}
-                    <div className="flex-1 min-w-[160px] flex items-center gap-2 truncate pr-2">
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--color-brand-subtle) text-(--color-brand) text-[10.5px] font-semibold">
-                        {u.nama
-                          .split(/\s+/)
-                          .slice(0, 2)
-                          .map((w) => w[0])
-                          .join('')
-                          .toUpperCase()}
-                      </div>
-                      <span
-                        className={`truncate ${
-                          isSelected
-                            ? 'font-semibold text-(--color-text-primary)'
-                            : 'font-normal text-(--color-text-primary)'
-                        } ${!u.aktif ? 'text-(--color-text-muted) line-through' : ''}`}
-                      >
-                        {u.nama}
-                      </span>
-                      {isCurrentUser && (
-                        <span className="text-[10px] bg-(--color-brand-subtle) text-(--color-brand) font-semibold px-1 rounded">
-                          Anda
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Username */}
-                    <div className="w-[120px] shrink-0 text-xs font-mono text-(--color-text-secondary) truncate pr-2">
-                      {u.username}
-                    </div>
-
-                    {/* Peran Pill */}
-                    <div className="w-[90px] shrink-0 pr-2">
-                      <span
-                        className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
-                          u.peran === 'admin'
-                            ? 'border-[#8764B8] bg-[#F3EFFA] text-[#5B4394]'
-                            : 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand)'
-                        }`}
-                      >
-                        {u.peran === 'admin' ? 'Admin' : 'Operator'}
-                      </span>
-                    </div>
-
-                    {/* Status */}
-                    <div className="w-[80px] shrink-0 text-right pr-2">
-                      <span
-                        className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
-                          u.aktif
-                            ? 'border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]'
-                            : 'border-(--color-border) bg-(--color-surface-alt) text-(--color-text-muted)'
-                        }`}
-                      >
-                        {u.aktif ? 'Aktif' : 'Nonaktif'}
-                      </span>
-                    </div>
+              {filteredUsers.length === 0 ? (
+                <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
+                  <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+                    {cari ? (
+                      <Search24Regular className="w-6 h-6" />
+                    ) : (
+                      <Person24Regular className="w-6 h-6" />
+                    )}
                   </div>
-                );
-              })}
+                  <h3 className="text-sm font-semibold text-(--color-text-primary) mb-1">
+                    {cari ? 'Tidak ada pengguna yang cocok' : 'Belum ada pengguna'}
+                  </h3>
+                  <p className="text-xs text-(--color-text-muted) max-w-[280px] mb-3 leading-relaxed">
+                    {cari
+                      ? `Pencarian "${cari}" tidak menemukan pengguna mana pun.`
+                      : 'Belum ada data operator yang tersimpan.'}
+                  </p>
+                  {cari && (
+                    <button
+                      type="button"
+                      onClick={() => setCari('')}
+                      className="h-6.5 px-3 border border-(--color-border-strong) rounded bg-white text-(--color-text-primary) text-xs cursor-pointer hover:bg-(--color-surface-alt) transition-colors"
+                    >
+                      Reset pencarian
+                    </button>
+                  )}
+                </div>
+              ) : (
+                filteredUsers.map((u) => {
+                  const isSelected = !isNewMode && effectiveUserId === u.id;
+                  const isCurrentUser = currentSession?.user?.id === u.id;
+
+                  return (
+                    <div
+                      key={u.id}
+                      onClick={() => handleSelectUser(u.id)}
+                      title={u.nama}
+                      className={`flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
+                        isSelected
+                          ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
+                          : 'bg-(--color-surface) hover:bg-(--color-surface-alt)'
+                      }`}
+                    >
+                      {/* Nama & Avatar */}
+                      <div className="flex-1 min-w-[160px] flex items-center gap-2 truncate pr-2">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--color-brand-subtle) text-(--color-brand) text-[10.5px] font-semibold">
+                          {u.nama
+                            .split(/\s+/)
+                            .slice(0, 2)
+                            .map((w) => w[0])
+                            .join('')
+                            .toUpperCase()}
+                        </div>
+                        <span
+                          className={`truncate ${
+                            isSelected
+                              ? 'font-semibold text-(--color-text-primary)'
+                              : 'font-normal text-(--color-text-primary)'
+                          } ${!u.aktif ? 'text-(--color-text-muted) line-through' : ''}`}
+                        >
+                          {u.nama}
+                        </span>
+                        {isCurrentUser && (
+                          <span className="text-[10px] bg-(--color-brand-subtle) text-(--color-brand) font-semibold px-1 rounded">
+                            Anda
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Username */}
+                      <div className="w-[120px] shrink-0 text-xs font-mono text-(--color-text-secondary) truncate pr-2">
+                        {u.username}
+                      </div>
+
+                      {/* Peran Pill */}
+                      <div className="w-[90px] shrink-0 pr-2">
+                        <span
+                          className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
+                            u.peran === 'admin'
+                              ? 'border-[#8764B8] bg-[#F3EFFA] text-[#5B4394]'
+                              : 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand)'
+                          }`}
+                        >
+                          {u.peran === 'admin' ? 'Admin' : 'Operator'}
+                        </span>
+                      </div>
+
+                      {/* Status */}
+                      <div className="w-[80px] shrink-0 text-right pr-2">
+                        <span
+                          className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
+                            u.aktif
+                              ? 'border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]'
+                              : 'border-(--color-border) bg-(--color-surface-alt) text-(--color-text-muted)'
+                          }`}
+                        >
+                          {u.aktif ? 'Aktif' : 'Nonaktif'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         )}
@@ -682,8 +711,10 @@ export function UserManagementScreen() {
           />
         ) : (
           <div className="flex flex-1 items-center justify-center p-6 text-center text-(--color-text-secondary)">
-            <div>
-              <div className="text-[22px] text-(--color-text-disabled) mb-2">◇</div>
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+                <Person24Regular className="w-6 h-6" />
+              </div>
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat pengguna
               </div>

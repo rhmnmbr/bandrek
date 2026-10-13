@@ -1,3 +1,5 @@
+import { Search24Regular, PersonBoard24Regular } from '@fluentui/react-icons';
+
 interface SubjekEmptyStateProps {
   adaFilter: boolean;
   cari: string;
@@ -29,7 +31,13 @@ export function SubjekEmptyState({
   return (
     <div className="flex flex-1 min-h-0 items-center justify-center p-6 bg-(--color-surface)">
       <div className="max-w-[420px] text-center flex flex-col items-center">
-        <div className="text-[22px] text-(--color-text-muted) mb-2">◇</div>
+        <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+          {adaFilter ? (
+            <Search24Regular className="w-6 h-6" />
+          ) : (
+            <PersonBoard24Regular className="w-6 h-6" />
+          )}
+        </div>
         <div className="text-[15px] font-semibold text-(--color-text-primary) mb-1.25">{judul}</div>
         <div className="text-[13.5px] text-(--color-text-secondary) leading-relaxed mb-3.5">
           {teks}

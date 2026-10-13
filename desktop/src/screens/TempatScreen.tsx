@@ -21,6 +21,7 @@ import {
   type RuanganFormData,
 } from '@/components/master/tempat/TempatFormView';
 import { TempatConfirmModal } from '@/components/master/tempat/TempatConfirmModal';
+import { Building24Regular } from '@fluentui/react-icons';
 import { TempatSkeleton } from '@/components/skeleton';
 
 export function TempatScreen() {
@@ -395,8 +396,10 @@ export function TempatScreen() {
           />
         ) : (
           <div className="flex flex-1 items-center justify-center p-6 text-center text-(--color-text-secondary)">
-            <div>
-              <div className="text-[22px] text-(--color-text-disabled) mb-2">◇</div>
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+                <Building24Regular className="w-6 h-6" />
+              </div>
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat tempat
               </div>

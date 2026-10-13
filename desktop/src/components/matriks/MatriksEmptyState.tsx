@@ -33,8 +33,10 @@ export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
   return (
     <div className="flex flex-1 min-h-0 items-center justify-center p-6 bg-white">
       <div className="max-w-[440px] text-center">
-        <div className="flex justify-center mb-2">
-          <Warning24Regular className="w-6 h-6 text-[#8A5200]" />
+        <div className="flex justify-center mb-3">
+          <div className="w-12 h-12 rounded-full bg-(--color-warning-bg) flex items-center justify-center text-(--color-warning-ink)">
+            <Warning24Regular className="w-6 h-6" />
+          </div>
         </div>
         <div className="text-[15px] font-semibold text-[#242424] mb-1.5">{judul}</div>
         <div className="text-[13.5px] text-[#424242] leading-[1.55] mb-3.5">{deskripsi}</div>

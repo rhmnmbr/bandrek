@@ -1,3 +1,5 @@
+import { Search24Regular, Tag24Regular } from '@fluentui/react-icons';
+
 interface JenisEmptyStateProps {
   isFiltered: boolean;
   onResetFilter?: () => void;
@@ -11,8 +13,14 @@ export function JenisEmptyState({
 }: JenisEmptyStateProps) {
   return (
     <div className="flex flex-1 min-h-0 items-center justify-center p-6 bg-(--color-surface)">
-      <div className="max-w-[420px] text-center">
-        <div className="text-[22px] text-(--color-text-disabled) mb-2">◇</div>
+      <div className="max-w-[420px] text-center flex flex-col items-center">
+        <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
+          {isFiltered ? (
+            <Search24Regular className="w-6 h-6" />
+          ) : (
+            <Tag24Regular className="w-6 h-6" />
+          )}
+        </div>
         <div className="text-[15px] font-semibold text-(--color-text-primary) mb-1.5">
           {isFiltered ? 'Tidak ada yang cocok' : 'Belum ada jenis kegiatan'}
         </div>
