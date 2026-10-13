@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function ProfilSiswaSkeleton() {
   return (
-    <div className="flex flex-1 min-h-0 flex-col overflow-y-auto bg-(--color-surface) pt-3.5 px-4 md:px-5.5 pb-8 gap-3.5 select-none">
+    <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-(--color-surface) pt-3.5 px-4 md:px-5.5 pb-3.5 gap-3 select-none">
       {/* 1. Header Toolbar */}
       <div className="flex items-center justify-between pb-3 border-b border-(--color-border)">
         <div className="flex items-center gap-3">

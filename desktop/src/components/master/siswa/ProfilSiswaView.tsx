@@ -57,9 +57,9 @@ export function ProfilSiswaView({
   const mapelLabel = mapelObj ? mapelObj.nama : 'Semua mapel';
 
   return (
-    <div className="flex flex-1 min-h-0 flex-col overflow-y-auto bg-(--color-surface) pt-3.5 px-4 md:px-5.5 pb-8 gap-3.5">
+    <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-(--color-surface) pt-3.5 px-4 md:px-5.5 pb-3.5 gap-3">
       {/* Top Header */}
-      <div className="flex flex-wrap items-center gap-2.5">
+      <div className="flex shrink-0 flex-wrap items-center gap-2.5">
         {/* Back Button (Ghost Icon Button - identical to DetailKegiatanScreen & ProfilSubjekView) */}
         <button
           type="button"
@@ -112,7 +112,7 @@ export function ProfilSiswaView({
       </div>
 
       {/* 4 KPI Cards */}
-      <div className="flex flex-wrap gap-2.5">
+      <div className="flex shrink-0 flex-wrap gap-2.5">
         {kpi.map((k, i) => (
           <div
             key={i}
@@ -144,11 +144,11 @@ export function ProfilSiswaView({
         ))}
       </div>
 
-      {/* Content Grid */}
-      <div className="flex flex-wrap items-start gap-4">
+      {/* Content Area */}
+      <div className="flex flex-1 min-h-0 gap-4 overflow-hidden">
         {/* Left Column: Riwayat Kegiatan */}
-        <div className="flex-1 min-w-95 flex flex-col gap-2">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-1 min-w-0 min-h-0 flex-col">
+          <div className="flex shrink-0 items-center gap-2 mb-2 flex-wrap">
             <div className="flex-1 min-w-0 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
               RIWAYAT KEGIATAN
             </div>
@@ -194,7 +194,7 @@ export function ProfilSiswaView({
               </button>
 
               {mapelOpen && (
-                <div className="absolute left-0 top-6.75 z-12 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.25">
+                <div className="absolute right-0 top-6.75 z-20 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.25">
                   <button
                     type="button"
                     onClick={() => {
@@ -231,66 +231,70 @@ export function ProfilSiswaView({
             </div>
           </div>
 
-          {/* Table Riwayat */}
-          <div className="rounded-lg border border-(--color-border) overflow-hidden bg-(--color-surface)">
-            <div className="flex h-6.5 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-2.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-              <div className="w-16 shrink-0">TANGGAL</div>
-              <div className="flex-1 min-w-30">KEGIATAN</div>
-              <div className="w-27.5 shrink-0">MATERI</div>
+          {/* Table Riwayat: fills remaining vertical height */}
+          <div className="flex flex-1 min-h-0 flex-col rounded-lg border border-(--color-border) bg-(--color-surface) overflow-hidden">
+            {/* Sticky Table Header */}
+            <div className="flex shrink-0 h-6.5 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-2.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
+              <div className="w-30 shrink-0 whitespace-nowrap">TANGGAL</div>
+              <div className="flex-1 min-w-32 truncate pr-2">KEGIATAN</div>
+              <div className="flex-1 min-w-32 truncate pr-2">MATERI</div>
               <div className="w-24 shrink-0">KEHADIRAN</div>
-              <div className="w-32.5 shrink-0">CATATAN</div>
+              <div className="w-36 shrink-0 truncate">CATATAN</div>
             </div>
 
-            {filteredRiwayat.length > 0 ? (
-              filteredRiwayat.map((r, i) => (
-                <div
-                  key={r.id}
-                  className={`flex min-h-8 items-center px-2.5 py-1.5 text-xs hover:bg-(--color-surface-alt) transition-colors ${
-                    i > 0 ? 'border-t border-(--color-border-subtle)' : ''
-                  }`}
-                >
-                  <div className="w-16 shrink-0 font-mono text-[11px] text-(--color-text-muted)">
-                    {r.tanggalFormatted}
-                  </div>
+            {/* Scrollable Table Rows */}
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              {filteredRiwayat.length > 0 ? (
+                filteredRiwayat.map((r, i) => (
                   <div
-                    className={`flex-1 min-w-30 truncate pr-2 text-[12.5px] ${
-                      r.kehadiran.status === 'batal'
-                        ? 'text-(--color-text-muted) line-through'
-                        : 'text-(--color-text-primary)'
+                    key={r.id}
+                    className={`flex min-h-8 items-center px-2.5 py-1.5 text-xs hover:bg-(--color-surface-alt) transition-colors ${
+                      i > 0 ? 'border-t border-(--color-border-subtle)' : ''
                     }`}
                   >
-                    {r.nama}
+                    <div className="w-30 shrink-0 font-mono text-[11px] whitespace-nowrap text-(--color-text-muted)">
+                      {r.tanggalFormatted}
+                    </div>
+                    <div
+                      className={`flex-1 min-w-32 truncate pr-2 text-[12.5px] ${
+                        r.kehadiran.status === 'batal'
+                          ? 'text-(--color-text-muted) line-through'
+                          : 'text-(--color-text-primary)'
+                      }`}
+                    >
+                      {r.nama}
+                    </div>
+                    <div className="flex-1 min-w-32 truncate pr-2 text-xs text-(--color-text-secondary)">
+                      {r.materi}
+                    </div>
+                    <div className="w-24 shrink-0">
+                      {r.kehadiran.status === 'batal' ? (
+                        <KegiatanBadge status="dibatalkan" label="Batal" />
+                      ) : r.kehadiran.status === 'hadir' || r.kehadiran.status === 'izin' || r.kehadiran.status === 'sakit' || r.kehadiran.status === 'alpa' ? (
+                        <KehadiranBadge status={r.kehadiran.status} label={r.kehadiran.label} />
+                      ) : (
+                        <span className="inline-flex h-4.5 items-center px-1.75 rounded-full text-[10.5px] font-semibold border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted) whitespace-nowrap">
+                          <span className="opacity-60">·</span>
+                          <span className="ml-1">{r.kehadiran.label}</span>
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-36 shrink-0 truncate text-[11.5px] text-(--color-text-muted)">
+                      {r.catatan}
+                    </div>
                   </div>
-                  <div className="w-27.5 shrink-0 truncate pr-1.5 text-xs text-(--color-text-secondary)">
-                    {r.materi}
-                  </div>
-                  <div className="w-24 shrink-0">
-                    {r.kehadiran.status === 'batal' ? (
-                      <KegiatanBadge status="dibatalkan" label="Batal" />
-                    ) : r.kehadiran.status === 'hadir' || r.kehadiran.status === 'izin' || r.kehadiran.status === 'sakit' || r.kehadiran.status === 'alpa' ? (
-                      <KehadiranBadge status={r.kehadiran.status} label={r.kehadiran.label} />
-                    ) : (
-                      <span className="inline-flex h-4.5 items-center px-1.75 rounded-full text-[10.5px] font-semibold border border-(--color-border) bg-(--color-canvas) text-(--color-text-muted) whitespace-nowrap">
-                        <span className="opacity-60">·</span>
-                        <span className="ml-1">{r.kehadiran.label}</span>
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-32.5 shrink-0 truncate text-[11.5px] text-(--color-text-muted)">
-                    {r.catatan}
-                  </div>
+                ))
+              ) : (
+                <div className="flex h-full min-h-32 items-center justify-center p-4 text-center text-[12.5px] text-(--color-text-muted)">
+                  Tidak ada kegiatan yang cocok dengan filter ini.
                 </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-[12.5px] text-(--color-text-muted)">
-                Tidak ada kegiatan yang cocok dengan filter ini.
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
         {/* Right Column: Cakupan & Materi Terlewat */}
-        <div className="w-70 shrink-0 flex flex-col gap-3">
+        <div className="w-70 shrink-0 flex flex-col min-h-0 overflow-y-auto pr-1 gap-3">
           {/* Cakupan Materi Per Mapel */}
           <div>
             <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-muted) mb-2">
