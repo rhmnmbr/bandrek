@@ -39,7 +39,9 @@ export const siswaKeys = {
 export function useSiswaList(filter?: SiswaFilterParams) {
   const status = filter?.status ?? 'aktif';
   const jenjang = filter?.jenjang ?? 'semua';
+  const jenjangList = filter?.jenjangList;
   const kelasId = filter?.kelasId;
+  const kelasIds = filter?.kelasIds;
   const q = filter?.q;
   const desc = filter?.desc ?? false;
 
@@ -53,8 +55,15 @@ export function useSiswaList(filter?: SiswaFilterParams) {
           if (status === 'aktif' && !s.aktif) return false;
           if (status === 'nonaktif' && s.aktif) return false;
           if (jenjang !== 'semua' && s.jenjang !== jenjang) return false;
+          if (jenjangList && jenjangList.length > 0 && !jenjangList.includes(s.jenjang)) return false;
 
-          if (kelasId === '-') {
+          if (kelasIds && kelasIds.length > 0) {
+            const hasNoClass = (s.daftarKelas?.length ?? 0) === 0;
+            const match = kelasIds.some((kId) =>
+              kId === '-' ? hasNoClass : s.daftarKelas?.includes(kId)
+            );
+            if (!match) return false;
+          } else if (kelasId === '-') {
             if ((s.daftarKelas?.length ?? 0) > 0) return false;
           } else if (kelasId) {
             if (!s.daftarKelas?.includes(kelasId)) return false;

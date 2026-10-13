@@ -33,8 +33,8 @@ export function SiswaScreen() {
 
   // Filter states
   const [cari, setCari] = useState('');
-  const [jenjang, setJenjang] = useState<JenjangPendidikan | 'semua'>('semua');
-  const [kelasId, setKelasId] = useState('');
+  const [jenjangList, setJenjangList] = useState<JenjangPendidikan[]>([]);
+  const [kelasIds, setKelasIds] = useState<string[]>([]);
   const [status, setStatus] = useState<'aktif' | 'nonaktif' | 'semua'>('aktif');
   const [desc, setDesc] = useState(false);
 
@@ -57,8 +57,8 @@ export function SiswaScreen() {
   // Queries
   const { data: siswaList = [] } = useSiswaList({
     status,
-    jenjang,
-    kelasId,
+    jenjangList,
+    kelasIds,
     q: cari,
     desc,
   });
@@ -85,12 +85,12 @@ export function SiswaScreen() {
 
   // Check if any filter is active
   const adaFilter =
-    status !== 'aktif' || jenjang !== 'semua' || Boolean(kelasId) || Boolean(cari) || desc;
+    status !== 'aktif' || jenjangList.length > 0 || kelasIds.length > 0 || Boolean(cari) || desc;
 
   const handleResetFilter = useCallback(() => {
     setCari('');
-    setJenjang('semua');
-    setKelasId('');
+    setJenjangList([]);
+    setKelasIds([]);
     setStatus('aktif');
     setDesc(false);
   }, []);
@@ -403,10 +403,10 @@ export function SiswaScreen() {
           totalNonaktif={totalNonaktif}
           cari={cari}
           onCariChange={setCari}
-          jenjang={jenjang}
-          onJenjangChange={setJenjang}
-          kelasId={kelasId}
-          onKelasChange={setKelasId}
+          jenjangList={jenjangList}
+          onJenjangChange={setJenjangList}
+          kelasIds={kelasIds}
+          onKelasChange={setKelasIds}
           kelasList={kelasList}
           status={status}
           onStatusChange={setStatus}

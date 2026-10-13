@@ -637,12 +637,13 @@ export function filterMatriksBelajarResult(
   base: MatriksBelajarResult,
   filter: MatriksFilterParams = {}
 ): MatriksBelajarResult {
-  const { tampilkanNonaktif = false, kelasId, q } = filter;
+  const { tampilkanNonaktif = false, kelasId, kelasIds, q } = filter;
   const qLower = q?.trim().toLowerCase() ?? '';
 
   const baris = base.baris.filter((s) => {
     if (!tampilkanNonaktif && !s.aktif) return false;
     if (kelasId && !s.daftarKelasIds?.includes(kelasId)) return false;
+    if (kelasIds && kelasIds.length > 0 && !kelasIds.some((k) => s.daftarKelasIds?.includes(k))) return false;
     if (qLower.length > 0 && !s.nama.toLowerCase().includes(qLower)) return false;
     return true;
   });

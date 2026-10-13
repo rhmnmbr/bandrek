@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Add16Regular } from '@fluentui/react-icons';
+import { MultiSelect, type MultiSelectOption } from '@/components/ui/select';
 import type { JenjangPendidikan } from '@/data/types/common';
 import type { Kelas } from '@/data/types/master';
 
@@ -8,10 +9,10 @@ interface SiswaToolbarProps {
   totalNonaktif: number;
   cari: string;
   onCariChange: (val: string) => void;
-  jenjang: JenjangPendidikan | 'semua';
-  onJenjangChange: (val: JenjangPendidikan | 'semua') => void;
-  kelasId: string;
-  onKelasChange: (val: string) => void;
+  jenjangList: JenjangPendidikan[];
+  onJenjangChange: (val: JenjangPendidikan[]) => void;
+  kelasIds: string[];
+  onKelasChange: (val: string[]) => void;
   kelasList: Kelas[];
   status: 'aktif' | 'nonaktif' | 'semua';
   onStatusChange: (val: 'aktif' | 'nonaktif' | 'semua') => void;
@@ -20,14 +21,22 @@ interface SiswaToolbarProps {
   onSiswaBaru: () => void;
 }
 
+const JENJANG_OPTIONS: MultiSelectOption[] = [
+  { value: 'SD', label: 'SD' },
+  { value: 'SMP', label: 'SMP' },
+  { value: 'SMA', label: 'SMA' },
+  { value: 'Alumni', label: 'Alumni' },
+  { value: 'Umum', label: 'Umum' },
+];
+
 export function SiswaToolbar({
   totalAktif,
   totalNonaktif,
   cari,
   onCariChange,
-  jenjang,
+  jenjangList,
   onJenjangChange,
-  kelasId,
+  kelasIds,
   onKelasChange,
   kelasList,
   status,
@@ -36,22 +45,18 @@ export function SiswaToolbar({
   onResetFilter,
   onSiswaBaru,
 }: SiswaToolbarProps) {
-  const [jenjangOpen, setJenjangOpen] = useState(false);
-  const [kelasOpen, setKelasOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
-
-  const jenjangRef = useRef<HTMLDivElement>(null);
-  const kelasRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+
+  const kelasOptions: MultiSelectOption[] = useMemo(() => {
+    return [
+      { value: '-', label: 'Belum punya kelas' },
+      ...kelasList.map((k) => ({ value: k.id, label: k.nama })),
+    ];
+  }, [kelasList]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (jenjangRef.current && !jenjangRef.current.contains(e.target as Node)) {
-        setJenjangOpen(false);
-      }
-      if (kelasRef.current && !kelasRef.current.contains(e.target as Node)) {
-        setKelasOpen(false);
-      }
       if (statusRef.current && !statusRef.current.contains(e.target as Node)) {
         setStatusOpen(false);
       }
@@ -60,14 +65,6 @@ export function SiswaToolbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const jenjangLabel = jenjang !== 'semua' ? `Jenjang: ${jenjang}` : 'Jenjang: semua';
-  const kelasObj = kelasList.find((k) => k.id === kelasId);
-  const kelasLabel =
-    kelasId === '-'
-      ? 'Kelas: belum punya'
-      : kelasObj
-        ? `Kelas: ${kelasObj.nama}`
-        : 'Kelas: semua';
   const statusLabel =
     status === 'nonaktif'
       ? 'Status: Nonaktif'
@@ -83,14 +80,6 @@ export function SiswaToolbar({
           {totalAktif} aktif · {totalNonaktif} nonaktif
         </div>
         <div className="flex-1" />
-        <button
-          type="button"
-          disabled
-          title="Impor CSV menyusul di tahap berikutnya"
-          className="flex h-6.5 shrink-0 items-center px-2.5 rounded border border-(--color-border) bg-(--color-surface-sunken) text-(--color-text-disabled) text-[12.5px] cursor-not-allowed whitespace-nowrap"
-        >
-          Impor CSV
-        </button>
         <button
           type="button"
           onClick={onSiswaBaru}
@@ -123,121 +112,30 @@ export function SiswaToolbar({
           )}
         </div>
 
-        {/* Jenjang Dropdown */}
-        <div className="relative shrink-0" ref={jenjangRef}>
-          <button
-            type="button"
-            onClick={() => setJenjangOpen((prev) => !prev)}
-            className={`flex h-6.5 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap cursor-pointer transition-colors ${
-              jenjang !== 'semua'
-                ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-text-muted)'
-            }`}
-          >
-            <span>{jenjangLabel}</span>
-            <svg width="12" height="12" viewBox="0 0 16 16" className="shrink-0 text-(--color-text-muted)">
-              <path
-                fill="currentColor"
-                d="M3.15 5.65c.2-.2.5-.2.7 0L8 9.79l4.15-4.14c.2-.2.5-.2.7 0 .2.2.2.5 0 .7l-4.5 4.5c-.2.2-.5.2-.7 0l-4.5-4.5c-.2-.2-.2-.5 0-.7Z"
-              />
-            </svg>
-          </button>
-          {jenjangOpen && (
-            <div className="absolute left-0 top-7.25 z-12 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.25">
-              {[
-                { id: 'semua', label: 'Jenjang: semua' },
-                { id: 'SD', label: 'Jenjang: SD' },
-                { id: 'SMP', label: 'Jenjang: SMP' },
-                { id: 'SMA', label: 'Jenjang: SMA' },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => {
-                    onJenjangChange(opt.id as JenjangPendidikan | 'semua');
-                    setJenjangOpen(false);
-                  }}
-                  className={`w-full rounded px-2.25 py-1.5 text-left text-[12.5px] whitespace-nowrap cursor-pointer ${
-                    jenjang === opt.id
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                      : 'hover:bg-(--color-brand-subtle) text-(--color-text-primary)'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Jenjang MultiSelect */}
+        <div className="shrink-0">
+          <MultiSelect
+            className="w-auto max-w-36 gap-2"
+            value={jenjangList}
+            onValueChange={(val) => onJenjangChange(val as JenjangPendidikan[])}
+            options={JENJANG_OPTIONS}
+            placeholder="Jenjang"
+            density="compact"
+          />
         </div>
 
-        {/* Kelas Dropdown */}
-        <div className="relative shrink-0" ref={kelasRef}>
-          <button
-            type="button"
-            onClick={() => setKelasOpen((prev) => !prev)}
-            className={`flex h-6.5 max-w-42 items-center justify-between gap-2.5 rounded border px-2 text-xs whitespace-nowrap cursor-pointer transition-colors ${
-              kelasId
-                ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                : 'border-(--color-border-strong) bg-(--color-surface) text-(--color-text-secondary) hover:border-(--color-text-muted)'
-            }`}
-          >
-            <span className="truncate">{kelasLabel}</span>
-            <svg width="12" height="12" viewBox="0 0 16 16" className="shrink-0 text-(--color-text-muted)">
-              <path
-                fill="currentColor"
-                d="M3.15 5.65c.2-.2.5-.2.7 0L8 9.79l4.15-4.14c.2-.2.5-.2.7 0 .2.2.2.5 0 .7l-4.5 4.5c-.2.2-.5.2-.7 0l-4.5-4.5c-.2-.2-.2-.5 0-.7Z"
-              />
-            </svg>
-          </button>
-          {kelasOpen && (
-            <div className="absolute left-0 top-7.25 z-12 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.25">
-              <button
-                type="button"
-                onClick={() => {
-                  onKelasChange('');
-                  setKelasOpen(false);
-                }}
-                className={`w-full rounded px-2.25 py-1.5 text-left text-[12.5px] whitespace-nowrap cursor-pointer ${
-                  !kelasId
-                    ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                    : 'hover:bg-(--color-brand-subtle) text-(--color-text-primary)'
-                }`}
-              >
-                Kelas: semua
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onKelasChange('-');
-                  setKelasOpen(false);
-                }}
-                className={`w-full rounded px-2.25 py-1.5 text-left text-[12.5px] whitespace-nowrap cursor-pointer ${
-                  kelasId === '-'
-                    ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                    : 'hover:bg-(--color-brand-subtle) text-(--color-text-primary)'
-                }`}
-              >
-                Kelas: belum punya
-              </button>
-              {kelasList.map((k) => (
-                <button
-                  key={k.id}
-                  type="button"
-                  onClick={() => {
-                    onKelasChange(k.id);
-                    setKelasOpen(false);
-                  }}
-                  className={`w-full rounded px-2.25 py-1.5 text-left text-[12.5px] whitespace-nowrap cursor-pointer ${
-                    kelasId === k.id
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                      : 'hover:bg-(--color-brand-subtle) text-(--color-text-primary)'
-                  }`}
-                >
-                  Kelas: {k.nama}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Kelas MultiSelect */}
+        <div className="shrink-0">
+          <MultiSelect
+            searchable
+            searchPlaceholder="Cari kelas..."
+            className="w-auto max-w-42 gap-2"
+            value={kelasIds}
+            onValueChange={onKelasChange}
+            options={kelasOptions}
+            placeholder="Kelas"
+            density="compact"
+          />
         </div>
 
         {/* Status Dropdown */}

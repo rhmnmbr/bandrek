@@ -7,16 +7,14 @@ import {
   Warning16Regular,
   Dismiss16Regular,
 } from '@fluentui/react-icons';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Select, type SelectOption } from '@/components/ui/select';
+import { MultiSelect, type SelectOption } from '@/components/ui/select';
 import { useAuthSession } from '@/data/hooks/useAuth';
 import { MOCK_AUDIT_LOGS } from '@/data/mocks/auditLog';
-import type { AuditAksi, AuditKategori } from '@/data/types/auditLog';
+import type { AuditAksi } from '@/data/types/auditLog';
 import { AuditLogSkeleton } from '@/components/skeleton/AuditLogSkeleton';
 
 const KATEGORI_OPTIONS: SelectOption[] = [
-  { value: 'semua', label: 'Semua Kategori' },
   { value: 'kegiatan', label: 'Kegiatan' },
   { value: 'realisasi', label: 'Realisasi' },
   { value: 'siswa', label: 'Siswa' },
@@ -27,7 +25,6 @@ const KATEGORI_OPTIONS: SelectOption[] = [
 ];
 
 const AKSI_OPTIONS: SelectOption[] = [
-  { value: 'semua', label: 'Semua Aksi' },
   { value: 'buat', label: 'Buat' },
   { value: 'ubah', label: 'Ubah' },
   { value: 'hapus', label: 'Hapus' },
@@ -98,9 +95,9 @@ export function AuditLogScreen() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [cari, setCari] = useState('');
-  const [filterKategori, setFilterKategori] = useState<AuditKategori>('semua');
-  const [filterAksi, setFilterAksi] = useState<'semua' | AuditAksi>('semua');
-  const [filterOperator, setFilterOperator] = useState<string>('semua');
+  const [filterKategori, setFilterKategori] = useState<string[]>([]);
+  const [filterAksi, setFilterAksi] = useState<string[]>([]);
+  const [filterOperator, setFilterOperator] = useState<string[]>([]);
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
 
   // Simulate fast loading
@@ -129,17 +126,17 @@ export function AuditLogScreen() {
       }
 
       // Kategori match
-      if (filterKategori !== 'semua' && item.kategori !== filterKategori) {
+      if (filterKategori.length > 0 && !filterKategori.includes(item.kategori)) {
         return false;
       }
 
       // Aksi match
-      if (filterAksi !== 'semua' && item.aksi !== filterAksi) {
+      if (filterAksi.length > 0 && !filterAksi.includes(item.aksi)) {
         return false;
       }
 
       // Operator match
-      if (filterOperator !== 'semua' && item.operator.id !== filterOperator) {
+      if (filterOperator.length > 0 && !filterOperator.includes(item.operator.id)) {
         return false;
       }
 
@@ -149,7 +146,7 @@ export function AuditLogScreen() {
 
   // Unique operators for dropdown filter
   const operatorSelectOptions: SelectOption[] = useMemo(() => {
-    const list: SelectOption[] = [{ value: 'semua', label: 'Semua Operator' }];
+    const list: SelectOption[] = [];
     const map = new Map<string, string>();
     MOCK_AUDIT_LOGS.forEach((item) => {
       map.set(item.operator.id, item.operator.nama);
@@ -166,15 +163,15 @@ export function AuditLogScreen() {
 
   const hasFilterActive =
     cari.trim() !== '' ||
-    filterKategori !== 'semua' ||
-    filterAksi !== 'semua' ||
-    filterOperator !== 'semua';
+    filterKategori.length > 0 ||
+    filterAksi.length > 0 ||
+    filterOperator.length > 0;
 
   const resetFilter = () => {
     setCari('');
-    setFilterKategori('semua');
-    setFilterAksi('semua');
-    setFilterOperator('semua');
+    setFilterKategori([]);
+    setFilterAksi([]);
+    setFilterOperator([]);
   };
 
   // Keyboard shortcut Esc closes detail drawer
@@ -237,16 +234,6 @@ export function AuditLogScreen() {
               · {filteredLogs.length} dari {MOCK_AUDIT_LOGS.length} riwayat
             </span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              disabled
-              title="Ekspor CSV menyusul di tahap berikutnya"
-            >
-              Ekspor CSV
-            </Button>
-          </div>
         </div>
 
         {/* Filter Bar */}
@@ -273,44 +260,40 @@ export function AuditLogScreen() {
           </div>
 
           {/* Filter Kategori */}
-          <div className="w-38 shrink-0">
-            <Select
+          <div className="shrink-0">
+            <MultiSelect
+              className="w-auto max-w-40 gap-2"
               value={filterKategori}
-              onValueChange={(val) => setFilterKategori(val as AuditKategori)}
+              onValueChange={setFilterKategori}
               options={KATEGORI_OPTIONS}
+              placeholder="Kategori"
               density="compact"
-              className={cn(
-                filterKategori !== 'semua' &&
-                  'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-medium'
-              )}
             />
           </div>
 
           {/* Filter Aksi */}
-          <div className="w-34 shrink-0">
-            <Select
+          <div className="shrink-0">
+            <MultiSelect
+              className="w-auto max-w-36 gap-2"
               value={filterAksi}
-              onValueChange={(val) => setFilterAksi(val as 'semua' | AuditAksi)}
+              onValueChange={setFilterAksi}
               options={AKSI_OPTIONS}
+              placeholder="Aksi"
               density="compact"
-              className={cn(
-                filterAksi !== 'semua' &&
-                  'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-medium'
-              )}
             />
           </div>
 
           {/* Filter Operator */}
-          <div className="w-44 shrink-0">
-            <Select
+          <div className="shrink-0">
+            <MultiSelect
+              searchable
+              searchPlaceholder="Cari operator..."
+              className="w-auto max-w-44 gap-2"
               value={filterOperator}
-              onValueChange={(val) => setFilterOperator(val)}
+              onValueChange={setFilterOperator}
               options={operatorSelectOptions}
+              placeholder="Operator"
               density="compact"
-              className={cn(
-                filterOperator !== 'semua' &&
-                  'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-medium'
-              )}
             />
           </div>
 

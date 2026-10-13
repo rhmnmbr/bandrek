@@ -38,7 +38,9 @@ export interface Siswa {
 export interface SiswaFilterParams {
   status?: 'aktif' | 'nonaktif' | 'semua';
   jenjang?: JenjangPendidikan | 'semua';
+  jenjangList?: JenjangPendidikan[];
   kelasId?: string;
+  kelasIds?: string[];
   q?: string;
   desc?: boolean;
 }

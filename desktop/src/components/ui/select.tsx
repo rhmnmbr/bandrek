@@ -563,7 +563,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               error
                 ? "border border-(--color-danger) shadow-[inset_0_-1px_0_0_var(--color-danger)] text-(--color-danger-ink)"
                 : selectedCount > 0
-                ? "border border-(--color-brand) shadow-[inset_0_-1px_0_0_var(--color-brand)]"
+                ? "border border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) shadow-[inset_0_-1px_0_0_var(--color-brand)] font-medium"
                 : "border border-(--color-border-strong) hover:border-[#8A8886] focus:border-(--color-brand) focus:shadow-[inset_0_-1px_0_0_var(--color-brand)] data-[state=open]:border-(--color-brand) data-[state=open]:shadow-[inset_0_-1px_0_0_var(--color-brand)]",
               disabled &&
                 "cursor-not-allowed border-(--color-border-subtle) bg-(--color-surface-sunken) text-(--color-text-muted)",
@@ -575,14 +575,15 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                 "truncate text-left flex-1",
                 selectedCount === 0
                   ? "text-(--color-text-secondary) font-normal"
-                  : "text-(--color-text) font-medium"
+                  : "text-(--color-brand-ink) font-medium"
               )}
             >
               {displayContent}
             </span>
             <ChevronDown12Regular
               className={cn(
-                "text-[#8A8886] flex-none ml-1.5 transition-transform duration-150",
+                selectedCount > 0 ? "text-(--color-brand-ink)" : "text-[#8A8886]",
+                "flex-none ml-1.5 transition-transform duration-150",
                 open && "rotate-180"
               )}
             />

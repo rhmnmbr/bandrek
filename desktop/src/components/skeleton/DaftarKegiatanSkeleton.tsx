@@ -26,13 +26,17 @@ export function DaftarKegiatanSkeleton({ rowCount = 10 }: { rowCount?: number })
         {/* Dropdown: Kelas */}
         <Skeleton className="h-6.5 w-25 rounded shrink-0" />
 
+        {/* Dropdown: Siswa */}
+        <Skeleton className="h-6.5 w-25 rounded shrink-0" />
+
+        {/* Dropdown: Mapel */}
+        <Skeleton className="h-6.5 w-25 rounded shrink-0" />
+
         {/* Search input */}
         <Skeleton className="h-6.5 w-39.5 rounded shrink-0" />
 
         {/* Right Action Buttons */}
         <div className="ml-auto flex items-center gap-1.75 flex-none pl-2">
-          {/* Ekspor CSV */}
-          <Skeleton className="h-6.5 w-21 rounded shrink-0" />
           {/* + Kegiatan baru */}
           <Skeleton className="h-6.5 w-28.5 rounded shrink-0" />
         </div>

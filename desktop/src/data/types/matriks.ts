@@ -129,6 +129,7 @@ export interface CatatanDiLuarJenjang {
 
 export interface MatriksFilterParams {
   kelasId?: string;
+  kelasIds?: string[];
   q?: string; // cari nama siswa
   tampilkanNonaktif?: boolean; // default false
 }

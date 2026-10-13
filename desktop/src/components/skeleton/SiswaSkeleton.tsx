@@ -10,8 +10,6 @@ export function SiswaSkeleton() {
           {/* Active / Inactive counter skeleton */}
           <Skeleton className="h-3.5 w-32 rounded shrink-0" />
           <div className="flex-1" />
-          {/* Impor CSV Button */}
-          <Skeleton className="h-6.5 w-21 rounded shrink-0" />
           {/* + Siswa baru Button */}
           <Skeleton className="h-6.5 w-26 rounded shrink-0" />
         </div>

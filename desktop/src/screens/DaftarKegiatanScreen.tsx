@@ -81,14 +81,14 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const dari = userDari ?? defaultRentang.dari;
   const sampai = userSampai ?? defaultRentang.sampai;
 
-  const [jenis, setJenis] = React.useState<string>('');
-  const [status, setStatus] = React.useState<StatusKegiatan | ''>('');
-  const [subjek, setSubjek] = React.useState<string>('');
-  const [kelas, setKelas] = React.useState<string>('');
-  const [mapel, setMapel] = React.useState<string>('');
+  const [jenis, setJenis] = React.useState<string[]>([]);
+  const [status, setStatus] = React.useState<StatusKegiatan[]>([]);
+  const [subjek, setSubjek] = React.useState<string[]>([]);
+  const [kelas, setKelas] = React.useState<string[]>([]);
+  const [siswa, setSiswa] = React.useState<string[]>([]);
+  const [mapel, setMapel] = React.useState<string[]>([]);
   const [tempat, setTempat] = React.useState<string>('');
   const [cari, setCari] = React.useState<string>('');
-  const [siswa, setSiswa] = React.useState<string>('');
   const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
   const [viewMode, setViewMode] = React.useState<'tabel' | 'kanban'>(() => {
@@ -102,7 +102,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
     const subjekParam = searchParams.get('subjek');
     const kelasParam = searchParams.get('kelas');
     const jenisParam = searchParams.get('jenis');
-    const statusParam = searchParams.get('status') as StatusKegiatan | null;
+    const statusParam = searchParams.get('status');
     const cariParam = searchParams.get('cari');
     const mapelParam = searchParams.get('mapel');
     const tempatParam = searchParams.get('tempat');
@@ -122,14 +122,14 @@ export const DaftarKegiatanScreen: React.FC = () => {
       setCepat('');
     }
 
-    setSubjek(subjekParam || '');
-    setKelas(kelasParam || '');
-    setJenis(jenisParam || '');
-    setStatus(statusParam || '');
+    setSubjek(subjekParam ? subjekParam.split(',').filter(Boolean) : []);
+    setKelas(kelasParam ? kelasParam.split(',').filter(Boolean) : []);
+    setJenis(jenisParam ? jenisParam.split(',').filter(Boolean) : []);
+    setStatus(statusParam ? (statusParam.split(',').filter(Boolean) as StatusKegiatan[]) : []);
+    setSiswa(siswaParam ? siswaParam.split(',').filter(Boolean) : []);
+    setMapel(mapelParam ? mapelParam.split(',').filter(Boolean) : []);
     setCari(cariParam || '');
-    setMapel(mapelParam || '');
     setTempat(tempatParam || '');
-    setSiswa(siswaParam || '');
 
     if (dariParam) {
       setUserDari(dariParam);
@@ -193,17 +193,18 @@ export const DaftarKegiatanScreen: React.FC = () => {
   // Main predicate: matches dropdowns and search term
   const lolosFilter = React.useCallback(
     (ev: Kegiatan) => {
-      if (jenis && ev.jenis !== jenis) return false;
-      if (status && ev.status !== status) return false;
-      if (subjek && !ev.subjek.some((s) => s.id === subjek)) return false;
-      if (siswa && !ev.siswa.includes(siswa)) return false;
-      if (kelas) {
-        const anggota = kelasAnggotaMap.get(kelas) || [];
-        if (ev.kelas !== kelas && !ev.siswa.some((sid) => anggota.includes(sid))) {
-          return false;
-        }
+      if (jenis.length > 0 && !jenis.includes(ev.jenis)) return false;
+      if (status.length > 0 && !status.includes(ev.status)) return false;
+      if (subjek.length > 0 && !ev.subjek.some((s) => subjek.includes(s.id))) return false;
+      if (siswa.length > 0 && !ev.siswa.some((sid) => siswa.includes(sid))) return false;
+      if (kelas.length > 0) {
+        const matchAnyKelas = kelas.some((kId) => {
+          const anggota = kelasAnggotaMap.get(kId) || [];
+          return ev.kelas === kId || ev.siswa.some((sid) => anggota.includes(sid));
+        });
+        if (!matchAnyKelas) return false;
       }
-      if (mapel && ev.mapel !== mapel) return false;
+      if (mapel.length > 0 && (!ev.mapel || !mapel.includes(ev.mapel))) return false;
       if (tempat && ev.tempat !== tempat) return false;
       if (cari.trim().length > 0) {
         const qLower = cari.trim().toLowerCase();
@@ -283,13 +284,13 @@ export const DaftarKegiatanScreen: React.FC = () => {
 
   // Active filter count and presence
   const activeDropdownCount =
-    (jenis ? 1 : 0) +
-    (status ? 1 : 0) +
-    (subjek ? 1 : 0) +
-    (kelas ? 1 : 0) +
-    (mapel ? 1 : 0) +
+    (jenis.length > 0 ? 1 : 0) +
+    (status.length > 0 ? 1 : 0) +
+    (subjek.length > 0 ? 1 : 0) +
+    (kelas.length > 0 ? 1 : 0) +
+    (siswa.length > 0 ? 1 : 0) +
+    (mapel.length > 0 ? 1 : 0) +
     (tempat ? 1 : 0) +
-    (siswa ? 1 : 0) +
     (cari.trim() ? 1 : 0);
 
   const hasActiveFilters =
@@ -313,34 +314,34 @@ export const DaftarKegiatanScreen: React.FC = () => {
     [searchParams, setSearchParams]
   );
 
-  const handleChangeJenis = (val: string) => {
+  const handleChangeJenis = (val: string[]) => {
     setJenis(val);
-    handleUpdateParam('jenis', val || null);
+    handleUpdateParam('jenis', val.length > 0 ? val.join(',') : null);
   };
 
-  const handleChangeStatus = (val: StatusKegiatan | '') => {
+  const handleChangeStatus = (val: StatusKegiatan[]) => {
     setStatus(val);
-    handleUpdateParam('status', val || null);
+    handleUpdateParam('status', val.length > 0 ? val.join(',') : null);
   };
 
-  const handleChangeSubjek = (val: string) => {
+  const handleChangeSubjek = (val: string[]) => {
     setSubjek(val);
-    handleUpdateParam('subjek', val || null);
+    handleUpdateParam('subjek', val.length > 0 ? val.join(',') : null);
   };
 
-  const handleChangeKelas = (val: string) => {
+  const handleChangeKelas = (val: string[]) => {
     setKelas(val);
-    handleUpdateParam('kelas', val || null);
+    handleUpdateParam('kelas', val.length > 0 ? val.join(',') : null);
   };
 
-  const handleChangeSiswa = (val: string) => {
+  const handleChangeSiswa = (val: string[]) => {
     setSiswa(val);
-    handleUpdateParam('siswa', val || null);
+    handleUpdateParam('siswa', val.length > 0 ? val.join(',') : null);
   };
 
-  const handleChangeMapel = (val: string) => {
+  const handleChangeMapel = (val: string[]) => {
     setMapel(val);
-    handleUpdateParam('mapel', val || null);
+    handleUpdateParam('mapel', val.length > 0 ? val.join(',') : null);
   };
 
   const handleChangeTempat = (val: string) => {
@@ -397,13 +398,13 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const handleResetFilters = () => {
     setUserDari(null);
     setUserSampai(null);
-    setJenis('');
-    setStatus('');
-    setSubjek('');
-    setKelas('');
-    setMapel('');
+    setJenis([]);
+    setStatus([]);
+    setSubjek([]);
+    setKelas([]);
+    setSiswa([]);
+    setMapel([]);
     setTempat('');
-    setSiswa('');
     setCari('');
     setCepat('');
     setSortDesc(true);
@@ -456,17 +457,6 @@ export const DaftarKegiatanScreen: React.FC = () => {
     }
   };
 
-  const activeSiswaObj = React.useMemo(() => {
-    if (!siswa) return null;
-    const s = siswaList.find((item) => item.id === siswa);
-    return s ? { id: s.id, nama: s.nama } : { id: siswa, nama: 'Siswa' };
-  }, [siswa, siswaList]);
-
-  const activeMapelObj = React.useMemo(() => {
-    if (!mapel) return null;
-    const m = mapelList.find((item) => item.id === mapel);
-    return m ? { id: m.id, nama: m.nama } : { id: mapel, nama: 'Mata pelajaran' };
-  }, [mapel, mapelList]);
 
   const activeTempatObj = React.useMemo(() => {
     if (!tempat) return null;
@@ -498,6 +488,12 @@ export const DaftarKegiatanScreen: React.FC = () => {
             kelas={kelas}
             onChangeKelas={handleChangeKelas}
             kelasList={kelasList}
+            siswa={siswa}
+            onChangeSiswa={handleChangeSiswa}
+            siswaList={siswaList}
+            mapel={mapel}
+            onChangeMapel={handleChangeMapel}
+            mapelList={mapelList}
             cari={cari}
             onChangeCari={handleChangeCari}
             simulatedToday={SIMULATED_TODAY}
@@ -515,10 +511,6 @@ export const DaftarKegiatanScreen: React.FC = () => {
             totalAll={semuaKegiatan.length}
             sortDesc={sortDesc}
             isLoading={false}
-            activeSiswa={activeSiswaObj}
-            onClearSiswa={() => handleChangeSiswa('')}
-            activeMapel={activeMapelObj}
-            onClearMapel={() => handleChangeMapel('')}
             activeTempat={activeTempatObj}
             onClearTempat={() => handleChangeTempat('')}
             viewMode={viewMode}

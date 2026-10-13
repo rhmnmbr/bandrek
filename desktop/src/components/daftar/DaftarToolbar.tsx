@@ -2,10 +2,10 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { formatTanggalSlash, toDate, toIso, NAMA_BULAN } from '@/lib/dateUtils';
 import type { StatusKegiatan } from '@/data/types/kegiatan';
-import type { JenisKegiatan, Subjek, Kelas } from '@/data/types/master';
+import type { JenisKegiatan, Subjek, Kelas, Siswa, MataPelajaran } from '@/data/types/master';
+import { MultiSelect, type MultiSelectOption } from '@/components/ui/select';
 import {
   Calendar16Regular,
-  ChevronDown12Regular,
   ChevronLeft12Regular,
   ChevronRight12Regular,
   Add16Regular,
@@ -17,30 +17,35 @@ export interface DaftarToolbarProps {
   onChangeDari: (val: string) => void;
   onChangeSampai: (val: string) => void;
   rentangMati: boolean;
-  jenis: string;
-  onChangeJenis: (val: string) => void;
+  jenis: string[];
+  onChangeJenis: (val: string[]) => void;
   jenisList: JenisKegiatan[];
-  status: StatusKegiatan | '';
-  onChangeStatus: (val: StatusKegiatan | '') => void;
-  subjek: string;
-  onChangeSubjek: (val: string) => void;
+  status: StatusKegiatan[];
+  onChangeStatus: (val: StatusKegiatan[]) => void;
+  subjek: string[];
+  onChangeSubjek: (val: string[]) => void;
   subjekList: Subjek[];
-  kelas: string;
-  onChangeKelas: (val: string) => void;
+  kelas: string[];
+  onChangeKelas: (val: string[]) => void;
   kelasList: Kelas[];
+  siswa: string[];
+  onChangeSiswa: (val: string[]) => void;
+  siswaList: Siswa[];
+  mapel: string[];
+  onChangeMapel: (val: string[]) => void;
+  mapelList: MataPelajaran[];
   cari: string;
   onChangeCari: (val: string) => void;
   simulatedToday?: string;
   onNewKegiatan?: () => void;
 }
 
-const STATUS_OPTIONS: { id: StatusKegiatan | ''; label: string }[] = [
-  { id: '', label: 'Status: semua' },
-  { id: 'terjadwal', label: 'Status: Terjadwal' },
-  { id: 'belum_direalisasi', label: 'Status: Belum direalisasi' },
-  { id: 'terealisasi', label: 'Status: Terealisasi' },
-  { id: 'dijadwal_ulang', label: 'Status: Dijadwal ulang' },
-  { id: 'dibatalkan', label: 'Status: Dibatalkan' },
+const STATUS_OPTIONS: MultiSelectOption[] = [
+  { value: 'terjadwal', label: 'Terjadwal' },
+  { value: 'belum_direalisasi', label: 'Belum direalisasi' },
+  { value: 'terealisasi', label: 'Terealisasi' },
+  { value: 'dijadwal_ulang', label: 'Dijadwal ulang' },
+  { value: 'dibatalkan', label: 'Dibatalkan' },
 ];
 
 export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
@@ -60,6 +65,12 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
   kelas,
   onChangeKelas,
   kelasList,
+  siswa,
+  onChangeSiswa,
+  siswaList,
+  mapel,
+  onChangeMapel,
+  mapelList,
   cari,
   onChangeCari,
   simulatedToday = '2026-09-16',
@@ -151,29 +162,31 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
     setCalAnchor(toIso(d));
   };
 
-  // Label computations
-  const jenisLabel = React.useMemo(() => {
-    if (!jenis) return 'Jenis: semua';
-    const j = jenisList.find((item) => item.id === jenis);
-    return j ? j.nama : 'Jenis: semua';
-  }, [jenis, jenisList]);
+  // Options for MultiSelect
+  const jenisOptions: MultiSelectOption[] = React.useMemo(
+    () => jenisList.map((j) => ({ value: j.id, label: j.nama })),
+    [jenisList]
+  );
 
-  const statusLabel = React.useMemo(() => {
-    const s = STATUS_OPTIONS.find((item) => item.id === status);
-    return s ? s.label : 'Status: semua';
-  }, [status]);
+  const subjekOptions: MultiSelectOption[] = React.useMemo(
+    () => subjekList.map((s) => ({ value: s.id, label: s.nama })),
+    [subjekList]
+  );
 
-  const subjekLabel = React.useMemo(() => {
-    if (!subjek) return 'Subjek: semua';
-    const s = subjekList.find((item) => item.id === subjek);
-    return s ? `Subjek: ${s.nama}` : 'Subjek: semua';
-  }, [subjek, subjekList]);
+  const kelasOptions: MultiSelectOption[] = React.useMemo(
+    () => kelasList.map((k) => ({ value: k.id, label: k.nama })),
+    [kelasList]
+  );
 
-  const kelasLabel = React.useMemo(() => {
-    if (!kelas) return 'Kelas: semua';
-    const k = kelasList.find((item) => item.id === kelas);
-    return k ? `Kelas: ${k.nama}` : 'Kelas: semua';
-  }, [kelas, kelasList]);
+  const siswaOptions: MultiSelectOption[] = React.useMemo(
+    () => siswaList.map((s) => ({ value: s.id, label: s.nama })),
+    [siswaList]
+  );
+
+  const mapelOptions: MultiSelectOption[] = React.useMemo(
+    () => mapelList.map((m) => ({ value: m.id, label: m.nama })),
+    [mapelList]
+  );
 
   return (
     <div
@@ -413,223 +426,86 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
       </div>
 
       {/* 3. Filter: Jenis */}
-      <div className="relative flex-none">
-        <button
-          type="button"
-          onClick={() => toggleDropdown('jenis')}
-          className={cn(
-            'h-6.5 pl-2.5 pr-2 border rounded text-[12px] cursor-pointer flex items-center justify-between gap-3.5 whitespace-nowrap transition-colors',
-            jenis
-              ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink)'
-              : 'border-(--color-border-strong) bg-white text-(--color-text-secondary) hover:border-(--color-text-muted)'
-          )}
-        >
-          <span>{jenisLabel}</span>
-          <ChevronDown12Regular className="w-3 h-3 flex-none text-(--color-icon-faint)" />
-        </button>
-
-        {openDropdown === 'jenis' && (
-          <div className="absolute left-0 top-7.25 z-30 min-w-full w-max bg-white border border-(--color-border-strong) rounded-md shadow-(--shadow-overlay) p-1 flex flex-col gap-0.5 max-h-65 overflow-y-auto">
-            <button
-              type="button"
-              onClick={() => {
-                onChangeJenis('');
-                setOpenDropdown(null);
-              }}
-              className={cn(
-                'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                !jenis
-                  ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                  : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-              )}
-            >
-              Jenis: semua
-            </button>
-            {jenisList.map((j) => {
-              const active = jenis === j.id;
-              return (
-                <button
-                  key={j.id}
-                  type="button"
-                  onClick={() => {
-                    onChangeJenis(j.id);
-                    setOpenDropdown(null);
-                  }}
-                  className={cn(
-                    'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                    active
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                      : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-                  )}
-                >
-                  {j.nama}
-                </button>
-              );
-            })}
-          </div>
-        )}
+      <div className="flex-none">
+        <MultiSelect
+          className="w-auto max-w-36 gap-2"
+          value={jenis}
+          onValueChange={onChangeJenis}
+          options={jenisOptions}
+          placeholder="Jenis"
+          density="compact"
+        />
       </div>
 
       {/* 4. Filter: Status */}
-      <div className="relative flex-none">
-        <button
-          type="button"
-          onClick={() => toggleDropdown('status')}
-          className={cn(
-            'h-6.5 pl-2.5 pr-2 border rounded text-[12px] cursor-pointer flex items-center justify-between gap-3.5 whitespace-nowrap transition-colors',
-            status
-              ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink)'
-              : 'border-(--color-border-strong) bg-white text-(--color-text-secondary) hover:border-(--color-text-muted)'
-          )}
-        >
-          <span>{statusLabel}</span>
-          <ChevronDown12Regular className="w-3 h-3 flex-none text-(--color-icon-faint)" />
-        </button>
-
-        {openDropdown === 'status' && (
-          <div className="absolute left-0 top-7.25 z-30 min-w-full w-max bg-white border border-(--color-border-strong) rounded-md shadow-(--shadow-overlay) p-1 flex flex-col gap-0.5 max-h-65 overflow-y-auto">
-            {STATUS_OPTIONS.map((opt) => {
-              const active = status === opt.id;
-              return (
-                <button
-                  key={opt.id || 'semua'}
-                  type="button"
-                  onClick={() => {
-                    onChangeStatus(opt.id);
-                    setOpenDropdown(null);
-                  }}
-                  className={cn(
-                    'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                    active
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                      : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-                  )}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
+      <div className="flex-none">
+        <MultiSelect
+          className="w-auto max-w-36 gap-2"
+          value={status}
+          onValueChange={(val) => onChangeStatus(val as StatusKegiatan[])}
+          options={STATUS_OPTIONS}
+          placeholder="Status"
+          density="compact"
+        />
       </div>
 
       {/* 5. Filter: Subjek */}
-      <div className="relative flex-none">
-        <button
-          type="button"
-          onClick={() => toggleDropdown('subjek')}
-          className={cn(
-            'h-6.5 px-2 max-w-37.5 border rounded text-[12px] cursor-pointer flex items-center justify-between gap-2.5 whitespace-nowrap transition-colors',
-            subjek
-              ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink)'
-              : 'border-(--color-border-strong) bg-white text-(--color-text-secondary) hover:border-(--color-text-muted)'
-          )}
-        >
-          <span className="truncate">{subjekLabel}</span>
-          <ChevronDown12Regular className="w-3 h-3 flex-none text-(--color-icon-faint)" />
-        </button>
-
-        {openDropdown === 'subjek' && (
-          <div className="absolute left-0 top-7.25 z-30 min-w-full w-max bg-white border border-(--color-border-strong) rounded-md shadow-(--shadow-overlay) p-1 flex flex-col gap-0.5 max-h-65 overflow-y-auto">
-            <button
-              type="button"
-              onClick={() => {
-                onChangeSubjek('');
-                setOpenDropdown(null);
-              }}
-              className={cn(
-                'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                !subjek
-                  ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                  : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-              )}
-            >
-              Subjek: semua
-            </button>
-            {subjekList.map((s) => {
-              const active = subjek === s.id;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => {
-                    onChangeSubjek(s.id);
-                    setOpenDropdown(null);
-                  }}
-                  className={cn(
-                    'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                    active
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                      : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-                  )}
-                >
-                  Subjek: {s.nama}
-                </button>
-              );
-            })}
-          </div>
-        )}
+      <div className="flex-none">
+        <MultiSelect
+          searchable
+          searchPlaceholder="Cari subjek..."
+          className="w-auto max-w-37.5 gap-2"
+          value={subjek}
+          onValueChange={onChangeSubjek}
+          options={subjekOptions}
+          placeholder="Subjek"
+          density="compact"
+        />
       </div>
 
       {/* 6. Filter: Kelas */}
-      <div className="relative flex-none">
-        <button
-          type="button"
-          onClick={() => toggleDropdown('kelas')}
-          className={cn(
-            'h-6.5 px-2 max-w-39.5 border rounded text-[12px] cursor-pointer flex items-center justify-between gap-2.5 whitespace-nowrap transition-colors',
-            kelas
-              ? 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink)'
-              : 'border-(--color-border-strong) bg-white text-(--color-text-secondary) hover:border-(--color-text-muted)'
-          )}
-        >
-          <span className="truncate">{kelasLabel}</span>
-          <ChevronDown12Regular className="w-3 h-3 flex-none text-(--color-icon-faint)" />
-        </button>
-
-        {openDropdown === 'kelas' && (
-          <div className="absolute left-0 top-7.25 z-30 min-w-full w-max bg-white border border-(--color-border-strong) rounded-md shadow-(--shadow-overlay) p-1 flex flex-col gap-0.5 max-h-65 overflow-y-auto">
-            <button
-              type="button"
-              onClick={() => {
-                onChangeKelas('');
-                setOpenDropdown(null);
-              }}
-              className={cn(
-                'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                !kelas
-                  ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                  : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-              )}
-            >
-              Kelas: semua
-            </button>
-            {kelasList.map((k) => {
-              const active = kelas === k.id;
-              return (
-                <button
-                  key={k.id}
-                  type="button"
-                  onClick={() => {
-                    onChangeKelas(k.id);
-                    setOpenDropdown(null);
-                  }}
-                  className={cn(
-                    'w-full text-left px-2.25 py-1.5 rounded text-[12.5px] cursor-pointer whitespace-nowrap transition-colors',
-                    active
-                      ? 'bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold'
-                      : 'text-(--color-text) hover:bg-(--color-surface-alt)'
-                  )}
-                >
-                  Kelas: {k.nama}
-                </button>
-              );
-            })}
-          </div>
-        )}
+      <div className="flex-none">
+        <MultiSelect
+          searchable
+          searchPlaceholder="Cari kelas..."
+          className="w-auto max-w-39.5 gap-2"
+          value={kelas}
+          onValueChange={onChangeKelas}
+          options={kelasOptions}
+          placeholder="Kelas"
+          density="compact"
+        />
       </div>
 
-      {/* 7. Search Input */}
+      {/* 7. Filter: Siswa */}
+      <div className="flex-none">
+        <MultiSelect
+          searchable
+          searchPlaceholder="Cari siswa..."
+          className="w-auto max-w-39.5 gap-2"
+          value={siswa}
+          onValueChange={onChangeSiswa}
+          options={siswaOptions}
+          placeholder="Siswa"
+          density="compact"
+        />
+      </div>
+
+      {/* 8. Filter: Mata Pelajaran */}
+      <div className="flex-none">
+        <MultiSelect
+          searchable
+          searchPlaceholder="Cari mapel..."
+          className="w-auto max-w-39.5 gap-2"
+          value={mapel}
+          onValueChange={onChangeMapel}
+          options={mapelOptions}
+          placeholder="Mapel"
+          density="compact"
+        />
+      </div>
+
+      {/* 9. Search Input */}
       <input
         type="text"
         value={cari}
@@ -640,17 +516,7 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
 
       {/* Right Actions Group (selalu rata kanan, terkunci agar tidak pernah melompat ke kiri) */}
       <div className="ml-auto flex items-center gap-1.75 flex-none pl-2">
-        {/* 8. Ekspor CSV (Disabled per spec) */}
-        <button
-          type="button"
-          disabled
-          title="Ekspor CSV menyusul di tahap berikutnya"
-          className="flex-none h-6.5 px-2.75 border border-(--color-border) rounded bg-(--color-surface-alt) text-(--color-text-muted) text-[12px] cursor-not-allowed whitespace-nowrap"
-        >
-          Ekspor CSV
-        </button>
-
-        {/* 9. Tombol Tambah Kegiatan Baru */}
+        {/* Tombol Tambah Kegiatan Baru */}
         {onNewKegiatan && (
           <button
             type="button"

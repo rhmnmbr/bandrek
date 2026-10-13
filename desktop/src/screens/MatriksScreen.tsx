@@ -64,7 +64,7 @@ export const MatriksScreen: React.FC = () => {
   }, []);
 
   // Additional Filters
-  const [selectedKelasId, setSelectedKelasId] = React.useState<string>('');
+  const [selectedKelasIds, setSelectedKelasIds] = React.useState<string[]>([]);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const [showNonaktif, setShowNonaktif] = React.useState<boolean>(false);
   const [tandaiTertinggal, setTandaiTertinggal] = React.useState<boolean>(true);
@@ -99,11 +99,11 @@ export const MatriksScreen: React.FC = () => {
   // Build filter params for TanStack Query
   const filterParams = React.useMemo(() => {
     return {
-      kelasId: selectedKelasId || undefined,
+      kelasIds: selectedKelasIds.length > 0 ? selectedKelasIds : undefined,
       q: searchQuery.trim() || undefined,
       tampilkanNonaktif: showNonaktif,
     };
-  }, [selectedKelasId, searchQuery, showNonaktif]);
+  }, [selectedKelasIds, searchQuery, showNonaktif]);
 
   // Fetch Matrix Data
   const { data: matriksResult, isLoading } = useMatriks(
@@ -120,11 +120,11 @@ export const MatriksScreen: React.FC = () => {
 
   // Reset Filters
   const handleResetFilter = React.useCallback(() => {
-    setSelectedKelasId('');
+    setSelectedKelasIds([]);
     setSearchQuery('');
   }, []);
 
-  const hasFilter = Boolean(selectedKelasId || searchQuery.trim());
+  const hasFilter = Boolean(selectedKelasIds.length > 0 || searchQuery.trim());
 
   // Bulk Selection Handlers
   const handleToggleCellSelection = React.useCallback((key: string) => {
@@ -366,9 +366,14 @@ export const MatriksScreen: React.FC = () => {
   const hasNoSiswa = matriksResult.baris.length === 0;
 
   // Filter suffix for metadata
-  const currentKelasObj = kelasList.find((k) => k.id === selectedKelasId);
+  const kelasLabel =
+    selectedKelasIds.length === 1
+      ? ` · Kelas: ${kelasList.find((k) => k.id === selectedKelasIds[0])?.nama || selectedKelasIds[0]}`
+      : selectedKelasIds.length > 1
+        ? ` · ${selectedKelasIds.length} kelas`
+        : '';
   const filterSuffix = [
-    currentKelasObj ? ` · Kelas: ${currentKelasObj.nama}` : '',
+    kelasLabel,
     searchQuery.trim() ? ` · pencarian “${searchQuery.trim()}”` : '',
     showNonaktif ? ' · termasuk nonaktif' : '',
   ].join('');
@@ -381,8 +386,8 @@ export const MatriksScreen: React.FC = () => {
         selectedMapelId={selectedMapelId}
         onSelectMapel={handleSelectMapel}
         kelasList={kelasList}
-        selectedKelasId={selectedKelasId}
-        onSelectKelas={setSelectedKelasId}
+        selectedKelasIds={selectedKelasIds}
+        onSelectKelasIds={setSelectedKelasIds}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         showNonaktif={showNonaktif}
