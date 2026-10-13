@@ -1,15 +1,90 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logo-cup.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bandrek</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #FAFAFA;
+        overflow: hidden;
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+      }
+      .app-splash {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background-color: #FAFAFA;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .app-splash-logo {
+        width: 320px;
+        max-width: 82vw;
+        height: auto;
+        animation: splash-fade-in 0.35s ease-out forwards;
+      }
+      .app-splash-loader {
+        margin-top: 28px;
+        width: 136px;
+        height: 3px;
+        background-color: #EDEBE9;
+        border-radius: 9999px;
+        overflow: hidden;
+        position: relative;
+      }
+      .app-splash-bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 40%;
+        background-color: #0F6CBD;
+        border-radius: 9999px;
+        animation: splash-slide 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      @keyframes splash-fade-in {
+        from {
+          opacity: 0;
+          transform: scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes splash-slide {
+        0% {
+          left: -40%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="app-splash" id="app-splash">
+        <img src="/logo-bandrek.svg" class="app-splash-logo" alt="Bandrek - Bandung Remaja Intelek" />
+        <div class="app-splash-loader" aria-hidden="true">
+          <div class="app-splash-bar"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
