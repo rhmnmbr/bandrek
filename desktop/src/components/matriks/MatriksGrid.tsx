@@ -165,7 +165,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
                       onStudentNameClick(sw);
                     }
                   }}
-                  title={isBulkMode ? 'Pilih semua sel di baris ini' : 'Profil siswa menyusul di Batch B'}
+                  title={isBulkMode ? 'Pilih semua sel di baris ini' : `Buka profil ${sw.nama}`}
                   className={`w-[260px] flex-none sticky left-0 z-10 border-r border-[#E1DFDD] flex items-center gap-1.5 px-[11px] text-[12.5px] text-left cursor-pointer transition-colors ${
                     isTertinggal
                       ? 'bg-[#FFF3E0] text-[#8A5200] hover:brightness-95'

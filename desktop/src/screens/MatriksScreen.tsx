@@ -175,13 +175,10 @@ export const MatriksScreen: React.FC = () => {
 
   // Student Name Click Handler
   const handleStudentNameClick = React.useCallback(
-    (_siswa: BarisSiswa) => {
-      showToast({
-        message: 'Profil siswa menyusul di Batch B.',
-        type: 'info',
-      });
+    (siswa: BarisSiswa) => {
+      navigate(`/master/siswa?profil=${encodeURIComponent(siswa.id)}`);
     },
-    [showToast]
+    [navigate]
   );
 
   // Navigate to kegiatan

@@ -100,7 +100,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
         data: s,
         label: s.nama,
         sub: `${s.jenjang}${s.asal ? ` · ${s.asal}` : ''}`,
-        url: `/master/siswa?id=${s.id}`,
+        url: `/master/siswa?profil=${s.id}`,
       });
     }
 
@@ -115,7 +115,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
         data: sub,
         label: sub.nama,
         sub: `${sub.peran} · ${sub.kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}`,
-        url: `/master/subjek?id=${sub.id}`,
+        url: `/master/subjek?profil=${sub.id}`,
       });
     }
 
