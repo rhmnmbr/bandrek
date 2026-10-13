@@ -18,6 +18,7 @@ import { DataLayerScreen } from '@/screens/DataLayerScreen';
 import { SetupServerScreen } from '@/screens/SetupServerScreen';
 import { LoginScreen } from '@/screens/LoginScreen';
 import { UserManagementScreen } from '@/screens/UserManagementScreen';
+import { AuditLogScreen } from '@/screens/AuditLogScreen';
 import { UpdateRequiredScreen } from '@/screens/UpdateRequiredScreen';
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="/master/jenis" element={<JenisKegiatanScreen />} />
             <Route path="/master/jenis/:id" element={<JenisKegiatanScreen />} />
             <Route path="/pengaturan/pengguna" element={<UserManagementScreen />} />
+            <Route path="/pengaturan/audit-log" element={<AuditLogScreen />} />
           </Route>
 
           {/* Client-Server Standalone Screens */}

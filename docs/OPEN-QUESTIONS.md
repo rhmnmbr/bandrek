@@ -9,8 +9,8 @@ Kalau sudah diputuskan, pindahkan hasilnya ke `ARCHITECTURE.md` atau `DOMAIN.md`
 | Q1 | Perlukah kegiatan berulang (jadwal mingguan)? | Tidak ada. Setiap kegiatan dibuat satu per satu | Skema kegiatan (aturan pengulangan vs. salinan per pertemuan), form, jadwal ulang dan pembatalan per pertemuan atau seluruh seri |
 | Q2 | Ketuntasan per kegiatan atau per siswa? | Per kegiatan, hanya sebagai label | Kolom tambahan di tabel kehadiran; kalau ikut menentukan isi sel matriks, muncul keadaan sel baru dan legenda berubah |
 | Q3 | Apa tindak lanjut catatan di materi luar jenjang? | Hanya pemberitahuan dan panel daftar di matriks | Mungkin perlu alur koreksi: memindahkan catatan ke materi lain, atau menandainya sebagai sah |
-| Q4 | Apa beda hak admin dan operator? | Admin bisa menambah akun operator. Hak lain belum dibedakan | Otorisasi di server per endpoint, aksi disembunyikan di klien, mungkin juga pembatasan data master |
-| Q5 | Perlukah riwayat perubahan (audit)? | Hanya "diisi oleh / diisi pada" yang tertimpa setiap diubah | Tabel riwayat terpisah, layar riwayat di detail kegiatan |
+| Q4 | Apa beda hak admin dan operator? | Admin bisa mengelola akun pengguna dan mengakses Log Audit (`/pengaturan/audit-log`). Hak operasional kegiatan setara | Otorisasi di server per endpoint, menu/rute dibatasi di klien |
+| Q5 | Perlukah riwayat perubahan (audit)? | **Diputuskan (13 Okt 2026)**: Ya, disediakan layar khusus Log Audit (`/pengaturan/audit-log`) untuk Administrator dengan filter dan rincian perubahan field (diff). | Layar log audit di desktop client, tabel audit log di backend server |
 | Q6 | Kepatuhan pelindungan data pribadi: data anak dan lokasi VPS | Belum dicek | Pilihan region VPS, persetujuan wali, kebijakan retensi dan penghapusan data |
 | Q7 | Kebijakan backup: frekuensi, retensi, lokasi | Backup di luar VPS dan restore harus pernah dites; detail belum ditentukan | Skrip di `deploy/`, biaya penyimpanan |
 | Q8 | Distribusi installer: code signing Windows, tempat hosting file update | Belum ditentukan | Proses rilis desktop, peringatan SmartScreen saat instalasi |

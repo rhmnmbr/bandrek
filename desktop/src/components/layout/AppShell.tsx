@@ -53,6 +53,7 @@ export const AppShell: React.FC = () => {
     if (pathname.startsWith('/master/tempat')) return 'Tempat & ruangan';
     if (pathname.startsWith('/master/jenis')) return 'Jenis kegiatan';
     if (pathname.startsWith('/pengaturan/pengguna')) return 'Manajemen pengguna';
+    if (pathname.startsWith('/pengaturan/audit-log')) return 'Log audit';
     if (pathname.startsWith('/data')) return 'Simulasi Data Layer & Mock';
     if (pathname.startsWith('/katalog')) return 'Katalog Komponen';
     return 'Bandrek';

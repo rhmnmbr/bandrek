@@ -22,6 +22,8 @@ import {
   Tag20Filled,
   PersonSettings20Regular,
   PersonSettings20Filled,
+  History20Regular,
+  History20Filled,
   Warning16Regular,
   LockClosed16Regular,
   ArrowExit16Regular,
@@ -122,6 +124,13 @@ const SETTINGS_NAV_ITEMS: NavItemConfig[] = [
     shortcut: 'Alt+0',
     icon: <PersonSettings20Regular />,
     activeIcon: <PersonSettings20Filled />,
+  },
+  {
+    to: '/pengaturan/audit-log',
+    label: 'Log audit',
+    shortcut: 'Alt+L',
+    icon: <History20Regular />,
+    activeIcon: <History20Filled />,
   },
 ];
 
