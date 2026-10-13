@@ -57,7 +57,6 @@ export function MapelToolbar({
         <button
           type="button"
           onClick={onMapelBaru}
-          title="Tambah mata pelajaran baru · Ctrl+N"
           className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
           <Add16Regular className="w-3.5 h-3.5 shrink-0" />

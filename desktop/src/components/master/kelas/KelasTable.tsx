@@ -33,7 +33,6 @@ export function KelasTable({
               <div
                 key={k.id}
                 onClick={() => onSelectKelas(k.id)}
-                title={rowTitle}
                 className={`flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
                   isDipilih
                     ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
@@ -42,6 +41,7 @@ export function KelasTable({
               >
                 {/* Nama Kelas */}
                 <div
+                  title={k.nama}
                   className={`flex-1 min-w-[140px] truncate pr-2 text-(--color-text-primary) ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   }`}

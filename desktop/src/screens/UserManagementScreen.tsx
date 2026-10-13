@@ -301,9 +301,7 @@ function UserFormView({
             title={
               isCurrentLoggedInUser
                 ? 'Tidak bisa menonaktifkan akun yang sedang digunakan'
-                : user.aktif
-                ? 'Nonaktifkan akun'
-                : 'Aktifkan kembali akun'
+                : undefined
             }
             className={`h-6.5 px-2.5 rounded border-none text-[12.5px] transition-colors ${
               isCurrentLoggedInUser
@@ -533,7 +531,6 @@ export function UserManagementScreen() {
             <button
               type="button"
               onClick={handleNewUser}
-              title="Tambah pengguna baru · Ctrl+N"
               className="flex h-6.5 shrink-0 items-center gap-1.5 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
             >
               <Add16Regular className="w-3.5 h-3.5 shrink-0" />
@@ -618,7 +615,6 @@ export function UserManagementScreen() {
                     <div
                       key={u.id}
                       onClick={() => handleSelectUser(u.id)}
-                      title={u.nama}
                       className={`flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
                         isSelected
                           ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'

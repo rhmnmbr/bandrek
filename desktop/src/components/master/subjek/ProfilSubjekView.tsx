@@ -77,7 +77,6 @@ export function ProfilSubjekView({
         <button
           type="button"
           onClick={onLihatKalender}
-          title="Lihat kegiatan subjek ini di kalender"
           className="h-7 px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-[12.5px] text-(--color-text-primary) cursor-pointer whitespace-nowrap transition-colors"
         >
           Lihat di kalender
@@ -85,7 +84,6 @@ export function ProfilSubjekView({
         <button
           type="button"
           onClick={onUbahData}
-          title="Ubah data subjek ini"
           className="h-7 px-3.5 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
           Ubah data

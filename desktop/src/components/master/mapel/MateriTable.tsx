@@ -102,7 +102,6 @@ export function MateriTable({
           type="button"
           onClick={onNewMateri}
           disabled={isLoading}
-          title={`Tambah materi di ${mapelNama}`}
           className={`flex h-6 shrink-0 items-center gap-1 px-2 rounded border border-(--color-border) bg-(--color-surface) text-[11.5px] font-medium transition-colors ${
             isLoading
               ? 'opacity-50 cursor-not-allowed text-(--color-text-muted)'
@@ -220,7 +219,7 @@ export function MateriTable({
               {/* Nama Materi */}
               <div
                 onClick={() => onSelectMateri(m)}
-                title={`Ubah ${m.nama}`}
+                title={m.nama}
                 className={`flex-1 min-w-[140px] truncate pr-2 text-[12.5px] cursor-pointer hover:underline ${
                   isNonaktif
                     ? 'text-(--color-text-muted) line-through'
@@ -259,8 +258,7 @@ export function MateriTable({
                 <button
                   type="button"
                   onClick={() => onSelectMateri(m)}
-                  title={`Ubah ${m.nama}`}
-                  className="h-5.25 px-2 rounded-sm border-none bg-transparent text-(--color-brand) text-[11.5px] font-medium hover:bg-(--color-brand-subtle) cursor-pointer transition-colors"
+                  className="h-5.25 px-2 rounded border-none bg-transparent text-(--color-brand) text-[11.5px] font-medium hover:bg-(--color-brand-subtle) cursor-pointer transition-colors"
                 >
                   Ubah
                 </button>

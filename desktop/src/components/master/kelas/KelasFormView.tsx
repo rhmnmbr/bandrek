@@ -289,7 +289,6 @@ export function KelasFormView({
               <button
                 type="button"
                 onClick={() => setMenuOpen(!menuOpen)}
-                title="Tambah siswa"
                 className="h-6 px-2 border border-(--color-border) rounded bg-(--color-surface) text-(--color-brand) text-[11.5px] font-medium inline-flex items-center gap-1 hover:bg-(--color-brand-subtle) transition-colors cursor-pointer"
               >
                 <Add16Regular className="w-3.5 h-3.5 shrink-0" />
@@ -474,13 +473,7 @@ export function KelasFormView({
           type="button"
           onClick={handleSubmit}
           disabled={simpanDisabled || isSubmitting}
-          title={
-            simpanDisabled
-              ? 'Bereskan dulu isian yang bermasalah'
-              : isNew
-              ? 'Tambahkan kelas ini'
-              : 'Simpan perubahan'
-          }
+          title={simpanDisabled ? 'Bereskan dulu isian yang bermasalah' : undefined}
           className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center justify-center gap-1.5 transition-colors ${
             simpanDisabled || isSubmitting
               ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'

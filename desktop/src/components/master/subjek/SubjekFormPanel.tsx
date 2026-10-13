@@ -275,7 +275,7 @@ export function SubjekFormPanel({
               onClick={() =>
                 setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'L' ? '' : 'L' }))
               }
-              title={form.kelamin === 'L' ? 'Klik lagi untuk mengosongkan' : 'Laki-laki'}
+              title={form.kelamin === 'L' ? 'Klik lagi untuk mengosongkan' : undefined}
               className={`flex-1 border-none text-[11.5px] cursor-pointer transition-colors ${
                 form.kelamin === 'L'
                   ? 'bg-(--color-brand) text-white font-semibold'
@@ -289,7 +289,7 @@ export function SubjekFormPanel({
               onClick={() =>
                 setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'P' ? '' : 'P' }))
               }
-              title={form.kelamin === 'P' ? 'Klik lagi untuk mengosongkan' : 'Perempuan'}
+              title={form.kelamin === 'P' ? 'Klik lagi untuk mengosongkan' : undefined}
               className={`flex-1 border-l border-(--color-border) text-[11.5px] cursor-pointer transition-colors ${
                 form.kelamin === 'P'
                   ? 'bg-(--color-brand) text-white font-semibold'
@@ -494,7 +494,6 @@ export function SubjekFormPanel({
         <button
           type="button"
           onClick={handleSubmit}
-          title={isNew ? 'Tambahkan subjek ini' : 'Simpan perubahan'}
           className="flex h-6.5 shrink-0 items-center gap-1.75 px-3 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-white text-[12.5px] font-semibold cursor-pointer whitespace-nowrap transition-colors"
         >
           <span>{isNew ? 'Simpan subjek' : 'Simpan'}</span>

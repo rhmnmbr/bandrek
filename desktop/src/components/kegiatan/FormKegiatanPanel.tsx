@@ -1537,11 +1537,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               variant="secondary"
               onClick={() => handleSave(true)}
               disabled={isSaveDisabled || isSaving}
-              title={
-                isSaveDisabled
-                  ? 'Perbaiki isian yang ditandai merah dulu'
-                  : 'Simpan, lalu buka form baru dengan jenis, ruangan, subjek, mapel, dan tanggal yang sama'
-              }
+              title={isSaveDisabled ? 'Perbaiki isian yang ditandai merah dulu' : undefined}
             >
               Simpan &amp; buat lagi
             </Button>
@@ -1550,11 +1546,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               variant="primary"
               onClick={() => handleSave(false)}
               disabled={isSaveDisabled || isSaving}
-              title={
-                isSaveDisabled
-                  ? 'Perbaiki isian yang ditandai merah dulu'
-                  : 'Simpan kegiatan · Ctrl+S'
-              }
+              title={isSaveDisabled ? 'Perbaiki isian yang ditandai merah dulu' : undefined}
             >
               {isSaving ? 'Menyimpan...' : 'Simpan'}
             </Button>

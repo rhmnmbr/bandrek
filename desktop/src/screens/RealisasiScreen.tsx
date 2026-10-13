@@ -699,7 +699,6 @@ export const RealisasiScreen: React.FC = () => {
         <button
           type="button"
           onClick={handleSimpanDraf}
-          title="Simpan isian sementara tanpa menandai terealisasi"
           className="flex-none h-6.5 px-2.75 border border-(--color-border-strong) rounded bg-white text-[12.5px] text-(--color-text) cursor-pointer whitespace-nowrap hover:bg-(--color-surface-alt) active:bg-(--color-surface-sunken) transition-colors"
         >
           Simpan draf
@@ -710,7 +709,7 @@ export const RealisasiScreen: React.FC = () => {
           type="button"
           onClick={handleSimpan}
           disabled={saveDisabled}
-          title={saveDisabled ? 'Lengkapi status kehadiran dulu' : 'Tandai kegiatan ini terealisasi · Ctrl S'}
+          title={saveDisabled ? 'Lengkapi status kehadiran dulu' : undefined}
           className={cn(
             'flex-none h-6.5 px-3 rounded border-none font-semibold text-[12.5px] whitespace-nowrap flex items-center gap-1.75 transition-all',
             saveDisabled

@@ -97,7 +97,6 @@ export function ProfilSiswaView({
         <button
           type="button"
           onClick={onCetak}
-          title="Cetak rapor kegiatan"
           className="flex h-7 items-center px-3 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-[12.5px] text-(--color-text-primary) cursor-pointer whitespace-nowrap transition-colors"
         >
           Cetak rapor kegiatan
@@ -106,7 +105,6 @@ export function ProfilSiswaView({
         <button
           type="button"
           onClick={() => onEdit(siswa.id)}
-          title="Ubah data siswa ini"
           className="flex h-7 items-center px-3.5 rounded border-none bg-(--color-brand) hover:bg-(--color-brand-pressed) text-[12.5px] font-semibold text-white cursor-pointer whitespace-nowrap transition-colors"
         >
           Ubah data

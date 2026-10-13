@@ -47,7 +47,6 @@ export function SubjekTable({
               <div
                 key={sb.id}
                 onClick={() => onSelectSubjek(sb.id)}
-                title={rowTitle}
                 className={`flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
                   isDipilih
                     ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
@@ -60,7 +59,7 @@ export function SubjekTable({
                     e.stopPropagation();
                     onOpenProfil(sb.id);
                   }}
-                  title={`Lihat profil ${sb.nama}`}
+                  title={sb.nama}
                   className={`w-[210px] shrink-0 truncate pr-2 cursor-pointer hover:underline hover:text-(--color-brand-ink) ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   } ${sb.aktif ? 'text-(--color-text-primary)' : 'text-(--color-text-muted) line-through'}`}

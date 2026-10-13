@@ -33,7 +33,6 @@ export function RuanganTable({
           type="button"
           onClick={onNewRuangan}
           disabled={isLoading}
-          title={`Tambah ruangan di ${tempatNama}`}
           className={`flex h-6 shrink-0 items-center gap-1 px-2 rounded border border-(--color-border) bg-(--color-surface) text-[11.5px] font-medium transition-colors ${
             isLoading
               ? 'opacity-50 cursor-not-allowed text-(--color-text-muted)'
@@ -101,7 +100,7 @@ export function RuanganTable({
                 {/* Nama Ruangan */}
                 <div
                   onClick={() => onSelectRuangan(r)}
-                  title={`Ubah ${r.nama}`}
+                  title={r.nama}
                   className="flex-1 min-w-0 truncate text-[12.5px] text-(--color-text-primary) cursor-pointer hover:underline pr-2"
                 >
                   {r.nama}
@@ -117,8 +116,7 @@ export function RuanganTable({
                   <button
                     type="button"
                     onClick={() => onSelectRuangan(r)}
-                    title={`Ubah ${r.nama}`}
-                    className="h-5.25 px-2 rounded-sm border-none bg-transparent text-(--color-brand) text-[11.5px] font-medium hover:bg-(--color-brand-subtle) cursor-pointer transition-colors"
+                    className="h-5.25 px-2 rounded border-none bg-transparent text-(--color-brand) text-[11.5px] font-medium hover:bg-(--color-brand-subtle) cursor-pointer transition-colors"
                   >
                     Ubah
                   </button>

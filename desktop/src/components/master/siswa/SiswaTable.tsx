@@ -60,7 +60,6 @@ export function SiswaTable({
               <div
                 key={sw.id}
                 onClick={() => onSelectSiswa(sw.id)}
-                title={rowTitle}
                 className={`flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
                   isDipilih
                     ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
@@ -73,7 +72,7 @@ export function SiswaTable({
                     e.stopPropagation();
                     onOpenProfil(sw.id);
                   }}
-                  title={`Lihat profil ${sw.nama}`}
+                  title={sw.nama}
                   className={`w-59 shrink-0 truncate pr-2 cursor-pointer hover:underline hover:text-(--color-brand-ink) ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   } ${sw.aktif ? 'text-(--color-text-primary)' : 'text-(--color-text-muted) line-through'}`}

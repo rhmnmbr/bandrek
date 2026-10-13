@@ -437,7 +437,6 @@ export const DetailKegiatanScreen: React.FC = () => {
           <button
             type="button"
             onClick={handleUtamaClick}
-            title="Buka form kegiatan"
             className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
           >
             Ubah kegiatan
@@ -446,7 +445,6 @@ export const DetailKegiatanScreen: React.FC = () => {
           <button
             type="button"
             onClick={handleUtamaClick}
-            title="Buka layar realisasi"
             className="flex-none h-6.5 px-3 rounded text-xs font-semibold bg-(--color-brand) text-white hover:bg-(--color-brand-pressed) active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
           >
             Ubah realisasi

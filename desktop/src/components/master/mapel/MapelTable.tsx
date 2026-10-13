@@ -44,7 +44,6 @@ export function MapelTable({
               <div
                 key={m.id}
                 onClick={() => onSelectMapel(m.id)}
-                title={`${m.nama} · ${jumlahMateri} materi`}
                 className={`flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
                   isDipilih
                     ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
@@ -53,6 +52,7 @@ export function MapelTable({
               >
                 {/* Nama Mata Pelajaran */}
                 <div
+                  title={namaTeks}
                   className={`flex-1 min-w-[150px] truncate pr-2 ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   } ${

@@ -310,7 +310,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                 type="button"
                 disabled={!isChanged}
                 onClick={handleSave}
-                title={isChanged ? 'Simpan perubahan ceklis manual' : 'Belum ada yang diubah'}
+                title={!isChanged ? 'Belum ada yang diubah' : undefined}
                 className={`h-[26px] px-3 rounded text-[12px] font-semibold whitespace-nowrap transition-colors ${
                   isChanged
                     ? 'bg-[#0F6CBD] text-white hover:brightness-95 cursor-pointer'

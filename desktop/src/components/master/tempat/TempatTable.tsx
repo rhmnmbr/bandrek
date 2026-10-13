@@ -36,7 +36,6 @@ export function TempatTable({
               <div
                 key={t.id}
                 onClick={() => onSelectTempat(t.id)}
-                title={`${t.nama} · ${jumlahRuangan} ruangan`}
                 className={`flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 text-[12.5px] cursor-pointer transition-colors ${
                   isDipilih
                     ? 'bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]'
@@ -50,7 +49,7 @@ export function TempatTable({
                   } ${isKosong ? 'text-(--color-warning-fg)' : 'text-(--color-text-primary)'}`}
                 >
                   {isKosong && <Warning16Regular className="w-3.5 h-3.5 shrink-0 text-(--color-warning-fg)" />}
-                  <span className="truncate">{t.nama}</span>
+                  <span className="truncate" title={t.nama}>{t.nama}</span>
                 </div>
 
                 {/* Ruangan Count */}

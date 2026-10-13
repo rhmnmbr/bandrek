@@ -537,7 +537,6 @@ export function SiswaFormPanel({
                 onClick={() =>
                   setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'L' ? '' : 'L' }))
                 }
-                title="Laki-laki"
                 className={`flex-1 min-w-0 border-none text-[11.5px] cursor-pointer transition-colors ${
                   form.kelamin === 'L'
                     ? 'bg-(--color-brand) text-white font-semibold'
@@ -551,7 +550,6 @@ export function SiswaFormPanel({
                 onClick={() =>
                   setForm((prev) => ({ ...prev, kelamin: prev.kelamin === 'P' ? '' : 'P' }))
                 }
-                title="Perempuan"
                 className={`flex-1 min-w-0 border-none border-l border-(--color-border) text-[11.5px] cursor-pointer transition-colors ${
                   form.kelamin === 'P'
                     ? 'bg-(--color-brand) text-white font-semibold'
@@ -863,13 +861,7 @@ export function SiswaFormPanel({
           type="button"
           onClick={handleSave}
           disabled={dicoba && hasErrors}
-          title={
-            dicoba && hasErrors
-              ? 'Bereskan dulu isian yang bermasalah'
-              : isNew
-                ? 'Tambahkan siswa ini'
-                : 'Simpan perubahan'
-          }
+          title={dicoba && hasErrors ? 'Bereskan dulu isian yang bermasalah' : undefined}
           className={`flex h-6.5 shrink-0 items-center gap-1.75 px-3 rounded border-none text-[12.5px] font-semibold transition-colors ${
             dicoba && hasErrors
               ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'

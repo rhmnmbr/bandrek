@@ -485,13 +485,7 @@ export function TempatFormView({
               type="button"
               onClick={handleSubmit}
               disabled={simpanDisabled || isSubmitting}
-              title={
-                simpanDisabled
-                  ? 'Bereskan dulu isian yang bermasalah'
-                  : isNewRuangan
-                  ? 'Tambahkan ruangan ini'
-                  : 'Simpan perubahan'
-              }
+              title={simpanDisabled ? 'Bereskan dulu isian yang bermasalah' : undefined}
               className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
                 simpanDisabled || isSubmitting
                   ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'
@@ -534,13 +528,7 @@ export function TempatFormView({
               type="button"
               onClick={handleSubmit}
               disabled={simpanDisabled || isSubmitting}
-              title={
-                simpanDisabled
-                  ? 'Bereskan dulu isian yang bermasalah'
-                  : isNewTempat
-                  ? 'Tambahkan tempat ini'
-                  : 'Simpan perubahan'
-              }
+              title={simpanDisabled ? 'Bereskan dulu isian yang bermasalah' : undefined}
               className={`h-6.5 px-3 rounded border-none text-[12.5px] font-semibold flex items-center gap-1.5 transition-colors ${
                 simpanDisabled || isSubmitting
                   ? 'bg-(--color-surface-sunken) text-(--color-text-disabled) cursor-not-allowed'

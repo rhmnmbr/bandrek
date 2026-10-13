@@ -145,7 +145,6 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
               <div
                 key={ev.id}
                 onClick={() => onOpenDetail(ev)}
-                title={`Buka detail ${ev.nama}`}
                 className={cn(
                   'flex items-center h-8 flex-none border-b border-[#EDEBE9] px-3.5 text-[12.5px] cursor-pointer transition-colors w-full min-w-full',
                   perlu
