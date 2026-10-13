@@ -1530,6 +1530,172 @@ export const INITIAL_SEED: SeedData = {
       "aktif": true
     },
     {
+      "id": "T49",
+      "mapel": "M1",
+      "nama": "Persamaan Linear",
+      "jenjang": [
+        "SMP"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T50",
+      "mapel": "M1",
+      "nama": "Sistem Persamaan (SPLDV)",
+      "jenjang": [
+        "SMP",
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T51",
+      "mapel": "M1",
+      "nama": "Relasi dan Fungsi",
+      "jenjang": [
+        "SMP"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T52",
+      "mapel": "M1",
+      "nama": "Persamaan Kuadrat",
+      "jenjang": [
+        "SMP",
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T53",
+      "mapel": "M1",
+      "nama": "Teorema Pythagoras",
+      "jenjang": [
+        "SMP"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T54",
+      "mapel": "M1",
+      "nama": "Lingkaran & Sudut",
+      "jenjang": [
+        "SMP",
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T55",
+      "mapel": "M1",
+      "nama": "Trigonometri Dasar",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T56",
+      "mapel": "M1",
+      "nama": "Aturan Sinus & Kosinus",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T57",
+      "mapel": "M1",
+      "nama": "Barisan & Deret Aritmetika",
+      "jenjang": [
+        "SMP",
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T58",
+      "mapel": "M1",
+      "nama": "Barisan Geometri",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T59",
+      "mapel": "M1",
+      "nama": "Eksponen & Logaritma",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T60",
+      "mapel": "M1",
+      "nama": "Matriks & Determinan",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T61",
+      "mapel": "M1",
+      "nama": "Vektor Dimensi Dua",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T62",
+      "mapel": "M1",
+      "nama": "Transformasi Geometri",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T63",
+      "mapel": "M1",
+      "nama": "Limit Fungsi Aljabar",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T64",
+      "mapel": "M1",
+      "nama": "Turunan Fungsi Aljabar",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T65",
+      "mapel": "M1",
+      "nama": "Integral Dasar",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
+      "id": "T66",
+      "mapel": "M1",
+      "nama": "Kombinatorika",
+      "jenjang": [
+        "SMA"
+      ],
+      "aktif": true
+    },
+    {
       "id": "T11",
       "mapel": "M2",
       "nama": "Fotosintesis",
@@ -2679,6 +2845,86 @@ export const INITIAL_SEED: SeedData = {
       "catatan": "Riwayat lama, dimasukkan saat migrasi catatan kertas",
       "oleh": "Bu Ningsih",
       "dicatat": "2026-08-31 18:13",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm65",
+      "siswa": "S1",
+      "materi": "T49",
+      "tanggal": "2026-08-10",
+      "catatan": "Tuntas materi SPLSV dari tugas mandiri",
+      "oleh": "Bu Rahma",
+      "dicatat": "2026-08-10 14:00",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm66",
+      "siswa": "S3",
+      "materi": "T50",
+      "tanggal": "2026-08-12",
+      "catatan": "Sudah tuntas metode eliminasi-substitusi",
+      "oleh": "Pak Dedi",
+      "dicatat": "2026-08-12 15:30",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm67",
+      "siswa": "S4",
+      "materi": "T53",
+      "tanggal": "2026-08-15",
+      "catatan": "Latihan tripel Pythagoras tuntas",
+      "oleh": "Bu Rahma",
+      "dicatat": "2026-08-15 11:20",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm68",
+      "siswa": "S7",
+      "materi": "T55",
+      "tanggal": "2026-08-20",
+      "catatan": "Sudah hafal sudut istimewa kuadran I",
+      "oleh": "Pak Joko",
+      "dicatat": "2026-08-20 16:45",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm69",
+      "siswa": "S12",
+      "materi": "T57",
+      "tanggal": "2026-08-22",
+      "catatan": "Suku ke-n dan jumlah deret lancar",
+      "oleh": "Bu Rahma",
+      "dicatat": "2026-08-22 13:10",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm70",
+      "siswa": "S15",
+      "materi": "T59",
+      "tanggal": "2026-08-25",
+      "catatan": "Sifat logaritma tuntas",
+      "oleh": "Pak Dedi",
+      "dicatat": "2026-08-25 14:00",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm71",
+      "siswa": "S20",
+      "materi": "T60",
+      "tanggal": "2026-09-01",
+      "catatan": "Invers dan determinan matriks 2x2",
+      "oleh": "Pak Joko",
+      "dicatat": "2026-09-01 10:15",
+      "sumber": "manual"
+    },
+    {
+      "id": "cm72",
+      "siswa": "S25",
+      "materi": "T64",
+      "tanggal": "2026-09-05",
+      "catatan": "Aturan rantai turunan",
+      "oleh": "Bu Rahma",
+      "dicatat": "2026-09-05 16:20",
       "sumber": "manual"
     }
   ],

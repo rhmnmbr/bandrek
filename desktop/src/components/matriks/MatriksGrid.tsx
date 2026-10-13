@@ -93,7 +93,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
 
       {/* 3. Grid Table Container (Sticky Header, Sticky Left, Sticky Right, Sticky Bottom) */}
       <div className="flex-1 min-h-0 overflow-auto bg-white" data-testid="matriks-grid-container">
-        <div className="flex flex-col min-w-min min-h-full">
+        <div className="flex flex-col w-fit min-w-full min-h-full">
           {/* Header Row (H: 34px) */}
           <div className="flex sticky top-0 z-30 bg-[#FAFAFA] border-b border-[#E1DFDD] text-[10.5px] text-[#424242] select-none">
             {/* Sticky Student Header Col (W: 260px) */}

@@ -183,6 +183,26 @@ export class MockDataStore {
             }
           });
 
+          // 3b. Sinkronkan materi baru dari INITIAL_SEED jika belum ada di storage
+          if (this.materi) {
+            INITIAL_SEED.materi.forEach((seedMateri) => {
+              if (!this.materi.some((m) => m.id === seedMateri.id)) {
+                this.materi.push(JSON.parse(JSON.stringify(seedMateri)));
+                adaBaru = true;
+              }
+            });
+          }
+
+          // 3c. Sinkronkan ceklisManual baru dari INITIAL_SEED jika belum ada di storage
+          if (this.ceklisManual) {
+            INITIAL_SEED.ceklisManual.forEach((seedCm) => {
+              if (!this.ceklisManual.some((cm) => cm.id === seedCm.id)) {
+                this.ceklisManual.push(JSON.parse(JSON.stringify(seedCm)));
+                adaBaru = true;
+              }
+            });
+          }
+
           // 4. Pulihkan nomor WhatsApp / kontak jika di storage lama masih mengandung format sensor "xxxx"
           let phoneSeed = 48271;
           const gen4 = () => {
