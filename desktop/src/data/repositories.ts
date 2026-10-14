@@ -14,19 +14,32 @@ import type {
 } from './interfaces/index.ts';
 
 import {
+  MockKegiatanRepository,
+  MockRealisasiRepository,
+  MockMatriksRepository,
+  MockSiswaRepository,
+  MockSubjekRepository,
+  MockKelasRepository,
+  MockMapelRepository,
+  MockTempatRepository,
+  MockJenisKegiatanRepository,
+  MockAuthRepository,
   MockSimulasiRepository,
 } from './mock';
-import { HttpAuthRepository } from './http/repositories/HttpAuthRepository';
-import { HttpSiswaRepository } from './http/repositories/HttpSiswaRepository';
-import { HttpSubjekRepository } from './http/repositories/HttpSubjekRepository';
-import { HttpKelasRepository } from './http/repositories/HttpKelasRepository';
-import { HttpMapelRepository } from './http/repositories/HttpMapelRepository';
-import { HttpTempatRepository } from './http/repositories/HttpTempatRepository';
-import { HttpJenisKegiatanRepository } from './http/repositories/HttpJenisKegiatanRepository';
-import { HttpKegiatanRepository } from './http/repositories/HttpKegiatanRepository';
-import { HttpRealisasiRepository } from './http/repositories/HttpRealisasiRepository';
-import { HttpMatriksRepository } from './http/repositories/HttpMatriksRepository';
-import { HttpAuditRepository } from './http/repositories/HttpAuditRepository';
+
+import {
+  HttpAuthRepository,
+  HttpSiswaRepository,
+  HttpSubjekRepository,
+  HttpKelasRepository,
+  HttpMapelRepository,
+  HttpTempatRepository,
+  HttpJenisKegiatanRepository,
+  HttpKegiatanRepository,
+  HttpRealisasiRepository,
+  HttpMatriksRepository,
+  HttpAuditRepository,
+} from './http';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;
@@ -43,18 +56,55 @@ export interface RepositoryContainer {
   simulasi: ISimulasiRepository;
 }
 
-// Repositories container
-export const repositories: RepositoryContainer = {
-  kegiatan: new HttpKegiatanRepository(),
-  realisasi: new HttpRealisasiRepository(),
-  matriks: new HttpMatriksRepository(),
-  siswa: new HttpSiswaRepository(),
-  subjek: new HttpSubjekRepository(),
-  kelas: new HttpKelasRepository(),
-  mapel: new HttpMapelRepository(),
-  tempat: new HttpTempatRepository(),
-  jenisKegiatan: new HttpJenisKegiatanRepository(),
-  auth: new HttpAuthRepository(),
-  audit: new HttpAuditRepository(),
-  simulasi: new MockSimulasiRepository(),
-};
+const DATA_SOURCE_KEY = 'bandrek:data-source';
+
+export function getDataSource(): 'http' | 'mock' {
+  if (typeof window === 'undefined') return 'http';
+  return (localStorage.getItem(DATA_SOURCE_KEY) as 'http' | 'mock') || 'http';
+}
+
+export function setDataSource(source: 'http' | 'mock'): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(DATA_SOURCE_KEY, source);
+    window.location.reload();
+  }
+}
+
+export function createRepositories(
+  source: 'http' | 'mock' = getDataSource()
+): RepositoryContainer {
+  if (source === 'mock') {
+    return {
+      kegiatan: new MockKegiatanRepository(),
+      realisasi: new MockRealisasiRepository(),
+      matriks: new MockMatriksRepository(),
+      siswa: new MockSiswaRepository(),
+      subjek: new MockSubjekRepository(),
+      kelas: new MockKelasRepository(),
+      mapel: new MockMapelRepository(),
+      tempat: new MockTempatRepository(),
+      jenisKegiatan: new MockJenisKegiatanRepository(),
+      auth: new MockAuthRepository(),
+      audit: new HttpAuditRepository(),
+      simulasi: new MockSimulasiRepository(),
+    };
+  }
+
+  return {
+    kegiatan: new HttpKegiatanRepository(),
+    realisasi: new HttpRealisasiRepository(),
+    matriks: new HttpMatriksRepository(),
+    siswa: new HttpSiswaRepository(),
+    subjek: new HttpSubjekRepository(),
+    kelas: new HttpKelasRepository(),
+    mapel: new HttpMapelRepository(),
+    tempat: new HttpTempatRepository(),
+    jenisKegiatan: new HttpJenisKegiatanRepository(),
+    auth: new HttpAuthRepository(),
+    audit: new HttpAuditRepository(),
+    simulasi: new MockSimulasiRepository(),
+  };
+}
+
+// Repositories container instance (defaults to HTTP)
+export const repositories: RepositoryContainer = createRepositories();
