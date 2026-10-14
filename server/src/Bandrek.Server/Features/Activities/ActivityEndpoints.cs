@@ -35,11 +35,13 @@ public static class ActivityEndpoints
 
         // GET /api/activities/cancellation-reasons
         group.MapGet("/cancellation-reasons", () => Results.Ok(StandardCancellationReasons))
-            .WithName("GetCancellationReasons");
+            .WithName("GetCancellationReasons")
+            .Produces<string[]>(StatusCodes.Status200OK);
 
         // GET /api/activities/reschedule-reasons
         group.MapGet("/reschedule-reasons", () => Results.Ok(StandardRescheduleReasons))
-            .WithName("GetRescheduleReasons");
+            .WithName("GetRescheduleReasons")
+            .Produces<string[]>(StatusCodes.Status200OK);
 
         // POST /api/activities/check-conflicts
         group.MapPost("/check-conflicts", async (
@@ -75,7 +77,9 @@ public static class ActivityEndpoints
                     c.Description)).ToList(),
                 result.Summary));
         })
-        .WithName("CheckActivityConflicts");
+        .WithName("CheckActivityConflicts")
+        .Produces<ConflictCheckResponse>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest);
 
         // GET /api/activities/calendar
         group.MapGet("/calendar", async (
@@ -123,7 +127,8 @@ public static class ActivityEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetCalendarActivities");
+        .WithName("GetCalendarActivities")
+        .Produces<List<ActivityDto>>(StatusCodes.Status200OK);
 
         // GET /api/activities/list
         group.MapGet("/list", async (
@@ -203,7 +208,8 @@ public static class ActivityEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetActivityList");
+        .WithName("GetActivityList")
+        .Produces<List<ActivityDto>>(StatusCodes.Status200OK);
 
         // GET /api/activities/{id}
         group.MapGet("/{id}", async (
@@ -223,7 +229,9 @@ public static class ActivityEndpoints
 
             return Results.Ok(MapToDto(activity, statusService, dtProvider));
         })
-        .WithName("GetActivityById");
+        .WithName("GetActivityById")
+        .Produces<ActivityDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // POST /api/activities
         group.MapPost("/", async (
@@ -282,7 +290,9 @@ public static class ActivityEndpoints
             var saved = await BuildActivityQuery(db).FirstAsync(a => a.Id == firstId, ct);
             return Results.Created($"/api/activities/{saved.Id}", MapToDto(saved, statusService, dtProvider));
         })
-        .WithName("CreateActivity");
+        .WithName("CreateActivity")
+        .Produces<ActivityDto>(StatusCodes.Status201Created)
+        .ProducesProblem(StatusCodes.Status400BadRequest);
 
         // PUT /api/activities/{id}
         group.MapPut("/{id}", async (
@@ -347,7 +357,9 @@ public static class ActivityEndpoints
             var saved = await BuildActivityQuery(db).FirstAsync(a => a.Id == id, ct);
             return Results.Ok(MapToDto(saved, statusService, dtProvider));
         })
-        .WithName("UpdateActivity");
+        .WithName("UpdateActivity")
+        .Produces<ActivityDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // POST /api/activities/{id}/cancel
         group.MapPost("/{id}/cancel", async (
@@ -371,7 +383,9 @@ public static class ActivityEndpoints
             var saved = await BuildActivityQuery(db).FirstAsync(a => a.Id == id, ct);
             return Results.Ok(MapToDto(saved, statusService, dtProvider));
         })
-        .WithName("CancelActivity");
+        .WithName("CancelActivity")
+        .Produces<ActivityDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // POST /api/activities/{id}/reschedule
         group.MapPost("/{id}/reschedule", async (
@@ -462,7 +476,10 @@ public static class ActivityEndpoints
                 MapToDto(savedOrig, statusService, dtProvider),
                 MapToDto(savedNew, statusService, dtProvider)));
         })
-        .WithName("RescheduleActivity");
+        .WithName("RescheduleActivity")
+        .Produces<RescheduleResultDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status404NotFound);
     }
 
     private static IQueryable<Activity> BuildActivityQuery(AppDbContext db)

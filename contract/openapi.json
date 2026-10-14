@@ -49,7 +49,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -75,7 +85,17 @@
         "operationId": "GetCurrentSession",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -99,6 +119,15 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -111,7 +140,17 @@
         "operationId": "GetUsers",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -131,8 +170,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -165,7 +217,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -215,7 +277,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StudentDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -235,8 +307,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -259,7 +344,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -290,7 +385,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -311,7 +416,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -334,7 +459,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentProfileData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -370,7 +505,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubjectDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -390,8 +535,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -414,7 +572,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -445,7 +613,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -466,7 +644,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -489,7 +687,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectProfileData"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -522,7 +730,20 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeeklyAvailabilityDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -565,7 +786,23 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeeklyAvailabilityDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -596,7 +833,23 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeeklyAvailabilityDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -625,7 +878,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClassGroupDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -645,8 +908,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassGroupDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -669,7 +945,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassGroupDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -700,7 +986,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassGroupDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -721,7 +1017,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -754,7 +1070,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassGroupDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -783,7 +1109,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourseDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -803,8 +1139,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -827,7 +1176,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -858,7 +1217,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -879,7 +1248,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -902,7 +1291,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopicDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -935,7 +1334,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopicDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -957,7 +1366,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopicDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -977,8 +1396,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -1011,7 +1443,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -1032,7 +1474,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -1054,7 +1516,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlaceDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1074,8 +1546,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -1098,7 +1583,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -1129,7 +1624,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -1150,7 +1655,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -1173,7 +1698,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1195,7 +1730,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1215,8 +1760,21 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
         }
       }
@@ -1249,7 +1807,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -1270,7 +1838,27 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -1292,7 +1880,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityTypeDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1312,8 +1910,35 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityTypeDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1336,7 +1961,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityTypeDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       },
@@ -1367,7 +2009,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityTypeDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       },
@@ -1388,7 +2047,34 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1401,7 +2087,17 @@
         "operationId": "GetCancellationReasons",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1414,7 +2110,17 @@
         "operationId": "GetRescheduleReasons",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1437,7 +2143,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1508,7 +2231,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1593,7 +2326,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1616,7 +2359,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       },
@@ -1647,7 +2407,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1669,8 +2446,25 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1703,7 +2497,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1736,7 +2547,34 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RescheduleResultDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1759,7 +2597,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealizationDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       },
@@ -1790,7 +2645,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealizationDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1803,7 +2675,14 @@
         "operationId": "GetPendingRealizationCount",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PendingCountDto"
+                }
+              }
+            }
           }
         }
       }
@@ -1847,7 +2726,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearningMatrixResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1870,7 +2756,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualChecklistDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1893,7 +2796,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -1916,7 +2836,17 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ManualChecklistDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1939,7 +2869,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkDeleteResultDto"
+                }
+              }
+            }
           }
         }
       }
@@ -2010,7 +2947,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLogDto"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -2030,8 +2977,15 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogDto"
+                }
+              }
+            }
           }
         }
       }
@@ -2039,6 +2993,260 @@
   },
   "components": {
     "schemas": {
+      "ActivityDto": {
+        "required": [
+          "id",
+          "name",
+          "activityTypeId",
+          "courseId",
+          "topicId",
+          "classGroupId",
+          "date",
+          "startTime",
+          "endTime",
+          "isAllDay",
+          "roomId",
+          "customPlace",
+          "subjects",
+          "studentIds",
+          "notes",
+          "status",
+          "rawStatus",
+          "realization",
+          "cancellation",
+          "reschedule",
+          "rescheduledFromId",
+          "rescheduledToId",
+          "seriesId",
+          "seriesIndex",
+          "totalSeries",
+          "allowedActions",
+          "placeId",
+          "placeName",
+          "roomName",
+          "activityTypeName",
+          "activityTypeColor",
+          "courseName",
+          "topicName",
+          "studentCount",
+          "primaryInstructor",
+          "needsRealization",
+          "daysLate",
+          "statusLabel",
+          "concurrencyToken"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "activityTypeId": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "topicId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "classGroupId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "isAllDay": {
+            "type": "boolean"
+          },
+          "roomId": {
+            "type": "string"
+          },
+          "customPlace": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivitySubjectDto"
+            }
+          },
+          "studentIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "rawStatus": {
+            "type": "string"
+          },
+          "realization": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RealizationDto"
+              }
+            ]
+          },
+          "cancellation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/CancellationInfoDto"
+              }
+            ]
+          },
+          "reschedule": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RescheduleInfoDto"
+              }
+            ]
+          },
+          "rescheduledFromId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rescheduledToId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "seriesId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "seriesIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "totalSeries": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "placeId": {
+            "type": "string"
+          },
+          "placeName": {
+            "type": "string"
+          },
+          "roomName": {
+            "type": "string"
+          },
+          "activityTypeName": {
+            "type": "string"
+          },
+          "activityTypeColor": {
+            "type": "string"
+          },
+          "courseName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "topicName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "studentCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "primaryInstructor": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PrimaryInstructorDto"
+              }
+            ]
+          },
+          "needsRealization": {
+            "type": "boolean"
+          },
+          "daysLate": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "statusLabel": {
+            "type": "string"
+          },
+          "concurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "uint32"
+          }
+        }
+      },
       "ActivitySubjectDto": {
         "required": [
           "id",
@@ -2057,6 +3265,60 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "ActivityTypeDto": {
+        "required": [
+          "id",
+          "name",
+          "color",
+          "requiresTopic",
+          "requiresStudents",
+          "activityCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "requiresTopic": {
+            "type": "boolean"
+          },
+          "requiresStudents": {
+            "type": "boolean"
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2129,6 +3391,30 @@
           }
         }
       },
+      "AuthSessionResponse": {
+        "required": [
+          "token",
+          "user",
+          "serverUrl",
+          "loginAt"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          },
+          "serverUrl": {
+            "type": "string"
+          },
+          "loginAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "BulkDeleteManualChecklistRequest": {
         "required": [
           "keys"
@@ -2140,6 +3426,22 @@
             "items": {
               "$ref": "#/components/schemas/ManualChecklistKeyDto"
             }
+          }
+        }
+      },
+      "BulkDeleteResultDto": {
+        "required": [
+          "deletedCount"
+        ],
+        "type": "object",
+        "properties": {
+          "deletedCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -2182,6 +3484,32 @@
           }
         }
       },
+      "CancellationInfoDto": {
+        "required": [
+          "reason",
+          "notes",
+          "at",
+          "by"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "by": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "ChangePasswordRequest": {
         "required": [
           "currentPassword",
@@ -2194,6 +3522,85 @@
           },
           "newPassword": {
             "type": "string"
+          }
+        }
+      },
+      "ClassGroupDto": {
+        "required": [
+          "id",
+          "name",
+          "educationalLevel",
+          "description",
+          "studentIds",
+          "studentNames",
+          "studentCount",
+          "activityCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "educationalLevel": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "studentIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "studentNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "studentCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2238,6 +3645,129 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "ConflictCheckResponse": {
+        "required": [
+          "hasConflict",
+          "conflicts",
+          "summary"
+        ],
+        "type": "object",
+        "properties": {
+          "hasConflict": {
+            "type": "boolean"
+          },
+          "conflicts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConflictItemDto"
+            }
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      },
+      "ConflictItemDto": {
+        "required": [
+          "type",
+          "entityId",
+          "entityName",
+          "conflictingActivityId",
+          "conflictingActivityName",
+          "startTime",
+          "endTime",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "entityId": {
+            "type": "string"
+          },
+          "entityName": {
+            "type": "string"
+          },
+          "conflictingActivityId": {
+            "type": "string"
+          },
+          "conflictingActivityName": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CourseDto": {
+        "required": [
+          "id",
+          "name",
+          "isActive",
+          "topics",
+          "topicCount",
+          "activityCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopicDto"
+            }
+          },
+          "topicCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2709,6 +4239,331 @@
           }
         }
       },
+      "DeleteResultDto": {
+        "required": [
+          "success",
+          "message",
+          "usageCount",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LaggingStudentItem": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "missingTopicsCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "totalTopicsCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "missingPercentage": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "LearningMatrixCell": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "activityId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "completionStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "manualChecklistId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "manualNotes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "manualRecordedBy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "manualRecordedAt": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningMatrixHistoryItem"
+            }
+          }
+        }
+      },
+      "LearningMatrixColumn": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "educationalLevels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "orderIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "latestScheduledDate": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LearningMatrixColumnSummary": {
+        "type": "object",
+        "properties": {
+          "topicId": {
+            "type": "string"
+          },
+          "deliveredCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "totalStudents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "percentage": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "LearningMatrixHistoryItem": {
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "type": "string"
+          },
+          "activityName": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "attendanceStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "completionStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "hasRealization": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LearningMatrixResult": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string"
+          },
+          "courseName": {
+            "type": "string"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningMatrixColumn"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningMatrixRow"
+            }
+          },
+          "cells": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/LearningMatrixCell"
+              }
+            }
+          },
+          "columnSummaries": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/LearningMatrixColumnSummary"
+            }
+          },
+          "laggingStudents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LaggingStudentItem"
+            }
+          },
+          "laggingThresholdCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "mostLaggingTopic": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MostLaggingTopicItem"
+              }
+            ]
+          },
+          "pendingRealizationCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "LearningMatrixRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "educationalLevel": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "classGroupIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "classGroupNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "LoginRequest": {
         "required": [
           "username",
@@ -2721,6 +4576,48 @@
           },
           "password": {
             "type": "string"
+          }
+        }
+      },
+      "ManualChecklistDto": {
+        "required": [
+          "id",
+          "studentId",
+          "topicId",
+          "date",
+          "notes",
+          "recordedBy",
+          "recordedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "studentId": {
+            "type": "string"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "recordedBy": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -2772,6 +4669,246 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "MessageResponseDto": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "MostLaggingTopicItem": {
+        "type": "object",
+        "properties": {
+          "topicId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "missingCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "latestScheduledDate": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "PendingCountDto": {
+        "required": [
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "PlaceDto": {
+        "required": [
+          "id",
+          "name",
+          "rooms",
+          "roomCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomDto"
+            }
+          },
+          "roomCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PrimaryInstructorDto": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "RealizationDto": {
+        "required": [
+          "activityId",
+          "startTime",
+          "endTime",
+          "actualTopicId",
+          "actualTopicName",
+          "completionStatus",
+          "notes",
+          "studentAttendances",
+          "studentNotes",
+          "subjectAttendances",
+          "subjectNotes",
+          "recordedBy",
+          "recordedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "actualTopicId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "actualTopicName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "completionStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "studentAttendances": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "studentNotes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "subjectAttendances": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "subjectNotes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "recordedBy": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string"
           }
         }
       },
@@ -2896,6 +5033,102 @@
           }
         }
       },
+      "RescheduleInfoDto": {
+        "required": [
+          "reason",
+          "notes",
+          "at",
+          "by"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          },
+          "by": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "RescheduleResultDto": {
+        "required": [
+          "originalActivity",
+          "newActivity"
+        ],
+        "type": "object",
+        "properties": {
+          "originalActivity": {
+            "$ref": "#/components/schemas/ActivityDto"
+          },
+          "newActivity": {
+            "$ref": "#/components/schemas/ActivityDto"
+          }
+        }
+      },
+      "RoomDto": {
+        "required": [
+          "id",
+          "placeId",
+          "name",
+          "capacity",
+          "activityCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "placeId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "capacity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "SaveRealizationRequest": {
         "required": [
           "startTime",
@@ -2967,6 +5200,452 @@
           },
           "recordedBy": {
             "type": "string"
+          }
+        }
+      },
+      "StudentCourseCoverage": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string"
+          },
+          "courseName": {
+            "type": "string"
+          },
+          "deliveredTopics": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "totalTopics": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "percentage": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "StudentDto": {
+        "required": [
+          "id",
+          "fullName",
+          "educationalLevel",
+          "isActive",
+          "birthDate",
+          "gender",
+          "schoolOrigin",
+          "guardianName",
+          "guardianPhone",
+          "joinedDate",
+          "notes",
+          "classGroupIds",
+          "classGroupNames",
+          "activityCount",
+          "classCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "educationalLevel": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "schoolOrigin": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "guardianName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "guardianPhone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "joinedDate": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "classGroupIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "classGroupNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "classCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StudentMissedTopic": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "topicName": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "StudentProfileData": {
+        "type": "object",
+        "properties": {
+          "student": {
+            "$ref": "#/components/schemas/StudentDto"
+          },
+          "totalActivities": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "presentCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "sickCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "permittedCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "absentCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "attendanceRate": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "coverage": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StudentCourseCoverage"
+            }
+          },
+          "missedTopics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StudentMissedTopic"
+            }
+          }
+        }
+      },
+      "SubjectDto": {
+        "required": [
+          "id",
+          "fullName",
+          "gender",
+          "role",
+          "isActive",
+          "contact",
+          "courseIds",
+          "weeklyAvailabilities",
+          "activityCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "contact": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "courseIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "weeklyAvailabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WeeklyAvailabilityDto"
+            }
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SubjectProfileData": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/components/schemas/SubjectDto"
+          },
+          "totalActivities": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "teachingHoursThisWeek": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "pendingRealizationsCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "weeklyWorkload": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubjectWorkloadDay"
+            }
+          }
+        }
+      },
+      "SubjectWorkloadDay": {
+        "type": "object",
+        "properties": {
+          "dayName": {
+            "type": "string"
+          },
+          "hours": {
+            "type": "string"
+          },
+          "activitiesCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "exceedsComfortLimit": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TopicDto": {
+        "required": [
+          "id",
+          "courseId",
+          "name",
+          "educationalLevels",
+          "isActive",
+          "orderIndex",
+          "activityCount",
+          "manualChecklistCount",
+          "canDelete",
+          "cannotDeleteReason",
+          "usageDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "educationalLevels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "orderIndex": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "activityCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "manualChecklistCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "cannotDeleteReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "usageDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -3430,6 +6109,38 @@
               "null",
               "boolean"
             ]
+          }
+        }
+      },
+      "UserDto": {
+        "required": [
+          "id",
+          "username",
+          "fullName",
+          "role",
+          "isActive",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

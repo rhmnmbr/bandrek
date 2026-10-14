@@ -26,3 +26,5 @@ public record SaveRealizationRequest(
     Dictionary<string, string> SubjectAttendances,
     Dictionary<string, string>? SubjectNotes,
     string RecordedBy);
+
+public record PendingCountDto(int Count);

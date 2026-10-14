@@ -60,7 +60,8 @@ public static class ClassGroupEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetClasses");
+        .WithName("GetClasses")
+        .Produces<List<ClassGroupDto>>(StatusCodes.Status200OK);
 
         // GET /api/classes/{id}
         group.MapGet("/{id}", async (
@@ -91,7 +92,9 @@ public static class ClassGroupEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("GetClassById");
+        .WithName("GetClassById")
+        .Produces<ClassGroupDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/classes
         group.MapPost("/", async (
@@ -161,7 +164,10 @@ public static class ClassGroupEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateClass");
+        .WithName("CreateClass")
+        .Produces<ClassGroupDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/classes/{id}
         group.MapPut("/{id}", async (
@@ -198,7 +204,9 @@ public static class ClassGroupEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateClass");
+        .WithName("UpdateClass")
+        .Produces<ClassGroupDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/classes/{id}/members
         group.MapPost("/{id}/members", async (
@@ -245,7 +253,9 @@ public static class ClassGroupEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateClassMember");
+        .WithName("UpdateClassMember")
+        .Produces<ClassGroupDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/classes/{id}
         group.MapDelete("/{id}", async (
@@ -276,6 +286,9 @@ public static class ClassGroupEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteClass");
+        .WithName("DeleteClass")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

@@ -50,7 +50,8 @@ public static class ActivityTypeEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetActivityTypes");
+        .WithName("GetActivityTypes")
+        .Produces<List<ActivityTypeDto>>(StatusCodes.Status200OK);
 
         // GET /api/activity-types/{id}
         group.MapGet("/{id}", async (
@@ -78,7 +79,9 @@ public static class ActivityTypeEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("GetActivityTypeById");
+        .WithName("GetActivityTypeById")
+        .Produces<ActivityTypeDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // POST /api/activity-types
         group.MapPost("/", async (
@@ -135,7 +138,10 @@ public static class ActivityTypeEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateActivityType");
+        .WithName("CreateActivityType")
+        .Produces<ActivityTypeDto>(StatusCodes.Status201Created)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status409Conflict);
 
         // PUT /api/activity-types/{id}
         group.MapPut("/{id}", async (
@@ -170,7 +176,9 @@ public static class ActivityTypeEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateActivityType");
+        .WithName("UpdateActivityType")
+        .Produces<ActivityTypeDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // DELETE /api/activity-types/{id}
         group.MapDelete("/{id}", async (
@@ -201,6 +209,9 @@ public static class ActivityTypeEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteActivityType");
+        .WithName("DeleteActivityType")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .ProducesProblem(StatusCodes.Status404NotFound);
     }
 }

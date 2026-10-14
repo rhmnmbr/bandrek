@@ -1,5 +1,6 @@
 using Bandrek.Server.Data;
 using Bandrek.Server.Data.Entities;
+using Bandrek.Server.Features.Master;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bandrek.Server.Services.BusinessRules;
@@ -23,7 +24,7 @@ public class StudentMissedTopic
 
 public class StudentProfileData
 {
-    public Student Student { get; set; } = null!;
+    public StudentDto Student { get; set; } = null!;
     public int TotalActivities { get; set; }
     public int PresentCount { get; set; }
     public int SickCount { get; set; }
@@ -44,7 +45,7 @@ public class SubjectWorkloadDay
 
 public class SubjectProfileData
 {
-    public SubjectPerson Subject { get; set; } = null!;
+    public SubjectDto Subject { get; set; } = null!;
     public int TotalActivities { get; set; }
     public int TeachingHoursThisWeek { get; set; }
     public int PendingRealizationsCount { get; set; }
@@ -155,9 +156,29 @@ public class ProfileKpiCalculator
             }
         }
 
+        var studentDto = new StudentDto(
+            student.Id,
+            student.FullName,
+            student.EducationalLevel,
+            student.IsActive,
+            student.BirthDate.ToString("yyyy-MM-dd"),
+            student.Gender,
+            student.SchoolOrigin,
+            student.GuardianName,
+            student.GuardianPhone,
+            student.JoinedDate?.ToString("yyyy-MM-dd"),
+            student.Notes,
+            student.ClassGroups.Select(cg => cg.ClassGroupId).ToList(),
+            student.ClassGroups.Select(cg => cg.ClassGroup.Name).ToList(),
+            totalAttended,
+            student.ClassGroups.Count,
+            true,
+            null,
+            new List<string>());
+
         return new StudentProfileData
         {
-            Student = student,
+            Student = studentDto,
             TotalActivities = totalAttended,
             PresentCount = present,
             SickCount = sick,
@@ -184,9 +205,23 @@ public class ProfileKpiCalculator
             .CountAsync(a => a.RawStatus == RawActivityStatuses.Pending &&
                              a.Subjects.Any(s => s.SubjectPersonId == subjectId), ct);
 
+        var subjectDto = new SubjectDto(
+            subject.Id,
+            subject.FullName,
+            subject.Gender,
+            subject.Role,
+            subject.IsActive,
+            subject.Contact,
+            subject.CourseIds,
+            subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)).ToList(),
+            totalActivities,
+            true,
+            null,
+            new List<string>());
+
         return new SubjectProfileData
         {
-            Subject = subject,
+            Subject = subjectDto,
             TotalActivities = totalActivities,
             TeachingHoursThisWeek = 0,
             PendingRealizationsCount = pendingCount,

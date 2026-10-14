@@ -86,7 +86,8 @@ public static class StudentEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetStudents");
+        .WithName("GetStudents")
+        .Produces<List<StudentDto>>(StatusCodes.Status200OK);
 
         // GET /api/students/{id}
         group.MapGet("/{id}", async (
@@ -124,7 +125,9 @@ public static class StudentEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("GetStudentById");
+        .WithName("GetStudentById")
+        .Produces<StudentDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // GET /api/students/{id}/profile
         group.MapGet("/{id}/profile", async (
@@ -137,7 +140,9 @@ public static class StudentEndpoints
 
             return Results.Ok(profile);
         })
-        .WithName("GetStudentProfile");
+        .WithName("GetStudentProfile")
+        .Produces<StudentProfileData>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/students
         group.MapPost("/", async (
@@ -210,7 +215,10 @@ public static class StudentEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateStudent");
+        .WithName("CreateStudent")
+        .Produces<StudentDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/students/{id}
         group.MapPut("/{id}", async (
@@ -261,7 +269,9 @@ public static class StudentEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateStudent");
+        .WithName("UpdateStudent")
+        .Produces<StudentDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/students/{id}
         group.MapDelete("/{id}", async (
@@ -292,6 +302,9 @@ public static class StudentEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteStudent");
+        .WithName("DeleteStudent")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

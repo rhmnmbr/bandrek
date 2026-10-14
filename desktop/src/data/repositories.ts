@@ -22,9 +22,9 @@ import {
   MockMapelRepository,
   MockTempatRepository,
   MockJenisKegiatanRepository,
-  MockAuthRepository,
   MockSimulasiRepository,
 } from './mock';
+import { HttpAuthRepository } from './http/repositories/HttpAuthRepository';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;
@@ -40,7 +40,7 @@ export interface RepositoryContainer {
   simulasi: ISimulasiRepository;
 }
 
-// Development & Prototyping: Mock Repositories
+// Development & Prototyping: Repositories
 export const repositories: RepositoryContainer = {
   kegiatan: new MockKegiatanRepository(),
   realisasi: new MockRealisasiRepository(),
@@ -51,6 +51,6 @@ export const repositories: RepositoryContainer = {
   mapel: new MockMapelRepository(),
   tempat: new MockTempatRepository(),
   jenisKegiatan: new MockJenisKegiatanRepository(),
-  auth: new MockAuthRepository(),
+  auth: new HttpAuthRepository(),
   simulasi: new MockSimulasiRepository(),
 };

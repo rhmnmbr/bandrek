@@ -9,7 +9,7 @@ export function SetupServerScreen() {
   const { showToast } = useToast();
 
   const [serverUrl, setServerUrl] = useState(() => {
-    return localStorage.getItem('bandrek:server-url') || 'https://api.bandrek-bimbel.id';
+    return localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
   });
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<{
@@ -18,7 +18,7 @@ export function SetupServerScreen() {
     latency?: number;
   } | null>(null);
 
-  const handleTestConnection = () => {
+  const handleTestConnection = async () => {
     const trimmed = serverUrl.trim();
     if (!trimmed) {
       setTestResult({
@@ -39,15 +39,39 @@ export function SetupServerScreen() {
     setIsTesting(true);
     setTestResult(null);
 
-    setTimeout(() => {
-      setIsTesting(false);
-      const simulatedLatency = Math.floor(Math.random() * 35) + 25; // 25 - 60ms
-      setTestResult({
-        status: 'success',
-        message: `Terhubung ke server Bandrek API (latensi ${simulatedLatency} ms).`,
-        latency: simulatedLatency,
+    const start = performance.now();
+    try {
+      const cleanBase = trimmed.replace(/\/+$/, '');
+      const res = await fetch(`${cleanBase}/health`, {
+        method: 'GET',
+        headers: { Accept: 'application/json, text/plain' },
       });
-    }, 600);
+
+      const latency = Math.round(performance.now() - start);
+
+      if (res.ok) {
+        setTestResult({
+          status: 'success',
+          message: `Terhubung ke server Bandrek API (latensi ${latency} ms).`,
+          latency,
+        });
+      } else {
+        setTestResult({
+          status: 'error',
+          message: `Server merespons status ${res.status}: ${res.statusText}`,
+          latency,
+        });
+      }
+    } catch (err: any) {
+      const latency = Math.round(performance.now() - start);
+      setTestResult({
+        status: 'error',
+        message: `Gagal terhubung ke server: ${err?.message || 'Server tidak dapat dijangkau'}`,
+        latency,
+      });
+    } finally {
+      setIsTesting(false);
+    }
   };
 
   const handleSave = () => {

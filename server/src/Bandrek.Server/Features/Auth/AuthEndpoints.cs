@@ -54,11 +54,14 @@ public static class AuthEndpoints
                 DateTimeOffset.UtcNow));
         })
         .WithName("Login")
+        .Produces<AuthSessionResponse>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status401Unauthorized)
         .AllowAnonymous();
 
         // POST /api/auth/logout
         authGroup.MapPost("/logout", () => Results.Ok(new { message = "Berhasil logout." }))
-            .WithName("Logout");
+            .WithName("Logout")
+            .Produces(StatusCodes.Status200OK);
 
         // GET /api/auth/session
         authGroup.MapGet("/session", async (
@@ -85,7 +88,9 @@ public static class AuthEndpoints
                 user.IsActive,
                 user.CreatedAt));
         })
-        .WithName("GetCurrentSession");
+        .WithName("GetCurrentSession")
+        .Produces<UserDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status401Unauthorized);
 
         // POST /api/auth/change-password
         authGroup.MapPost("/change-password", async (
@@ -114,7 +119,11 @@ public static class AuthEndpoints
 
             return Results.Ok(new { message = "Kata sandi berhasil diubah." });
         })
-        .WithName("ChangePassword");
+        .WithName("ChangePassword")
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status401Unauthorized)
+        .Produces(StatusCodes.Status404NotFound);
 
         // GET /api/users
         userGroup.MapGet("/", async (UserManager<AppUser> userManager) =>
@@ -132,7 +141,8 @@ public static class AuthEndpoints
 
             return Results.Ok(users);
         })
-        .WithName("GetUsers");
+        .WithName("GetUsers")
+        .Produces<List<UserDto>>(StatusCodes.Status200OK);
 
         // POST /api/users
         userGroup.MapPost("/", async (
@@ -177,7 +187,10 @@ public static class AuthEndpoints
                 user.IsActive,
                 user.CreatedAt));
         })
-        .WithName("CreateUser");
+        .WithName("CreateUser")
+        .Produces<UserDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/users/{id}
         userGroup.MapPut("/{id}", async (
@@ -228,6 +241,8 @@ public static class AuthEndpoints
                 user.IsActive,
                 user.CreatedAt));
         })
-        .WithName("UpdateUser");
+        .WithName("UpdateUser")
+        .Produces<UserDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

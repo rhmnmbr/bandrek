@@ -72,7 +72,8 @@ public static class CourseTopicEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetCourses");
+        .WithName("GetCourses")
+        .Produces<List<CourseDto>>(StatusCodes.Status200OK);
 
         // GET /api/courses/{id}
         courseGroup.MapGet("/{id}", async (
@@ -120,7 +121,9 @@ public static class CourseTopicEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("GetCourseById");
+        .WithName("GetCourseById")
+        .Produces<CourseDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/courses
         courseGroup.MapPost("/", async (
@@ -175,7 +178,10 @@ public static class CourseTopicEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateCourse");
+        .WithName("CreateCourse")
+        .Produces<CourseDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/courses/{id}
         courseGroup.MapPut("/{id}", async (
@@ -220,7 +226,9 @@ public static class CourseTopicEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateCourse");
+        .WithName("UpdateCourse")
+        .Produces<CourseDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/courses/{id}
         courseGroup.MapDelete("/{id}", async (
@@ -251,7 +259,10 @@ public static class CourseTopicEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteCourse");
+        .WithName("DeleteCourse")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
 
         // GET /api/topics
         topicGroup.MapGet("/", async (
@@ -277,9 +288,10 @@ public static class CourseTopicEndpoints
                 0,
                 true,
                 null,
-                new List<string>())));
+                new List<string>())).ToList());
         })
-        .WithName("GetAllTopics");
+        .WithName("GetAllTopics")
+        .Produces<List<TopicDto>>(StatusCodes.Status200OK);
 
         // GET /api/courses/{courseId}/topics
         courseGroup.MapGet("/{courseId}/topics", async (
@@ -314,7 +326,8 @@ public static class CourseTopicEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetTopicsByCourse");
+        .WithName("GetTopicsByCourse")
+        .Produces<List<TopicDto>>(StatusCodes.Status200OK);
 
         // POST /api/topics
         topicGroup.MapPost("/", async (
@@ -383,7 +396,10 @@ public static class CourseTopicEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateTopic");
+        .WithName("CreateTopic")
+        .Produces<TopicDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/topics/{id}
         topicGroup.MapPut("/{id}", async (
@@ -417,7 +433,9 @@ public static class CourseTopicEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateTopic");
+        .WithName("UpdateTopic")
+        .Produces<TopicDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/topics/{id}
         topicGroup.MapDelete("/{id}", async (
@@ -448,7 +466,10 @@ public static class CourseTopicEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteTopic");
+        .WithName("DeleteTopic")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/courses/{courseId}/topics/reorder
         courseGroup.MapPost("/{courseId}/topics/reorder", async (
@@ -489,6 +510,7 @@ public static class CourseTopicEndpoints
 
             return Results.Ok(updatedTopics);
         })
-        .WithName("ReorderCourseTopics");
+        .WithName("ReorderCourseTopics")
+        .Produces<List<TopicDto>>(StatusCodes.Status200OK);
     }
 }

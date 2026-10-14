@@ -42,7 +42,9 @@ public static class RealizationEndpoints
                 r.FilledBy,
                 r.FilledAt.ToString("yyyy-MM-dd HH:mm")));
         })
-        .WithName("GetActivityRealization");
+        .WithName("GetActivityRealization")
+        .Produces<RealizationDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // POST /api/activities/{id}/realization
         group.MapPost("/activities/{id}/realization", async (
@@ -125,7 +127,9 @@ public static class RealizationEndpoints
                 realization.FilledBy,
                 realization.FilledAt.ToString("yyyy-MM-dd HH:mm")));
         })
-        .WithName("SaveActivityRealization");
+        .WithName("SaveActivityRealization")
+        .Produces<RealizationDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // GET /api/realization/pending-count
         group.MapGet("/realization/pending-count", async (
@@ -135,8 +139,9 @@ public static class RealizationEndpoints
             var count = await db.Activities
                 .CountAsync(a => a.RawStatus == RawActivityStatuses.Pending, ct);
 
-            return Results.Ok(new { count });
+            return Results.Ok(new PendingCountDto(count));
         })
-        .WithName("GetPendingRealizationCount");
+        .WithName("GetPendingRealizationCount")
+        .Produces<PendingCountDto>(StatusCodes.Status200OK);
     }
 }

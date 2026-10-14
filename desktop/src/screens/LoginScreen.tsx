@@ -11,11 +11,11 @@ export function LoginScreen() {
   const loginMutation = useLogin();
 
   const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('password');
+  const [password, setPassword] = useState('Admin123!');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const serverUrl =
-    localStorage.getItem('bandrek:server-url') || 'https://api.bandrek-bimbel.id';
+    localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,14 +117,14 @@ export function LoginScreen() {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => handleQuickFill('admin', 'password')}
+              onClick={() => handleQuickFill('admin', 'Admin123!')}
               className="flex-1 py-1 rounded border border-(--color-border) bg-(--color-surface) hover:bg-(--color-brand-subtle) hover:text-(--color-brand) transition-colors cursor-pointer text-[11.5px] font-medium"
             >
               Sebagai Admin
             </button>
             <button
               type="button"
-              onClick={() => handleQuickFill('operator', 'password')}
+              onClick={() => handleQuickFill('operator', 'Operator123!')}
               className="flex-1 py-1 rounded border border-(--color-border) bg-(--color-surface) hover:bg-(--color-brand-subtle) hover:text-(--color-brand) transition-colors cursor-pointer text-[11.5px] font-medium"
             >
               Sebagai Operator

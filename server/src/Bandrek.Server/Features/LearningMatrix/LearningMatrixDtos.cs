@@ -17,6 +17,8 @@ public record ManualChecklistKeyDto(
 public record BulkDeleteManualChecklistRequest(
     List<ManualChecklistKeyDto> Keys);
 
+public record BulkDeleteResultDto(int DeletedCount);
+
 public record ManualChecklistDto(
     string Id,
     string StudentId,

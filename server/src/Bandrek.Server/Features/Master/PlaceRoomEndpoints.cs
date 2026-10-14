@@ -59,7 +59,8 @@ public static class PlaceRoomEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetPlaces");
+        .WithName("GetPlaces")
+        .Produces<List<PlaceDto>>(StatusCodes.Status200OK);
 
         // GET /api/places/{id}
         placeGroup.MapGet("/{id}", async (
@@ -101,7 +102,9 @@ public static class PlaceRoomEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("GetPlaceById");
+        .WithName("GetPlaceById")
+        .Produces<PlaceDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/places
         placeGroup.MapPost("/", async (
@@ -153,7 +156,10 @@ public static class PlaceRoomEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreatePlace");
+        .WithName("CreatePlace")
+        .Produces<PlaceDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/places/{id}
         placeGroup.MapPut("/{id}", async (
@@ -191,7 +197,9 @@ public static class PlaceRoomEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdatePlace");
+        .WithName("UpdatePlace")
+        .Produces<PlaceDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/places/{id}
         placeGroup.MapDelete("/{id}", async (
@@ -222,7 +230,10 @@ public static class PlaceRoomEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeletePlace");
+        .WithName("DeletePlace")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
 
         // GET /api/rooms
         roomGroup.MapGet("/", async (
@@ -245,9 +256,10 @@ public static class PlaceRoomEndpoints
                 0,
                 true,
                 null,
-                new List<string>())));
+                new List<string>())).ToList());
         })
-        .WithName("GetAllRooms");
+        .WithName("GetAllRooms")
+        .Produces<List<RoomDto>>(StatusCodes.Status200OK);
 
         // GET /api/places/{placeId}/rooms
         placeGroup.MapGet("/{placeId}/rooms", async (
@@ -279,7 +291,8 @@ public static class PlaceRoomEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetRoomsByPlace");
+        .WithName("GetRoomsByPlace")
+        .Produces<List<RoomDto>>(StatusCodes.Status200OK);
 
         // POST /api/rooms
         roomGroup.MapPost("/", async (
@@ -334,7 +347,10 @@ public static class PlaceRoomEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateRoom");
+        .WithName("CreateRoom")
+        .Produces<RoomDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/rooms/{id}
         roomGroup.MapPut("/{id}", async (
@@ -363,7 +379,9 @@ public static class PlaceRoomEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateRoom");
+        .WithName("UpdateRoom")
+        .Produces<RoomDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/rooms/{id}
         roomGroup.MapDelete("/{id}", async (
@@ -394,6 +412,9 @@ public static class PlaceRoomEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteRoom");
+        .WithName("DeleteRoom")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

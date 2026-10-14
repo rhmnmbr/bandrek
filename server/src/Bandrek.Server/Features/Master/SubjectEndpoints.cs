@@ -67,7 +67,8 @@ public static class SubjectEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetSubjects");
+        .WithName("GetSubjects")
+        .Produces<List<SubjectDto>>(StatusCodes.Status200OK);
 
         // GET /api/subjects/{id}
         group.MapGet("/{id}", async (
@@ -98,7 +99,9 @@ public static class SubjectEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("GetSubjectById");
+        .WithName("GetSubjectById")
+        .Produces<SubjectDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // GET /api/subjects/{id}/profile
         group.MapGet("/{id}/profile", async (
@@ -111,7 +114,9 @@ public static class SubjectEndpoints
 
             return Results.Ok(profile);
         })
-        .WithName("GetSubjectProfile");
+        .WithName("GetSubjectProfile")
+        .Produces<SubjectProfileData>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/subjects
         group.MapPost("/", async (
@@ -179,7 +184,10 @@ public static class SubjectEndpoints
                 null,
                 new List<string>()));
         })
-        .WithName("CreateSubject");
+        .WithName("CreateSubject")
+        .Produces<SubjectDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/subjects/{id}
         group.MapPut("/{id}", async (
@@ -219,7 +227,9 @@ public static class SubjectEndpoints
                 usage.Reason,
                 usage.UsageDetails));
         })
-        .WithName("UpdateSubject");
+        .WithName("UpdateSubject")
+        .Produces<SubjectDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/subjects/{id}
         group.MapDelete("/{id}", async (
@@ -250,7 +260,10 @@ public static class SubjectEndpoints
                 0,
                 new List<string>()));
         })
-        .WithName("DeleteSubject");
+        .WithName("DeleteSubject")
+        .Produces<DeleteResultDto>(StatusCodes.Status200OK)
+        .Produces<DeleteResultDto>(StatusCodes.Status409Conflict)
+        .Produces(StatusCodes.Status404NotFound);
 
         // POST /api/subjects/{id}/availability
         group.MapPost("/{id}/availability", async (
@@ -271,9 +284,11 @@ public static class SubjectEndpoints
 
             await db.SaveChangesAsync(ct);
 
-            return Results.Ok(subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)));
+            return Results.Ok(subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)).ToList());
         })
-        .WithName("AddSubjectAvailability");
+        .WithName("AddSubjectAvailability")
+        .Produces<List<WeeklyAvailabilityDto>>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
 
         // PUT /api/subjects/{id}/availability/{index:int}
         group.MapPut("/{id}/availability/{index:int}", async (
@@ -300,9 +315,12 @@ public static class SubjectEndpoints
 
             await db.SaveChangesAsync(ct);
 
-            return Results.Ok(subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)));
+            return Results.Ok(subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)).ToList());
         })
-        .WithName("UpdateSubjectAvailability");
+        .WithName("UpdateSubjectAvailability")
+        .Produces<List<WeeklyAvailabilityDto>>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status404NotFound);
 
         // DELETE /api/subjects/{id}/availability/{index:int}
         group.MapDelete("/{id}/availability/{index:int}", async (
@@ -322,8 +340,11 @@ public static class SubjectEndpoints
             subject.WeeklyAvailabilities.RemoveAt(index);
             await db.SaveChangesAsync(ct);
 
-            return Results.Ok(subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)));
+            return Results.Ok(subject.WeeklyAvailabilities.Select(w => new WeeklyAvailabilityDto(w.Day, w.From, w.To)).ToList());
         })
-        .WithName("DeleteSubjectAvailability");
+        .WithName("DeleteSubjectAvailability")
+        .Produces<List<WeeklyAvailabilityDto>>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

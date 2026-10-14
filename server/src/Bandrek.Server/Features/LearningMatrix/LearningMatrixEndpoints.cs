@@ -1,3 +1,4 @@
+using Bandrek.Server.Common.Models;
 using Bandrek.Server.Data;
 using Bandrek.Server.Data.Entities;
 using Bandrek.Server.Services.BusinessRules;
@@ -29,7 +30,8 @@ public static class LearningMatrixEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetLearningMatrix");
+        .WithName("GetLearningMatrix")
+        .Produces<LearningMatrixResult>(StatusCodes.Status200OK);
 
         // POST /api/learning-matrix/manual
         group.MapPost("/manual", async (
@@ -81,7 +83,9 @@ public static class LearningMatrixEndpoints
                 existing.RecordedBy,
                 existing.RecordedAt));
         })
-        .WithName("MarkManualChecklist");
+        .WithName("MarkManualChecklist")
+        .Produces<ManualChecklistDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest);
 
         // DELETE /api/learning-matrix/manual/{id}
         group.MapDelete("/manual/{id}", async (
@@ -98,9 +102,11 @@ public static class LearningMatrixEndpoints
             db.ManualChecklists.Remove(existing);
             await db.SaveChangesAsync(ct);
 
-            return Results.Ok(new { message = "Rekaman ceklis manual berhasil dihapus." });
+            return Results.Ok(new MessageResponseDto("Rekaman ceklis manual berhasil dihapus."));
         })
-        .WithName("DeleteManualChecklist");
+        .WithName("DeleteManualChecklist")
+        .Produces<MessageResponseDto>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status404NotFound);
 
         // POST /api/learning-matrix/manual/bulk
         group.MapPost("/manual/bulk", async (
@@ -155,7 +161,8 @@ public static class LearningMatrixEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("BulkMarkManualChecklist");
+        .WithName("BulkMarkManualChecklist")
+        .Produces<List<ManualChecklistDto>>(StatusCodes.Status200OK);
 
         // POST /api/learning-matrix/manual/bulk-delete
         group.MapPost("/manual/bulk-delete", async (
@@ -179,8 +186,9 @@ public static class LearningMatrixEndpoints
 
             await db.SaveChangesAsync(ct);
 
-            return Results.Ok(new { deletedCount });
+            return Results.Ok(new BulkDeleteResultDto(deletedCount));
         })
-        .WithName("BulkDeleteManualChecklist");
+        .WithName("BulkDeleteManualChecklist")
+        .Produces<BulkDeleteResultDto>(StatusCodes.Status200OK);
     }
 }

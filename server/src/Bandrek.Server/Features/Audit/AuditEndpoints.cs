@@ -58,7 +58,8 @@ public static class AuditEndpoints
 
             return Results.Ok(result);
         })
-        .WithName("GetAuditLogs");
+        .WithName("GetAuditLogs")
+        .Produces<List<AuditLogDto>>(StatusCodes.Status200OK);
 
         // POST /api/audit-logs
         group.MapPost("/", async (
@@ -88,6 +89,7 @@ public static class AuditEndpoints
 
             return Results.Created($"/api/audit-logs/{log.Id}", request);
         })
-        .WithName("CreateAuditLog");
+        .WithName("CreateAuditLog")
+        .Produces<AuditLogDto>(StatusCodes.Status201Created);
     }
 }
