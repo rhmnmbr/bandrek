@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Warning16Regular, Server16Regular } from '@fluentui/react-icons';
-import { useLogin } from '@/data/hooks/useAuth';
+import { useLogin, useAuthSession } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { BandrekLogo } from '@/components/ui/bandrek-logo';
 
@@ -9,10 +9,18 @@ export function LoginScreen() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const loginMutation = useLogin();
+  const { data: session, isLoading: isSessionLoading } = useAuthSession();
 
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('Admin123!');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // If already logged in, redirect to main app
+  useEffect(() => {
+    if (session && !isSessionLoading) {
+      navigate('/kalender', { replace: true });
+    }
+  }, [session, isSessionLoading, navigate]);
 
   const serverUrl =
     localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
@@ -40,12 +48,6 @@ export function LoginScreen() {
     } catch (err: any) {
       setErrorMsg(err?.message || 'Nama pengguna atau kata sandi tidak valid.');
     }
-  };
-
-  const handleQuickFill = (u: string, p: string) => {
-    setUsername(u);
-    setPassword(p);
-    setErrorMsg(null);
   };
 
   return (
@@ -108,29 +110,6 @@ export function LoginScreen() {
             <span>{loginMutation.isPending ? 'Memeriksa...' : 'Masuk'}</span>
           </button>
         </form>
-
-        {/* Quick Dev Account Switcher */}
-        <div className="rounded-sm border border-(--color-border-subtle) bg-(--color-surface-alt) p-2.5 flex flex-col gap-1.5 text-xs text-(--color-text-muted)">
-          <div className="font-medium text-(--color-text-secondary) flex items-center justify-between">
-            <span>Pintasan Masuk (Mode Demo):</span>
-          </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickFill('admin', 'Admin123!')}
-              className="flex-1 py-1 rounded border border-(--color-border) bg-(--color-surface) hover:bg-(--color-brand-subtle) hover:text-(--color-brand) transition-colors cursor-pointer text-[11.5px] font-medium"
-            >
-              Sebagai Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickFill('operator', 'Operator123!')}
-              className="flex-1 py-1 rounded border border-(--color-border) bg-(--color-surface) hover:bg-(--color-brand-subtle) hover:text-(--color-brand) transition-colors cursor-pointer text-[11.5px] font-medium"
-            >
-              Sebagai Operator
-            </button>
-          </div>
-        </div>
 
         {/* Server Setting Footer */}
         <div className="flex items-center justify-center pt-2 border-t border-(--color-border)">

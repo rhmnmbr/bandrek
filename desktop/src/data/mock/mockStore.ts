@@ -67,12 +67,7 @@ export class MockDataStore {
     this.ceklisManual = JSON.parse(JSON.stringify(INITIAL_SEED.ceklisManual));
     this.kegiatan = JSON.parse(JSON.stringify(INITIAL_SEED.kegiatan));
     this.users = [...DEFAULT_USERS];
-    this.session = {
-      token: 'mock-jwt-token-dev-2026',
-      user: DEFAULT_USERS[0],
-      serverUrl: 'https://api.bandrek-bimbel.id',
-      loginAt: '2026-09-16 08:00',
-    };
+    this.session = null;
 
     this.loadFromStorage();
   }

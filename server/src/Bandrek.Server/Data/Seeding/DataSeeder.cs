@@ -29,6 +29,9 @@ public class DataSeeder
 
     public async Task SeedAsync(bool forceReset = false)
     {
+        _logger.LogInformation("Applying database migrations...");
+        await _db.Database.MigrateAsync();
+
         if (forceReset)
         {
             _logger.LogWarning("Resetting existing database data before seeding...");

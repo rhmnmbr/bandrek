@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, Navigate } from 'react-router-dom';
 import { NavigationRail } from './NavigationRail';
 import { TopBar } from './TopBar';
 import { QuickSearchModal } from './QuickSearchModal';
 import { OfflineBanner } from '@/components/ui/offline-banner';
 import { useToast } from '@/components/ui/toast';
-import { useSimulasi } from '@/data/hooks';
+import { useSimulasi, useAuthSession } from '@/data/hooks';
 import {
   useGlobalKeyboardShortcuts,
   BANDREK_EVENTS,
@@ -16,6 +16,7 @@ export const AppShell: React.FC = () => {
   const location = useLocation();
   const { showToast, setOffsetRight } = useToast();
   const { config, updateConfig } = useSimulasi();
+  const { data: session, isLoading: isSessionLoading } = useAuthSession();
 
   // Rail collapse state with persistence
   const [railCollapsed, setRailCollapsed] = React.useState<boolean>(() => {
@@ -138,6 +139,23 @@ export const AppShell: React.FC = () => {
       });
     }, 1200);
   }, [updateConfig, showToast]);
+
+  // Guard: Memeriksa sesi login saat aplikasi dibuka
+  if (isSessionLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-(--color-canvas)">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-(--color-border) border-t-(--color-brand)" />
+          <span className="text-xs text-(--color-text-muted)">Memeriksa sesi pengguna...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Jika belum login, selalu arahkan ke halaman login terlebih dahulu
+  if (!session) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-(--color-canvas) text-(--color-text) select-none">

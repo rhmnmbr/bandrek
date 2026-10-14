@@ -1,0 +1,19 @@
+services:
+  bandrek-api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: bandrek-api
+    restart: unless-stopped
+    # network_mode: host memungkinkan container mengakses PostgreSQL lokal (127.0.0.1:5432)
+    # dan hanya mengikat port ke 127.0.0.1:5050 agar aman dari akses luar langsung (hanya via Nginx)
+    network_mode: "host"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://127.0.0.1:5050
+      - ConnectionStrings__DefaultConnection=Host=127.0.0.1;Port=5432;Database=bandrek_db;Username=bandrek_user;Password=GANTI_DENGAN_PASSWORD_DB_ANDA
+      - Jwt__Secret=GANTI_DENGAN_SECRET_KEY_MINIMAL_32_KARAKTER_YANG_AMAN_2026!
+      - Bimbel__Name=Bandrek Bimbel
+      - Bimbel__Timezone=Asia/Jakarta
+      - Bimbel__MinClientVersion=1.0.0
+      - Bimbel__ServerVersion=1.0.0

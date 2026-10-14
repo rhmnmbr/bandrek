@@ -1,0 +1,23 @@
+[Unit]
+Description=Bandrek Backend API Service (.NET 10)
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+WorkingDirectory=/var/www/bandrek
+ExecStart=/usr/bin/dotnet /var/www/bandrek/Bandrek.Server.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=bandrek-api
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+Environment=ASPNETCORE_URLS=http://127.0.0.1:5050
+Environment="ConnectionStrings__DefaultConnection=Host=127.0.0.1;Port=5432;Database=bandrek_db;Username=bandrek_user;Password=GANTI_DENGAN_PASSWORD_DB_ANDA"
+Environment="Jwt__Secret=GANTI_DENGAN_SECRET_KEY_MINIMAL_32_KARAKTER_YANG_AMAN_2026!"
+Environment="Bimbel__Name=Bandrek Bimbel"
+Environment="Bimbel__Timezone=Asia/Jakarta"
+
+[Install]
+WantedBy=multi-user.target
