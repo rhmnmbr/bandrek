@@ -24,6 +24,7 @@ import {
 import { MapelConfirmModal } from '@/components/master/mapel/MapelConfirmModal';
 import { BookOpen24Regular } from '@fluentui/react-icons';
 import { MapelSkeleton } from '@/components/skeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 export function MapelScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -462,8 +463,9 @@ export function MapelScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedMateriId, isNewMateri, handleNewMateri, handleNewMapel]);
 
-  // Full page Mapel Skeleton during initial page loading
-  if (isLoadingAllMapel) {
+  // Full page Mapel Skeleton during initial page loading (enforcing 350ms minimum duration)
+  const isPageLoading = useMinimumLoading(isLoadingAllMapel && allMapel.length === 0, 350);
+  if (isPageLoading) {
     return <MapelSkeleton />;
   }
 

@@ -3,4 +3,5 @@ export * from './useRealisasi';
 export * from './useMatriks';
 export * from './useMaster';
 export * from './useAuth';
+export * from './useAudit';
 export * from './useSimulasi';

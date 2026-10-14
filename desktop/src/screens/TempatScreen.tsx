@@ -23,6 +23,7 @@ import {
 import { TempatConfirmModal } from '@/components/master/tempat/TempatConfirmModal';
 import { Building24Regular } from '@fluentui/react-icons';
 import { TempatSkeleton } from '@/components/skeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 export function TempatScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -317,8 +318,9 @@ export function TempatScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedRuanganId, isNewRuangan, handleNewRuangan, handleNewTempat]);
 
-  // Full page Tempat Skeleton during initial page loading
-  if (isLoadingAllTempat) {
+  // Full page Tempat Skeleton during initial page loading (enforcing 350ms minimum duration)
+  const isPageLoading = useMinimumLoading(isLoadingAllTempat && allTempat.length === 0, 350);
+  if (isPageLoading) {
     return <TempatSkeleton />;
   }
 

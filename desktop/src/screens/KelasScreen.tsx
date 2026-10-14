@@ -15,6 +15,7 @@ import { KelasFormView, type KelasFormData } from '@/components/master/kelas/Kel
 import { KelasConfirmModal } from '@/components/master/kelas/KelasConfirmModal';
 import { PeopleTeam24Regular } from '@fluentui/react-icons';
 import { KelasSkeleton } from '@/components/skeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 export function KelasScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -204,8 +205,9 @@ export function KelasScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewKelas]);
 
-  // Full page Kelas Skeleton during initial page loading
-  if (isLoadingAllKelas) {
+  // Full page Kelas Skeleton during initial page loading (enforcing 350ms minimum duration)
+  const isPageLoading = useMinimumLoading(isLoadingAllKelas && allKelas.length === 0, 350);
+  if (isPageLoading) {
     return <KelasSkeleton />;
   }
 

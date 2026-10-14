@@ -9,11 +9,10 @@ import {
 } from '@fluentui/react-icons';
 import { Button } from '@/components/ui/button';
 import { MultiSelect, type SelectOption } from '@/components/ui/select';
-import { useAuthSession } from '@/data/hooks/useAuth';
-import { repositories } from '@/data/repositories';
-import { MOCK_AUDIT_LOGS } from '@/data/mocks/auditLog';
-import type { AuditAksi, AuditLogItem } from '@/data/types/auditLog';
+import { useAuthSession, useAuditLogs } from '@/data/hooks';
+import type { AuditAksi, AuditFieldDiff } from '@/data/types/auditLog';
 import { AuditLogSkeleton } from '@/components/skeleton/AuditLogSkeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 const KATEGORI_OPTIONS: SelectOption[] = [
   { value: 'kegiatan', label: 'Kegiatan' },
@@ -69,9 +68,22 @@ const AKSI_BADGES: Record<
   },
 };
 
+function getAksiBadge(aksi: string) {
+  return (
+    AKSI_BADGES[aksi as AuditAksi] || {
+      label: aksi || 'Aktivitas',
+      bg: 'bg-(--color-surface-alt)',
+      text: 'text-(--color-text-secondary)',
+      border: 'border-(--color-border)',
+    }
+  );
+}
+
 function formatWaktuIndo(isoString: string): string {
   try {
+    if (!isoString) return '—';
     const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
     const tgl = d.toLocaleDateString('id-ID', {
       day: '2-digit',
       month: 'short',
@@ -91,41 +103,19 @@ function formatWaktuIndo(isoString: string): string {
 
 export function AuditLogScreen() {
   const navigate = useNavigate();
-  const { data: session } = useAuthSession();
+  const { data: session, isLoading: isSessionLoading } = useAuthSession();
   const isAdmin = session?.user?.peran === 'admin';
 
-  const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: auditLogs = [], isLoading } = useAuditLogs();
+  const isScreenLoading = useMinimumLoading(
+    (isSessionLoading || isLoading) && auditLogs.length === 0,
+    350
+  );
   const [cari, setCari] = useState('');
   const [filterKategori, setFilterKategori] = useState<string[]>([]);
   const [filterAksi, setFilterAksi] = useState<string[]>([]);
   const [filterOperator, setFilterOperator] = useState<string[]>([]);
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
-
-  // Load audit logs from repository
-  useEffect(() => {
-    let isMounted = true;
-    repositories.audit
-      .getAll()
-      .then((data) => {
-        if (!isMounted) return;
-        if (data && data.length > 0) {
-          setAuditLogs(data);
-        } else {
-          setAuditLogs(MOCK_AUDIT_LOGS);
-        }
-      })
-      .catch(() => {
-        if (isMounted) setAuditLogs(MOCK_AUDIT_LOGS);
-      })
-      .finally(() => {
-        if (isMounted) setIsLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   // Filtered log entries
   const filteredLogs = useMemo(() => {
@@ -133,12 +123,14 @@ export function AuditLogScreen() {
       // Search text match
       if (cari.trim()) {
         const q = cari.toLowerCase();
+        const opNama = item.operator?.nama || '';
+        const opUser = item.operator?.username || '';
         const matchOperator =
-          item.operator.nama.toLowerCase().includes(q) ||
-          item.operator.username.toLowerCase().includes(q);
-        const matchRingkasan = item.ringkasan.toLowerCase().includes(q);
-        const matchEntitas = item.entitasNama.toLowerCase().includes(q);
-        const matchTipe = item.entitasTipe.toLowerCase().includes(q);
+          opNama.toLowerCase().includes(q) ||
+          opUser.toLowerCase().includes(q);
+        const matchRingkasan = (item.ringkasan || '').toLowerCase().includes(q);
+        const matchEntitas = (item.entitasNama || '').toLowerCase().includes(q);
+        const matchTipe = (item.entitasTipe || '').toLowerCase().includes(q);
         if (!matchOperator && !matchRingkasan && !matchEntitas && !matchTipe) {
           return false;
         }
@@ -155,7 +147,7 @@ export function AuditLogScreen() {
       }
 
       // Operator match
-      if (filterOperator.length > 0 && !filterOperator.includes(item.operator.id)) {
+      if (filterOperator.length > 0 && !filterOperator.includes(item.operator?.id)) {
         return false;
       }
 
@@ -168,7 +160,9 @@ export function AuditLogScreen() {
     const list: SelectOption[] = [];
     const map = new Map<string, string>();
     auditLogs.forEach((item) => {
-      map.set(item.operator.id, item.operator.nama);
+      if (item.operator?.id) {
+        map.set(item.operator.id, item.operator.nama || 'Operator');
+      }
     });
     map.forEach((nama, id) => {
       list.push({ value: id, label: nama });
@@ -205,7 +199,12 @@ export function AuditLogScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedLogId]);
 
-  // 1. Role Guard: Access Denied for Non-Admin
+  // 1. Session Loading Guard (prevent false positive Access Denied on refresh)
+  if (isSessionLoading) {
+    return <AuditLogSkeleton />;
+  }
+
+  // 2. Role Guard: Access Denied for Non-Admin
   if (!isAdmin) {
     return (
       <div className="flex h-full w-full items-center justify-center p-6 bg-(--color-surface)">
@@ -231,8 +230,8 @@ export function AuditLogScreen() {
     );
   }
 
-  // 2. Loading State
-  if (isLoading) {
+  // 3. Loading State (enforces 350ms minimum duration to prevent rapid flicker)
+  if (isScreenLoading) {
     return <AuditLogSkeleton />;
   }
 
@@ -250,7 +249,7 @@ export function AuditLogScreen() {
               Log Audit Aktivitas
             </div>
             <span className="text-xs text-(--color-text-muted)">
-              · {filteredLogs.length} dari {MOCK_AUDIT_LOGS.length} riwayat
+              · {filteredLogs.length} dari {auditLogs.length} riwayat
             </span>
           </div>
         </div>
@@ -363,9 +362,10 @@ export function AuditLogScreen() {
               {/* Table Body Rows */}
               {filteredLogs.map((item) => {
                 const isSelected = selectedLogId === item.id;
-                const badge = AKSI_BADGES[item.aksi];
+                const badge = getAksiBadge(item.aksi);
                 const waktuStr = formatWaktuIndo(item.waktu);
-                const initials = item.operator.nama.slice(0, 2).toUpperCase();
+                const operatorNama = item.operator?.nama || 'Operator';
+                const initials = operatorNama.slice(0, 2).toUpperCase();
 
                 return (
                   <div
@@ -390,7 +390,7 @@ export function AuditLogScreen() {
                         {initials}
                       </div>
                       <span className="truncate font-medium text-(--color-text-primary)">
-                        {item.operator.nama}
+                        {operatorNama}
                       </span>
                     </div>
 
@@ -476,36 +476,39 @@ export function AuditLogScreen() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="font-semibold text-(--color-text-primary) truncate">
-                    {selectedLog.operator.nama}
+                    {selectedLog.operator?.nama || 'Operator'}
                   </div>
                   <div className="text-[11px] text-(--color-text-muted) font-mono">
-                    @{selectedLog.operator.username} · {selectedLog.operator.peran}
+                    @{selectedLog.operator?.username || '—'} · {selectedLog.operator?.peran || '—'}
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Aktivitas & Ringkasan */}
-            <div className="rounded border border-(--color-border) bg-(--color-surface) p-2.5 flex flex-col gap-1.5 text-xs">
-              <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-muted) uppercase">
-                RINGKASAN AKTIVITAS
-              </div>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span
-                  className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10.5px] font-semibold border ${
-                    AKSI_BADGES[selectedLog.aksi].border
-                  } ${AKSI_BADGES[selectedLog.aksi].bg} ${AKSI_BADGES[selectedLog.aksi].text}`}
-                >
-                  {AKSI_BADGES[selectedLog.aksi].label}
-                </span>
-                <span className="font-semibold text-(--color-text-primary)">
-                  [{selectedLog.entitasTipe}] {selectedLog.entitasNama}
-                </span>
-              </div>
-              <p className="text-(--color-text-secondary) leading-relaxed mt-1">
-                {selectedLog.ringkasan}
-              </p>
-            </div>
+            {(() => {
+              const detailBadge = getAksiBadge(selectedLog.aksi);
+              return (
+                <div className="rounded border border-(--color-border) bg-(--color-surface) p-2.5 flex flex-col gap-1.5 text-xs">
+                  <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-muted) uppercase">
+                    RINGKASAN AKTIVITAS
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span
+                      className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10.5px] font-semibold border ${detailBadge.border} ${detailBadge.bg} ${detailBadge.text}`}
+                    >
+                      {detailBadge.label}
+                    </span>
+                    <span className="font-semibold text-(--color-text-primary)">
+                      [{selectedLog.entitasTipe}] {selectedLog.entitasNama}
+                    </span>
+                  </div>
+                  <p className="text-(--color-text-secondary) leading-relaxed mt-1">
+                    {selectedLog.ringkasan}
+                  </p>
+                </div>
+              );
+            })()}
 
             {/* Field Diff Section */}
             {selectedLog.diff && selectedLog.diff.length > 0 && (
@@ -514,7 +517,7 @@ export function AuditLogScreen() {
                   PERUBAHAN BIDANG DATA ({selectedLog.diff.length})
                 </div>
                 <div className="flex flex-col gap-2 mt-1">
-                  {selectedLog.diff.map((df, i) => (
+                  {selectedLog.diff.map((df: AuditFieldDiff, i: number) => (
                     <div
                       key={i}
                       className="rounded border border-(--color-border-subtle) bg-(--color-surface-alt) p-2 flex flex-col gap-1"

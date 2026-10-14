@@ -20,6 +20,7 @@ import { SubjekFormPanel, type SubjekFormData } from '@/components/master/subjek
 import { SubjekConfirmModal } from '@/components/master/subjek/SubjekConfirmModal';
 import { ProfilSubjekView } from '@/components/master/subjek/ProfilSubjekView';
 import { ProfilSubjekSkeleton, SubjekSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 export function SubjekScreen() {
   const { id: routeId } = useParams<{ id?: string }>();
@@ -397,8 +398,12 @@ export function SubjekScreen() {
     );
   }
 
-  // Full page Subjek Skeleton during initial page loading
-  if (isLoadingAllSubjek || isLoadingMapel) {
+  // Full page Subjek Skeleton during initial page loading (enforcing 350ms minimum duration)
+  const isPageLoading = useMinimumLoading(
+    (isLoadingAllSubjek || isLoadingMapel) && allSubjek.length === 0,
+    350
+  );
+  if (isPageLoading) {
     return <SubjekSkeleton />;
   }
 

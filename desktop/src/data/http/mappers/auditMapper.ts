@@ -6,6 +6,26 @@ import type {
 } from '../../types/auditLog';
 import type { AuditLogDto } from '../../api/generated/models';
 
+function normalizeAuditAksi(action: string): AuditAksi {
+  const lower = (action || '').toLowerCase();
+  if (lower.includes('buat') || lower.includes('create') || lower.includes('add')) return 'buat';
+  if (lower.includes('hapus') || lower.includes('delete') || lower.includes('remove')) return 'hapus';
+  if (lower.includes('realisasi')) return 'realisasi';
+  if (lower.includes('login') || lower.includes('auth')) return 'login';
+  return 'ubah';
+}
+
+function normalizeAuditKategori(cat: string): Exclude<AuditKategori, 'semua'> {
+  const lower = (cat || '').toLowerCase();
+  if (lower === 'kegiatan') return 'kegiatan';
+  if (lower === 'realisasi') return 'realisasi';
+  if (lower === 'siswa') return 'siswa';
+  if (lower === 'subjek') return 'subjek';
+  if (lower === 'master') return 'master';
+  if (lower === 'pengguna' || lower === 'user') return 'pengguna';
+  return 'sistem';
+}
+
 export function mapAuditLogDtoToAuditLogItem(dto: AuditLogDto): AuditLogItem {
   let diff: AuditFieldDiff[] | undefined = undefined;
   if (dto.diffsJson) {
@@ -24,13 +44,13 @@ export function mapAuditLogDtoToAuditLogItem(dto: AuditLogDto): AuditLogItem {
         : new Date(dto.timestamp).toISOString(),
     operator: {
       id: dto.userId || '',
-      nama: dto.operatorName || '',
-      username: dto.operatorUsername || '',
+      nama: dto.operatorName || 'Administrator',
+      username: dto.operatorUsername || 'admin',
       peran: (dto.operatorRole as 'admin' | 'operator') || 'operator',
     },
-    aksi: (dto.action as AuditAksi) || 'ubah',
-    kategori: (dto.category as Exclude<AuditKategori, 'semua'>) || 'sistem',
-    entitasTipe: dto.entityType || '',
+    aksi: normalizeAuditAksi(dto.action),
+    kategori: normalizeAuditKategori(dto.category),
+    entitasTipe: dto.entityType || 'sistem',
     entitasNama: dto.entityName || '',
     ringkasan: dto.summary || '',
     diff,

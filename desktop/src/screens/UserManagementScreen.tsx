@@ -10,6 +10,7 @@ import {
 } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { MasterTableSkeleton, FormPanelSkeleton, UserManagementSkeleton } from '@/components/skeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 export interface UserFormData {
   nama: string;
@@ -479,7 +480,11 @@ export function UserManagementScreen() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewUser]);
 
-  if ((isLoadingUsers && !cari) || isLoadingSession) {
+  const isPageLoading = useMinimumLoading(
+    ((isLoadingUsers && !cari) || isLoadingSession) && users.length === 0,
+    350
+  );
+  if (isPageLoading) {
     return <UserManagementSkeleton />;
   }
 

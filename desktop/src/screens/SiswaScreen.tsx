@@ -19,6 +19,7 @@ import { SiswaFormPanel, type SiswaFormData } from '@/components/master/siswa/Si
 import { SiswaConfirmModal } from '@/components/master/siswa/SiswaConfirmModal';
 import { ProfilSiswaView } from '@/components/master/siswa/ProfilSiswaView';
 import { ProfilSiswaSkeleton, SiswaSkeleton, FormPanelSkeleton } from '@/components/skeleton';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 import { BANDREK_EVENTS, dispatchBandrekEvent } from '@/lib/keyboardShortcuts';
 
 export function SiswaScreen() {
@@ -388,8 +389,12 @@ export function SiswaScreen() {
     );
   }
 
-  // Full page Siswa Skeleton during initial page loading
-  if (isLoadingAllSiswa || isLoadingKelas) {
+  // Full page Siswa Skeleton during initial page loading (enforcing 350ms minimum duration)
+  const isPageLoading = useMinimumLoading(
+    (isLoadingAllSiswa || isLoadingKelas) && allSiswa.length === 0,
+    350
+  );
+  if (isPageLoading) {
     return <SiswaSkeleton />;
   }
 

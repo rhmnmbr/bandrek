@@ -18,6 +18,7 @@ import {
 } from '@/lib/dateUtils';
 import { BANDREK_EVENTS } from '@/lib/keyboardShortcuts';
 import { useToast } from '@/components/ui/toast';
+import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
 import { DaftarToolbar } from '@/components/daftar/DaftarToolbar';
 import { DaftarQuickFilters } from '@/components/daftar/DaftarQuickFilters';
@@ -49,7 +50,10 @@ export const DaftarKegiatanScreen: React.FC = () => {
   const { data: mapelList = [] } = useMapelList();
   const { data: tempatList = [] } = useTempatList();
 
-  const isPageLoading = loadingKegiatan || loadingJenis || loadingSubjek || loadingKelas;
+  const rawLoading =
+    (loadingKegiatan || loadingJenis || loadingSubjek || loadingKelas) &&
+    semuaKegiatan.length === 0;
+  const isPageLoading = useMinimumLoading(rawLoading, 350);
 
   // Calculate default date range: past 14 days to latest event in dataset
   const defaultRentang = React.useMemo(() => {
@@ -74,29 +78,71 @@ export const DaftarKegiatanScreen: React.FC = () => {
     );
   }, [semuaKegiatan]);
 
-  // Local filter states - user explicit selections (null means default derived from data)
-  const [userDari, setUserDari] = React.useState<string | null>(null);
-  const [userSampai, setUserSampai] = React.useState<string | null>(null);
+  // Local filter states - initialized eagerly from URL searchParams to prevent double-mount
+  const [userDari, setUserDari] = React.useState<string | null>(
+    () => searchParams.get('dari') || null
+  );
+  const [userSampai, setUserSampai] = React.useState<string | null>(
+    () => searchParams.get('sampai') || null
+  );
 
-  const dari = userDari ?? defaultRentang.dari;
-  const sampai = userSampai ?? defaultRentang.sampai;
-
-  const [jenis, setJenis] = React.useState<string[]>([]);
-  const [status, setStatus] = React.useState<StatusKegiatan[]>([]);
-  const [subjek, setSubjek] = React.useState<string[]>([]);
-  const [kelas, setKelas] = React.useState<string[]>([]);
-  const [siswa, setSiswa] = React.useState<string[]>([]);
-  const [mapel, setMapel] = React.useState<string[]>([]);
-  const [tempat, setTempat] = React.useState<string>('');
-  const [cari, setCari] = React.useState<string>('');
-  const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>('');
+  const [jenis, setJenis] = React.useState<string[]>(
+    () => searchParams.get('jenis')?.split(',').filter(Boolean) || []
+  );
+  const [status, setStatus] = React.useState<StatusKegiatan[]>(
+    () => (searchParams.get('status')?.split(',').filter(Boolean) as StatusKegiatan[]) || []
+  );
+  const [subjek, setSubjek] = React.useState<string[]>(
+    () => searchParams.get('subjek')?.split(',').filter(Boolean) || []
+  );
+  const [kelas, setKelas] = React.useState<string[]>(
+    () => searchParams.get('kelas')?.split(',').filter(Boolean) || []
+  );
+  const [siswa, setSiswa] = React.useState<string[]>(
+    () => searchParams.get('siswa')?.split(',').filter(Boolean) || []
+  );
+  const [mapel, setMapel] = React.useState<string[]>(
+    () => searchParams.get('mapel')?.split(',').filter(Boolean) || []
+  );
+  const [tempat, setTempat] = React.useState<string>(
+    () => searchParams.get('tempat') || ''
+  );
+  const [cari, setCari] = React.useState<string>(
+    () => searchParams.get('cari') || ''
+  );
+  const [cepat, setCepat] = React.useState<QuickFilterDaftar | ''>(() => {
+    const filterParam = searchParams.get('filter');
+    if (filterParam === 'perlu_realisasi' || filterParam === 'perlu') return 'perlu';
+    if (
+      filterParam === 'hari' ||
+      filterParam === 'minggu' ||
+      filterParam === 'datang'
+    ) {
+      return filterParam as QuickFilterDaftar;
+    }
+    return '';
+  });
   const [sortDesc, setSortDesc] = React.useState<boolean>(true);
   const [viewMode, setViewMode] = React.useState<'tabel' | 'kanban'>(() => {
     const v = searchParams.get('view');
     return v === 'kanban' ? 'kanban' : 'tabel';
   });
 
-  // Sync URL query parameters (?filter, ?subjek, ?kelas, ?jenis, ?status, ?cari, ?mapel, ?tempat, ?dari, ?sampai, ?siswa)
+  const hasEntityFilter = Boolean(
+    subjek.length > 0 ||
+    kelas.length > 0 ||
+    jenis.length > 0 ||
+    mapel.length > 0 ||
+    tempat ||
+    cari.trim() ||
+    siswa.length > 0
+  );
+
+  const dari = userDari ?? (hasEntityFilter && tglAwalData ? tglAwalData : defaultRentang.dari);
+  const sampai = userSampai ?? defaultRentang.sampai;
+
+  // Sync URL query parameters only when URL search actually changes externally
+  const searchParamsStr = searchParams.toString();
   React.useEffect(() => {
     const filterParam = searchParams.get('filter');
     const subjekParam = searchParams.get('subjek');
@@ -109,10 +155,6 @@ export const DaftarKegiatanScreen: React.FC = () => {
     const siswaParam = searchParams.get('siswa');
     const dariParam = searchParams.get('dari');
     const sampaiParam = searchParams.get('sampai');
-
-    const hasEntityFilter = Boolean(
-      subjekParam || kelasParam || jenisParam || mapelParam || tempatParam || cariParam || siswaParam
-    );
 
     if (filterParam === 'perlu_realisasi' || filterParam === 'perlu') {
       setCepat('perlu');
@@ -130,21 +172,9 @@ export const DaftarKegiatanScreen: React.FC = () => {
     setMapel(mapelParam ? mapelParam.split(',').filter(Boolean) : []);
     setCari(cariParam || '');
     setTempat(tempatParam || '');
-
-    if (dariParam) {
-      setUserDari(dariParam);
-    } else if (hasEntityFilter && tglAwalData) {
-      setUserDari(tglAwalData);
-    } else {
-      setUserDari(null);
-    }
-
-    if (sampaiParam) {
-      setUserSampai(sampaiParam);
-    } else {
-      setUserSampai(null);
-    }
-  }, [searchParams, tglAwalData]);
+    setUserDari(dariParam || null);
+    setUserSampai(sampaiParam || null);
+  }, [searchParamsStr]);
 
   // Modal Dialog States
   const [modalBatalState, setModalBatalState] = React.useState<{
@@ -190,13 +220,29 @@ export const DaftarKegiatanScreen: React.FC = () => {
     return map;
   }, [kelasList]);
 
-  // Main predicate: matches dropdowns and search term
+  // Siswa lowercase name map for O(1) text search
+  const siswaNameMap = React.useMemo(() => {
+    const map = new Map<string, string>();
+    for (const s of siswaList) {
+      map.set(s.id, s.nama.toLowerCase());
+    }
+    return map;
+  }, [siswaList]);
+
+  // Fast O(1) lookup sets
+  const jenisSet = React.useMemo(() => new Set(jenis), [jenis]);
+  const statusSet = React.useMemo(() => new Set(status), [status]);
+  const subjekSet = React.useMemo(() => new Set(subjek), [subjek]);
+  const siswaSet = React.useMemo(() => new Set(siswa), [siswa]);
+  const mapelSet = React.useMemo(() => new Set(mapel), [mapel]);
+
+  // Main predicate: matches dropdowns and search term with O(1) lookups
   const lolosFilter = React.useCallback(
     (ev: Kegiatan) => {
-      if (jenis.length > 0 && !jenis.includes(ev.jenis)) return false;
-      if (status.length > 0 && !status.includes(ev.status)) return false;
-      if (subjek.length > 0 && !ev.subjek.some((s) => subjek.includes(s.id))) return false;
-      if (siswa.length > 0 && !ev.siswa.some((sid) => siswa.includes(sid))) return false;
+      if (jenis.length > 0 && !jenisSet.has(ev.jenis)) return false;
+      if (status.length > 0 && !statusSet.has(ev.status)) return false;
+      if (subjek.length > 0 && !ev.subjek.some((s) => subjekSet.has(s.id))) return false;
+      if (siswa.length > 0 && !ev.siswa.some((sid) => siswaSet.has(sid))) return false;
       if (kelas.length > 0) {
         const matchAnyKelas = kelas.some((kId) => {
           const anggota = kelasAnggotaMap.get(kId) || [];
@@ -204,20 +250,36 @@ export const DaftarKegiatanScreen: React.FC = () => {
         });
         if (!matchAnyKelas) return false;
       }
-      if (mapel.length > 0 && (!ev.mapel || !mapel.includes(ev.mapel))) return false;
+      if (mapel.length > 0 && (!ev.mapel || !mapelSet.has(ev.mapel))) return false;
       if (tempat && ev.tempat !== tempat) return false;
       if (cari.trim().length > 0) {
         const qLower = cari.trim().toLowerCase();
         const matchNama = ev.nama.toLowerCase().includes(qLower);
         const matchSiswa = ev.siswa.some((sid) => {
-          const sw = siswaList.find((s) => s.id === sid);
-          return sw && sw.nama.toLowerCase().includes(qLower);
+          const sNama = siswaNameMap.get(sid);
+          return sNama ? sNama.includes(qLower) : false;
         });
         if (!matchNama && !matchSiswa) return false;
       }
       return true;
     },
-    [jenis, status, subjek, siswa, kelas, mapel, tempat, kelasAnggotaMap, cari, siswaList]
+    [
+      jenis.length,
+      jenisSet,
+      status.length,
+      statusSet,
+      subjek.length,
+      subjekSet,
+      siswa.length,
+      siswaSet,
+      kelas,
+      kelasAnggotaMap,
+      mapel.length,
+      mapelSet,
+      tempat,
+      cari,
+      siswaNameMap,
+    ]
   );
 
   // Quick filter counts (calculated on full dataset matching other active filters)

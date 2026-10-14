@@ -37,6 +37,166 @@ interface MenuState {
   anchorEl: HTMLElement;
 }
 
+interface DaftarTableRowProps {
+  ev: Kegiatan;
+  isToday: boolean;
+  isMenuOpen: boolean;
+  onOpenDetail: (kegiatan: Kegiatan) => void;
+  onToggleMenu: (kegiatan: Kegiatan, el: HTMLElement) => void;
+}
+
+const DaftarTableRow = React.memo<DaftarTableRowProps>(({
+  ev,
+  isToday,
+  isMenuOpen,
+  onOpenDetail,
+  onToggleMenu,
+}) => {
+  const isBatal = ev.status === 'dibatalkan';
+  const isUlang = ev.status === 'dijadwal_ulang';
+  const isTerealisasi = ev.status === 'terealisasi';
+  const isBelum = ev.status === 'belum_direalisasi';
+  const isTerjadwal = ev.status === 'terjadwal';
+  const perlu = ev.perluRealisasi ?? isBelum;
+
+  const formattedDate = formatTanggalPendek(ev.tanggal);
+  const formattedJam = `${ev.mulai}–${ev.selesai}`;
+  const displayJenis = ev.namaJenis || '—';
+  const displayMateri = ev.namaMateri
+    ? `${ev.namaMapel || '—'} › ${ev.namaMateri}`
+    : '—';
+  const displayRuangan = ev.namaRuangan
+    ? `${ev.namaTempat || '—'} · ${ev.namaRuangan}`
+    : 'Tanpa ruangan';
+  const displayPengisi = ev.pengisiUtama?.nama || '—';
+  const siswaCount = ev.siswa.length;
+
+  return (
+    <div
+      onClick={() => onOpenDetail(ev)}
+      className={cn(
+        'flex items-center h-8 flex-none border-b border-[#EDEBE9] px-3.5 text-[12.5px] cursor-pointer transition-colors w-full min-w-full',
+        perlu
+          ? 'bg-[#FFF8EE] shadow-[inset_3px_0_0_#F0A82E] hover:bg-[#FFF3E0]'
+          : 'bg-white hover:bg-[#FAFAFA]'
+      )}
+    >
+      {/* TANGGAL */}
+      <div
+        className={cn(
+          'w-26 flex-none font-mono text-[11.5px] whitespace-nowrap',
+          isToday ? 'text-[#0C548F] font-semibold' : 'text-[#5C5A58]'
+        )}
+      >
+        {formattedDate}
+      </div>
+
+      {/* JAM */}
+      <div className="w-26 flex-none font-mono text-[11.5px] text-[#424242] whitespace-nowrap">
+        {formattedJam}
+      </div>
+
+      {/* NAMA KEGIATAN */}
+      <div
+        className={cn(
+          'flex-1 min-w-40 whitespace-nowrap overflow-hidden text-ellipsis pr-2 flex items-center gap-1.5',
+          perlu ? 'font-semibold' : 'font-normal',
+          isBatal ? 'line-through text-[#5C5A58]' : 'text-[#242424]'
+        )}
+      >
+        <span className="truncate">{ev.nama}</span>
+        {ev.seriId && (
+          <span
+            title={`Kegiatan berulang: Pertemuan ${ev.urutanSeri ?? 1} dari ${ev.totalSeri ?? '?'}`}
+            className="inline-flex items-center gap-0.5 px-1.5 py-0.25 rounded text-[10px] font-medium bg-[#F3F2F1] text-[#5C5A58] border border-[#E1DFDD] flex-none"
+          >
+            <ArrowSync16Regular className="w-2.75 h-2.75 text-(--color-brand)" />
+            <span>
+              {ev.urutanSeri ?? 1}/{ev.totalSeri ?? '?'}
+            </span>
+          </span>
+        )}
+      </div>
+
+      {/* JENIS */}
+      <div className="w-26 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
+        {displayJenis}
+      </div>
+
+      {/* MATERI */}
+      <div className="w-47.5 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
+        {displayMateri}
+      </div>
+
+      {/* RUANGAN */}
+      <div className="w-35 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
+        {displayRuangan}
+      </div>
+
+      {/* PENGISI */}
+      <div className="w-27 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
+        {displayPengisi}
+      </div>
+
+      {/* SISWA */}
+      <div
+        className={cn(
+          'w-13.5 flex-none text-right font-mono text-[11.5px]',
+          siswaCount > 0 ? 'text-[#242424]' : 'text-[#A19F9D]'
+        )}
+      >
+        {siswaCount > 0 ? siswaCount : '—'}
+      </div>
+
+      {/* STATUS BADGE */}
+      <div className="w-32 flex-none pl-2">
+        <span
+          className={cn(
+            'inline-flex items-center gap-1 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border whitespace-nowrap select-none',
+            isBelum && 'border-[#F0A82E] bg-[#FFF4CE] text-[#795B00]',
+            isTerjadwal && 'border-[#0F6CBD] bg-[#EFF6FC] text-[#0F6CBD]',
+            isTerealisasi && 'border-[#107C10] bg-[#DFF6DD] text-[#107C10]',
+            isUlang && 'border-dashed border-[#5B4394] bg-white text-[#5B4394]',
+            isBatal && 'border-[#C8C6C4] bg-[#F3F2F1] text-[#5C5A58]'
+          )}
+        >
+          {isBelum && <Warning12Regular className="w-2.5 h-2.5 flex-none" />}
+          {isTerjadwal && (
+            <span className="w-1.75 h-1.75 flex-none rounded-full bg-current" />
+          )}
+          {isTerealisasi && <Checkmark12Regular className="w-2.75 h-2.75 flex-none" />}
+          {isUlang && <ArrowClockwise12Regular className="w-2.5 h-2.5 flex-none" />}
+          {isBatal && <Dismiss12Regular className="w-2.25 h-2.25 flex-none" />}
+          <span className="leading-none -translate-y-px">
+            {ev.labelStatus || 'Terjadwal'}
+          </span>
+        </span>
+      </div>
+
+      {/* AKSI: MENU TITIK TIGA */}
+      <div className="w-10 flex-none flex items-center justify-end">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleMenu(ev, e.currentTarget);
+          }}
+          title={`Menu aksi ${ev.nama}`}
+          className={cn(
+            'w-6.5 h-6.5 rounded flex items-center justify-center transition-colors cursor-pointer',
+            isMenuOpen
+              ? 'bg-(--color-surface-sunken) text-(--color-text)'
+              : 'text-(--color-text-muted) hover:text-(--color-text) hover:bg-(--color-surface-sunken)'
+          )}
+        >
+          <MoreVertical16Regular className="w-4 h-4 flex-none" />
+        </button>
+      </div>
+    </div>
+  );
+});
+DaftarTableRow.displayName = 'DaftarTableRow';
+
 export const DaftarTable: React.FC<DaftarTableProps> = ({
   kegiatanList,
   simulatedToday = '2026-09-16',
@@ -54,6 +214,12 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
   const total = kegiatanList.length;
   const isPotong = total > MAX_DISPLAY_ROWS;
   const displayList = isPotong ? kegiatanList.slice(0, MAX_DISPLAY_ROWS) : kegiatanList;
+
+  const handleToggleMenu = React.useCallback((keg: Kegiatan, el: HTMLElement) => {
+    setMenuState((prev) =>
+      prev?.kegiatan.id === keg.id ? null : { kegiatan: keg, anchorEl: el }
+    );
+  }, []);
 
   // Footer message
   const footerText = React.useMemo(() => {
@@ -119,152 +285,16 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
           </div>
 
           {/* 2. Table Rows */}
-          {displayList.map((ev) => {
-            const isToday = ev.tanggal === simulatedToday;
-            const isBatal = ev.status === 'dibatalkan';
-            const isUlang = ev.status === 'dijadwal_ulang';
-            const isTerealisasi = ev.status === 'terealisasi';
-            const isBelum = ev.status === 'belum_direalisasi';
-            const isTerjadwal = ev.status === 'terjadwal';
-            const perlu = ev.perluRealisasi ?? isBelum;
-
-            // Display values
-            const formattedDate = formatTanggalPendek(ev.tanggal);
-            const formattedJam = `${ev.mulai}–${ev.selesai}`;
-            const displayJenis = ev.namaJenis || '—';
-            const displayMateri = ev.namaMateri
-              ? `${ev.namaMapel || '—'} › ${ev.namaMateri}`
-              : '—';
-            const displayRuangan = ev.namaRuangan
-              ? `${ev.namaTempat || '—'} · ${ev.namaRuangan}`
-              : 'Tanpa ruangan';
-            const displayPengisi = ev.pengisiUtama?.nama || '—';
-            const siswaCount = ev.siswa.length;
-
-            return (
-              <div
-                key={ev.id}
-                onClick={() => onOpenDetail(ev)}
-                className={cn(
-                  'flex items-center h-8 flex-none border-b border-[#EDEBE9] px-3.5 text-[12.5px] cursor-pointer transition-colors w-full min-w-full',
-                  perlu
-                    ? 'bg-[#FFF8EE] shadow-[inset_3px_0_0_#F0A82E] hover:bg-[#FFF3E0]'
-                    : 'bg-white hover:bg-[#FAFAFA]'
-                )}
-              >
-                {/* TANGGAL */}
-                <div
-                  className={cn(
-                    'w-26 flex-none font-mono text-[11.5px] whitespace-nowrap',
-                    isToday ? 'text-[#0C548F] font-semibold' : 'text-[#5C5A58]'
-                  )}
-                >
-                  {formattedDate}
-                </div>
-
-                {/* JAM */}
-                <div className="w-26 flex-none font-mono text-[11.5px] text-[#424242] whitespace-nowrap">
-                  {formattedJam}
-                </div>
-
-                {/* NAMA KEGIATAN */}
-                <div
-                  className={cn(
-                    'flex-1 min-w-40 whitespace-nowrap overflow-hidden text-ellipsis pr-2 flex items-center gap-1.5',
-                    perlu ? 'font-semibold' : 'font-normal',
-                    isBatal ? 'line-through text-[#5C5A58]' : 'text-[#242424]'
-                  )}
-                >
-                  <span className="truncate">{ev.nama}</span>
-                  {ev.seriId && (
-                    <span
-                      title={`Kegiatan berulang: Pertemuan ${ev.urutanSeri ?? 1} dari ${ev.totalSeri ?? '?'}`}
-                      className="inline-flex items-center gap-0.5 px-1.5 py-0.25 rounded text-[10px] font-medium bg-[#F3F2F1] text-[#5C5A58] border border-[#E1DFDD] flex-none"
-                    >
-                      <ArrowSync16Regular className="w-2.75 h-2.75 text-(--color-brand)" />
-                      <span>{ev.urutanSeri ?? 1}/{ev.totalSeri ?? '?'}</span>
-                    </span>
-                  )}
-                </div>
-
-                {/* JENIS */}
-                <div className="w-26 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
-                  {displayJenis}
-                </div>
-
-                {/* MATERI */}
-                <div className="w-47.5 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
-                  {displayMateri}
-                </div>
-
-                {/* RUANGAN */}
-                <div className="w-35 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
-                  {displayRuangan}
-                </div>
-
-                {/* PENGISI */}
-                <div className="w-27 flex-none text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
-                  {displayPengisi}
-                </div>
-
-                {/* SISWA */}
-                <div
-                  className={cn(
-                    'w-13.5 flex-none text-right font-mono text-[11.5px]',
-                    siswaCount > 0 ? 'text-[#242424]' : 'text-[#A19F9D]'
-                  )}
-                >
-                  {siswaCount > 0 ? siswaCount : '—'}
-                </div>
-
-                {/* STATUS BADGE */}
-                <div className="w-32 flex-none pl-2">
-                  <span
-                    className={cn(
-                      'inline-flex items-center gap-1 h-4.5 px-1.75 rounded-full text-[10.5px] font-semibold border whitespace-nowrap select-none',
-                      isBelum && 'border-[#F0A82E] bg-[#FFF4CE] text-[#795B00]',
-                      isTerjadwal && 'border-[#0F6CBD] bg-[#EFF6FC] text-[#0F6CBD]',
-                      isTerealisasi && 'border-[#107C10] bg-[#DFF6DD] text-[#107C10]',
-                      isUlang && 'border-dashed border-[#5B4394] bg-white text-[#5B4394]',
-                      isBatal && 'border-[#C8C6C4] bg-[#F3F2F1] text-[#5C5A58]'
-                    )}
-                  >
-                    {isBelum && <Warning12Regular className="w-2.5 h-2.5 flex-none" />}
-                    {isTerjadwal && (
-                      <span className="w-1.75 h-1.75 flex-none rounded-full bg-current" />
-                    )}
-                    {isTerealisasi && <Checkmark12Regular className="w-2.75 h-2.75 flex-none" />}
-                    {isUlang && <ArrowClockwise12Regular className="w-2.5 h-2.5 flex-none" />}
-                    {isBatal && <Dismiss12Regular className="w-2.25 h-2.25 flex-none" />}
-                    <span className="leading-none -translate-y-px">{ev.labelStatus || 'Terjadwal'}</span>
-                  </span>
-                </div>
-
-                {/* AKSI: MENU TITIK TIGA */}
-                <div className="w-10 flex-none flex items-center justify-end">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const el = e.currentTarget;
-                      setMenuState((prev) =>
-                        prev?.kegiatan.id === ev.id ? null : { kegiatan: ev, anchorEl: el }
-                      );
-                    }}
-                    title={`Menu aksi ${ev.nama}`}
-                    className={cn(
-                      'w-6.5 h-6.5 rounded flex items-center justify-center transition-colors cursor-pointer',
-                      menuState?.kegiatan.id === ev.id
-                        ? 'bg-(--color-surface-sunken) text-(--color-text)'
-                        : 'text-(--color-text-muted) hover:text-(--color-text) hover:bg-(--color-surface-sunken)'
-                    )}
-                  >
-                    <MoreVertical16Regular className="w-4 h-4 flex-none" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {displayList.map((ev) => (
+            <DaftarTableRow
+              key={ev.id}
+              ev={ev}
+              isToday={ev.tanggal === simulatedToday}
+              isMenuOpen={menuState?.kegiatan.id === ev.id}
+              onOpenDetail={onOpenDetail}
+              onToggleMenu={handleToggleMenu}
+            />
+          ))}
 
           <div className="flex-1 min-h-0" />
         </div>
