@@ -1,10 +1,15 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Bandrek.Server.Data;
 using Bandrek.Server.Data.Entities;
+using Bandrek.Server.Features.Auth;
+using Bandrek.Server.Features.Master;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +34,34 @@ builder.Services.AddIdentityCore<AppUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();
 
+// Configure JWT Authentication
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "BandrekSuperSecretSigningKeyForDevelopmentPurposes2026!";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "BandrekServer";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "BandrekDesktopClient";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = jwtIssuer,
+        ValidateAudience = true,
+        ValidAudience = jwtAudience,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+        ValidateLifetime = true
+    };
+});
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<Bandrek.Server.Data.Seeding.DataSeeder>();
+builder.Services.AddScoped<TokenService>();
 
 // Business Rules & Services
 builder.Services.AddSingleton<Bandrek.Server.Services.DateTimeProvider.IDateTimeProvider, Bandrek.Server.Services.DateTimeProvider.SystemDateTimeProvider>();
@@ -45,6 +77,7 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 // Configure CORS for desktop client & dev browser
@@ -64,6 +97,8 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
@@ -96,6 +131,15 @@ app.MapGet("/api/system/info", (IConfiguration config) =>
 .WithName("GetSystemInfo")
 .WithTags("System");
 
+// Map Domain Endpoints
+app.MapAuthEndpoints();
+app.MapStudentEndpoints();
+app.MapSubjectEndpoints();
+app.MapClassGroupEndpoints();
+app.MapCourseTopicEndpoints();
+app.MapPlaceRoomEndpoints();
+app.MapActivityTypeEndpoints();
+
 // Execute Seeding on startup if database is empty or --reset-seed is passed
 using (var scope = app.Services.CreateScope())
 {
@@ -105,3 +149,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public partial class Program { }
+
