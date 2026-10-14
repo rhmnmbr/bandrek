@@ -13,8 +13,6 @@ import type {
 } from './interfaces/index.ts';
 
 import {
-  MockKegiatanRepository,
-  MockRealisasiRepository,
   MockMatriksRepository,
   MockSimulasiRepository,
 } from './mock';
@@ -25,6 +23,8 @@ import { HttpKelasRepository } from './http/repositories/HttpKelasRepository';
 import { HttpMapelRepository } from './http/repositories/HttpMapelRepository';
 import { HttpTempatRepository } from './http/repositories/HttpTempatRepository';
 import { HttpJenisKegiatanRepository } from './http/repositories/HttpJenisKegiatanRepository';
+import { HttpKegiatanRepository } from './http/repositories/HttpKegiatanRepository';
+import { HttpRealisasiRepository } from './http/repositories/HttpRealisasiRepository';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;
@@ -42,8 +42,8 @@ export interface RepositoryContainer {
 
 // Repositories container
 export const repositories: RepositoryContainer = {
-  kegiatan: new MockKegiatanRepository(),
-  realisasi: new MockRealisasiRepository(),
+  kegiatan: new HttpKegiatanRepository(),
+  realisasi: new HttpRealisasiRepository(),
   matriks: new MockMatriksRepository(),
   siswa: new HttpSiswaRepository(),
   subjek: new HttpSubjekRepository(),
