@@ -4,6 +4,7 @@ import { Warning16Regular, Server16Regular } from '@fluentui/react-icons';
 import { useLogin, useAuthSession } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { BandrekLogo } from '@/components/ui/bandrek-logo';
+import { getServerUrl } from '@/data/api/client';
 
 export function LoginScreen() {
   const navigate = useNavigate();
@@ -22,8 +23,7 @@ export function LoginScreen() {
     }
   }, [session, isSessionLoading, navigate]);
 
-  const serverUrl =
-    localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
+  const serverUrl = getServerUrl();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,16 +54,12 @@ export function LoginScreen() {
     <div className="flex min-h-screen w-full items-center justify-center bg-(--color-canvas) p-4 select-none">
       <div className="w-full max-w-[400px] rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
         {/* Brand Header */}
-        <div className="flex flex-col items-center text-center gap-2">
-          <BandrekLogo className="h-10 w-auto max-w-[220px] text-[#4D5962] mb-1" />
-          <div>
-            <h1 className="text-[19px] font-semibold text-(--color-text-primary) tracking-tight">
-              Masuk ke Bandrek
-            </h1>
-            <p className="text-xs text-(--color-text-muted) leading-relaxed mt-0.5">
-              Sistem Manajemen Kegiatan & Matriks Belajar Bimbel
-            </p>
-          </div>
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <BandrekLogo className="h-10 w-auto max-w-[220px] text-[#4D5962]" />
+          <h1 className="sr-only">Masuk ke Bandrek</h1>
+          <p className="text-xs text-(--color-text-muted) leading-relaxed">
+            Sistem Manajemen Kegiatan & Matriks Belajar Bimbel
+          </p>
         </div>
 
         {/* Login Form */}

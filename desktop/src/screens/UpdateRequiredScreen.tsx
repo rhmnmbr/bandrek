@@ -16,7 +16,7 @@ export interface UpdateRequiredScreenProps {
 }
 
 export function UpdateRequiredScreen({
-  currentVersion = '0.1.0',
+  currentVersion = '1.0.0',
   requiredVersion = '1.0.0',
   latestVersion = '1.0.4',
 }: UpdateRequiredScreenProps) {

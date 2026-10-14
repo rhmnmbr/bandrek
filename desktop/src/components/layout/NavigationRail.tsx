@@ -375,7 +375,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
                 onClick={() => {
                   setIsProfileMenuOpen(false);
                   logoutMutation.mutate();
-                  navigate('/login');
+                  navigate('/login', { replace: true });
                 }}
                 className="flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-[12.5px] text-(--color-danger) hover:bg-(--color-danger-subtle) transition-colors cursor-pointer border-none bg-transparent text-left"
               >

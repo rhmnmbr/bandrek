@@ -3,13 +3,28 @@ import { BandrekApiError, type SimulasiConfig } from '../types/simulasi';
 // In-memory or localStorage configuration for simulation
 const STORAGE_KEY = 'bandrek_simulasi_config';
 
+const getTodayIso = () => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
+const getNowTime = () => {
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+};
+
 const DEFAULT_CONFIG: SimulasiConfig = {
   latencyMs: 150, // Default 150ms for realistic desktop app feel, toggleable to 0 or higher
   errorType: 'none',
   offlineBannerVisible: false,
   lastSyncedAt: new Date().toISOString(),
-  simulatedToday: '2026-09-16',
-  simulatedNow: '11:39',
+  simulatedToday: getTodayIso(),
+  simulatedNow: getNowTime(),
 };
 
 class SimulasiManager {
@@ -24,7 +39,14 @@ class SimulasiManager {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
+        const parsed = JSON.parse(stored);
+        if (parsed.simulatedToday === '2026-09-16') {
+          parsed.simulatedToday = getTodayIso();
+        }
+        if (parsed.simulatedNow === '11:39') {
+          parsed.simulatedNow = getNowTime();
+        }
+        return { ...DEFAULT_CONFIG, ...parsed };
       }
     } catch {
       // Fallback if localStorage unavailable

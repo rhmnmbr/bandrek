@@ -31,7 +31,7 @@ import { FormKegiatanPanel } from '@/components/kegiatan/FormKegiatanPanel';
 import { BatalkanKegiatanModal } from '@/components/kegiatan/BatalkanKegiatanModal';
 import { JadwalUlangModal } from '@/components/kegiatan/JadwalUlangModal';
 
-const SIMULATED_TODAY = '2026-09-16';
+const TODAY_ISO = toIso(new Date());
 
 export const DaftarKegiatanScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -55,28 +55,16 @@ export const DaftarKegiatanScreen: React.FC = () => {
     semuaKegiatan.length === 0;
   const isPageLoading = useMinimumLoading(rawLoading, 350);
 
-  // Calculate default date range: past 14 days to latest event in dataset
+  // Default date range: awal bulan sekarang sampai akhir bulan depan
   const defaultRentang = React.useMemo(() => {
-    const dToday = toDate(SIMULATED_TODAY);
-    const dDari = addDays(dToday, -14);
-    const tglAkhir = semuaKegiatan.reduce(
-      (max, k) => (k.tanggal > max ? k.tanggal : max),
-      SIMULATED_TODAY
-    );
+    const now = new Date();
+    const dStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const dEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0);
     return {
-      dari: toIso(dDari),
-      sampai: tglAkhir,
+      dari: toIso(dStart),
+      sampai: toIso(dEnd),
     };
-  }, [semuaKegiatan]);
-
-  // Earliest date in the dataset (equivalent to prototype's tglAwal(db))
-  const tglAwalData = React.useMemo(() => {
-    if (!semuaKegiatan.length) return SIMULATED_TODAY;
-    return semuaKegiatan.reduce(
-      (min, k) => (k.tanggal < min ? k.tanggal : min),
-      SIMULATED_TODAY
-    );
-  }, [semuaKegiatan]);
+  }, []);
 
   // Local filter states - initialized eagerly from URL searchParams to prevent double-mount
   const [userDari, setUserDari] = React.useState<string | null>(
@@ -128,17 +116,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
     return v === 'kanban' ? 'kanban' : 'tabel';
   });
 
-  const hasEntityFilter = Boolean(
-    subjek.length > 0 ||
-    kelas.length > 0 ||
-    jenis.length > 0 ||
-    mapel.length > 0 ||
-    tempat ||
-    cari.trim() ||
-    siswa.length > 0
-  );
-
-  const dari = userDari ?? (hasEntityFilter && tglAwalData ? tglAwalData : defaultRentang.dari);
+  const dari = userDari ?? defaultRentang.dari;
   const sampai = userSampai ?? defaultRentang.sampai;
 
   // Sync URL query parameters only when URL search actually changes externally
@@ -202,7 +180,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
 
   // Current week boundaries for "Minggu ini" quick filter
   const mingguIniRange = React.useMemo(() => {
-    const dToday = toDate(SIMULATED_TODAY);
+    const dToday = toDate(TODAY_ISO);
     const mon = getMonday(dToday);
     const sun = addDays(mon, 6);
     return {
@@ -293,14 +271,14 @@ export const DaftarKegiatanScreen: React.FC = () => {
       if (!lolosFilter(ev)) continue;
 
       if (ev.status === 'belum_direalisasi') perlu++;
-      if (ev.tanggal === SIMULATED_TODAY) hari++;
+      if (ev.tanggal === TODAY_ISO) hari++;
       if (
         ev.tanggal >= mingguIniRange.senin &&
         ev.tanggal <= mingguIniRange.minggu
       ) {
         minggu++;
       }
-      if (ev.tanggal >= SIMULATED_TODAY) datang++;
+      if (ev.tanggal >= TODAY_ISO) datang++;
     }
 
     return { perlu, hari, minggu, datang };
@@ -316,7 +294,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
         return ev.status === 'belum_direalisasi';
       }
       if (cepat === 'hari') {
-        return ev.tanggal === SIMULATED_TODAY;
+        return ev.tanggal === TODAY_ISO;
       }
       if (cepat === 'minggu') {
         return (
@@ -325,7 +303,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
         );
       }
       if (cepat === 'datang') {
-        return ev.tanggal >= SIMULATED_TODAY;
+        return ev.tanggal >= TODAY_ISO;
       }
 
       // Default date range
@@ -475,7 +453,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
 
   // Widen date range by 1 year past/future
   const handleWidenRange = () => {
-    const dToday = toDate(SIMULATED_TODAY);
+    const dToday = toDate(TODAY_ISO);
     const dPast = addDays(dToday, -365);
     const dFuture = addDays(dToday, 365);
     const pastIso = toIso(dPast);
@@ -558,7 +536,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
             mapelList={mapelList}
             cari={cari}
             onChangeCari={handleChangeCari}
-            simulatedToday={SIMULATED_TODAY}
+            simulatedToday={TODAY_ISO}
             onNewKegiatan={() => setFormOpen(true)}
           />
 
@@ -584,7 +562,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
             viewMode === 'kanban' ? (
               <DaftarKanban
                 kegiatanList={filteredKegiatan}
-                simulatedToday={SIMULATED_TODAY}
+                simulatedToday={TODAY_ISO}
                 onOpenDetail={handleOpenDetail}
                 onIsiRealisasi={handleIsiRealisasi}
                 onJadwalUlang={handleJadwalUlang}
@@ -593,7 +571,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
             ) : (
               <DaftarTable
                 kegiatanList={filteredKegiatan}
-                simulatedToday={SIMULATED_TODAY}
+                simulatedToday={TODAY_ISO}
                 dari={dari}
                 sampai={sampai}
                 activeCepat={cepat}
@@ -626,7 +604,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
       {formOpen && (
         <FormKegiatanPanel
           open={formOpen}
-          initialData={{ mode: 'create', tanggal: SIMULATED_TODAY }}
+          initialData={{ mode: 'create', tanggal: TODAY_ISO }}
           onClose={() => setFormOpen(false)}
           onSuccess={() => {
             setFormOpen(false);

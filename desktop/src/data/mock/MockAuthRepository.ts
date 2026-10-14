@@ -44,6 +44,7 @@ export class MockAuthRepository implements IAuthRepository {
   }
 
   public async logout(): Promise<void> {
+    mockStore.session = null;
     return mockRunner(
       () => {
         mockStore.session = null;

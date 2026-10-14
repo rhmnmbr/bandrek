@@ -49,6 +49,7 @@ export class HttpAuthRepository implements IAuthRepository {
   }
 
   async logout(): Promise<void> {
+    setAuthToken(null);
     try {
       await logout();
     } catch {

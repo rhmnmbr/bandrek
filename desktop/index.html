@@ -20,6 +20,9 @@
         height: 100%;
       }
       .app-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -29,6 +32,12 @@
         background-color: #FAFAFA;
         user-select: none;
         -webkit-user-select: none;
+        transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+      }
+      .app-splash.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
       .app-splash-logo {
         width: 320px;
@@ -77,14 +86,19 @@
   </head>
 
   <body>
-    <div id="root">
-      <div class="app-splash" id="app-splash">
-        <img src="/logo-bandrek.svg" class="app-splash-logo" alt="Bandrek - Bandung Remaja Intelek" />
-        <div class="app-splash-loader" aria-hidden="true">
-          <div class="app-splash-bar"></div>
-        </div>
+    <div class="app-splash" id="app-splash">
+      <img src="/logo-bandrek.svg" class="app-splash-logo" alt="Bandrek - Bandung Remaja Intelek" />
+      <div class="app-splash-loader" aria-hidden="true">
+        <div class="app-splash-bar"></div>
       </div>
     </div>
+    <div id="root"></div>
+    <script>
+      // Nonaktifkan native browser context menu (Back, Refresh, Save as, Print)
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

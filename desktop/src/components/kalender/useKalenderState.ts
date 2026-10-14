@@ -30,10 +30,12 @@ export interface KalenderStateFilters {
   status: StatusKegiatan[];
 }
 
-export function useKalenderState(initialAnchor: string = '2026-09-16') {
+export function useKalenderState(initialAnchor?: string) {
+  const currentToday = toIso(new Date());
+  const effectiveAnchor = initialAnchor || currentToday;
   const [view, setView] = React.useState<KalenderViewMode>('minggu');
-  const [anchorDate, setAnchorDate] = React.useState<string>(initialAnchor);
-  const [miniAnchor, setMiniAnchor] = React.useState<string>(initialAnchor);
+  const [anchorDate, setAnchorDate] = React.useState<string>(effectiveAnchor);
+  const [miniAnchor, setMiniAnchor] = React.useState<string>(effectiveAnchor);
 
   // Filters state
   const [filters, setFilters] = React.useState<KalenderStateFilters>({
@@ -47,9 +49,10 @@ export function useKalenderState(initialAnchor: string = '2026-09-16') {
 
   // Navigation handlers
   const goToday = React.useCallback(() => {
-    setAnchorDate(initialAnchor);
-    setMiniAnchor(initialAnchor);
-  }, [initialAnchor]);
+    const today = toIso(new Date());
+    setAnchorDate(today);
+    setMiniAnchor(today);
+  }, []);
 
   const prev = React.useCallback(() => {
     const d = toDate(anchorDate);

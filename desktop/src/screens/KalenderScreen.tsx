@@ -9,14 +9,12 @@ import {
   useRuanganList,
   useTempatList,
   useSiswaList,
-  useSimulasi,
 } from '@/data/hooks';
 import { useKalenderState } from '@/components/kalender/useKalenderState';
 import { KalenderSidebar } from '@/components/kalender/KalenderSidebar';
 import { KalenderToolbar } from '@/components/kalender/KalenderToolbar';
 import { KalenderGrid, type DayColumnData } from '@/components/kalender/KalenderGrid';
 import { KalenderMonthView } from '@/components/kalender/KalenderMonthView';
-import { KalenderEmptyState } from '@/components/kalender/KalenderEmptyState';
 import { KalenderSkeleton } from '@/components/skeleton';
 import { KegiatanPopover } from '@/components/kalender/KegiatanPopover';
 import {
@@ -28,6 +26,7 @@ import { JadwalUlangModal } from '@/components/kegiatan/JadwalUlangModal';
 import { susunLayoutKegiatan } from '@/components/kalender/kalenderLayout';
 import {
   toDate,
+  toIso,
   menit,
   NAMA_HARI_PENDEK,
   JAM_AWAL,
@@ -40,9 +39,24 @@ import type { Kegiatan } from '@/data/types';
 export const KalenderScreen: React.FC = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { config } = useSimulasi();
-  const todayIso = config.simulatedToday || '2026-09-16';
-  const nowTime = config.simulatedNow || '11:39';
+  // Gunakan tanggal dan jam lokal real-time saat ini
+  const todayIso = React.useMemo(() => toIso(new Date()), []);
+  const [nowTime, setNowTime] = React.useState<string>(() => {
+    const d = new Date();
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  });
+
+  React.useEffect(() => {
+    const updateTime = () => {
+      const d = new Date();
+      setNowTime(
+        `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 10000); // Perbarui posisi garis merah setiap 10 detik
+    return () => clearInterval(interval);
+  }, []);
 
   // Master Data Queries
   const { data: jenisList = [] } = useJenisKegiatanList();
@@ -107,7 +121,7 @@ export const KalenderScreen: React.FC = () => {
   });
 
   // Filter activities per current filter state
-  const { filteredKegiatan, allInPeriodCount, activeFilterCount } = React.useMemo(() => {
+  const { filteredKegiatan, allInPeriodCount } = React.useMemo(() => {
     const setTampil = new Set(tanggalTampil);
     const inPeriod = semuaKegiatan.filter((k) => setTampil.has(k.tanggal));
 
@@ -266,7 +280,7 @@ export const KalenderScreen: React.FC = () => {
               open: true,
               initialData: {
                 mode: 'create',
-                tanggal: '2026-09-16',
+                tanggal: todayIso,
                 mulai: '08:00',
                 selesai: '09:30',
               },
@@ -418,7 +432,6 @@ export const KalenderScreen: React.FC = () => {
     [setAnchorDate, setView]
   );
 
-  const isPeriodEmpty = filteredKegiatan.length === 0;
   const countLabel = `Menampilkan ${filteredKegiatan.length} dari ${allInPeriodCount} kegiatan`;
   const currentMonth = toDate(anchorDate).getMonth();
 
@@ -493,14 +506,7 @@ export const KalenderScreen: React.FC = () => {
         />
 
         {/* Content Views */}
-        {isPeriodEmpty ? (
-          <KalenderEmptyState
-            totalInPeriod={allInPeriodCount}
-            activeFilterCount={activeFilterCount}
-            onResetFilters={resetFilters}
-            onGoToday={goToday}
-          />
-        ) : view === 'bulan' ? (
+        {view === 'bulan' ? (
           <KalenderMonthView
             visibleDates={tanggalTampil}
             currentMonth={currentMonth}

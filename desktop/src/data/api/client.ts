@@ -2,8 +2,38 @@ const DEFAULT_SERVER_URL = 'http://localhost:5109';
 const SERVER_URL_KEY = 'bandrek:server-url';
 const TOKEN_KEY = 'bandrek:auth-token';
 
+export function decodeServerUrl(code: string): string {
+  try {
+    const trimmed = code.trim();
+    if (!trimmed) return '';
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    const decoded = atob(trimmed);
+    if (decoded.startsWith('http://') || decoded.startsWith('https://')) {
+      return decoded;
+    }
+    return '';
+  } catch {
+    return '';
+  }
+}
+
+export function encodeServerUrl(url: string): string {
+  try {
+    const trimmed = url.trim();
+    if (!trimmed) return '';
+    return btoa(trimmed);
+  } catch {
+    return '';
+  }
+}
+
 export function getServerUrl(): string {
-  return localStorage.getItem(SERVER_URL_KEY) || DEFAULT_SERVER_URL;
+  const stored = localStorage.getItem(SERVER_URL_KEY);
+  if (!stored) return DEFAULT_SERVER_URL;
+  const decoded = decodeServerUrl(stored);
+  return decoded || stored || DEFAULT_SERVER_URL;
 }
 
 export function setServerUrl(url: string): void {

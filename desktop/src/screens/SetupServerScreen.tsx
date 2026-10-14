@@ -3,13 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Checkmark16Regular, Warning16Regular, ArrowLeft16Regular } from '@fluentui/react-icons';
 import { useToast } from '@/components/ui/toast';
 import { BandrekCupIcon } from '@/components/ui/bandrek-logo';
+import { encodeServerUrl, decodeServerUrl } from '@/data/api/client';
 
 export function SetupServerScreen() {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const [serverUrl, setServerUrl] = useState(() => {
-    return localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
+  const [serverCode, setServerCode] = useState(() => {
+    const storedCode = localStorage.getItem('bandrek:server-code');
+    if (storedCode) return storedCode;
+    const storedUrl = localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
+    return encodeServerUrl(storedUrl);
   });
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState<{
@@ -19,19 +23,20 @@ export function SetupServerScreen() {
   } | null>(null);
 
   const handleTestConnection = async () => {
-    const trimmed = serverUrl.trim();
+    const trimmed = serverCode.trim();
     if (!trimmed) {
       setTestResult({
         status: 'error',
-        message: 'Masukkan alamat URL server terlebih dahulu.',
+        message: 'Masukkan kode koneksi server terlebih dahulu.',
       });
       return;
     }
 
-    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+    const decoded = decodeServerUrl(trimmed);
+    if (!decoded || (!decoded.startsWith('http://') && !decoded.startsWith('https://'))) {
       setTestResult({
         status: 'error',
-        message: 'Alamat server harus diawali dengan http:// atau https://',
+        message: 'Kode koneksi tidak valid. Pastikan kode yang dimasukkan benar.',
       });
       return;
     }
@@ -41,7 +46,7 @@ export function SetupServerScreen() {
 
     const start = performance.now();
     try {
-      const cleanBase = trimmed.replace(/\/+$/, '');
+      const cleanBase = decoded.replace(/\/+$/, '');
       const res = await fetch(`${cleanBase}/health`, {
         method: 'GET',
         headers: { Accept: 'application/json, text/plain' },
@@ -66,7 +71,7 @@ export function SetupServerScreen() {
       const latency = Math.round(performance.now() - start);
       setTestResult({
         status: 'error',
-        message: `Gagal terhubung ke server: ${err?.message || 'Server tidak dapat dijangkau'}`,
+        message: `Gagal terhubung ke server (latensi ${latency} ms). Pastikan server aktif dan kode benar.`,
         latency,
       });
     } finally {
@@ -75,19 +80,31 @@ export function SetupServerScreen() {
   };
 
   const handleSave = () => {
-    const trimmed = serverUrl.trim();
+    const trimmed = serverCode.trim();
     if (!trimmed) {
       setTestResult({
         status: 'error',
-        message: 'Masukkan alamat URL server.',
+        message: 'Masukkan kode koneksi server.',
       });
       return;
     }
 
-    localStorage.setItem('bandrek:server-url', trimmed);
+    const decoded = decodeServerUrl(trimmed);
+    if (!decoded) {
+      setTestResult({
+        status: 'error',
+        message: 'Kode koneksi tidak valid.',
+      });
+      return;
+    }
+
+    const cleanCode = encodeServerUrl(decoded);
+    localStorage.setItem('bandrek:server-code', cleanCode);
+    localStorage.setItem('bandrek:server-url', decoded);
+
     showToast({
       type: 'success',
-      message: 'Alamat server berhasil disimpan.',
+      message: 'Kode koneksi server berhasil disimpan.',
     });
     navigate('/login');
   };
@@ -100,10 +117,10 @@ export function SetupServerScreen() {
           <BandrekCupIcon className="h-9 w-9 text-[#4D5962] shrink-0" />
           <div>
             <h1 className="text-[17px] font-semibold text-(--color-text-primary) leading-tight">
-              Pengaturan Alamat Server
+              Pengaturan Koneksi Server
             </h1>
             <p className="text-xs text-(--color-text-muted) leading-snug mt-0.5">
-              Hubungkan aplikasi Bandrek ke server bimbel Anda.
+              Hubungkan aplikasi Bandrek ke server bimbel Anda menggunakan kode koneksi.
             </p>
           </div>
         </div>
@@ -111,18 +128,18 @@ export function SetupServerScreen() {
         {/* Input Form */}
         <div className="flex flex-col gap-2">
           <label className="text-[12px] font-medium text-(--color-text-secondary)">
-            Alamat server API <span className="text-(--color-danger)">*</span>
+            Kode koneksi server <span className="text-(--color-danger)">*</span>
           </label>
           <div className="flex gap-2">
             <input
               type="text"
-              value={serverUrl}
+              value={serverCode}
               onChange={(e) => {
-                setServerUrl(e.target.value);
+                setServerCode(e.target.value);
                 setTestResult(null);
               }}
-              placeholder="mis. https://api.bandrek-bimbel.id"
-              className="h-8 flex-1 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[13px] font-mono outline-none focus:border-(--color-brand) transition-colors"
+              placeholder="mis. aHR0cDovL2FwaS5iYW5kcmVr..."
+              className="h-8 flex-1 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[12.5px] font-mono outline-none focus:border-(--color-brand) transition-colors"
             />
             <button
               type="button"
@@ -155,7 +172,7 @@ export function SetupServerScreen() {
           )}
 
           <div className="text-[11px] text-(--color-text-muted) leading-relaxed mt-1">
-            Alamat server disediakan oleh administrator teknis yang memasang VPS bimbel Anda.
+            Kode koneksi disediakan oleh administrator teknis yang memasang server bimbel Anda. Kode ini mengamankan informasi server agar mudah dibagikan tanpa menampilkan alamat IP atau port teknis.
           </div>
         </div>
 

@@ -73,7 +73,7 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
   mapelList,
   cari,
   onChangeCari,
-  simulatedToday = '2026-09-16',
+  simulatedToday = toIso(new Date()),
   onNewKegiatan,
 }) => {
   // Dropdown open states: 'dari' | 'sampai' | 'jenis' | 'status' | 'subjek' | 'kelas' | null

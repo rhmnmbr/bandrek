@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { formatTanggalPendek } from '@/lib/dateUtils';
+import { formatTanggalPendek, toIso } from '@/lib/dateUtils';
 import type { Kegiatan } from '@/data/types/kegiatan';
 import {
   Warning12Regular,
@@ -199,7 +199,7 @@ DaftarTableRow.displayName = 'DaftarTableRow';
 
 export const DaftarTable: React.FC<DaftarTableProps> = ({
   kegiatanList,
-  simulatedToday = '2026-09-16',
+  simulatedToday = toIso(new Date()),
   dari,
   sampai,
   activeCepat,

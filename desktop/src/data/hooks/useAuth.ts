@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { repositories } from '../repositories';
+import { setAuthToken } from '../api/client';
 import type { LoginCredentials, CreateUserInput, UpdateUserInput } from '../types/auth';
 
 export const authKeys = {
@@ -27,10 +28,21 @@ export function useLogin() {
 export function useLogout() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => repositories.auth.logout(),
-    onSuccess: () => {
+    onMutate: async () => {
+      // Cancel active session queries and clear token & session immediately
+      await queryClient.cancelQueries({ queryKey: authKeys.session });
+      setAuthToken(null);
       queryClient.setQueryData(authKeys.session, null);
+    },
+    mutationFn: async () => {
+      setAuthToken(null);
+      queryClient.setQueryData(authKeys.session, null);
+      await repositories.auth.logout();
+    },
+    onSettled: () => {
+      setAuthToken(null);
       queryClient.clear();
+      queryClient.setQueryData(authKeys.session, null);
     },
   });
 }

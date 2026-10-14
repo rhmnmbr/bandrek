@@ -7,7 +7,7 @@ import {
   Color16Regular,
   ArrowExit16Regular,
 } from '@fluentui/react-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogout } from '@/data/hooks/useAuth';
 
 export interface TopBarProps {
@@ -25,7 +25,13 @@ export const TopBar: React.FC<TopBarProps> = ({
   onQuickSearch,
   className,
 }) => {
+  const navigate = useNavigate();
   const logoutMutation = useLogout();
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <header
@@ -95,15 +101,15 @@ export const TopBar: React.FC<TopBarProps> = ({
       )}
 
       {/* Logout Action Button at Top Right Corner */}
-      <Link
-        to="/login"
-        onClick={() => logoutMutation.mutate()}
+      <button
+        type="button"
+        onClick={handleLogout}
         title="Keluar dari akun (Logout)"
         className="flex h-7.5 items-center gap-1.5 rounded border border-(--color-border-strong) bg-white px-2.5 text-[12px] font-medium text-(--color-text-secondary) hover:border-[#C50F1F] hover:text-[#C50F1F] hover:bg-[#FDE7E9] transition-colors cursor-pointer shadow-xs select-none"
       >
         <ArrowExit16Regular className="text-[13px]" />
         <span>Keluar</span>
-      </Link>
+      </button>
     </header>
   );
 };
