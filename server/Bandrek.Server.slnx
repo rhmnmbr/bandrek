@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Bandrek.Server/Bandrek.Server.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Bandrek.Server.Tests/Bandrek.Server.Tests.csproj" />
+  </Folder>
 </Solution>

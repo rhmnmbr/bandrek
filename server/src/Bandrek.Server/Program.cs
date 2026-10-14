@@ -31,6 +31,14 @@ builder.Services.AddIdentityCore<AppUser>(options =>
 
 builder.Services.AddScoped<Bandrek.Server.Data.Seeding.DataSeeder>();
 
+// Business Rules & Services
+builder.Services.AddSingleton<Bandrek.Server.Services.DateTimeProvider.IDateTimeProvider, Bandrek.Server.Services.DateTimeProvider.SystemDateTimeProvider>();
+builder.Services.AddScoped<Bandrek.Server.Services.BusinessRules.ActivityStatusService>();
+builder.Services.AddScoped<Bandrek.Server.Services.BusinessRules.ConflictDetector>();
+builder.Services.AddScoped<Bandrek.Server.Services.BusinessRules.MasterUsageChecker>();
+builder.Services.AddScoped<Bandrek.Server.Services.BusinessRules.LearningMatrixEngine>();
+builder.Services.AddScoped<Bandrek.Server.Services.BusinessRules.ProfileKpiCalculator>();
+
 // Configure JSON serialization (camelCase, string enums)
 builder.Services.Configure<JsonOptions>(options =>
 {
