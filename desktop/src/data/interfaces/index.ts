@@ -8,4 +8,5 @@ export * from './IMapelRepository';
 export * from './ITempatRepository';
 export * from './IJenisKegiatanRepository';
 export * from './IAuthRepository';
+export * from './IAuditRepository';
 export * from './ISimulasiRepository';

@@ -9,11 +9,11 @@ import type {
   ITempatRepository,
   IJenisKegiatanRepository,
   IAuthRepository,
+  IAuditRepository,
   ISimulasiRepository,
 } from './interfaces/index.ts';
 
 import {
-  MockMatriksRepository,
   MockSimulasiRepository,
 } from './mock';
 import { HttpAuthRepository } from './http/repositories/HttpAuthRepository';
@@ -25,6 +25,8 @@ import { HttpTempatRepository } from './http/repositories/HttpTempatRepository';
 import { HttpJenisKegiatanRepository } from './http/repositories/HttpJenisKegiatanRepository';
 import { HttpKegiatanRepository } from './http/repositories/HttpKegiatanRepository';
 import { HttpRealisasiRepository } from './http/repositories/HttpRealisasiRepository';
+import { HttpMatriksRepository } from './http/repositories/HttpMatriksRepository';
+import { HttpAuditRepository } from './http/repositories/HttpAuditRepository';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;
@@ -37,6 +39,7 @@ export interface RepositoryContainer {
   tempat: ITempatRepository;
   jenisKegiatan: IJenisKegiatanRepository;
   auth: IAuthRepository;
+  audit: IAuditRepository;
   simulasi: ISimulasiRepository;
 }
 
@@ -44,7 +47,7 @@ export interface RepositoryContainer {
 export const repositories: RepositoryContainer = {
   kegiatan: new HttpKegiatanRepository(),
   realisasi: new HttpRealisasiRepository(),
-  matriks: new MockMatriksRepository(),
+  matriks: new HttpMatriksRepository(),
   siswa: new HttpSiswaRepository(),
   subjek: new HttpSubjekRepository(),
   kelas: new HttpKelasRepository(),
@@ -52,5 +55,6 @@ export const repositories: RepositoryContainer = {
   tempat: new HttpTempatRepository(),
   jenisKegiatan: new HttpJenisKegiatanRepository(),
   auth: new HttpAuthRepository(),
+  audit: new HttpAuditRepository(),
   simulasi: new MockSimulasiRepository(),
 };

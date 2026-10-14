@@ -10,8 +10,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { MultiSelect, type SelectOption } from '@/components/ui/select';
 import { useAuthSession } from '@/data/hooks/useAuth';
+import { repositories } from '@/data/repositories';
 import { MOCK_AUDIT_LOGS } from '@/data/mocks/auditLog';
-import type { AuditAksi } from '@/data/types/auditLog';
+import type { AuditAksi, AuditLogItem } from '@/data/types/auditLog';
 import { AuditLogSkeleton } from '@/components/skeleton/AuditLogSkeleton';
 
 const KATEGORI_OPTIONS: SelectOption[] = [
@@ -93,6 +94,7 @@ export function AuditLogScreen() {
   const { data: session } = useAuthSession();
   const isAdmin = session?.user?.peran === 'admin';
 
+  const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [cari, setCari] = useState('');
   const [filterKategori, setFilterKategori] = useState<string[]>([]);
@@ -100,17 +102,34 @@ export function AuditLogScreen() {
   const [filterOperator, setFilterOperator] = useState<string[]>([]);
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
 
-  // Simulate fast loading
+  // Load audit logs from repository
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 180);
-    return () => clearTimeout(timer);
+    let isMounted = true;
+    repositories.audit
+      .getAll()
+      .then((data) => {
+        if (!isMounted) return;
+        if (data && data.length > 0) {
+          setAuditLogs(data);
+        } else {
+          setAuditLogs(MOCK_AUDIT_LOGS);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setAuditLogs(MOCK_AUDIT_LOGS);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Filtered log entries
   const filteredLogs = useMemo(() => {
-    return MOCK_AUDIT_LOGS.filter((item) => {
+    return auditLogs.filter((item) => {
       // Search text match
       if (cari.trim()) {
         const q = cari.toLowerCase();
@@ -142,24 +161,24 @@ export function AuditLogScreen() {
 
       return true;
     });
-  }, [cari, filterKategori, filterAksi, filterOperator]);
+  }, [auditLogs, cari, filterKategori, filterAksi, filterOperator]);
 
   // Unique operators for dropdown filter
   const operatorSelectOptions: SelectOption[] = useMemo(() => {
     const list: SelectOption[] = [];
     const map = new Map<string, string>();
-    MOCK_AUDIT_LOGS.forEach((item) => {
+    auditLogs.forEach((item) => {
       map.set(item.operator.id, item.operator.nama);
     });
     map.forEach((nama, id) => {
       list.push({ value: id, label: nama });
     });
     return list;
-  }, []);
+  }, [auditLogs]);
 
   const selectedLog = useMemo(() => {
-    return MOCK_AUDIT_LOGS.find((l) => l.id === selectedLogId) || null;
-  }, [selectedLogId]);
+    return auditLogs.find((l) => l.id === selectedLogId) || null;
+  }, [auditLogs, selectedLogId]);
 
   const hasFilterActive =
     cari.trim() !== '' ||

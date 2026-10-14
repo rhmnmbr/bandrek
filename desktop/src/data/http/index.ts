@@ -2,6 +2,8 @@ export * from './mappers/authMapper';
 export * from './mappers/masterMapper';
 export * from './mappers/kegiatanMapper';
 export * from './mappers/realisasiMapper';
+export * from './mappers/matriksMapper';
+export * from './mappers/auditMapper';
 
 export * from './repositories/HttpAuthRepository';
 export * from './repositories/HttpSiswaRepository';
@@ -12,3 +14,5 @@ export * from './repositories/HttpTempatRepository';
 export * from './repositories/HttpJenisKegiatanRepository';
 export * from './repositories/HttpKegiatanRepository';
 export * from './repositories/HttpRealisasiRepository';
+export * from './repositories/HttpMatriksRepository';
+export * from './repositories/HttpAuditRepository';
