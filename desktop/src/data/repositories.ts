@@ -16,15 +16,15 @@ import {
   MockKegiatanRepository,
   MockRealisasiRepository,
   MockMatriksRepository,
-  MockSiswaRepository,
-  MockSubjekRepository,
-  MockKelasRepository,
-  MockMapelRepository,
-  MockTempatRepository,
-  MockJenisKegiatanRepository,
   MockSimulasiRepository,
 } from './mock';
 import { HttpAuthRepository } from './http/repositories/HttpAuthRepository';
+import { HttpSiswaRepository } from './http/repositories/HttpSiswaRepository';
+import { HttpSubjekRepository } from './http/repositories/HttpSubjekRepository';
+import { HttpKelasRepository } from './http/repositories/HttpKelasRepository';
+import { HttpMapelRepository } from './http/repositories/HttpMapelRepository';
+import { HttpTempatRepository } from './http/repositories/HttpTempatRepository';
+import { HttpJenisKegiatanRepository } from './http/repositories/HttpJenisKegiatanRepository';
 
 export interface RepositoryContainer {
   kegiatan: IKegiatanRepository;
@@ -40,17 +40,17 @@ export interface RepositoryContainer {
   simulasi: ISimulasiRepository;
 }
 
-// Development & Prototyping: Repositories
+// Repositories container
 export const repositories: RepositoryContainer = {
   kegiatan: new MockKegiatanRepository(),
   realisasi: new MockRealisasiRepository(),
   matriks: new MockMatriksRepository(),
-  siswa: new MockSiswaRepository(),
-  subjek: new MockSubjekRepository(),
-  kelas: new MockKelasRepository(),
-  mapel: new MockMapelRepository(),
-  tempat: new MockTempatRepository(),
-  jenisKegiatan: new MockJenisKegiatanRepository(),
+  siswa: new HttpSiswaRepository(),
+  subjek: new HttpSubjekRepository(),
+  kelas: new HttpKelasRepository(),
+  mapel: new HttpMapelRepository(),
+  tempat: new HttpTempatRepository(),
+  jenisKegiatan: new HttpJenisKegiatanRepository(),
   auth: new HttpAuthRepository(),
   simulasi: new MockSimulasiRepository(),
 };
