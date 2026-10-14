@@ -1392,10 +1392,796 @@
           }
         }
       }
+    },
+    "/api/activities/cancellation-reasons": {
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "GetCancellationReasons",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/reschedule-reasons": {
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "GetRescheduleReasons",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/check-conflicts": {
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "CheckActivityConflicts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConflictCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/calendar": {
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "GetCalendarActivities",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "activityTypeId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subjectId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roomId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "showCancelled",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/list": {
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "GetActivityList",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "activityTypeId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subjectId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "onlyPendingRealization",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "quickFilter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortDesc",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/{id}": {
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "GetActivityById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "UpdateActivity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateActivityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities": {
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "CreateActivity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActivityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "CancelActivity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelActivityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/{id}/reschedule": {
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "operationId": "RescheduleActivity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RescheduleActivityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/activities/{id}/realization": {
+      "get": {
+        "tags": [
+          "Realization"
+        ],
+        "operationId": "GetActivityRealization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Realization"
+        ],
+        "operationId": "SaveActivityRealization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveRealizationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/realization/pending-count": {
+      "get": {
+        "tags": [
+          "Realization"
+        ],
+        "operationId": "GetPendingRealizationCount",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/learning-matrix/{courseId}": {
+      "get": {
+        "tags": [
+          "LearningMatrix"
+        ],
+        "operationId": "GetLearningMatrix",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classGroupId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "showInactive",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/learning-matrix/manual": {
+      "post": {
+        "tags": [
+          "LearningMatrix"
+        ],
+        "operationId": "MarkManualChecklist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkManualChecklistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/learning-matrix/manual/{id}": {
+      "delete": {
+        "tags": [
+          "LearningMatrix"
+        ],
+        "operationId": "DeleteManualChecklist",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/learning-matrix/manual/bulk": {
+      "post": {
+        "tags": [
+          "LearningMatrix"
+        ],
+        "operationId": "BulkMarkManualChecklist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkMarkManualChecklistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/learning-matrix/manual/bulk-delete": {
+      "post": {
+        "tags": [
+          "LearningMatrix"
+        ],
+        "operationId": "BulkDeleteManualChecklist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteManualChecklistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/audit-logs": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "GetAuditLogs",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "CreateAuditLog",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditLogDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ActivitySubjectDto": {
+        "required": [
+          "id",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "AuditLogDto": {
+        "required": [
+          "id",
+          "timestamp",
+          "userId",
+          "operatorName",
+          "operatorUsername",
+          "operatorRole",
+          "action",
+          "category",
+          "entityType",
+          "entityName",
+          "summary",
+          "diffsJson",
+          "ipAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "operatorName": {
+            "type": "string"
+          },
+          "operatorUsername": {
+            "type": "string"
+          },
+          "operatorRole": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "entityType": {
+            "type": "string"
+          },
+          "entityName": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "diffsJson": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "ipAddress": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "BulkDeleteManualChecklistRequest": {
+        "required": [
+          "keys"
+        ],
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualChecklistKeyDto"
+            }
+          }
+        }
+      },
+      "BulkMarkManualChecklistRequest": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarkManualChecklistRequest"
+            }
+          }
+        }
+      },
+      "CancelActivityRequest": {
+        "required": [
+          "reason",
+          "notes",
+          "rescheduleAlso"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rescheduleAlso": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          }
+        }
+      },
       "ChangePasswordRequest": {
         "required": [
           "currentPassword",
@@ -1408,6 +2194,155 @@
           },
           "newPassword": {
             "type": "string"
+          }
+        }
+      },
+      "ConflictCheckRequest": {
+        "required": [
+          "date",
+          "startTime",
+          "endTime",
+          "roomId",
+          "subjectIds",
+          "studentIds",
+          "excludeActivityId"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "roomId": {
+            "type": "string"
+          },
+          "subjectIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "studentIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "excludeActivityId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "CreateActivityRequest": {
+        "required": [
+          "id",
+          "name",
+          "activityTypeId",
+          "courseId",
+          "topicId",
+          "classGroupId",
+          "date",
+          "startTime",
+          "endTime",
+          "isAllDay",
+          "roomId",
+          "customPlace",
+          "subjects",
+          "studentIds",
+          "notes",
+          "recurring"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "activityTypeId": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "topicId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "classGroupId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "isAllDay": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "roomId": {
+            "type": "string"
+          },
+          "customPlace": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivitySubjectDto"
+            }
+          },
+          "studentIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "recurring": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RecurringRuleDto"
+              }
+            ]
           }
         }
       },
@@ -1789,6 +2724,93 @@
           }
         }
       },
+      "ManualChecklistKeyDto": {
+        "required": [
+          "studentId",
+          "topicId"
+        ],
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string"
+          },
+          "topicId": {
+            "type": "string"
+          }
+        }
+      },
+      "MarkManualChecklistRequest": {
+        "required": [
+          "studentId",
+          "topicId",
+          "date",
+          "notes",
+          "recordedBy"
+        ],
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "string"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "recordedBy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "RecurringRuleDto": {
+        "required": [
+          "isActive",
+          "frequency",
+          "endType",
+          "totalMeetings",
+          "untilDate"
+        ],
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "endType": {
+            "type": "string"
+          },
+          "totalMeetings": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "untilDate": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "ReorderTopicsRequest": {
         "required": [
           "orderedTopicIds"
@@ -1800,6 +2822,272 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "RescheduleActivityRequest": {
+        "required": [
+          "reason",
+          "notes",
+          "newDate",
+          "newStartTime",
+          "newEndTime",
+          "newRoomId",
+          "newName",
+          "newSubjects",
+          "newStudentIds",
+          "newNotes"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "newDate": {
+            "type": "string"
+          },
+          "newStartTime": {
+            "type": "string"
+          },
+          "newEndTime": {
+            "type": "string"
+          },
+          "newRoomId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "newName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "newSubjects": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ActivitySubjectDto"
+            }
+          },
+          "newStudentIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "newNotes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SaveRealizationRequest": {
+        "required": [
+          "startTime",
+          "endTime",
+          "actualTopicId",
+          "completionStatus",
+          "notes",
+          "studentAttendances",
+          "studentNotes",
+          "subjectAttendances",
+          "subjectNotes",
+          "recordedBy"
+        ],
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "actualTopicId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "completionStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "studentAttendances": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "studentNotes": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "subjectAttendances": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "subjectNotes": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "recordedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateActivityRequest": {
+        "required": [
+          "name",
+          "activityTypeId",
+          "courseId",
+          "topicId",
+          "classGroupId",
+          "date",
+          "startTime",
+          "endTime",
+          "isAllDay",
+          "roomId",
+          "customPlace",
+          "subjects",
+          "studentIds",
+          "notes",
+          "concurrencyToken"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "activityTypeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "courseId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "topicId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "classGroupId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "date": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "startTime": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "endTime": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "isAllDay": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "roomId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "customPlace": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "subjects": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ActivitySubjectDto"
+            }
+          },
+          "studentIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "concurrencyToken": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "uint32"
           }
         }
       },
@@ -2199,6 +3487,18 @@
     },
     {
       "name": "ActivityTypes"
+    },
+    {
+      "name": "Activities"
+    },
+    {
+      "name": "Realization"
+    },
+    {
+      "name": "LearningMatrix"
+    },
+    {
+      "name": "Audit"
     }
   ]
 }

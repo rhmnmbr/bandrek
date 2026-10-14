@@ -3,8 +3,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Bandrek.Server.Data;
 using Bandrek.Server.Data.Entities;
+using Bandrek.Server.Features.Activities;
+using Bandrek.Server.Features.Audit;
 using Bandrek.Server.Features.Auth;
+using Bandrek.Server.Features.LearningMatrix;
 using Bandrek.Server.Features.Master;
+using Bandrek.Server.Features.Realization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -139,6 +143,10 @@ app.MapClassGroupEndpoints();
 app.MapCourseTopicEndpoints();
 app.MapPlaceRoomEndpoints();
 app.MapActivityTypeEndpoints();
+app.MapActivityEndpoints();
+app.MapRealizationEndpoints();
+app.MapLearningMatrixEndpoints();
+app.MapAuditEndpoints();
 
 // Execute Seeding on startup if database is empty or --reset-seed is passed
 using (var scope = app.Services.CreateScope())
