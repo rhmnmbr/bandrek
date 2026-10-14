@@ -1,8 +1,33 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Bandrek.Server.Data;
+using Bandrek.Server.Data.Entities;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure DbContext with PostgreSQL
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(connectionString);
+});
+
+// Configure ASP.NET Core Identity
+builder.Services.AddIdentityCore<AppUser>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<AppDbContext>();
 
 // Configure JSON serialization (camelCase, string enums)
 builder.Services.Configure<JsonOptions>(options =>
