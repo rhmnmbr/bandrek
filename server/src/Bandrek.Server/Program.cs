@@ -29,6 +29,8 @@ builder.Services.AddIdentityCore<AppUser>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddScoped<Bandrek.Server.Data.Seeding.DataSeeder>();
+
 // Configure JSON serialization (camelCase, string enums)
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -86,12 +88,12 @@ app.MapGet("/api/system/info", (IConfiguration config) =>
 .WithName("GetSystemInfo")
 .WithTags("System");
 
-app.MapGet("/", () => Results.Ok(new
+// Execute Seeding on startup if database is empty or --reset-seed is passed
+using (var scope = app.Services.CreateScope())
 {
-    app = "Bandrek API Server",
-    status = "running",
-    version = "1.0.0",
-    docs = "/openapi/v1.json"
-}));
+    var seeder = scope.ServiceProvider.GetRequiredService<Bandrek.Server.Data.Seeding.DataSeeder>();
+    var forceReset = args.Contains("--reset-seed");
+    await seeder.SeedAsync(forceReset);
+}
 
 app.Run();

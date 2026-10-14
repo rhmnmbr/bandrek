@@ -30,26 +30,11 @@
           }
         }
       }
-    },
-    "/": {
-      "get": {
-        "tags": [
-          "Bandrek.Server"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
     }
   },
   "tags": [
     {
       "name": "System"
-    },
-    {
-      "name": "Bandrek.Server"
     }
   ]
 }

@@ -343,5 +343,27 @@ public class AppDbContext : IdentityDbContext<AppUser>
             b.Property(a => a.OperatorRole).HasMaxLength(50);
             b.Property(a => a.DiffsJson).HasColumnType("jsonb");
         });
+
+        // -------------------------------------------------------------
+        // Global DateTimeOffset UTC normalization for PostgreSQL
+        // -------------------------------------------------------------
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTimeOffset))
+                {
+                    property.SetValueConverter(new ValueConverter<DateTimeOffset, DateTimeOffset>(
+                        v => v.ToUniversalTime(),
+                        v => v.ToUniversalTime()));
+                }
+                else if (property.ClrType == typeof(DateTimeOffset?))
+                {
+                    property.SetValueConverter(new ValueConverter<DateTimeOffset?, DateTimeOffset?>(
+                        v => v.HasValue ? v.Value.ToUniversalTime() : v,
+                        v => v.HasValue ? v.Value.ToUniversalTime() : v));
+                }
+            }
+        }
     }
 }
