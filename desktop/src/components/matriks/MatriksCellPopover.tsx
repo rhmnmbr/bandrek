@@ -146,7 +146,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
               {siswa.nama}
             </div>
             <div className="mt-0.5 text-[12.5px] leading-[1.4] text-[#5C5A58] truncate">
-              {siswa.jenjang} · {namaMapel} › {materi.nama}
+              {siswa.jenjang ? `${siswa.jenjang} · ` : ''}{namaMapel} › {materi.nama}
             </div>
           </div>
           <div

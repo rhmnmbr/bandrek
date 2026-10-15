@@ -155,7 +155,7 @@ export class MockSiswaRepository implements ISiswaRepository {
 
       for (const mp of activeMapel) {
         const materiList = mockStore.materi.filter(
-          (mt) => mt.mapel === mp.id && mt.aktif && (mt.jenjang || []).includes(s.jenjang)
+          (mt) => mt.mapel === mp.id && mt.aktif && Boolean(s.jenjang && (mt.jenjang || []).includes(s.jenjang))
         );
         if (!materiList.length) continue;
         let ok = 0;

@@ -3,7 +3,7 @@ namespace Bandrek.Server.Features.Master;
 public record StudentDto(
     string Id,
     string FullName,
-    string EducationalLevel,
+    string? EducationalLevel,
     bool IsActive,
     string BirthDate,
     string Gender,
@@ -23,7 +23,7 @@ public record StudentDto(
 public record CreateStudentRequest(
     string? Id,
     string FullName,
-    string EducationalLevel,
+    string? EducationalLevel,
     bool? IsActive,
     string BirthDate,
     string Gender,

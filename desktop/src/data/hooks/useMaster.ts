@@ -55,7 +55,7 @@ export function useSiswaList(filter?: SiswaFilterParams) {
           if (status === 'aktif' && !s.aktif) return false;
           if (status === 'nonaktif' && s.aktif) return false;
           if (jenjang !== 'semua' && s.jenjang !== jenjang) return false;
-          if (jenjangList && jenjangList.length > 0 && !jenjangList.includes(s.jenjang)) return false;
+          if (jenjangList && jenjangList.length > 0 && (!s.jenjang || !jenjangList.includes(s.jenjang))) return false;
 
           if (kelasIds && kelasIds.length > 0) {
             const hasNoClass = (s.daftarKelas?.length ?? 0) === 0;
@@ -686,3 +686,53 @@ export function useDeleteJenisKegiatan() {
     },
   });
 }
+
+// ==========================================
+// JENJANG PENDIDIKAN
+// ==========================================
+export const jenjangKeys = {
+  all: ['jenjang'] as const,
+  list: () => ['jenjang', 'list'] as const,
+};
+
+export function useJenjangList() {
+  return useQuery({
+    queryKey: jenjangKeys.list(),
+    queryFn: () => repositories.jenjang.getJenjangList(),
+  });
+}
+
+export function useCreateJenjang() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ nama, urutan }: { nama: string; urutan?: number }) =>
+      repositories.jenjang.createJenjang(nama, urutan),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: jenjangKeys.all });
+    },
+  });
+}
+
+export function useUpdateJenjang() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, nama, urutan }: { id: string; nama: string; urutan?: number }) =>
+      repositories.jenjang.updateJenjang(id, nama, urutan),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: jenjangKeys.all });
+      queryClient.invalidateQueries({ queryKey: siswaKeys.all });
+    },
+  });
+}
+
+export function useDeleteJenjang() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => repositories.jenjang.deleteJenjang(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: jenjangKeys.all });
+      queryClient.invalidateQueries({ queryKey: siswaKeys.all });
+    },
+  });
+}
+

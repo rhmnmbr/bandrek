@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Add16Regular } from '@fluentui/react-icons';
 import { Select } from '@/components/ui/select';
 import { CalendarMonthYearSelect } from '@/components/ui/calendar-month-year-select';
+import { useJenjangList } from '@/data/hooks/useMaster';
+import { KelolaJenjangModal } from './KelolaJenjangModal';
 import type { JenjangPendidikan, JenisKelamin } from '@/data/types/common';
 import type { Siswa, Kelas } from '@/data/types/master';
 import { formatTanggalSlash, formatTanggalTahun, hitungUmur, toIso } from '@/lib/dateUtils';
@@ -42,7 +44,7 @@ function getInitialFormData(initialData: Siswa | null, today: string): SiswaForm
     return {
       id: initialData.id,
       nama: initialData.nama,
-      jenjang: initialData.jenjang,
+      jenjang: initialData.jenjang || '',
       aktif: initialData.aktif,
       lahir: initialData.lahir || '',
       kelamin: initialData.kelamin || '',
@@ -89,6 +91,9 @@ export function SiswaFormPanel({
   const [calOpen, setCalOpen] = useState<'lahir' | 'gabung' | null>(null);
   const [calMonth, setCalMonth] = useState<Date>(new Date(today));
   const [menuKelasOpen, setMenuKelasOpen] = useState(false);
+  const [kelolaJenjangOpen, setKelolaJenjangOpen] = useState(false);
+
+  const { data: jenjangOptions = [] } = useJenjangList();
 
   const namaInputRef = useRef<HTMLInputElement>(null);
   const calRef = useRef<HTMLDivElement>(null);
@@ -100,7 +105,7 @@ export function SiswaFormPanel({
       setForm({
         id: initialData.id,
         nama: initialData.nama,
-        jenjang: initialData.jenjang,
+        jenjang: initialData.jenjang || '',
         aktif: initialData.aktif,
         lahir: initialData.lahir || '',
         kelamin: initialData.kelamin || '',
@@ -152,11 +157,10 @@ export function SiswaFormPanel({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Validation rules matching prototype line 5679
+  // Validation rules
   const errors: {
     nama?: string;
     lahir?: string;
-    jenjang?: string;
     wa?: string;
   } = {};
 
@@ -176,10 +180,6 @@ export function SiswaFormPanel({
     errors.lahir = 'Tanggal lahir harus diisi — dipakai untuk memilah jenjang.';
   } else if (form.lahir >= today) {
     errors.lahir = 'Tanggal lahir harus sebelum hari ini.';
-  }
-
-  if (!form.jenjang) {
-    errors.jenjang = 'Jenjang harus dipilih — matriks belajar memakainya untuk menentukan kolom materi.';
   }
 
   const waTrimmed = form.waliWa.trim();
@@ -555,37 +555,37 @@ export function SiswaFormPanel({
         {/* Jenjang & Tanggal Bergabung */}
         <div className="flex shrink-0 gap-2.25 items-start">
           {/* Jenjang */}
-          <div className="w-27.5 shrink-0 flex flex-col gap-1">
-            <label
-              className={`text-[11.5px] ${
-                dicoba && errors.jenjang ? 'text-(--color-danger-ink) font-semibold' : 'text-(--color-text-secondary)'
-              }`}
-            >
-              Jenjang <span className="text-(--color-danger)">*</span>
-            </label>
+          <div className="flex-1 min-w-0 flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <label className="text-[11.5px] text-(--color-text-secondary)">
+                Jenjang <span className="text-[10.5px] text-(--color-text-muted) font-normal">(opsional)</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => setKelolaJenjangOpen(true)}
+                className="text-[11px] text-(--color-brand) hover:underline cursor-pointer font-medium"
+              >
+                Kelola opsi
+              </button>
+            </div>
             <Select
-              value={form.jenjang}
+              value={form.jenjang || ''}
               onValueChange={(val) =>
                 setForm((prev) => ({
                   ...prev,
                   jenjang: val as JenjangPendidikan | '',
                 }))
               }
-              placeholder="Pilih"
-              error={Boolean(dicoba && errors.jenjang)}
+              placeholder="Pilih jenjang"
               className="h-7 text-[13.5px]"
             >
-              <option value="">Pilih</option>
-              <option value="SD">SD</option>
-              <option value="SMP">SMP</option>
-              <option value="SMA">SMA</option>
+              <option value="">Tanpa jenjang</option>
+              {jenjangOptions.map((opt) => (
+                <option key={opt.id} value={opt.nama}>
+                  {opt.nama}
+                </option>
+              ))}
             </Select>
-            {dicoba && errors.jenjang && (
-              <div className="flex items-center gap-1 text-[11px] text-(--color-danger-ink)">
-                <span>⚠</span>
-                <span>{errors.jenjang}</span>
-              </div>
-            )}
           </div>
 
           {/* Tanggal Bergabung */}
@@ -861,6 +861,11 @@ export function SiswaFormPanel({
           <span>{isNew ? 'Simpan siswa' : 'Simpan'}</span>
         </button>
       </div>
+
+      <KelolaJenjangModal
+        isOpen={kelolaJenjangOpen}
+        onClose={() => setKelolaJenjangOpen(false)}
+      />
     </div>
   );
 }

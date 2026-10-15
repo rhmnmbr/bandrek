@@ -8,6 +8,7 @@ import type {
   IMapelRepository,
   ITempatRepository,
   IJenisKegiatanRepository,
+  IJenjangRepository,
   IAuthRepository,
   IAuditRepository,
   ISimulasiRepository,
@@ -23,6 +24,7 @@ import {
   MockMapelRepository,
   MockTempatRepository,
   MockJenisKegiatanRepository,
+  MockJenjangRepository,
   MockAuthRepository,
   MockAuditRepository,
   MockSimulasiRepository,
@@ -36,6 +38,7 @@ import {
   HttpMapelRepository,
   HttpTempatRepository,
   HttpJenisKegiatanRepository,
+  HttpJenjangRepository,
   HttpKegiatanRepository,
   HttpRealisasiRepository,
   HttpMatriksRepository,
@@ -52,6 +55,7 @@ export interface RepositoryContainer {
   mapel: IMapelRepository;
   tempat: ITempatRepository;
   jenisKegiatan: IJenisKegiatanRepository;
+  jenjang: IJenjangRepository;
   auth: IAuthRepository;
   audit: IAuditRepository;
   simulasi: ISimulasiRepository;
@@ -85,6 +89,7 @@ export function createRepositories(
       mapel: new MockMapelRepository(),
       tempat: new MockTempatRepository(),
       jenisKegiatan: new MockJenisKegiatanRepository(),
+      jenjang: new MockJenjangRepository(),
       auth: new MockAuthRepository(),
       audit: new MockAuditRepository(),
       simulasi: new MockSimulasiRepository(),
@@ -101,6 +106,7 @@ export function createRepositories(
     mapel: new HttpMapelRepository(),
     tempat: new HttpTempatRepository(),
     jenisKegiatan: new HttpJenisKegiatanRepository(),
+    jenjang: new HttpJenjangRepository(),
     auth: new HttpAuthRepository(),
     audit: new HttpAuditRepository(),
     simulasi: new MockSimulasiRepository(),

@@ -182,7 +182,7 @@ public static class StudentEndpoints
             {
                 Id = studentId,
                 FullName = request.FullName.Trim(),
-                EducationalLevel = request.EducationalLevel,
+                EducationalLevel = string.IsNullOrWhiteSpace(request.EducationalLevel) ? null : request.EducationalLevel.Trim(),
                 IsActive = request.IsActive ?? true,
                 BirthDate = DateOnly.TryParse(request.BirthDate, out var bd) ? bd : DateOnly.FromDateTime(DateTime.Today),
                 Gender = request.Gender,
@@ -246,7 +246,7 @@ public static class StudentEndpoints
             if (student == null) return Results.NotFound(new { message = $"Siswa dengan ID '{id}' tidak ditemukan." });
 
             if (!string.IsNullOrWhiteSpace(request.FullName)) student.FullName = request.FullName.Trim();
-            if (!string.IsNullOrWhiteSpace(request.EducationalLevel)) student.EducationalLevel = request.EducationalLevel;
+            if (request.EducationalLevel != null) student.EducationalLevel = string.IsNullOrWhiteSpace(request.EducationalLevel) ? null : request.EducationalLevel.Trim();
             if (request.IsActive.HasValue) student.IsActive = request.IsActive.Value;
             if (!string.IsNullOrWhiteSpace(request.BirthDate) && DateOnly.TryParse(request.BirthDate, out var bd)) student.BirthDate = bd;
             if (!string.IsNullOrWhiteSpace(request.Gender)) student.Gender = request.Gender;

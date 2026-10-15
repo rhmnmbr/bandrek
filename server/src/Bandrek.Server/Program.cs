@@ -140,6 +140,7 @@ app.MapGet("/api/system/info", (IConfiguration config) =>
 // Map Domain Endpoints
 app.MapAuthEndpoints();
 app.MapStudentEndpoints();
+app.MapEducationalLevelEndpoints();
 app.MapSubjectEndpoints();
 app.MapClassGroupEndpoints();
 app.MapCourseTopicEndpoints();

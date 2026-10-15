@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Add16Regular } from '@fluentui/react-icons';
+import { Add16Regular, Settings16Regular } from '@fluentui/react-icons';
 import { MultiSelect, type MultiSelectOption } from '@/components/ui/select';
+import { useJenjangList } from '@/data/hooks/useMaster';
+import { KelolaJenjangModal } from './KelolaJenjangModal';
 import type { JenjangPendidikan } from '@/data/types/common';
 import type { Kelas } from '@/data/types/master';
 
@@ -21,14 +23,6 @@ interface SiswaToolbarProps {
   onSiswaBaru: () => void;
 }
 
-const JENJANG_OPTIONS: MultiSelectOption[] = [
-  { value: 'SD', label: 'SD' },
-  { value: 'SMP', label: 'SMP' },
-  { value: 'SMA', label: 'SMA' },
-  { value: 'Alumni', label: 'Alumni' },
-  { value: 'Umum', label: 'Umum' },
-];
-
 export function SiswaToolbar({
   totalAktif,
   totalNonaktif,
@@ -46,7 +40,21 @@ export function SiswaToolbar({
   onSiswaBaru,
 }: SiswaToolbarProps) {
   const [statusOpen, setStatusOpen] = useState(false);
+  const [kelolaJenjangOpen, setKelolaJenjangOpen] = useState(false);
   const statusRef = useRef<HTMLDivElement>(null);
+
+  const { data: dynamicJenjangs = [] } = useJenjangList();
+
+  const jenjangOptions: MultiSelectOption[] = useMemo(() => {
+    if (dynamicJenjangs.length > 0) {
+      return dynamicJenjangs.map((j) => ({ value: j.nama, label: j.nama }));
+    }
+    return [
+      { value: 'SD', label: 'SD' },
+      { value: 'SMP', label: 'SMP' },
+      { value: 'SMA', label: 'SMA' },
+    ];
+  }, [dynamicJenjangs]);
 
   const kelasOptions: MultiSelectOption[] = useMemo(() => {
     return [
@@ -80,6 +88,14 @@ export function SiswaToolbar({
           {totalAktif} aktif · {totalNonaktif} nonaktif
         </div>
         <div className="flex-1" />
+        <button
+          type="button"
+          onClick={() => setKelolaJenjangOpen(true)}
+          className="flex h-6.5 shrink-0 items-center gap-1.5 px-2.5 rounded border border-(--color-border-strong) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-primary) text-[12px] font-medium cursor-pointer whitespace-nowrap transition-colors"
+        >
+          <Settings16Regular className="w-3.5 h-3.5 shrink-0 text-(--color-text-muted)" />
+          <span>Kelola jenjang</span>
+        </button>
         <button
           type="button"
           onClick={onSiswaBaru}
@@ -118,7 +134,7 @@ export function SiswaToolbar({
             className="w-auto max-w-36 gap-2"
             value={jenjangList}
             onValueChange={(val) => onJenjangChange(val as JenjangPendidikan[])}
-            options={JENJANG_OPTIONS}
+            options={jenjangOptions}
             placeholder="Jenjang"
             density="compact"
           />
@@ -197,6 +213,11 @@ export function SiswaToolbar({
           </button>
         )}
       </div>
+
+      <KelolaJenjangModal
+        isOpen={kelolaJenjangOpen}
+        onClose={() => setKelolaJenjangOpen(false)}
+      />
     </div>
   );
 }

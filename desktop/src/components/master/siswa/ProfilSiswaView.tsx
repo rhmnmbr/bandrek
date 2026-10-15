@@ -89,7 +89,7 @@ export function ProfilSiswaView({
         </span>
 
         <div className="text-[12.5px] text-(--color-text-muted)">
-          {siswa.jenjang} · {kelasTeks}
+          {siswa.jenjang ? `${siswa.jenjang} · ` : ''}{kelasTeks}
         </div>
 
         <div className="flex-1" />

@@ -68,7 +68,7 @@ export class HttpSiswaRepository implements ISiswaRepository {
     const res = await createStudent({
       id: null,
       fullName: input.nama,
-      educationalLevel: input.jenjang,
+      educationalLevel: (input.jenjang || null) as any,
       birthDate: input.lahir,
       gender: input.kelamin,
       isActive: input.aktif ?? true,

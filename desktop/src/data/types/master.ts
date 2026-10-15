@@ -4,6 +4,13 @@ import type { StatusKehadiran } from './realisasi';
 // ==========================================
 // SISWA
 // ==========================================
+export interface JenjangOption {
+  id: string;
+  nama: string;
+  urutan?: number;
+  jumlahSiswa?: number;
+}
+
 export interface SiswaKelasDetail {
   id: string;
   nama: string;
@@ -13,7 +20,7 @@ export interface SiswaKelasDetail {
 export interface Siswa {
   id: string;
   nama: string;
-  jenjang: JenjangPendidikan;
+  jenjang?: JenjangPendidikan;
   aktif: boolean;
   lahir: string; // ISO date YYYY-MM-DD
   kelamin: JenisKelamin;
@@ -47,7 +54,7 @@ export interface SiswaFilterParams {
 
 export interface CreateSiswaInput {
   nama: string;
-  jenjang: JenjangPendidikan;
+  jenjang?: JenjangPendidikan;
   aktif?: boolean;
   lahir: string;
   kelamin: JenisKelamin;

@@ -85,7 +85,7 @@ export interface KolomMateri {
 export interface BarisSiswa {
   id: string;
   nama: string;
-  jenjang: JenjangPendidikan;
+  jenjang?: JenjangPendidikan;
   aktif: boolean;
   daftarKelasIds?: string[];
   daftarKelasNama?: string[];

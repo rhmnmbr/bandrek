@@ -1,4 +1,4 @@
-export type JenjangPendidikan = 'SD' | 'SMP' | 'SMA';
+export type JenjangPendidikan = 'SD' | 'SMP' | 'SMA' | string;
 
 export type JenisKelamin = 'L' | 'P';
 

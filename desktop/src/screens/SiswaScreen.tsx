@@ -130,7 +130,7 @@ export function SiswaScreen() {
           // Create
           const created = await createSiswaMutation.mutateAsync({
             nama: formData.nama.trim(),
-            jenjang: formData.jenjang as JenjangPendidikan,
+            jenjang: formData.jenjang ? (formData.jenjang as JenjangPendidikan) : undefined,
             aktif: formData.aktif,
             lahir: formData.lahir,
             kelamin: formData.kelamin as any,
@@ -151,7 +151,7 @@ export function SiswaScreen() {
             id: formData.id,
             input: {
               nama: formData.nama.trim(),
-              jenjang: formData.jenjang as JenjangPendidikan,
+              jenjang: formData.jenjang ? (formData.jenjang as JenjangPendidikan) : undefined,
               aktif: formData.aktif,
               lahir: formData.lahir,
               kelamin: formData.kelamin as any,

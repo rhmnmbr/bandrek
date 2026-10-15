@@ -90,16 +90,17 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
         (s: Siswa) =>
           s.nama.toLowerCase().includes(q) ||
           (s.asal && s.asal.toLowerCase().includes(q)) ||
-          s.jenjang.toLowerCase().includes(q)
+          (s.jenjang && s.jenjang.toLowerCase().includes(q))
       )
       .slice(0, 5);
 
     for (const s of matchedSiswa) {
+      const parts = [s.jenjang, s.asal].filter(Boolean);
       items.push({
         type: 'siswa',
         data: s,
         label: s.nama,
-        sub: `${s.jenjang}${s.asal ? ` · ${s.asal}` : ''}`,
+        sub: parts.join(' · ') || 'Siswa',
         url: `/master/siswa?profil=${s.id}`,
       });
     }

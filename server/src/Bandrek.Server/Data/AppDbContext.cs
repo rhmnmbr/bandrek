@@ -27,6 +27,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Realization> Realizations => Set<Realization>();
     public DbSet<ManualChecklist> ManualChecklists => Set<ManualChecklist>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<EducationalLevelOption> EducationalLevels => Set<EducationalLevelOption>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -84,11 +85,20 @@ public class AppDbContext : IdentityDbContext<AppUser>
         {
             b.HasKey(s => s.Id);
             b.Property(s => s.FullName).HasMaxLength(200).IsRequired();
-            b.Property(s => s.EducationalLevel).HasMaxLength(20).IsRequired();
+            b.Property(s => s.EducationalLevel).HasMaxLength(50).IsRequired(false);
             b.Property(s => s.Gender).HasMaxLength(10).IsRequired();
             b.Property(s => s.SchoolOrigin).HasMaxLength(200);
             b.Property(s => s.GuardianName).HasMaxLength(200);
             b.Property(s => s.GuardianPhone).HasMaxLength(50);
+        });
+
+        // -------------------------------------------------------------
+        // EducationalLevelOption
+        // -------------------------------------------------------------
+        builder.Entity<EducationalLevelOption>(b =>
+        {
+            b.HasKey(e => e.Id);
+            b.Property(e => e.Name).HasMaxLength(50).IsRequired();
         });
 
         // -------------------------------------------------------------

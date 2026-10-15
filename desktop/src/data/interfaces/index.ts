@@ -7,6 +7,7 @@ export * from './IKelasRepository';
 export * from './IMapelRepository';
 export * from './ITempatRepository';
 export * from './IJenisKegiatanRepository';
+export * from './IJenjangRepository';
 export * from './IAuthRepository';
 export * from './IAuditRepository';
 export * from './ISimulasiRepository';

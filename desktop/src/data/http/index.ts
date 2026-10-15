@@ -12,6 +12,7 @@ export * from './repositories/HttpKelasRepository';
 export * from './repositories/HttpMapelRepository';
 export * from './repositories/HttpTempatRepository';
 export * from './repositories/HttpJenisKegiatanRepository';
+export * from './repositories/HttpJenjangRepository';
 export * from './repositories/HttpKegiatanRepository';
 export * from './repositories/HttpRealisasiRepository';
 export * from './repositories/HttpMatriksRepository';

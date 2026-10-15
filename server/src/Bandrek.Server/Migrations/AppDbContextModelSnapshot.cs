@@ -393,6 +393,24 @@ namespace Bandrek.Server.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("Bandrek.Server.Data.Entities.EducationalLevelOption", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EducationalLevels");
+                });
+
             modelBuilder.Entity("Bandrek.Server.Data.Entities.ManualChecklist", b =>
                 {
                     b.Property<string>("Id")
@@ -540,9 +558,8 @@ namespace Bandrek.Server.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("EducationalLevel")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("FullName")
                         .IsRequired()

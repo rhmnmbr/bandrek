@@ -42,6 +42,7 @@ public class DataSeeder
         await SeedUsersAndRolesAsync();
 
         // Check if database is already seeded
+        await SeedEducationalLevelsAsync();
         if (await _db.Students.AnyAsync())
         {
             _logger.LogInformation("Database already contains data. Skipping domain data seed.");
@@ -280,7 +281,7 @@ public class DataSeeder
                 {
                     Id = elem.GetProperty("id").GetString()!,
                     FullName = elem.GetProperty("nama").GetString()!,
-                    EducationalLevel = elem.GetProperty("jenjang").GetString() ?? EducationalLevels.SD,
+                    EducationalLevel = elem.TryGetProperty("jenjang", out var jj) ? jj.GetString() : null,
                     IsActive = elem.GetProperty("aktif").GetBoolean(),
                     BirthDate = DateOnly.Parse(elem.GetProperty("lahir").GetString()!),
                     Gender = elem.GetProperty("kelamin").GetString() ?? Genders.Male,
@@ -776,5 +777,21 @@ public class DataSeeder
         _db.AuditLogs.AddRange(logs);
         await _db.SaveChangesAsync();
         _logger.LogInformation("Seeded {Count} initial audit logs.", logs.Count);
+    }
+
+    private async Task SeedEducationalLevelsAsync()
+    {
+        if (!await _db.EducationalLevels.AnyAsync())
+        {
+            _logger.LogInformation("Seeding default educational level options (SD, SMP, SMA)...");
+            var defaults = new List<EducationalLevelOption>
+            {
+                new() { Id = "SD", Name = "SD", Order = 1 },
+                new() { Id = "SMP", Name = "SMP", Order = 2 },
+                new() { Id = "SMA", Name = "SMA", Order = 3 }
+            };
+            _db.EducationalLevels.AddRange(defaults);
+            await _db.SaveChangesAsync();
+        }
     }
 }

@@ -77,7 +77,7 @@ export function SiswaTable({
                 </div>
 
                 {/* Jenjang */}
-                <div className="w-11 shrink-0 text-(--color-text-secondary)">{sw.jenjang}</div>
+                <div className="w-11 shrink-0 text-(--color-text-secondary)">{sw.jenjang || '—'}</div>
 
                 {/* Tanggal Lahir */}
                 <div className="w-23.5 shrink-0 text-right pr-2.5 font-mono text-[11.5px] text-(--color-text-muted) whitespace-nowrap">
