@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { formatTanggalSlash, toDate, toIso, NAMA_BULAN } from '@/lib/dateUtils';
+import { formatTanggalSlash, toDate, toIso } from '@/lib/dateUtils';
 import type { StatusKegiatan } from '@/data/types/kegiatan';
 import type { JenisKegiatan, Subjek, Kelas, Siswa, MataPelajaran } from '@/data/types/master';
 import { MultiSelect, type MultiSelectOption } from '@/components/ui/select';
+import { CalendarMonthYearSelect } from '@/components/ui/calendar-month-year-select';
 import {
   Calendar16Regular,
-  ChevronLeft12Regular,
-  ChevronRight12Regular,
   Add16Regular,
 } from '@fluentui/react-icons';
 
@@ -101,7 +100,6 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
   const calDate = React.useMemo(() => toDate(calAnchor), [calAnchor]);
   const calYear = calDate.getFullYear();
   const calMonth = calDate.getMonth();
-  const calMonthLabel = `${NAMA_BULAN[calMonth]} ${calYear}`;
 
   const calWeeks = React.useMemo(() => {
     const firstDay = new Date(calYear, calMonth, 1);
@@ -150,14 +148,14 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
     return weeks;
   }, [calYear, calMonth]);
 
-  const handlePrevCalMonth = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handlePrevCalMonth = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     const d = new Date(calYear, calMonth - 1, 1);
     setCalAnchor(toIso(d));
   };
 
-  const handleNextCalMonth = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleNextCalMonth = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     const d = new Date(calYear, calMonth + 1, 1);
     setCalAnchor(toIso(d));
   };
@@ -223,27 +221,22 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
 
         {openDropdown === 'dari' && !rentangMati && (
           <div className="absolute left-0 top-7.25 z-30 w-66.5 bg-white border border-(--color-border-strong) rounded-lg shadow-(--shadow-overlay) p-2.5">
-            <div className="flex items-center gap-1.5 mb-2">
-              <div className="flex-1 text-[13.5px] font-semibold text-(--color-text)">
-                {calMonthLabel}
-              </div>
-              <button
-                type="button"
-                onClick={handlePrevCalMonth}
-                title="Bulan sebelumnya"
-                className="w-5.5 h-5.5 rounded flex items-center justify-center text-(--color-text-secondary) hover:bg-(--color-surface-alt) cursor-pointer"
-              >
-                <ChevronLeft12Regular className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNextCalMonth}
-                title="Bulan berikutnya"
-                className="w-5.5 h-5.5 rounded flex items-center justify-center text-(--color-text-secondary) hover:bg-(--color-surface-alt) cursor-pointer"
-              >
-                <ChevronRight12Regular className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <CalendarMonthYearSelect
+              month={calMonth}
+              year={calYear}
+              onMonthChange={(newM) => {
+                const d = new Date(calYear, newM, 1);
+                setCalAnchor(toIso(d));
+              }}
+              onYearChange={(newY) => {
+                const d = new Date(newY, calMonth, 1);
+                setCalAnchor(toIso(d));
+              }}
+              onPrevMonth={handlePrevCalMonth}
+              onNextMonth={handleNextCalMonth}
+              minYear={2020}
+              maxYear={new Date().getFullYear() + 5}
+            />
 
             <div className="grid grid-cols-7 gap-0.5 text-[10px] font-semibold text-(--color-text-muted) text-center mb-1">
               {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d) => (
@@ -340,27 +333,22 @@ export const DaftarToolbar: React.FC<DaftarToolbarProps> = ({
 
         {openDropdown === 'sampai' && !rentangMati && (
           <div className="absolute left-0 top-7.25 z-30 w-66.5 bg-white border border-(--color-border-strong) rounded-lg shadow-(--shadow-overlay) p-2.5">
-            <div className="flex items-center gap-1.5 mb-2">
-              <div className="flex-1 text-[13.5px] font-semibold text-(--color-text)">
-                {calMonthLabel}
-              </div>
-              <button
-                type="button"
-                onClick={handlePrevCalMonth}
-                title="Bulan sebelumnya"
-                className="w-5.5 h-5.5 rounded flex items-center justify-center text-(--color-text-secondary) hover:bg-(--color-surface-alt) cursor-pointer"
-              >
-                <ChevronLeft12Regular className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNextCalMonth}
-                title="Bulan berikutnya"
-                className="w-5.5 h-5.5 rounded flex items-center justify-center text-(--color-text-secondary) hover:bg-(--color-surface-alt) cursor-pointer"
-              >
-                <ChevronRight12Regular className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <CalendarMonthYearSelect
+              month={calMonth}
+              year={calYear}
+              onMonthChange={(newM) => {
+                const d = new Date(calYear, newM, 1);
+                setCalAnchor(toIso(d));
+              }}
+              onYearChange={(newY) => {
+                const d = new Date(newY, calMonth, 1);
+                setCalAnchor(toIso(d));
+              }}
+              onPrevMonth={handlePrevCalMonth}
+              onNextMonth={handleNextCalMonth}
+              minYear={2020}
+              maxYear={new Date().getFullYear() + 5}
+            />
 
             <div className="grid grid-cols-7 gap-0.5 text-[10px] font-semibold text-(--color-text-muted) text-center mb-1">
               {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d) => (

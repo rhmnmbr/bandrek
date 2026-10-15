@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Add16Regular } from '@fluentui/react-icons';
 import { Select } from '@/components/ui/select';
+import { CalendarMonthYearSelect } from '@/components/ui/calendar-month-year-select';
 import type { JenjangPendidikan, JenisKelamin } from '@/data/types/common';
 import type { Siswa, Kelas } from '@/data/types/master';
-import { formatTanggalSlash, formatTanggalTahun, hitungUmur, toIso, NAMA_BULAN } from '@/lib/dateUtils';
+import { formatTanggalSlash, formatTanggalTahun, hitungUmur, toIso } from '@/lib/dateUtils';
 
-const SIMULATED_TODAY = '2026-09-16';
+const SIMULATED_TODAY = toIso(new Date());
 
 export interface SiswaFormData {
   id?: string;
@@ -313,27 +314,16 @@ export function SiswaFormPanel({
           calOpen === 'gabung' ? 'right-0' : 'left-0'
         } top-7.5 z-20 w-66.5 rounded-lg border border-(--color-border-strong) bg-(--color-surface) p-2.5 shadow-xl animate-in fade-in-0 duration-100`}
       >
-        <div className="flex items-center gap-1.5 mb-2">
-          <div className="flex-1 text-[13.5px] font-semibold text-(--color-text-primary)">
-            {NAMA_BULAN[month]} {year}
-          </div>
-          <button
-            type="button"
-            onClick={() => setCalMonth(new Date(year, month - 1, 1))}
-            title="Bulan sebelumnya"
-            className="flex h-5.5 w-5.5 items-center justify-center rounded border-none bg-transparent hover:bg-(--color-surface-alt) text-(--color-text-secondary) cursor-pointer"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            onClick={() => setCalMonth(new Date(year, month + 1, 1))}
-            title="Bulan berikutnya"
-            className="flex h-5.5 w-5.5 items-center justify-center rounded border-none bg-transparent hover:bg-(--color-surface-alt) text-(--color-text-secondary) cursor-pointer"
-          >
-            ›
-          </button>
-        </div>
+        <CalendarMonthYearSelect
+          month={month}
+          year={year}
+          onMonthChange={(newM) => setCalMonth(new Date(year, newM, 1))}
+          onYearChange={(newY) => setCalMonth(new Date(newY, month, 1))}
+          onPrevMonth={() => setCalMonth(new Date(year, month - 1, 1))}
+          onNextMonth={() => setCalMonth(new Date(year, month + 1, 1))}
+          minYear={1970}
+          maxYear={new Date().getFullYear() + 5}
+        />
 
         <div className="grid grid-cols-7 gap-0.5 text-center text-[10px] font-semibold text-(--color-text-muted) mb-1">
           {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d) => (
