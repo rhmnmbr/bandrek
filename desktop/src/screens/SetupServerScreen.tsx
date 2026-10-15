@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkmark16Regular, Warning16Regular, ArrowLeft16Regular } from '@fluentui/react-icons';
+import { Checkmark16Regular, Warning16Regular, ArrowLeft16Regular, Copy16Regular } from '@fluentui/react-icons';
 import { useToast } from '@/components/ui/toast';
 import { BandrekCupIcon } from '@/components/ui/bandrek-logo';
 import { encodeServerUrl, decodeServerUrl } from '@/data/api/client';
@@ -10,9 +10,11 @@ export function SetupServerScreen() {
   const { showToast } = useToast();
 
   const [serverCode, setServerCode] = useState(() => {
-    const storedCode = localStorage.getItem('bandrek:server-code');
-    if (storedCode) return storedCode;
     const storedUrl = localStorage.getItem('bandrek:server-url') || 'http://localhost:5109';
+    const storedCode = localStorage.getItem('bandrek:server-code');
+    if (storedCode && !storedCode.includes('=')) {
+      return storedCode;
+    }
     return encodeServerUrl(storedUrl);
   });
   const [isTesting, setIsTesting] = useState(false);
@@ -79,6 +81,16 @@ export function SetupServerScreen() {
     }
   };
 
+  const handleCopyCode = () => {
+    const trimmed = serverCode.trim();
+    if (!trimmed) return;
+    navigator.clipboard.writeText(trimmed);
+    showToast({
+      type: 'info',
+      message: 'Kode koneksi disalin ke clipboard.',
+    });
+  };
+
   const handleSave = () => {
     const trimmed = serverCode.trim();
     if (!trimmed) {
@@ -135,12 +147,35 @@ export function SetupServerScreen() {
               type="text"
               value={serverCode}
               onChange={(e) => {
-                setServerCode(e.target.value);
+                const val = e.target.value;
+                if (val.startsWith('http://') || val.startsWith('https://')) {
+                  setServerCode(val);
+                } else {
+                  setServerCode(val.toUpperCase());
+                }
                 setTestResult(null);
               }}
-              placeholder="mis. aHR0cDovL2FwaS5iYW5kcmVr..."
-              className="h-8 flex-1 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[12.5px] font-mono outline-none focus:border-(--color-brand) transition-colors"
+              onBlur={() => {
+                const trimmed = serverCode.trim();
+                if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+                  const clean = trimmed.replace(/[-\s]/g, '').toUpperCase();
+                  if (clean.length >= 10 && /^[0-9A-Z]+$/.test(clean)) {
+                    const chunked = clean.match(/.{1,5}/g)?.join('-');
+                    if (chunked) setServerCode(chunked);
+                  }
+                }
+              }}
+              placeholder="mis. G5KMR-YB33Y-8FXZP-5DKSN-N89VP"
+              className="h-8 flex-1 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[12.5px] font-mono tracking-wide outline-none focus:border-(--color-brand) transition-colors"
             />
+            <button
+              type="button"
+              onClick={handleCopyCode}
+              title="Salin kode koneksi"
+              className="h-8 w-8 flex items-center justify-center rounded-sm border border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-alt) text-(--color-text-secondary) hover:text-(--color-text-primary) cursor-pointer transition-colors"
+            >
+              <Copy16Regular className="w-3.5 h-3.5" />
+            </button>
             <button
               type="button"
               onClick={handleTestConnection}
@@ -172,7 +207,7 @@ export function SetupServerScreen() {
           )}
 
           <div className="text-[11px] text-(--color-text-muted) leading-relaxed mt-1">
-            Kode koneksi disediakan oleh administrator teknis yang memasang server bimbel Anda. Kode ini mengamankan informasi server agar mudah dibagikan tanpa menampilkan alamat IP atau port teknis.
+            Dapatkan kode koneksi dari pengelola atau admin bimbel Anda untuk menghubungkan aplikasi ke server.
           </div>
         </div>
 
