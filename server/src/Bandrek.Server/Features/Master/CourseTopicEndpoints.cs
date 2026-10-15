@@ -129,6 +129,7 @@ public static class CourseTopicEndpoints
         courseGroup.MapPost("/", async (
             CreateCourseRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -167,6 +168,14 @@ public static class CourseTopicEndpoints
             db.Courses.Add(course);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "master",
+                entityType: "mapel",
+                entityName: course.Name,
+                summary: $"Menambahkan mata pelajaran: {course.Name}",
+                ct: ct);
+
             return Results.Created($"/api/courses/{course.Id}", new CourseDto(
                 course.Id,
                 course.Name,
@@ -189,6 +198,7 @@ public static class CourseTopicEndpoints
             UpdateCourseRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var course = await db.Courses
@@ -202,6 +212,14 @@ public static class CourseTopicEndpoints
             if (request.IsActive.HasValue) course.IsActive = request.IsActive.Value;
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "mapel",
+                entityName: course.Name,
+                summary: $"Memperbarui mata pelajaran: {course.Name}",
+                ct: ct);
 
             var usage = await usageChecker.CheckCourseUsageAsync(course.Id, ct);
             return Results.Ok(new CourseDto(
@@ -235,6 +253,7 @@ public static class CourseTopicEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var course = await db.Courses.FirstOrDefaultAsync(c => c.Id == id, ct);
@@ -252,6 +271,14 @@ public static class CourseTopicEndpoints
 
             db.Courses.Remove(course);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "mapel",
+                entityName: course.Name,
+                summary: $"Menghapus mata pelajaran: {course.Name}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,
@@ -333,6 +360,7 @@ public static class CourseTopicEndpoints
         topicGroup.MapPost("/", async (
             CreateTopicRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.CourseId))
@@ -383,6 +411,14 @@ public static class CourseTopicEndpoints
             db.Topics.Add(topic);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "master",
+                entityType: "materi",
+                entityName: topic.Name,
+                summary: $"Menambahkan materi: {topic.Name}",
+                ct: ct);
+
             return Results.Created($"/api/topics/{topic.Id}", new TopicDto(
                 topic.Id,
                 topic.CourseId,
@@ -407,6 +443,7 @@ public static class CourseTopicEndpoints
             UpdateTopicRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var topic = await db.Topics.FirstOrDefaultAsync(t => t.Id == id, ct);
@@ -418,6 +455,14 @@ public static class CourseTopicEndpoints
             if (request.OrderIndex.HasValue) topic.OrderIndex = request.OrderIndex.Value;
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "materi",
+                entityName: topic.Name,
+                summary: $"Memperbarui materi: {topic.Name}",
+                ct: ct);
 
             var usage = await usageChecker.CheckTopicUsageAsync(topic.Id, ct);
             return Results.Ok(new TopicDto(
@@ -442,6 +487,7 @@ public static class CourseTopicEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var topic = await db.Topics.FirstOrDefaultAsync(t => t.Id == id, ct);
@@ -459,6 +505,14 @@ public static class CourseTopicEndpoints
 
             db.Topics.Remove(topic);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "materi",
+                entityName: topic.Name,
+                summary: $"Menghapus materi: {topic.Name}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,

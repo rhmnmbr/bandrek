@@ -239,6 +239,7 @@ public static class ActivityEndpoints
             AppDbContext db,
             ActivityStatusService statusService,
             IDateTimeProvider dtProvider,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name) ||
@@ -288,6 +289,15 @@ public static class ActivityEndpoints
             // Re-fetch first activity with navigation properties
             var firstId = createdActivities[0].Id;
             var saved = await BuildActivityQuery(db).FirstAsync(a => a.Id == firstId, ct);
+
+            await auditService.LogAsync(
+                action: "buat",
+                category: "kegiatan",
+                entityType: "kegiatan",
+                entityName: saved.Name,
+                summary: $"Menambahkan kegiatan baru: {saved.Name} ({saved.Date:dd MMM yyyy}, {saved.StartTime}-{saved.EndTime})",
+                ct: ct);
+
             return Results.Created($"/api/activities/{saved.Id}", MapToDto(saved, statusService, dtProvider));
         })
         .WithName("CreateActivity")
@@ -301,6 +311,7 @@ public static class ActivityEndpoints
             AppDbContext db,
             ActivityStatusService statusService,
             IDateTimeProvider dtProvider,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var activity = await db.Activities
@@ -355,6 +366,15 @@ public static class ActivityEndpoints
             await db.SaveChangesAsync(ct);
 
             var saved = await BuildActivityQuery(db).FirstAsync(a => a.Id == id, ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "kegiatan",
+                entityType: "kegiatan",
+                entityName: saved.Name,
+                summary: $"Memperbarui kegiatan: {saved.Name} ({saved.Date:dd MMM yyyy}, {saved.StartTime}-{saved.EndTime})",
+                ct: ct);
+
             return Results.Ok(MapToDto(saved, statusService, dtProvider));
         })
         .WithName("UpdateActivity")
@@ -368,6 +388,7 @@ public static class ActivityEndpoints
             AppDbContext db,
             ActivityStatusService statusService,
             IDateTimeProvider dtProvider,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var activity = await db.Activities.FirstOrDefaultAsync(a => a.Id == id, ct);
@@ -381,6 +402,15 @@ public static class ActivityEndpoints
             await db.SaveChangesAsync(ct);
 
             var saved = await BuildActivityQuery(db).FirstAsync(a => a.Id == id, ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "kegiatan",
+                entityType: "kegiatan",
+                entityName: saved.Name,
+                summary: $"Membatalkan kegiatan: {saved.Name}. Alasan: {request.Reason}",
+                ct: ct);
+
             return Results.Ok(MapToDto(saved, statusService, dtProvider));
         })
         .WithName("CancelActivity")
@@ -394,6 +424,7 @@ public static class ActivityEndpoints
             AppDbContext db,
             ActivityStatusService statusService,
             IDateTimeProvider dtProvider,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var original = await db.Activities
@@ -471,6 +502,14 @@ public static class ActivityEndpoints
 
             var savedOrig = await BuildActivityQuery(db).FirstAsync(a => a.Id == original.Id, ct);
             var savedNew = await BuildActivityQuery(db).FirstAsync(a => a.Id == newAct.Id, ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "kegiatan",
+                entityType: "kegiatan",
+                entityName: original.Name,
+                summary: $"Menjadwalkan ulang kegiatan: {original.Name} ke {newDate:dd MMM yyyy} ({request.NewStartTime}-{request.NewEndTime}). Alasan: {request.Reason}",
+                ct: ct);
 
             return Results.Ok(new RescheduleResultDto(
                 MapToDto(savedOrig, statusService, dtProvider),

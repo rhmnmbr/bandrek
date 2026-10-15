@@ -112,6 +112,7 @@ public static class LearningMatrixEndpoints
         group.MapPost("/manual/bulk", async (
             BulkMarkManualChecklistRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var result = new List<ManualChecklistDto>();
@@ -159,6 +160,14 @@ public static class LearningMatrixEndpoints
 
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "materi",
+                entityName: "Matriks Pembelajaran",
+                summary: $"Memperbarui status ceklis manual materi pembelajaran ({result.Count} entri)",
+                ct: ct);
+
             return Results.Ok(result);
         })
         .WithName("BulkMarkManualChecklist")
@@ -168,6 +177,7 @@ public static class LearningMatrixEndpoints
         group.MapPost("/manual/bulk-delete", async (
             BulkDeleteManualChecklistRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             int deletedCount = 0;
@@ -185,6 +195,14 @@ public static class LearningMatrixEndpoints
             }
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "materi",
+                entityName: "Matriks Pembelajaran",
+                summary: $"Menghapus status ceklis manual materi pembelajaran ({deletedCount} entri)",
+                ct: ct);
 
             return Results.Ok(new BulkDeleteResultDto(deletedCount));
         })

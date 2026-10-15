@@ -100,6 +100,7 @@ public static class ClassGroupEndpoints
         group.MapPost("/", async (
             CreateClassGroupRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -151,6 +152,14 @@ public static class ClassGroupEndpoints
             db.ClassGroups.Add(cg);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "master",
+                entityType: "kelas",
+                entityName: cg.Name,
+                summary: $"Menambahkan kelas baru: {cg.Name}",
+                ct: ct);
+
             return Results.Created($"/api/classes/{cg.Id}", new ClassGroupDto(
                 cg.Id,
                 cg.Name,
@@ -175,6 +184,7 @@ public static class ClassGroupEndpoints
             UpdateClassGroupRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var cg = await db.ClassGroups
@@ -189,6 +199,14 @@ public static class ClassGroupEndpoints
             if (request.Description != null) cg.Description = request.Description.Trim();
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "kelas",
+                entityName: cg.Name,
+                summary: $"Memperbarui data kelas: {cg.Name}",
+                ct: ct);
 
             var usage = await usageChecker.CheckClassGroupUsageAsync(cg.Id, ct);
             return Results.Ok(new ClassGroupDto(
@@ -262,6 +280,7 @@ public static class ClassGroupEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var cg = await db.ClassGroups.FirstOrDefaultAsync(c => c.Id == id, ct);
@@ -279,6 +298,14 @@ public static class ClassGroupEndpoints
 
             db.ClassGroups.Remove(cg);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "kelas",
+                entityName: cg.Name,
+                summary: $"Menghapus kelas: {cg.Name}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,

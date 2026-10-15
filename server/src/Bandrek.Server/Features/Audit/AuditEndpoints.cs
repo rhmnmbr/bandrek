@@ -38,7 +38,7 @@ public static class AuditEndpoints
                                          a.OperatorName.ToLower().Contains(term));
             }
 
-            int takeCount = Math.Clamp(limit ?? 50, 1, 200);
+            int takeCount = Math.Clamp(limit ?? 100, 1, 500);
             var logs = await query.OrderByDescending(a => a.Timestamp).Take(takeCount).ToListAsync(ct);
 
             var result = logs.Select(a => new AuditLogDto(

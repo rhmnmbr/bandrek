@@ -12,4 +12,5 @@ export * from './MockMapelRepository';
 export * from './MockTempatRepository';
 export * from './MockJenisKegiatanRepository';
 export * from './MockAuthRepository';
+export * from './MockAuditRepository';
 export * from './MockSimulasiRepository';

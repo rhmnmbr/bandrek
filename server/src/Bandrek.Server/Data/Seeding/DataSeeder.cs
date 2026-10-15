@@ -45,6 +45,10 @@ public class DataSeeder
         if (await _db.Students.AnyAsync())
         {
             _logger.LogInformation("Database already contains data. Skipping domain data seed.");
+            if (!await _db.AuditLogs.AnyAsync())
+            {
+                await SeedInitialAuditLogsAsync();
+            }
             return;
         }
 
@@ -89,6 +93,9 @@ public class DataSeeder
 
         // 10. Seed Activities and Realizations
         await SeedActivitiesAsync(root);
+
+        // 11. Seed Initial Audit Logs
+        await SeedInitialAuditLogsAsync();
 
         _logger.LogInformation("Database seeding completed successfully!");
     }
@@ -624,5 +631,150 @@ public class DataSeeder
             }
             await _db.SaveChangesAsync();
         }
+    }
+
+    private async Task SeedInitialAuditLogsAsync()
+    {
+        _logger.LogInformation("Seeding initial audit logs...");
+
+        var adminUser = await _userManager.FindByNameAsync("admin");
+        string adminId = adminUser?.Id ?? "usr-admin";
+        string adminName = adminUser?.FullName ?? "Administrator";
+        string adminUsername = adminUser?.UserName ?? "admin";
+
+        var operatorUser = await _userManager.FindByNameAsync("operator");
+        string operatorId = operatorUser?.Id ?? "usr-operator";
+        string operatorName = operatorUser?.FullName ?? "Operator Bimbel";
+        string operatorUsername = operatorUser?.UserName ?? "operator";
+
+        var baseTime = DateTimeOffset.UtcNow.AddDays(-2);
+
+        var logs = new List<AuditLog>
+        {
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-10),
+                UserId = adminId,
+                OperatorName = adminName,
+                OperatorUsername = adminUsername,
+                OperatorRole = UserRoles.Admin,
+                Action = "login",
+                Category = "pengguna",
+                EntityType = "pengguna",
+                EntityName = adminName,
+                Summary = $"Pengguna {adminName} ({adminUsername}) berhasil masuk ke aplikasi",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-9),
+                UserId = adminId,
+                OperatorName = adminName,
+                OperatorUsername = adminUsername,
+                OperatorRole = UserRoles.Admin,
+                Action = "buat",
+                Category = "master",
+                EntityType = "tempat",
+                EntityName = "Gedung Utama",
+                Summary = "Inisialisasi lokasi tempat bimbingan belajar: Gedung Utama",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-8),
+                UserId = adminId,
+                OperatorName = adminName,
+                OperatorUsername = adminUsername,
+                OperatorRole = UserRoles.Admin,
+                Action = "buat",
+                Category = "master",
+                EntityType = "mapel",
+                EntityName = "Kurikulum Pembelajaran",
+                Summary = "Inisialisasi mata pelajaran dan topik materi kurikulum",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-7),
+                UserId = adminId,
+                OperatorName = adminName,
+                OperatorUsername = adminUsername,
+                OperatorRole = UserRoles.Admin,
+                Action = "buat",
+                Category = "siswa",
+                EntityType = "siswa",
+                EntityName = "Data Siswa Awal",
+                Summary = "Mengimpor data siswa aktif dan data registrasi bimbel",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-6),
+                UserId = adminId,
+                OperatorName = adminName,
+                OperatorUsername = adminUsername,
+                OperatorRole = UserRoles.Admin,
+                Action = "buat",
+                Category = "master",
+                EntityType = "kelas",
+                EntityName = "Rombongan Belajar",
+                Summary = "Menyusun pembagian kelas rombongan belajar siswa",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-5),
+                UserId = operatorId,
+                OperatorName = operatorName,
+                OperatorUsername = operatorUsername,
+                OperatorRole = UserRoles.Operator,
+                Action = "login",
+                Category = "pengguna",
+                EntityType = "pengguna",
+                EntityName = operatorName,
+                Summary = $"Pengguna {operatorName} ({operatorUsername}) berhasil masuk ke aplikasi",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-4),
+                UserId = operatorId,
+                OperatorName = operatorName,
+                OperatorUsername = operatorUsername,
+                OperatorRole = UserRoles.Operator,
+                Action = "buat",
+                Category = "kegiatan",
+                EntityType = "kegiatan",
+                EntityName = "Jadwal Bimbingan Perdana",
+                Summary = "Menyusun jadwal kegiatan bimbingan belajar reguler",
+                IpAddress = "127.0.0.1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Timestamp = baseTime.AddHours(-2),
+                UserId = operatorId,
+                OperatorName = operatorName,
+                OperatorUsername = operatorUsername,
+                OperatorRole = UserRoles.Operator,
+                Action = "realisasi",
+                Category = "realisasi",
+                EntityType = "realisasi",
+                EntityName = "Realisasi Sesi Awal",
+                Summary = "Menyelesaikan pencatatan kehadiran dan materi sesi bimbingan awal",
+                IpAddress = "127.0.0.1"
+            }
+        };
+
+        _db.AuditLogs.AddRange(logs);
+        await _db.SaveChangesAsync();
+        _logger.LogInformation("Seeded {Count} initial audit logs.", logs.Count);
     }
 }

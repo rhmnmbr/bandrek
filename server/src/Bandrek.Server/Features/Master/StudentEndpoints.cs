@@ -148,6 +148,7 @@ public static class StudentEndpoints
         group.MapPost("/", async (
             CreateStudentRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.FullName))
@@ -195,6 +196,14 @@ public static class StudentEndpoints
             db.Students.Add(student);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "siswa",
+                entityType: "siswa",
+                entityName: student.FullName,
+                summary: $"Menambahkan siswa baru: {student.FullName}",
+                ct: ct);
+
             return Results.Created($"/api/students/{student.Id}", new StudentDto(
                 student.Id,
                 student.FullName,
@@ -226,6 +235,7 @@ public static class StudentEndpoints
             UpdateStudentRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var student = await db.Students
@@ -247,6 +257,14 @@ public static class StudentEndpoints
             if (request.Notes != null) student.Notes = request.Notes.Trim();
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "siswa",
+                entityType: "siswa",
+                entityName: student.FullName,
+                summary: $"Memperbarui data siswa: {student.FullName}",
+                ct: ct);
 
             var usage = await usageChecker.CheckStudentUsageAsync(student.Id, ct);
             return Results.Ok(new StudentDto(
@@ -278,6 +296,7 @@ public static class StudentEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var student = await db.Students.FirstOrDefaultAsync(s => s.Id == id, ct);
@@ -295,6 +314,14 @@ public static class StudentEndpoints
 
             db.Students.Remove(student);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "siswa",
+                entityType: "siswa",
+                entityName: student.FullName,
+                summary: $"Menghapus siswa: {student.FullName}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,

@@ -24,6 +24,7 @@ import {
   MockTempatRepository,
   MockJenisKegiatanRepository,
   MockAuthRepository,
+  MockAuditRepository,
   MockSimulasiRepository,
 } from './mock';
 
@@ -85,7 +86,7 @@ export function createRepositories(
       tempat: new MockTempatRepository(),
       jenisKegiatan: new MockJenisKegiatanRepository(),
       auth: new MockAuthRepository(),
-      audit: new HttpAuditRepository(),
+      audit: new MockAuditRepository(),
       simulasi: new MockSimulasiRepository(),
     };
   }

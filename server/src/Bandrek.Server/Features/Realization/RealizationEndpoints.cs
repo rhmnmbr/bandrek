@@ -51,6 +51,7 @@ public static class RealizationEndpoints
             string id,
             SaveRealizationRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var activity = await db.Activities
@@ -103,6 +104,18 @@ public static class RealizationEndpoints
             activity.RawStatus = RawActivityStatuses.Realized;
 
             await db.SaveChangesAsync(ct);
+
+            int hadirCount = realization.StudentAttendances?.Values.Count(v => v == "hadir" || v == "present") ?? 0;
+            int totalStudents = realization.StudentAttendances?.Count ?? 0;
+            string summaryAttendance = totalStudents > 0 ? $"{hadirCount}/{totalStudents} hadir" : "selesai dicatat";
+
+            await auditService.LogAsync(
+                action: "realisasi",
+                category: "realisasi",
+                entityType: "realisasi",
+                entityName: activity.Name,
+                summary: $"Menyelesaikan realisasi kegiatan: {activity.Name} ({summaryAttendance})",
+                ct: ct);
 
             // Fetch actual topic name
             string? topicName = null;

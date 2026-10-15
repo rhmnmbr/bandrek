@@ -333,10 +333,14 @@ export function AuditLogScreen() {
             <div className="flex h-64 flex-col items-center justify-center p-6 text-center text-xs text-(--color-text-muted)">
               <Search24Regular className="w-8 h-8 opacity-40 mb-2" />
               <div className="text-[13px] font-medium text-(--color-text-secondary)">
-                Tidak ada riwayat aktivitas yang sesuai filter
+                {auditLogs.length === 0
+                  ? 'Belum ada riwayat aktivitas tercatat'
+                  : 'Tidak ada riwayat aktivitas yang sesuai filter'}
               </div>
               <p className="mt-1 max-w-sm text-(--color-text-muted)">
-                Coba ubah kata kunci pencarian atau bersihkan filter untuk menampilkan data audit log.
+                {auditLogs.length === 0
+                  ? 'Setiap aktivitas perubahan jadwal, realisasi, siswa, dan master data akan tercatat secara otomatis di sini.'
+                  : 'Coba ubah kata kunci pencarian atau bersihkan filter untuk menampilkan data audit log.'}
               </p>
               {hasFilterActive && (
                 <Button

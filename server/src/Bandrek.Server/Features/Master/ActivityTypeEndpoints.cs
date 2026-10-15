@@ -87,6 +87,7 @@ public static class ActivityTypeEndpoints
         group.MapPost("/", async (
             CreateActivityTypeRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -127,6 +128,14 @@ public static class ActivityTypeEndpoints
             db.ActivityTypes.Add(activityType);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "master",
+                entityType: "jenis_kegiatan",
+                entityName: activityType.Name,
+                summary: $"Menambahkan jenis kegiatan baru: {activityType.Name}",
+                ct: ct);
+
             return Results.Created($"/api/activity-types/{activityType.Id}", new ActivityTypeDto(
                 activityType.Id,
                 activityType.Name,
@@ -149,6 +158,7 @@ public static class ActivityTypeEndpoints
             UpdateActivityTypeRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var activityType = await db.ActivityTypes
@@ -163,6 +173,14 @@ public static class ActivityTypeEndpoints
             if (request.RequiresStudents.HasValue) activityType.RequiresStudents = request.RequiresStudents.Value;
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "jenis_kegiatan",
+                entityName: activityType.Name,
+                summary: $"Memperbarui data jenis kegiatan: {activityType.Name}",
+                ct: ct);
 
             var usage = await usageChecker.CheckActivityTypeUsageAsync(activityType.Id, ct);
             return Results.Ok(new ActivityTypeDto(
@@ -185,6 +203,7 @@ public static class ActivityTypeEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var activityType = await db.ActivityTypes.FirstOrDefaultAsync(t => t.Id == id, ct);
@@ -202,6 +221,14 @@ public static class ActivityTypeEndpoints
 
             db.ActivityTypes.Remove(activityType);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "jenis_kegiatan",
+                entityName: activityType.Name,
+                summary: $"Menghapus jenis kegiatan: {activityType.Name}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,

@@ -64,8 +64,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<Bandrek.Server.Data.Seeding.DataSeeder>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<Bandrek.Server.Features.Audit.IAuditService, Bandrek.Server.Features.Audit.AuditService>();
 
 // Business Rules & Services
 builder.Services.AddSingleton<Bandrek.Server.Services.DateTimeProvider.IDateTimeProvider, Bandrek.Server.Services.DateTimeProvider.SystemDateTimeProvider>();
@@ -149,11 +151,16 @@ app.MapLearningMatrixEndpoints();
 app.MapAuditEndpoints();
 
 // Execute Seeding on startup if database is empty or --reset-seed is passed
-using (var scope = app.Services.CreateScope())
+try
 {
+    using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<Bandrek.Server.Data.Seeding.DataSeeder>();
     var forceReset = args.Contains("--reset-seed");
     await seeder.SeedAsync(forceReset);
+}
+catch (Exception ex)
+{
+    app.Logger.LogWarning(ex, "Could not seed database on startup (database may be unreachable or running during OpenAPI generation).");
 }
 
 app.Run();

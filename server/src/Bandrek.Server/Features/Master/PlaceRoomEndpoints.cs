@@ -110,6 +110,7 @@ public static class PlaceRoomEndpoints
         placeGroup.MapPost("/", async (
             CreatePlaceRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -147,6 +148,14 @@ public static class PlaceRoomEndpoints
             db.Places.Add(place);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "master",
+                entityType: "tempat",
+                entityName: place.Name,
+                summary: $"Menambahkan tempat baru: {place.Name}",
+                ct: ct);
+
             return Results.Created($"/api/places/{place.Id}", new PlaceDto(
                 place.Id,
                 place.Name,
@@ -167,6 +176,7 @@ public static class PlaceRoomEndpoints
             UpdatePlaceRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var place = await db.Places
@@ -178,6 +188,14 @@ public static class PlaceRoomEndpoints
             if (!string.IsNullOrWhiteSpace(request.Name)) place.Name = request.Name.Trim();
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "tempat",
+                entityName: place.Name,
+                summary: $"Memperbarui data tempat: {place.Name}",
+                ct: ct);
 
             var usage = await usageChecker.CheckPlaceUsageAsync(place.Id, ct);
             return Results.Ok(new PlaceDto(
@@ -206,6 +224,7 @@ public static class PlaceRoomEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var place = await db.Places.FirstOrDefaultAsync(p => p.Id == id, ct);
@@ -223,6 +242,14 @@ public static class PlaceRoomEndpoints
 
             db.Places.Remove(place);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "tempat",
+                entityName: place.Name,
+                summary: $"Menghapus tempat: {place.Name}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,
@@ -298,6 +325,7 @@ public static class PlaceRoomEndpoints
         roomGroup.MapPost("/", async (
             CreateRoomRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.PlaceId))
@@ -337,6 +365,14 @@ public static class PlaceRoomEndpoints
             db.Rooms.Add(room);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "master",
+                entityType: "ruangan",
+                entityName: room.Name,
+                summary: $"Menambahkan ruangan baru: {room.Name}",
+                ct: ct);
+
             return Results.Created($"/api/rooms/{room.Id}", new RoomDto(
                 room.Id,
                 room.PlaceId,
@@ -358,6 +394,7 @@ public static class PlaceRoomEndpoints
             UpdateRoomRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var room = await db.Rooms.FirstOrDefaultAsync(r => r.Id == id, ct);
@@ -367,6 +404,14 @@ public static class PlaceRoomEndpoints
             if (request.Capacity.HasValue) room.Capacity = request.Capacity.Value;
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "master",
+                entityType: "ruangan",
+                entityName: room.Name,
+                summary: $"Memperbarui data ruangan: {room.Name}",
+                ct: ct);
 
             var usage = await usageChecker.CheckRoomUsageAsync(room.Id, ct);
             return Results.Ok(new RoomDto(
@@ -388,6 +433,7 @@ public static class PlaceRoomEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var room = await db.Rooms.FirstOrDefaultAsync(r => r.Id == id, ct);
@@ -405,6 +451,14 @@ public static class PlaceRoomEndpoints
 
             db.Rooms.Remove(room);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "master",
+                entityType: "ruangan",
+                entityName: room.Name,
+                summary: $"Menghapus ruangan: {room.Name}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,

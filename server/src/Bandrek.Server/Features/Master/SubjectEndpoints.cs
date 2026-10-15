@@ -122,6 +122,7 @@ public static class SubjectEndpoints
         group.MapPost("/", async (
             CreateSubjectRequest request,
             AppDbContext db,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.FullName))
@@ -170,6 +171,14 @@ public static class SubjectEndpoints
             db.Subjects.Add(subject);
             await db.SaveChangesAsync(ct);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "subjek",
+                entityType: "subjek",
+                entityName: subject.FullName,
+                summary: $"Menambahkan subjek baru: {subject.FullName}",
+                ct: ct);
+
             return Results.Created($"/api/subjects/{subject.Id}", new SubjectDto(
                 subject.Id,
                 subject.FullName,
@@ -195,6 +204,7 @@ public static class SubjectEndpoints
             UpdateSubjectRequest request,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var subject = await db.Subjects
@@ -211,6 +221,14 @@ public static class SubjectEndpoints
             if (request.CourseIds != null) subject.CourseIds = request.CourseIds;
 
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "subjek",
+                entityType: "subjek",
+                entityName: subject.FullName,
+                summary: $"Memperbarui data subjek: {subject.FullName}",
+                ct: ct);
 
             var usage = await usageChecker.CheckSubjectUsageAsync(subject.Id, ct);
             return Results.Ok(new SubjectDto(
@@ -236,6 +254,7 @@ public static class SubjectEndpoints
             string id,
             AppDbContext db,
             MasterUsageChecker usageChecker,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             CancellationToken ct) =>
         {
             var subject = await db.Subjects.FirstOrDefaultAsync(s => s.Id == id, ct);
@@ -253,6 +272,14 @@ public static class SubjectEndpoints
 
             db.Subjects.Remove(subject);
             await db.SaveChangesAsync(ct);
+
+            await auditService.LogAsync(
+                action: "hapus",
+                category: "subjek",
+                entityType: "subjek",
+                entityName: subject.FullName,
+                summary: $"Menghapus subjek: {subject.FullName}",
+                ct: ct);
 
             return Results.Ok(new DeleteResultDto(
                 true,

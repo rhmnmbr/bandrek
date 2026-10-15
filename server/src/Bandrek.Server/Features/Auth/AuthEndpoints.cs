@@ -17,6 +17,7 @@ public static class AuthEndpoints
             LoginRequest request,
             UserManager<AppUser> userManager,
             TokenService tokenService,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
             HttpContext context) =>
         {
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
@@ -46,6 +47,15 @@ public static class AuthEndpoints
                 user.Role,
                 user.IsActive,
                 user.CreatedAt);
+
+            await auditService.LogAsync(
+                action: "login",
+                category: "pengguna",
+                entityType: "pengguna",
+                entityName: user.FullName,
+                summary: $"Pengguna {user.FullName} ({user.UserName}) berhasil masuk ke aplikasi",
+                httpContext: context,
+                explicitUser: user);
 
             return Results.Ok(new AuthSessionResponse(
                 token,
@@ -147,7 +157,9 @@ public static class AuthEndpoints
         // POST /api/users
         userGroup.MapPost("/", async (
             CreateUserRequest request,
-            UserManager<AppUser> userManager) =>
+            UserManager<AppUser> userManager,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
+            HttpContext context) =>
         {
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             {
@@ -179,6 +191,14 @@ public static class AuthEndpoints
 
             await userManager.AddToRoleAsync(user, role);
 
+            await auditService.LogAsync(
+                action: "buat",
+                category: "pengguna",
+                entityType: "pengguna",
+                entityName: user.FullName,
+                summary: $"Menambahkan pengguna baru: {user.FullName} ({user.UserName})",
+                httpContext: context);
+
             return Results.Created($"/api/users/{user.Id}", new UserDto(
                 user.Id,
                 user.UserName,
@@ -196,7 +216,9 @@ public static class AuthEndpoints
         userGroup.MapPut("/{id}", async (
             string id,
             UpdateUserRequest request,
-            UserManager<AppUser> userManager) =>
+            UserManager<AppUser> userManager,
+            Bandrek.Server.Features.Audit.IAuditService auditService,
+            HttpContext context) =>
         {
             var user = await userManager.FindByIdAsync(id);
             if (user == null)
@@ -232,6 +254,14 @@ public static class AuthEndpoints
             }
 
             await userManager.UpdateAsync(user);
+
+            await auditService.LogAsync(
+                action: "ubah",
+                category: "pengguna",
+                entityType: "pengguna",
+                entityName: user.FullName,
+                summary: $"Memperbarui data pengguna: {user.FullName} ({user.UserName})",
+                httpContext: context);
 
             return Results.Ok(new UserDto(
                 user.Id,
