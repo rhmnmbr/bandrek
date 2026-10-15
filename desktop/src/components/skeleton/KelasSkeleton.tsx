@@ -4,7 +4,7 @@ export function KelasSkeleton() {
   return (
     <div className="flex flex-1 min-h-0 bg-(--color-surface) overflow-hidden select-none" data-testid="kelas-skeleton">
       {/* Left Column: Kelas List */}
-      <div className="flex flex-col border-r border-(--color-border) w-[288px] flex-[0_0_288px] min-w-0 bg-(--color-surface)">
+      <div className="flex flex-col border-r border-(--color-border) w-72 flex-[0_0_288px] min-w-0 bg-(--color-surface)">
         {/* 1. Subheader Row (H: 44px / h-11) */}
         <div className="flex h-11 shrink-0 items-center justify-between border-b border-(--color-border) px-3.5 bg-(--color-surface)">
           <Skeleton className="h-3.5 w-32 rounded shrink-0" />
@@ -22,18 +22,18 @@ export function KelasSkeleton() {
             <div className="flex flex-col min-h-full w-full">
               {/* Sticky Header */}
               <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-                <div className="flex-1 min-w-[140px]">NAMA KELAS</div>
-                <div className="w-[64px] shrink-0 text-right">SISWA</div>
+                <div className="flex-1 min-w-35">NAMA KELAS</div>
+                <div className="w-16 shrink-0 text-right">SISWA</div>
               </div>
 
               {/* Table Rows */}
               <div className="flex flex-col">
                 {/* Row 1: Selected */}
                 <div className="flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]">
-                  <div className="flex-1 min-w-[140px]">
+                  <div className="flex-1 min-w-35">
                     <Skeleton className="h-3.5 w-24 rounded shrink-0" />
                   </div>
-                  <div className="w-[64px] shrink-0 flex justify-end">
+                  <div className="w-16 shrink-0 flex justify-end">
                     <Skeleton className="h-3.5 w-4 rounded shrink-0" />
                   </div>
                 </div>
@@ -44,10 +44,10 @@ export function KelasSkeleton() {
                     key={idx}
                     className="flex h-8 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 bg-(--color-surface)"
                   >
-                    <div className="flex-1 min-w-[140px]">
+                    <div className="flex-1 min-w-35">
                       <Skeleton className="h-3.5 w-20 rounded shrink-0" />
                     </div>
-                    <div className="w-[64px] shrink-0 flex justify-end">
+                    <div className="w-16 shrink-0 flex justify-end">
                       <Skeleton className="h-3.5 w-4 rounded shrink-0" />
                     </div>
                   </div>

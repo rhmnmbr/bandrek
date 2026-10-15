@@ -452,7 +452,7 @@ export function SubjekScreen() {
         {/* Side Panel Form */}
         {isPanelOpen && (
           selectedSubjekId && isLoadingAllSubjek && !selectedSubjek ? (
-            <div className="w-[380px] shrink-0 flex flex-col bg-(--color-surface-subtle) min-h-0 overflow-hidden border-l border-(--color-border)">
+            <div className="w-95 shrink-0 flex flex-col bg-(--color-surface-subtle) min-h-0 overflow-hidden border-l border-(--color-border)">
               <FormPanelSkeleton title="Memuat detail subjek..." />
             </div>
           ) : (

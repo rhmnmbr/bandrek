@@ -347,8 +347,8 @@ export function MapelFormView({
              ======================================================== */
           <>
             {/* Nama Materi (flex 1 1 100%, min-w 220px) */}
-            <div className="flex-[1_1_100%] min-w-[220px] flex flex-col gap-1">
-              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            <div className="flex-[1_1_100%] min-w-55 flex flex-col gap-1">
+              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
                 Nama materi <span className="text-(--color-danger)">*</span>
               </label>
               <input
@@ -412,8 +412,8 @@ export function MapelFormView({
              ======================================================== */
           <>
             {/* Nama Mapel (flex 1 1 300px, min-w 240px) */}
-            <div className="flex-[1_1_300px] min-w-[240px] flex flex-col gap-1">
-              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            <div className="flex-[1_1_300px] min-w-60 flex flex-col gap-1">
+              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
                 Nama mata pelajaran <span className="text-(--color-danger)">*</span>
               </label>
               <input
@@ -535,7 +535,7 @@ export function MapelFormView({
               </>
             )}
 
-            <div className="flex-1 min-w-[6px]" />
+            <div className="flex-1 min-w-1.5" />
 
             <button
               type="button"
@@ -596,7 +596,7 @@ export function MapelFormView({
               </>
             )}
 
-            <div className="flex-1 min-w-[6px]" />
+            <div className="flex-1 min-w-1.5" />
 
             <button
               type="button"

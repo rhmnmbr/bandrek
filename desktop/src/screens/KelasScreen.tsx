@@ -214,7 +214,7 @@ export function KelasScreen() {
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
       {/* Left Column (288px) */}
-      <div className="flex flex-col w-[288px] flex-[0_0_288px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
+      <div className="flex flex-col w-72 flex-[0_0_288px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
         <KelasToolbar
           totalKelas={totalKelas}
           totalKeanggotaan={totalKeanggotaan}
@@ -264,7 +264,7 @@ export function KelasScreen() {
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat kelas
               </div>
-              <div className="text-xs text-(--color-text-muted) max-w-[320px] mx-auto leading-relaxed">
+              <div className="text-xs text-(--color-text-muted) max-w-80 mx-auto leading-relaxed">
                 Pilih kelas dari daftar di sebelah kiri untuk melihat rincian atau mengubahnya, atau buat kelas baru.
               </div>
             </div>

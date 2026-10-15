@@ -52,10 +52,10 @@ export function LoginScreen() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-(--color-canvas) p-4 select-none">
-      <div className="w-full max-w-[400px] rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
+      <div className="w-full max-w-100 rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center gap-1.5">
-          <BandrekLogo className="h-10 w-auto max-w-[220px] text-[#4D5962]" />
+          <BandrekLogo className="h-10 w-auto max-w-55 text-[#4D5962]" />
           <h1 className="sr-only">Masuk ke Bandrek</h1>
           <p className="text-xs text-(--color-text-muted) leading-relaxed">
             Sistem Manajemen Kegiatan & Matriks Belajar Bimbel

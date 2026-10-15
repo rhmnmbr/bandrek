@@ -108,7 +108,7 @@ const DaftarTableRow = React.memo<DaftarTableRowProps>(({
         {ev.seriId && (
           <span
             title={`Kegiatan berulang: Pertemuan ${ev.urutanSeri ?? 1} dari ${ev.totalSeri ?? '?'}`}
-            className="inline-flex items-center gap-0.5 px-1.5 py-0.25 rounded text-[10px] font-medium bg-[#F3F2F1] text-[#5C5A58] border border-[#E1DFDD] flex-none"
+            className="inline-flex items-center gap-0.5 px-1.5 py-px rounded text-[10px] font-medium bg-[#F3F2F1] text-[#5C5A58] border border-[#E1DFDD] flex-none"
           >
             <ArrowSync16Regular className="w-2.75 h-2.75 text-(--color-brand)" />
             <span>
@@ -238,7 +238,7 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
         data-dft-scroll="tabel"
         className="flex-1 min-h-0 overflow-auto select-none"
       >
-        <div className="flex flex-col min-h-full min-w-[1060px] w-full">
+        <div className="flex flex-col min-h-full min-w-265 w-full">
           {/* 1. Sticky Table Header */}
           <div className="flex items-center h-6.5 flex-none sticky top-0 z-10 w-full min-w-full bg-[#FAFAFA] border-b border-(--color-border) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             {/* TANGGAL */}

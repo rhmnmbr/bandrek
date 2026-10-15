@@ -21,8 +21,8 @@ export function MapelTable({
         <div className="flex flex-col min-h-full">
           {/* Sticky Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-            <div className="flex-1 min-w-[150px]">MATA PELAJARAN</div>
-            <div className="w-[74px] shrink-0 text-right">MATERI</div>
+            <div className="flex-1 min-w-37.5">MATA PELAJARAN</div>
+            <div className="w-18.5 shrink-0 text-right">MATERI</div>
           </div>
 
           {/* Table Body */}
@@ -53,7 +53,7 @@ export function MapelTable({
                 {/* Nama Mata Pelajaran */}
                 <div
                   title={namaTeks}
-                  className={`flex-1 min-w-[150px] truncate pr-2 ${
+                  className={`flex-1 min-w-37.5 truncate pr-2 ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   } ${
                     isKosong
@@ -68,7 +68,7 @@ export function MapelTable({
 
                 {/* Materi Count */}
                 <div
-                  className={`w-[74px] shrink-0 text-right font-mono text-[11.5px] ${
+                  className={`w-18.5 shrink-0 text-right font-mono text-[11.5px] ${
                     isKosong
                       ? 'text-(--color-warning-fg) font-semibold'
                       : 'text-(--color-text-primary)'

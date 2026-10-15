@@ -1321,7 +1321,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             </div>
 
             {/* 7. Siswa Checklist */}
-            <div className="flex flex-col gap-1 flex-1 min-h-[240px]">
+            <div className="flex flex-col gap-1 flex-1 min-h-60">
               <div className="flex items-center justify-between flex-none">
                 <FormLabel
                   required={Boolean(currentJenisData?.siswaWajib)}
@@ -1407,7 +1407,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               )}
 
               {/* Student Search & Checklist Container */}
-              <div className="flex-1 min-h-[200px] flex flex-col border border-(--color-border) rounded-md bg-white overflow-hidden text-[12px]">
+              <div className="flex-1 min-h-50 flex flex-col border border-(--color-border) rounded-md bg-white overflow-hidden text-[12px]">
                 {/* Search Header */}
                 <div className="p-1.5 border-b border-(--color-border-subtle) bg-(--color-surface-alt) flex items-center gap-2 flex-none">
                   <SearchInput
@@ -1446,7 +1446,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                 </div>
 
                 {/* Grouped Checklist */}
-                <div className="flex-1 min-h-[140px] overflow-y-auto divide-y divide-(--color-border-subtle)">
+                <div className="flex-1 min-h-35 overflow-y-auto divide-y divide-(--color-border-subtle)">
                   {groupedStudents.length === 0 ? (
                     <div className="p-4 text-center text-(--color-text-muted) text-[11.5px]">
                       Tidak ada siswa yang cocok dengan &quot;{searchSiswa}&quot;.

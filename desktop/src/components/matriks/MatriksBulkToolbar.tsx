@@ -25,7 +25,7 @@ export const MatriksBulkToolbar: React.FC<MatriksBulkToolbarProps> = ({
   const isSelected = selectedCount > 0;
 
   return (
-    <div className="flex flex-none items-center gap-[9px] flex-wrap border-t border-[#0F6CBD] bg-[#EBF3FC] p-[9px_14px] text-[12px] text-[#0C548F]">
+    <div className="flex flex-none items-center gap-2.25 flex-wrap border-t border-[#0F6CBD] bg-[#EBF3FC] p-[9px_14px] text-[12px] text-[#0C548F]">
       <span className="flex-none font-semibold whitespace-nowrap">
         {selectedCount} sel dipilih
       </span>
@@ -40,13 +40,13 @@ export const MatriksBulkToolbar: React.FC<MatriksBulkToolbarProps> = ({
       {/* Tanggal Picker */}
       <div className="flex flex-none items-center gap-1.5 text-[#424242] whitespace-nowrap">
         <span>Tanggal</span>
-        <div className="w-[140px]">
+        <div className="w-35">
           <DatePicker
             value={tanggal}
             onChange={onTanggalChange}
             placeholder="Pilih tanggal"
             density="compact"
-            className="h-[26px] bg-white font-mono text-[11.5px]"
+            className="h-6.5 bg-white font-mono text-[11.5px]"
           />
         </div>
       </div>
@@ -57,7 +57,7 @@ export const MatriksBulkToolbar: React.FC<MatriksBulkToolbarProps> = ({
         value={catatan}
         onChange={(e) => onCatatanChange(e.target.value)}
         placeholder="Catatan untuk semua (opsional)"
-        className="flex-none h-[26px] w-[230px] rounded border border-[#C8C6C4] bg-white px-2 text-[12px] text-[#242424] placeholder:text-[#8A8886] hover:border-[#8A8886] focus:border-[#0F6CBD] focus:outline-none"
+        className="flex-none h-6.5 w-57.5 rounded border border-[#C8C6C4] bg-white px-2 text-[12px] text-[#242424] placeholder:text-[#8A8886] hover:border-[#8A8886] focus:border-[#0F6CBD] focus:outline-none"
       />
 
       {/* Button Lepas Ceklis */}
@@ -65,7 +65,7 @@ export const MatriksBulkToolbar: React.FC<MatriksBulkToolbarProps> = ({
         type="button"
         disabled={!isSelected}
         onClick={onRelease}
-        className={`flex-none h-[26px] px-[11px] rounded border text-[12px] whitespace-nowrap transition-colors ${
+        className={`flex-none h-6.5 px-2.75 rounded border text-[12px] whitespace-nowrap transition-colors ${
           isSelected
             ? 'border-[#C8C6C4] bg-white text-[#242424] hover:bg-[#FAFAFA] cursor-pointer'
             : 'border-[#E1DFDD] bg-white text-[#A19F9D] cursor-not-allowed'
@@ -80,7 +80,7 @@ export const MatriksBulkToolbar: React.FC<MatriksBulkToolbarProps> = ({
         disabled={!isSelected}
         onClick={onApply}
         title={isSelected ? `Tandai ${selectedCount} sel sebagai sudah dipelajari` : 'Pilih dulu sel yang mau ditandai'}
-        className={`flex-none h-[26px] px-3 rounded text-[12px] font-semibold whitespace-nowrap transition-colors ${
+        className={`flex-none h-6.5 px-3 rounded text-[12px] font-semibold whitespace-nowrap transition-colors ${
           isSelected
             ? 'bg-[#0F6CBD] text-white hover:brightness-95 cursor-pointer'
             : 'bg-[#EDEBE9] text-[#8A8886] cursor-not-allowed'
@@ -93,7 +93,7 @@ export const MatriksBulkToolbar: React.FC<MatriksBulkToolbarProps> = ({
       <button
         type="button"
         onClick={onExit}
-        className="flex-none h-[26px] px-[11px] rounded border border-[#C8C6C4] bg-white text-[12px] text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
+        className="flex-none h-6.5 px-2.75 rounded border border-[#C8C6C4] bg-white text-[12px] text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
       >
         Selesai
       </button>

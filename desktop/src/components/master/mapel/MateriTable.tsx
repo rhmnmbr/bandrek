@@ -119,9 +119,9 @@ export function MateriTable({
         <div className="flex h-6.5 items-center bg-(--color-surface-alt) border-b border-(--color-border) px-1 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
           <div className="w-5 shrink-0" />
           <div className="w-7.5 shrink-0 text-right pr-2.5">NO</div>
-          <div className="flex-1 min-w-[140px]">NAMA MATERI</div>
+          <div className="flex-1 min-w-35">NAMA MATERI</div>
           <div className="w-24 shrink-0 text-right pr-2.5">DIPAKAI</div>
-          <div className="w-[74px] shrink-0">STATUS</div>
+          <div className="w-18.5 shrink-0">STATUS</div>
           <div className="w-24 shrink-0 text-right pr-2" />
         </div>
 
@@ -143,7 +143,7 @@ export function MateriTable({
               </div>
 
               {/* Nama Materi */}
-              <div className="flex-1 min-w-[140px] pr-2">
+              <div className="flex-1 min-w-35 pr-2">
                 <Skeleton
                   className={`h-3.5 rounded-xs ${
                     idx % 3 === 0 ? 'w-36' : idx % 2 === 0 ? 'w-24' : 'w-44'
@@ -157,7 +157,7 @@ export function MateriTable({
               </div>
 
               {/* Status Pill */}
-              <div className="w-[74px] shrink-0">
+              <div className="w-18.5 shrink-0">
                 <Skeleton className="h-4.5 w-12 rounded-full" />
               </div>
 
@@ -220,7 +220,7 @@ export function MateriTable({
               <div
                 onClick={() => onSelectMateri(m)}
                 title={m.nama}
-                className={`flex-1 min-w-[140px] truncate pr-2 text-[12.5px] cursor-pointer hover:underline ${
+                className={`flex-1 min-w-35 truncate pr-2 text-[12.5px] cursor-pointer hover:underline ${
                   isNonaktif
                     ? 'text-(--color-text-muted) line-through'
                     : 'text-(--color-text-primary)'
@@ -241,7 +241,7 @@ export function MateriTable({
               </div>
 
               {/* Status Pill */}
-              <div className="w-[74px] shrink-0">
+              <div className="w-18.5 shrink-0">
                 <span
                   className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10.5px] font-semibold border whitespace-nowrap ${
                     m.aktif

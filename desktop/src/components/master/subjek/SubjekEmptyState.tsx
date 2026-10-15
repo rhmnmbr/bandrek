@@ -30,7 +30,7 @@ export function SubjekEmptyState({
 
   return (
     <div className="flex flex-1 min-h-0 items-center justify-center p-6 bg-(--color-surface)">
-      <div className="max-w-[420px] text-center flex flex-col items-center">
+      <div className="max-w-105 text-center flex flex-col items-center">
         <div className="w-12 h-12 rounded-full bg-(--color-surface-sunken) flex items-center justify-center text-(--color-text-muted) mb-3">
           {adaFilter ? (
             <Search24Regular className="w-6 h-6" />

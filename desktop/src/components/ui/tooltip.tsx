@@ -244,7 +244,7 @@ export const GlobalTooltip: React.FC = () => {
       className={cn(
         'pointer-events-none z-99999 rounded-[4px] bg-[#242424] px-2.5 py-1 text-[11.5px] leading-snug font-normal text-white shadow-md border border-[#383838] select-none',
         'transition-[opacity,transform] duration-100 ease-out',
-        isShortText ? 'whitespace-nowrap w-max' : 'max-w-[280px] w-max whitespace-normal wrap-break-word'
+        isShortText ? 'whitespace-nowrap w-max' : 'max-w-70 w-max whitespace-normal wrap-break-word'
       )}
     >
       {tooltipState.text}

@@ -257,7 +257,7 @@ export function AuditLogScreen() {
         {/* Filter Bar */}
         <div className="flex h-12 shrink-0 items-center gap-2 border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-xs flex-wrap">
           {/* Search Input (Standard Bandrek Toolbar style) */}
-          <div className="relative flex-1 min-w-[200px] max-w-[280px]">
+          <div className="relative flex-1 min-w-50 max-w-70">
             <input
               type="text"
               value={cari}
@@ -353,14 +353,14 @@ export function AuditLogScreen() {
               )}
             </div>
           ) : (
-            <div className="min-w-[900px]">
+            <div className="min-w-225">
               {/* Sticky Table Header */}
               <div className="sticky top-0 z-10 flex h-7.5 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[11px] font-semibold tracking-wider text-(--color-text-secondary) uppercase select-none">
                 <div className="w-44 shrink-0">WAKTU</div>
                 <div className="w-48 shrink-0">OPERATOR</div>
                 <div className="w-24 shrink-0">AKSI</div>
                 <div className="w-48 shrink-0">ENTITAS</div>
-                <div className="flex-1 min-w-[200px]">RINGKASAN AKTIVITAS</div>
+                <div className="flex-1 min-w-50">RINGKASAN AKTIVITAS</div>
               </div>
 
               {/* Table Body Rows */}
@@ -416,7 +416,7 @@ export function AuditLogScreen() {
                     </div>
 
                     {/* Ringkasan */}
-                    <div className="flex-1 min-w-[200px] truncate pr-2 text-xs text-(--color-text-secondary)">
+                    <div className="flex-1 min-w-50 truncate pr-2 text-xs text-(--color-text-secondary)">
                       {item.ringkasan}
                     </div>
                   </div>
@@ -429,7 +429,7 @@ export function AuditLogScreen() {
 
       {/* Detail Slide-out Side Panel (380px) */}
       {selectedLog && (
-        <div className="w-[380px] shrink-0 border-l border-(--color-border) bg-(--color-surface) flex flex-col min-h-0 shadow-lg animate-in slide-in-from-right duration-150">
+        <div className="w-95 shrink-0 border-l border-(--color-border) bg-(--color-surface) flex flex-col min-h-0 shadow-lg animate-in slide-in-from-right duration-150">
           {/* Detail Header */}
           <div className="flex h-11 shrink-0 items-center justify-between border-b border-(--color-border) px-3.5 bg-(--color-surface)">
             <div className="text-[13px] font-semibold text-(--color-text-primary)">

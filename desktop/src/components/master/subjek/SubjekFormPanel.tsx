@@ -193,7 +193,7 @@ export function SubjekFormPanel({
       : `Tidak bisa dihapus: dipakai di ${initialData?.jumlahKegiatan || 0} kegiatan. Pakai Nonaktifkan.`;
 
   return (
-    <div className="w-[380px] shrink-0 flex flex-col bg-(--color-surface-subtle) min-h-0 overflow-hidden border-l border-(--color-border)">
+    <div className="w-95 shrink-0 flex flex-col bg-(--color-surface-subtle) min-h-0 overflow-hidden border-l border-(--color-border)">
       {/* Panel Header */}
       <div className="flex h-15.5 shrink-0 items-center gap-2.5 border-b border-(--color-border) px-3.5 bg-(--color-surface)">
         <div className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-full bg-[#F3EFFA] text-[#5B4394] text-[12.5px] font-semibold">
@@ -326,7 +326,7 @@ export function SubjekFormPanel({
                   key={mId}
                   className="flex items-center gap-1.25 border border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) rounded-full pl-2.25 pr-1.25 py-0.5 text-[11.5px] max-w-full"
                 >
-                  <span className="truncate max-w-[130px]">{mp?.nama || mId}</span>
+                  <span className="truncate max-w-32.5">{mp?.nama || mId}</span>
                   <button
                     type="button"
                     onClick={() =>
@@ -387,7 +387,7 @@ export function SubjekFormPanel({
                 tambah
               </button>
               {menuMapelOpen && (
-                <div className="absolute left-0 top-[27px] z-12 w-52 max-h-49 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5">
+                <div className="absolute left-0 top-6.75 z-12 w-52 max-h-49 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5">
                   {sisaMapel.map((m) => (
                     <button
                       key={m.id}

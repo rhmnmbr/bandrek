@@ -24,10 +24,10 @@ export function JenisTable({
         <div className="flex flex-col min-h-full">
           {/* Sticky Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-            <div className="flex-1 min-w-[140px] pr-2">JENIS KEGIATAN</div>
-            <div className="w-[104px] shrink-0 pr-2">MATERI</div>
-            <div className="w-[100px] shrink-0 pr-2">SISWA</div>
-            <div className="w-[84px] shrink-0 text-right pr-2">KEGIATAN</div>
+            <div className="flex-1 min-w-35 pr-2">JENIS KEGIATAN</div>
+            <div className="w-26 shrink-0 pr-2">MATERI</div>
+            <div className="w-25 shrink-0 pr-2">SISWA</div>
+            <div className="w-21 shrink-0 text-right pr-2">KEGIATAN</div>
           </div>
 
           {/* Table Body */}
@@ -47,7 +47,7 @@ export function JenisTable({
                 }`}
               >
                 {/* Nama Jenis & Color Dot */}
-                <div className="flex-1 min-w-[140px] flex items-center gap-1.75 truncate pr-2">
+                <div className="flex-1 min-w-35 flex items-center gap-1.75 truncate pr-2">
                   <span
                     className="w-2.25 h-2.25 shrink-0 rounded-[2px]"
                     style={{ backgroundColor: metaWarna.dot }}
@@ -65,7 +65,7 @@ export function JenisTable({
                 </div>
 
                 {/* Materi Wajib Pill */}
-                <div className="w-[104px] shrink-0 flex items-center pr-2">
+                <div className="w-26 shrink-0 flex items-center pr-2">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -88,7 +88,7 @@ export function JenisTable({
                 </div>
 
                 {/* Siswa Wajib Pill */}
-                <div className="w-[100px] shrink-0 flex items-center pr-2">
+                <div className="w-25 shrink-0 flex items-center pr-2">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -111,7 +111,7 @@ export function JenisTable({
                 </div>
 
                 {/* Kegiatan Count */}
-                <div className="w-[84px] shrink-0 text-right font-mono text-[11.5px] text-(--color-text-primary) pr-2">
+                <div className="w-21 shrink-0 text-right font-mono text-[11.5px] text-(--color-text-primary) pr-2">
                   {nKegiatan > 0 ? (
                     <span>{nKegiatan}</span>
                   ) : (

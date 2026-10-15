@@ -280,7 +280,7 @@ export function JenisKegiatanScreen() {
       </div>
 
       {/* Right Column (352px sidebar form panel) */}
-      <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
+      <div className="flex w-88 flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
         {selectedJenis || isBaruMode ? (
           <JenisFormView
             key={isBaruMode ? 'jenis-baru' : `jenis-${selectedJenis?.id}`}
@@ -301,7 +301,7 @@ export function JenisKegiatanScreen() {
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat jenis kegiatan
               </div>
-              <div className="text-xs text-(--color-text-muted) max-w-[280px] mx-auto leading-relaxed">
+              <div className="text-xs text-(--color-text-muted) max-w-70 mx-auto leading-relaxed">
                 Pilih jenis kegiatan dari daftar di sebelah kiri untuk mengubah datanya, atau tambah jenis kegiatan baru.
               </div>
             </div>

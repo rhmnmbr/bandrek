@@ -182,7 +182,7 @@ function UserFormView({
 
         {/* Nama Lengkap */}
         <div className="flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Nama lengkap <span className="text-(--color-danger)">*</span>
           </label>
           <input
@@ -201,7 +201,7 @@ function UserFormView({
 
         {/* Username */}
         <div className="flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Nama pengguna (username) <span className="text-(--color-danger)">*</span>
           </label>
           <input
@@ -225,7 +225,7 @@ function UserFormView({
 
         {/* Kata Sandi */}
         <div className="flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Kata sandi {isNewMode && <span className="text-(--color-danger)">*</span>}
           </label>
           <input
@@ -247,7 +247,7 @@ function UserFormView({
 
         {/* Peran Segmented Control */}
         <div className="flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) min-h-[18px]">
+          <label className="text-[11.5px] text-(--color-text-secondary) min-h-4.5">
             Peran hak akses
           </label>
           <div className="flex border border-(--color-border) rounded-sm overflow-hidden h-7">
@@ -316,7 +316,7 @@ function UserFormView({
           </button>
         )}
 
-        <div className="flex-1 min-w-[6px]" />
+        <div className="flex-1 min-w-1.5" />
 
         <button
           type="button"
@@ -549,7 +549,7 @@ export function UserManagementScreen() {
               value={cari}
               onChange={(e) => setCari(e.target.value)}
               placeholder="Cari nama atau username"
-              className="h-6.5 flex-1 min-w-0 max-w-[280px] rounded-sm border border-(--color-border) bg-(--color-surface) px-2 text-xs outline-none focus:border-(--color-brand) transition-colors"
+              className="h-6.5 flex-1 min-w-0 max-w-70 rounded-sm border border-(--color-border) bg-(--color-surface) px-2 text-xs outline-none focus:border-(--color-brand) transition-colors"
             />
             {cari && (
               <button
@@ -568,20 +568,20 @@ export function UserManagementScreen() {
           <MasterTableSkeleton
             rowCount={8}
             columns={[
-              { width: 'flex-1 min-w-[160px]', isFlex: true, headerTitle: 'PENGGUNA' },
-              { width: 'w-[120px]', headerTitle: 'USERNAME' },
-              { width: 'w-[90px]', headerTitle: 'PERAN' },
-              { width: 'w-[80px]', headerTitle: 'STATUS', align: 'right' },
+              { width: 'flex-1 min-w-40', isFlex: true, headerTitle: 'PENGGUNA' },
+              { width: 'w-30', headerTitle: 'USERNAME' },
+              { width: 'w-22.5', headerTitle: 'PERAN' },
+              { width: 'w-20', headerTitle: 'STATUS', align: 'right' },
             ]}
           />
         ) : (
           <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
             <div className="flex flex-col min-h-full">
               <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-                <div className="flex-1 min-w-[160px] pr-2">PENGGUNA</div>
-                <div className="w-[120px] shrink-0 pr-2">USERNAME</div>
-                <div className="w-[90px] shrink-0 pr-2">PERAN</div>
-                <div className="w-[80px] shrink-0 text-right pr-2">STATUS</div>
+                <div className="flex-1 min-w-40 pr-2">PENGGUNA</div>
+                <div className="w-30 shrink-0 pr-2">USERNAME</div>
+                <div className="w-22.5 shrink-0 pr-2">PERAN</div>
+                <div className="w-20 shrink-0 text-right pr-2">STATUS</div>
               </div>
 
               {filteredUsers.length === 0 ? (
@@ -596,7 +596,7 @@ export function UserManagementScreen() {
                   <h3 className="text-sm font-semibold text-(--color-text-primary) mb-1">
                     {cari ? 'Tidak ada pengguna yang cocok' : 'Belum ada pengguna'}
                   </h3>
-                  <p className="text-xs text-(--color-text-muted) max-w-[280px] mb-3 leading-relaxed">
+                  <p className="text-xs text-(--color-text-muted) max-w-70 mb-3 leading-relaxed">
                     {cari
                       ? `Pencarian "${cari}" tidak menemukan pengguna mana pun.`
                       : 'Belum ada data operator yang tersimpan.'}
@@ -627,7 +627,7 @@ export function UserManagementScreen() {
                       }`}
                     >
                       {/* Nama & Avatar */}
-                      <div className="flex-1 min-w-[160px] flex items-center gap-2 truncate pr-2">
+                      <div className="flex-1 min-w-40 flex items-center gap-2 truncate pr-2">
                         <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--color-brand-subtle) text-(--color-brand) text-[10.5px] font-semibold">
                           {u.nama
                             .split(/\s+/)
@@ -653,12 +653,12 @@ export function UserManagementScreen() {
                       </div>
 
                       {/* Username */}
-                      <div className="w-[120px] shrink-0 text-xs font-mono text-(--color-text-secondary) truncate pr-2">
+                      <div className="w-30 shrink-0 text-xs font-mono text-(--color-text-secondary) truncate pr-2">
                         {u.username}
                       </div>
 
                       {/* Peran Pill */}
-                      <div className="w-[90px] shrink-0 pr-2">
+                      <div className="w-22.5 shrink-0 pr-2">
                         <span
                           className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
                             u.peran === 'admin'
@@ -671,7 +671,7 @@ export function UserManagementScreen() {
                       </div>
 
                       {/* Status */}
-                      <div className="w-[80px] shrink-0 text-right pr-2">
+                      <div className="w-20 shrink-0 text-right pr-2">
                         <span
                           className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10px] font-semibold border ${
                             u.aktif
@@ -697,7 +697,7 @@ export function UserManagementScreen() {
       </div>
 
       {/* Right Column (Form Panel, 352px) */}
-      <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
+      <div className="flex w-88 flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
         {isLoadingUsers ? (
           <FormPanelSkeleton title="Memuat pengguna..." />
         ) : selectedUser || isNewMode ? (
@@ -720,7 +720,7 @@ export function UserManagementScreen() {
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat pengguna
               </div>
-              <div className="text-xs text-(--color-text-muted) max-w-[280px] mx-auto leading-relaxed">
+              <div className="text-xs text-(--color-text-muted) max-w-70 mx-auto leading-relaxed">
                 Pilih pengguna dari daftar di sebelah kiri untuk melihat atau mengubah akun operator bimbel.
               </div>
             </div>

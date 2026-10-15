@@ -30,7 +30,7 @@ const LEGENDA_ITEMS: Array<{
 
 export const MatriksLegendBar: React.FC<MatriksLegendBarProps> = ({ isBulkMode }) => {
   return (
-    <div className="flex h-[34px] flex-none items-center gap-[13px] border-t border-[#E1DFDD] bg-[#FAFAFA] px-[14px] text-[11.5px] text-[#424242] select-none">
+    <div className="flex h-8.5 flex-none items-center gap-3.25 border-t border-[#E1DFDD] bg-[#FAFAFA] px-3.5 text-[11.5px] text-[#424242] select-none">
       {LEGENDA_ITEMS.map((item) => (
         <span key={item.label} className="flex flex-none items-center gap-1.5 whitespace-nowrap">
           <span
@@ -46,7 +46,7 @@ export const MatriksLegendBar: React.FC<MatriksLegendBarProps> = ({ isBulkMode }
           {item.label}
         </span>
       ))}
-      <div className="flex-1 min-w-[6px]" />
+      <div className="flex-1 min-w-1.5" />
       <span className="flex-none text-[#5C5A58] whitespace-nowrap">
         {isBulkMode
           ? 'Klik sel, nama siswa, atau judul kolom untuk memilih'

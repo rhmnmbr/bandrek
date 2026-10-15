@@ -43,7 +43,7 @@ export function JenisToolbar({
           value={cari}
           onChange={(e) => onCariChange(e.target.value)}
           placeholder="Cari nama jenis kegiatan"
-          className="h-6.5 flex-1 min-w-0 max-w-[280px] rounded-sm border border-(--color-border) bg-(--color-surface) px-2 text-xs outline-none focus:border-(--color-brand) transition-colors"
+          className="h-6.5 flex-1 min-w-0 max-w-70 rounded-sm border border-(--color-border) bg-(--color-surface) px-2 text-xs outline-none focus:border-(--color-brand) transition-colors"
         />
 
         {/* Reset Filter Button */}

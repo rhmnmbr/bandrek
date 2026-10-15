@@ -4,7 +4,7 @@ export function TempatSkeleton() {
   return (
     <div className="flex flex-1 min-h-0 bg-(--color-surface) overflow-hidden select-none" data-testid="tempat-skeleton">
       {/* Left Column: Tempat List */}
-      <div className="flex flex-col border-r border-(--color-border) w-[288px] flex-[0_0_288px] min-w-0 bg-(--color-surface)">
+      <div className="flex flex-col border-r border-(--color-border) w-72 flex-[0_0_288px] min-w-0 bg-(--color-surface)">
         {/* 1. Subheader Row (H: 44px / h-11) */}
         <div className="flex h-11 shrink-0 items-center justify-between border-b border-(--color-border) px-3.5 bg-(--color-surface)">
           <Skeleton className="h-3.5 w-32 rounded shrink-0" />

@@ -109,7 +109,7 @@ export function UbahKataSandiModal({ isOpen, onClose }: UbahKataSandiModalProps)
 
       {/* Modal Dialog */}
       <div
-        className="relative z-10 w-full max-w-[400px] rounded-lg border border-(--color-border-strong) bg-(--color-surface) shadow-2xl overflow-hidden flex flex-col"
+        className="relative z-10 w-full max-w-100 rounded-lg border border-(--color-border-strong) bg-(--color-surface) shadow-2xl overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

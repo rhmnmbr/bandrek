@@ -239,8 +239,8 @@ export function KelasFormView({
         )}
 
         {/* Nama Kelas (flex 1 1 240px, min-w 200px) */}
-        <div className="flex-[1_1_240px] min-w-[200px] flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+        <div className="flex-[1_1_240px] min-w-50 flex flex-col gap-1">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Nama kelas <span className="text-(--color-danger)">*</span>
           </label>
           <input
@@ -264,8 +264,8 @@ export function KelasFormView({
         </div>
 
         {/* Keterangan (flex 1 1 280px, min-w 220px) */}
-        <div className="flex-[1_1_280px] min-w-[220px] flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+        <div className="flex-[1_1_280px] min-w-55 flex flex-col gap-1">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Keterangan
           </label>
           <input
@@ -278,8 +278,8 @@ export function KelasFormView({
         </div>
 
         {/* Anggota Siswa (flex 1 1 340px, min-w 300px) */}
-        <div className="flex-[1_1_340px] min-w-[300px] flex flex-col gap-1">
-          <div className="flex items-center justify-between min-h-[18px]">
+        <div className="flex-[1_1_340px] min-w-75 flex flex-col gap-1">
+          <div className="flex items-center justify-between min-h-4.5">
             <label className="text-[11.5px] text-(--color-text-secondary)">
               Anggota · {anggota.length} siswa
             </label>
@@ -296,7 +296,7 @@ export function KelasFormView({
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 top-6.5 z-20 w-[260px] rounded-md border border-(--color-border) bg-(--color-surface) p-1.5 shadow-lg flex flex-col gap-1">
+                <div className="absolute right-0 top-6.5 z-20 w-65 rounded-md border border-(--color-border) bg-(--color-surface) p-1.5 shadow-lg flex flex-col gap-1">
                   <input
                     ref={searchInputRef}
                     type="text"
@@ -305,7 +305,7 @@ export function KelasFormView({
                     placeholder="Cari siswa"
                     className="h-6.5 px-2 text-xs rounded-sm border border-(--color-border) bg-(--color-surface) outline-none focus:border-(--color-brand)"
                   />
-                  <div className="max-h-[200px] overflow-y-auto overflow-x-hidden flex flex-col gap-0.5">
+                  <div className="max-h-50 overflow-y-auto overflow-x-hidden flex flex-col gap-0.5">
                     {candidateStudents.map((s) => (
                       <button
                         key={s.id}
@@ -338,7 +338,7 @@ export function KelasFormView({
           </div>
 
           {/* Member List Container */}
-          <div className="border border-(--color-border) rounded-sm bg-(--color-surface) max-h-[206px] overflow-y-auto overflow-x-hidden">
+          <div className="border border-(--color-border) rounded-sm bg-(--color-surface) max-h-51.5 overflow-y-auto overflow-x-hidden">
             {anggota.map((id, i) => {
               const s = siswaMap.get(id);
               const isMati = s?.aktif === false;
@@ -410,7 +410,7 @@ export function KelasFormView({
         </div>
 
         {/* Info Card: KELAS ITU PINTASAN (flex 1 1 210px, min-w 190px) */}
-        <div className="flex-[1_1_210px] min-w-[190px] rounded-md border border-(--color-border) bg-(--color-surface-alt) p-2.5">
+        <div className="flex-[1_1_210px] min-w-47.5 rounded-md border border-(--color-border) bg-(--color-surface-alt) p-2.5">
           <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             KELAS ITU PINTASAN
           </div>
@@ -459,7 +459,7 @@ export function KelasFormView({
           </button>
         )}
 
-        <div className="flex-1 min-w-[6px]" />
+        <div className="flex-1 min-w-1.5" />
 
         <button
           type="button"

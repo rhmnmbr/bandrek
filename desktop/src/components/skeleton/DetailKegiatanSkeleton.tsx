@@ -146,7 +146,7 @@ export function DetailKegiatanSkeleton() {
         </div>
 
         {/* Right Sidebar (330px) */}
-        <div className="w-[330px] flex-none border-l border-(--color-border) bg-white overflow-y-auto p-3 flex flex-col gap-3">
+        <div className="w-82.5 flex-none border-l border-(--color-border) bg-white overflow-y-auto p-3 flex flex-col gap-3">
           {/* Section 1: RIWAYAT KEGIATAN */}
           <div className="flex flex-col gap-2">
             <Skeleton className="h-3 w-28 rounded shrink-0 mb-1" />

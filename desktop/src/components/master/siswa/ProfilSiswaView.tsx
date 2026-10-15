@@ -194,7 +194,7 @@ export function ProfilSiswaView({
               </button>
 
               {mapelOpen && (
-                <div className="absolute right-0 top-6.75 z-20 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.25">
+                <div className="absolute right-0 top-6.75 z-20 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-px">
                   <button
                     type="button"
                     onClick={() => {

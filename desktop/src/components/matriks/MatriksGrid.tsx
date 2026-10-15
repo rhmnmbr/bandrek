@@ -72,7 +72,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
   return (
     <div className="flex flex-1 min-h-0 flex-col bg-white">
       {/* 1. Title & Meta Row */}
-      <div className="flex flex-none items-baseline gap-2.5 px-[14px] pb-[9px] pt-1">
+      <div className="flex flex-none items-baseline gap-2.5 px-3.5 pb-2.25 pt-1">
         <h1 className="flex-none text-[15px] font-semibold text-[#242424] whitespace-nowrap">
           {namaMapel}
         </h1>
@@ -97,7 +97,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
           {/* Header Row (H: 34px) */}
           <div className="flex sticky top-0 z-30 bg-[#FAFAFA] border-b border-[#E1DFDD] text-[10.5px] text-[#424242] select-none">
             {/* Sticky Student Header Col (W: 260px) */}
-            <div className="w-[260px] flex-none sticky left-0 z-40 bg-[#FAFAFA] border-r border-b border-[#E1DFDD] h-[34px] flex items-center px-[11px] text-[11px] font-semibold tracking-[0.09em] text-[#5C5A58]">
+            <div className="w-65 flex-none sticky left-0 z-40 bg-[#FAFAFA] border-r border-b border-[#E1DFDD] h-8.5 flex items-center px-2.75 text-[11px] font-semibold tracking-[0.09em] text-[#5C5A58]">
               SISWA
             </div>
 
@@ -119,7 +119,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
                       ? `Pilih semua sel di kolom ${c.nama}`
                       : `${c.nama} · diterima ${summary?.menerimaCount ?? 0} dari ${baris.length} siswa`
                   }
-                  className={`min-w-[96px] flex-1 h-[34px] border-r border-[#EDEBE9] border-b border-[#E1DFDD] bg-[#FAFAFA] text-[#424242] text-[10.5px] leading-[1.2] px-1.5 py-1 flex items-center justify-center text-center transition-colors ${
+                  className={`min-w-24 flex-1 h-8.5 border-r border-[#EDEBE9] border-b border-[#E1DFDD] bg-[#FAFAFA] text-[#424242] text-[10.5px] leading-[1.2] px-1.5 py-1 flex items-center justify-center text-center transition-colors ${
                     isBulkMode ? 'cursor-pointer hover:bg-[#EDEBE9]' : 'cursor-default'
                   }`}
                 >
@@ -129,7 +129,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
             })}
 
             {/* Sticky Checkmark Col (W: 62px) */}
-            <div className="w-[62px] flex-none sticky right-0 z-40 bg-[#FAFAFA] border-l border-b border-[#E1DFDD] h-[34px] flex items-center justify-end px-2.5 text-[#5C5A58]">
+            <div className="w-15.5 flex-none sticky right-0 z-40 bg-[#FAFAFA] border-l border-b border-[#E1DFDD] h-8.5 flex items-center justify-end px-2.5 text-[#5C5A58]">
               <Checkmark16Regular className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -166,7 +166,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
                     }
                   }}
                   title={isBulkMode ? 'Pilih semua sel di baris ini' : `Buka profil ${sw.nama}`}
-                  className={`w-[260px] flex-none sticky left-0 z-10 border-r border-[#E1DFDD] flex items-center gap-1.5 px-[11px] text-[12.5px] text-left cursor-pointer transition-colors ${
+                  className={`w-65 flex-none sticky left-0 z-10 border-r border-[#E1DFDD] flex items-center gap-1.5 px-2.75 text-[12.5px] text-left cursor-pointer transition-colors ${
                     isTertinggal
                       ? 'bg-[#FFF3E0] text-[#8A5200] hover:brightness-95'
                       : 'bg-white text-[#242424] hover:bg-[#FAFAFA]'
@@ -199,7 +199,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
                   return (
                     <div
                       key={c.id}
-                      className="min-w-[96px] flex-1 flex items-center justify-center p-0"
+                      className="min-w-24 flex-1 flex items-center justify-center p-0"
                     >
                       <MatrixCell
                         state={cell.keadaan as MatrixCellState}
@@ -221,7 +221,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
 
                 {/* Sticky Score Col (W: 62px) */}
                 <div
-                  className={`w-[62px] flex-none sticky right-0 z-10 border-l border-[#E1DFDD] flex items-center justify-end px-2.5 font-mono text-[12px] ${
+                  className={`w-15.5 flex-none sticky right-0 z-10 border-l border-[#E1DFDD] flex items-center justify-end px-2.5 font-mono text-[12px] ${
                     isTertinggal
                       ? 'bg-[#FFF3E0] text-[#8A5200]'
                       : 'bg-white text-[#242424]'
@@ -237,9 +237,9 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
           <div className="flex-1 min-h-0" />
 
           {/* Sticky Summary Row "MENERIMA" (H: 26px) */}
-          <div className="flex h-[26px] flex-none sticky bottom-0 z-20 bg-[#F5F5F5] text-[11.5px] text-[#5C5A58] border-t border-[#E1DFDD] select-none">
+          <div className="flex h-6.5 flex-none sticky bottom-0 z-20 bg-[#F5F5F5] text-[11.5px] text-[#5C5A58] border-t border-[#E1DFDD] select-none">
             {/* Sticky Label (W: 260px) */}
-            <div className="w-[260px] flex-none sticky left-0 z-30 bg-[#F5F5F5] border-r border-[#E1DFDD] flex items-center px-[11px] tracking-[0.06em] text-[#5C5A58] font-medium">
+            <div className="w-65 flex-none sticky left-0 z-30 bg-[#F5F5F5] border-r border-[#E1DFDD] flex items-center px-2.75 tracking-[0.06em] text-[#5C5A58] font-medium">
               MENERIMA
             </div>
 
@@ -252,7 +252,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
               return (
                 <div
                   key={c.id}
-                  className={`min-w-[96px] flex-1 border-r border-[#EDEBE9] flex items-center justify-center font-mono ${
+                  className={`min-w-24 flex-1 border-r border-[#EDEBE9] flex items-center justify-center font-mono ${
                     isZero ? 'text-[#9B0C18] font-semibold' : 'text-[#5C5A58] font-normal'
                   }`}
                 >
@@ -262,7 +262,7 @@ export const MatriksGrid: React.FC<MatriksGridProps> = ({
             })}
 
             {/* Sticky Right Spacer (W: 62px) */}
-            <div className="w-[62px] flex-none sticky right-0 z-30 bg-[#F5F5F5] border-l border-[#E1DFDD]" />
+            <div className="w-15.5 flex-none sticky right-0 z-30 bg-[#F5F5F5] border-l border-[#E1DFDD]" />
           </div>
         </div>
       </div>

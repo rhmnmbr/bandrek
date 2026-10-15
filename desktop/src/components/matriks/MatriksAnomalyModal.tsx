@@ -35,7 +35,7 @@ export const MatriksAnomalyModal: React.FC<MatriksAnomalyModalProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[76px]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-19">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/28 transition-opacity"
@@ -47,7 +47,7 @@ export const MatriksAnomalyModal: React.FC<MatriksAnomalyModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="anomaly-dialog-title"
-        className="relative z-50 flex flex-col w-[620px] max-h-[560px] overflow-hidden rounded-lg border border-[#C8C6C4] bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+        className="relative z-50 flex flex-col w-155 max-h-140 overflow-hidden rounded-lg border border-[#C8C6C4] bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Header */}
         <div className="flex-none p-[13px_16px_0_16px]">
@@ -108,7 +108,7 @@ export const MatriksAnomalyModal: React.FC<MatriksAnomalyModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex-none h-[26px] px-3 rounded border border-[#C8C6C4] bg-white text-[12.5px] font-medium text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
+            className="flex-none h-6.5 px-3 rounded border border-[#C8C6C4] bg-white text-[12.5px] font-medium text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
           >
             Tutup
           </button>

@@ -123,7 +123,7 @@ export function SetupServerScreen() {
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-(--color-canvas) p-4 select-none">
-      <div className="w-full max-w-[440px] rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
+      <div className="w-full max-w-110 rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
         {/* Brand Header */}
         <div className="flex items-center gap-3">
           <BandrekCupIcon className="h-9 w-9 text-[#4D5962] shrink-0" />

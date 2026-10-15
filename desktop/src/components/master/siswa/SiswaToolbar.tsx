@@ -109,7 +109,7 @@ export function SiswaToolbar({
       {/* Filter Bar */}
       <div className="flex shrink-0 flex-wrap items-center gap-1.75 border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 py-2.5 text-xs">
         {/* Search input */}
-        <div className="relative flex-1 min-w-[150px] max-w-[300px]">
+        <div className="relative flex-1 min-w-37.5 max-w-75">
           <input
             type="text"
             value={cari}
@@ -176,7 +176,7 @@ export function SiswaToolbar({
             </svg>
           </button>
           {statusOpen && (
-            <div className="absolute left-0 top-7.25 z-12 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.25">
+            <div className="absolute left-0 top-7.25 z-12 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-px">
               {[
                 { id: 'aktif', label: 'Status: Aktif' },
                 { id: 'nonaktif', label: 'Status: Nonaktif' },

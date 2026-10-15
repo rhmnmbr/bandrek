@@ -101,7 +101,7 @@ export function SiswaConfirmModal({
           <div className="truncate text-[13px] font-semibold text-(--color-text-primary)">
             {siswa.nama}
           </div>
-          <div className="mt-0.25 text-[11.5px] leading-normal text-(--color-text-muted)">
+          <div className="mt-px text-[11.5px] leading-normal text-(--color-text-muted)">
             {subText}
           </div>
         </div>

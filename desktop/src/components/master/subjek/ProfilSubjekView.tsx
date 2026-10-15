@@ -95,7 +95,7 @@ export function ProfilSubjekView({
         {kpi.map((k, i) => (
           <div
             key={i}
-            className="flex-1 min-w-[170px] rounded-lg border p-2.75 flex flex-col justify-between"
+            className="flex-1 min-w-42.5 rounded-lg border p-2.75 flex flex-col justify-between"
             style={{
               borderColor: k.brd,
               backgroundColor: k.bg,
@@ -137,7 +137,7 @@ export function ProfilSubjekView({
       {/* Two Column Layout */}
       <div className="flex gap-4 flex-wrap items-start">
         {/* Left Column (Workload & Nearby Events) */}
-        <div className="flex-[1.7] min-w-[380px] flex flex-col gap-3.5">
+        <div className="flex-[1.7] min-w-95 flex flex-col gap-3.5">
           {/* Workload Section */}
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -183,10 +183,10 @@ export function ProfilSubjekView({
             <div className="border border-(--color-border) rounded-lg overflow-hidden bg-(--color-surface)">
               {/* Header */}
               <div className="flex items-center h-6.5 bg-(--color-surface-alt) border-b border-(--color-border) px-2.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-                <div className="w-[120px] shrink-0">WAKTU</div>
-                <div className="flex-1 min-w-[120px]">KEGIATAN</div>
-                <div className="w-[86px] shrink-0">PERAN</div>
-                <div className="w-[130px] shrink-0">STATUS</div>
+                <div className="w-30 shrink-0">WAKTU</div>
+                <div className="flex-1 min-w-30">KEGIATAN</div>
+                <div className="w-21.5 shrink-0">PERAN</div>
+                <div className="w-32.5 shrink-0">STATUS</div>
               </div>
 
               {/* Rows */}
@@ -200,16 +200,16 @@ export function ProfilSubjekView({
                       i > 0 ? 'border-t border-(--color-border-subtle)' : ''
                     }`}
                   >
-                    <div className="w-[120px] shrink-0 font-mono text-[11px] text-(--color-text-muted)">
+                    <div className="w-30 shrink-0 font-mono text-[11px] text-(--color-text-muted)">
                       {d.waktu}
                     </div>
-                    <div className="flex-1 min-w-[120px] text-[12.5px] text-(--color-text-primary) truncate pr-2">
+                    <div className="flex-1 min-w-30 text-[12.5px] text-(--color-text-primary) truncate pr-2">
                       {d.nama}
                     </div>
-                    <div className="w-[86px] shrink-0 text-xs text-(--color-text-secondary)">
+                    <div className="w-21.5 shrink-0 text-xs text-(--color-text-secondary)">
                       {d.peran}
                     </div>
-                    <div className="w-[130px] shrink-0">
+                    <div className="w-32.5 shrink-0">
                       <KegiatanBadge
                         status={d.lewat ? 'belum' : 'terjadwal'}
                         label={d.stLabel.replace(/^[⚠●]\s*/, '')}
@@ -227,7 +227,7 @@ export function ProfilSubjekView({
         </div>
 
         {/* Right Column (Data Subjek & Availability) */}
-        <div className="flex-1 min-w-[280px] flex flex-col gap-3">
+        <div className="flex-1 min-w-70 flex flex-col gap-3">
           {/* Data Subjek Card */}
           <div className="rounded-lg border border-(--color-border) bg-(--color-surface-alt) p-3 md:p-3.5 flex flex-col gap-2.5">
             <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
@@ -246,7 +246,7 @@ export function ProfilSubjekView({
               </div>
               <div className="flex justify-between gap-2">
                 <span className="text-(--color-text-muted)">Mata pelajaran</span>
-                <span className="text-right max-w-[170px] text-(--color-text-primary)">
+                <span className="text-right max-w-42.5 text-(--color-text-primary)">
                   {mapelTeks}
                 </span>
               </div>

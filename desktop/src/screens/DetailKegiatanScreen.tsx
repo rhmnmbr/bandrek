@@ -402,7 +402,7 @@ export const DetailKegiatanScreen: React.FC = () => {
         {/* Activity Name */}
         <div
           className={cn(
-            'text-[17px] font-semibold text-(--color-text) whitespace-nowrap overflow-hidden text-ellipsis max-w-[480px]',
+            'text-[17px] font-semibold text-(--color-text) whitespace-nowrap overflow-hidden text-ellipsis max-w-120',
             isDibatalkan && 'line-through text-(--color-text-muted)'
           )}
           title={kegiatan.nama}
@@ -741,7 +741,7 @@ export const DetailKegiatanScreen: React.FC = () => {
         </div>
 
         {/* Right Sidebar (330px) */}
-        <div className="w-[330px] flex-none border-l border-(--color-border) bg-white overflow-y-auto p-3 flex flex-col gap-2">
+        <div className="w-82.5 flex-none border-l border-(--color-border) bg-white overflow-y-auto p-3 flex flex-col gap-2">
           {/* Section 1: RIWAYAT KEGIATAN */}
           <div className="text-[10.5px] font-semibold tracking-wider text-(--color-text-secondary) uppercase mb-1">
             RIWAYAT KEGIATAN

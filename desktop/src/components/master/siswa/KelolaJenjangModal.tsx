@@ -148,7 +148,7 @@ export function KelolaJenjangModal({ isOpen, onClose }: KelolaJenjangModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-in fade-in-0 duration-100">
-      <div className="w-full max-w-[480px] rounded-lg border border-(--color-border) bg-(--color-surface) shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
+      <div className="w-full max-w-120 rounded-lg border border-(--color-border) bg-(--color-surface) shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-(--color-border) px-4 py-3 bg-(--color-surface)">
           <div>

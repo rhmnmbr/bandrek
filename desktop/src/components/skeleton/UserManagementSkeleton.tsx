@@ -16,7 +16,7 @@ export function UserManagementSkeleton() {
 
         {/* Filter Bar (H: 48px / h-12) */}
         <div className="flex h-12 shrink-0 items-center gap-2 border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-xs">
-          <Skeleton className="h-6.5 flex-1 min-w-0 max-w-[280px] rounded shrink-0" />
+          <Skeleton className="h-6.5 flex-1 min-w-0 max-w-70 rounded shrink-0" />
         </div>
 
         {/* Table Container */}
@@ -25,27 +25,27 @@ export function UserManagementSkeleton() {
             <div className="flex flex-col min-h-full w-full">
               {/* Sticky Header (H: 26px / h-6.5) */}
               <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-                <div className="flex-1 min-w-[160px] pr-2">PENGGUNA</div>
-                <div className="w-[120px] shrink-0 pr-2">USERNAME</div>
-                <div className="w-[90px] shrink-0 pr-2">PERAN</div>
-                <div className="w-[80px] shrink-0 text-right pr-2">STATUS</div>
+                <div className="flex-1 min-w-40 pr-2">PENGGUNA</div>
+                <div className="w-30 shrink-0 pr-2">USERNAME</div>
+                <div className="w-22.5 shrink-0 pr-2">PERAN</div>
+                <div className="w-20 shrink-0 text-right pr-2">STATUS</div>
               </div>
 
               {/* Table Rows (H: 36px / h-9) */}
               <div className="flex flex-col">
                 {/* Row 1: Selected state */}
                 <div className="flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]">
-                  <div className="flex-1 min-w-[160px] flex items-center gap-2 pr-2">
+                  <div className="flex-1 min-w-40 flex items-center gap-2 pr-2">
                     <Skeleton className="size-6 rounded-full shrink-0" />
                     <Skeleton className="h-3.5 w-32 rounded shrink-0" />
                   </div>
-                  <div className="w-[120px] shrink-0 pr-2">
+                  <div className="w-30 shrink-0 pr-2">
                     <Skeleton className="h-3.5 w-20 rounded shrink-0" />
                   </div>
-                  <div className="w-[90px] shrink-0 pr-2">
+                  <div className="w-22.5 shrink-0 pr-2">
                     <Skeleton className="h-4.5 w-16 rounded-full shrink-0" />
                   </div>
-                  <div className="w-[80px] shrink-0 flex justify-end pr-2">
+                  <div className="w-20 shrink-0 flex justify-end pr-2">
                     <Skeleton className="h-4.5 w-14 rounded-full shrink-0" />
                   </div>
                 </div>
@@ -56,7 +56,7 @@ export function UserManagementSkeleton() {
                     key={idx}
                     className="flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 bg-(--color-surface)"
                   >
-                    <div className="flex-1 min-w-[160px] flex items-center gap-2 pr-2">
+                    <div className="flex-1 min-w-40 flex items-center gap-2 pr-2">
                       <Skeleton className="size-6 rounded-full shrink-0" />
                       <Skeleton
                         className={`h-3.5 rounded shrink-0 ${
@@ -64,13 +64,13 @@ export function UserManagementSkeleton() {
                         }`}
                       />
                     </div>
-                    <div className="w-[120px] shrink-0 pr-2">
+                    <div className="w-30 shrink-0 pr-2">
                       <Skeleton className="h-3.5 w-18 rounded shrink-0" />
                     </div>
-                    <div className="w-[90px] shrink-0 pr-2">
+                    <div className="w-22.5 shrink-0 pr-2">
                       <Skeleton className="h-4.5 w-16 rounded-full shrink-0" />
                     </div>
-                    <div className="w-[80px] shrink-0 flex justify-end pr-2">
+                    <div className="w-20 shrink-0 flex justify-end pr-2">
                       <Skeleton className="h-4.5 w-14 rounded-full shrink-0" />
                     </div>
                   </div>
@@ -89,7 +89,7 @@ export function UserManagementSkeleton() {
       </div>
 
       {/* Right Column (Form Panel, 352px) */}
-      <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
+      <div className="flex w-88 flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
         {/* Header (H: 52px / h-13) */}
         <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">
           <Skeleton className="size-8 rounded-md shrink-0" />

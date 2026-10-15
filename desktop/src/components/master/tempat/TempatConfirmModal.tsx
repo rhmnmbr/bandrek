@@ -70,7 +70,7 @@ export function TempatConfirmModal({
       />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-[460px] rounded-lg border border-(--color-border) bg-(--color-surface) p-5 shadow-2xl flex flex-col gap-3.5 z-10 animate-in fade-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-115 rounded-lg border border-(--color-border) bg-(--color-surface) p-5 shadow-2xl flex flex-col gap-3.5 z-10 animate-in fade-in zoom-in-95 duration-150">
         <div>
           <h2 id="modal-title" className="text-base font-semibold text-(--color-text-primary)">
             {judul}

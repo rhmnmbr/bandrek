@@ -19,8 +19,8 @@ export function KelasTable({
         <div className="flex flex-col min-h-full">
           {/* Sticky Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-            <div className="flex-1 min-w-[140px]">NAMA KELAS</div>
-            <div className="w-[64px] shrink-0 text-right">SISWA</div>
+            <div className="flex-1 min-w-35">NAMA KELAS</div>
+            <div className="w-16 shrink-0 text-right">SISWA</div>
           </div>
 
           {/* Table Body */}
@@ -41,7 +41,7 @@ export function KelasTable({
                 {/* Nama Kelas */}
                 <div
                   title={k.nama}
-                  className={`flex-1 min-w-[140px] truncate pr-2 text-(--color-text-primary) ${
+                  className={`flex-1 min-w-35 truncate pr-2 text-(--color-text-primary) ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   }`}
                 >
@@ -50,7 +50,7 @@ export function KelasTable({
 
                 {/* Siswa Count */}
                 <div
-                  className={`w-[64px] shrink-0 text-right font-mono text-[11.5px] ${
+                  className={`w-16 shrink-0 text-right font-mono text-[11.5px] ${
                     jumlahSiswa === 0
                       ? 'text-(--color-warning-fg) font-semibold'
                       : 'text-(--color-text-primary)'

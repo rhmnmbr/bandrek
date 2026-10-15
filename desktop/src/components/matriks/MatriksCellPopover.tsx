@@ -168,7 +168,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
         </div>
 
         {cell.riwayat.length > 0 ? (
-          <div className="m-[6px_14px_0_14px] max-h-[168px] overflow-y-auto rounded-md border border-[#E1DFDD]">
+          <div className="m-[6px_14px_0_14px] max-h-42 overflow-y-auto rounded-md border border-[#E1DFDD]">
             {cell.riwayat.map((k, idx) => {
               const pres = k.kehadiran ? PRESENCE_CONFIG[k.kehadiran] : null;
               const presenceLabel = pres
@@ -217,12 +217,12 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                         borderColor: presenceBorder,
                         color: presenceText,
                       }}
-                      className="inline-flex items-center gap-1.5 h-[18px] px-2 rounded-full border text-[10.5px] font-semibold leading-none whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 h-4.5 px-2 rounded-full border text-[10.5px] font-semibold leading-none whitespace-nowrap"
                     >
                       <span className="flex items-center justify-center flex-none">{presenceIcon}</span>
                       <span className="relative -top-px leading-none">{presenceLabel}</span>
                     </span>
-                    <span className="inline-flex items-center h-[18px] px-2 rounded-full border border-[#E1DFDD] bg-white text-[#424242] text-[10.5px] leading-none whitespace-nowrap">
+                    <span className="inline-flex items-center h-4.5 px-2 rounded-full border border-[#E1DFDD] bg-white text-[#424242] text-[10.5px] leading-none whitespace-nowrap">
                       <span className="relative -top-px leading-none">{ketuntasanLabel}</span>
                     </span>
                   </div>
@@ -267,7 +267,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                       onChange={setTanggal}
                       placeholder="Pilih tanggal"
                       density="compact"
-                      className="h-[26px] w-[160px] bg-white font-mono text-[11.5px]"
+                      className="h-6.5 w-40 bg-white font-mono text-[11.5px]"
                     />
                     <div className="text-[11px] text-[#5C5A58]">
                       Boleh dikosongkan kalau tidak ingat kapan.
@@ -281,7 +281,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                       value={catatan}
                       onChange={(e) => setCatatan(e.target.value)}
                       placeholder="mis. sudah dikuasai dari sekolah asal"
-                      className="h-[26px] rounded border border-[#C8C6C4] bg-white px-2 text-[12.5px] text-[#242424] placeholder:text-[#8A8886] hover:border-[#8A8886] focus:border-[#0F6CBD] focus:outline-none"
+                      className="h-6.5 rounded border border-[#C8C6C4] bg-white px-2 text-[12.5px] text-[#242424] placeholder:text-[#8A8886] hover:border-[#8A8886] focus:border-[#0F6CBD] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="h-[26px] px-3 rounded border border-[#C8C6C4] bg-white text-[12px] text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
+              className="h-6.5 px-3 rounded border border-[#C8C6C4] bg-white text-[12px] text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
             >
               Tutup
             </button>
@@ -311,7 +311,7 @@ export const MatriksCellPopover: React.FC<MatriksCellPopoverProps> = ({
                 disabled={!isChanged}
                 onClick={handleSave}
                 title={!isChanged ? 'Belum ada yang diubah' : undefined}
-                className={`h-[26px] px-3 rounded text-[12px] font-semibold whitespace-nowrap transition-colors ${
+                className={`h-6.5 px-3 rounded text-[12px] font-semibold whitespace-nowrap transition-colors ${
                   isChanged
                     ? 'bg-[#0F6CBD] text-white hover:brightness-95 cursor-pointer'
                     : 'bg-[#EDEBE9] text-[#8A8886] cursor-not-allowed'

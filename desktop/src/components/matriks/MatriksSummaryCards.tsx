@@ -26,7 +26,7 @@ export const MatriksSummaryCards: React.FC<MatriksSummaryCardsProps> = ({
   const adaMenunggu = menungguRealisasi > 0;
 
   return (
-    <div className="flex gap-[9px] border-b border-[#E1DFDD] p-[11px_14px]">
+    <div className="flex gap-2.25 border-b border-[#E1DFDD] p-[11px_14px]">
       {/* 1. Cakupan Materi */}
       <div className="flex-1 min-w-0 rounded-lg border border-[#E1DFDD] bg-white p-[8px_11px] leading-[1.35] text-[#424242]">
         <div className="text-[10.5px] tracking-[0.09em] text-[#5C5A58] uppercase">
@@ -72,7 +72,7 @@ export const MatriksSummaryCards: React.FC<MatriksSummaryCardsProps> = ({
         <div className="text-[10.5px] tracking-[0.09em] text-[#5C5A58] uppercase">
           Materi Paling Tertinggal
         </div>
-        <div className="mt-[2px] text-[14px] font-semibold truncate">
+        <div className="mt-0.5 text-[14px] font-semibold truncate">
           {materiPalingTertinggal ? materiPalingTertinggal.nama : 'Semua merata'}
         </div>
         <div className="text-[11.5px] text-[#5C5A58] truncate">

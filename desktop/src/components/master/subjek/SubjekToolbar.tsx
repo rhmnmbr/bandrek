@@ -71,7 +71,7 @@ export function SubjekToolbar({
           value={cari}
           onChange={(e) => onCariChange(e.target.value)}
           placeholder="Cari nama subjek"
-          className="flex-1 min-w-[150px] max-w-[280px] h-6.5 rounded border border-(--color-border-strong) bg-(--color-surface) px-2 text-xs text-(--color-text-primary) placeholder:text-(--color-text-placeholder) focus:outline-none focus:border-(--color-brand)"
+          className="flex-1 min-w-37.5 max-w-70 h-6.5 rounded border border-(--color-border-strong) bg-(--color-surface) px-2 text-xs text-(--color-text-primary) placeholder:text-(--color-text-placeholder) focus:outline-none focus:border-(--color-brand)"
         />
 
         {/* Status Dropdown */}
@@ -98,7 +98,7 @@ export function SubjekToolbar({
             </svg>
           </button>
           {statusOpen && (
-            <div className="absolute left-0 top-[29px] z-12 min-w-full w-max rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5 max-h-65 overflow-y-auto">
+            <div className="absolute left-0 top-7.25 z-12 min-w-full w-max rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-lg flex flex-col gap-0.5 max-h-65 overflow-y-auto">
               <button
                 type="button"
                 onClick={() => {

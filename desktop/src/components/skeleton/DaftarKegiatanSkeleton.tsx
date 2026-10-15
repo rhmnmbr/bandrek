@@ -61,7 +61,7 @@ export function DaftarKegiatanSkeleton({ rowCount = 10 }: { rowCount?: number })
 
       {/* 3. Table Skeleton */}
       <div className="flex-1 min-h-0 overflow-auto">
-        <div className="flex flex-col min-h-full min-w-[1100px] w-full">
+        <div className="flex flex-col min-h-full min-w-275 w-full">
           {/* Sticky Table Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             <div className="w-26 shrink-0">TANGGAL</div>

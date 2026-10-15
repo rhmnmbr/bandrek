@@ -4,7 +4,7 @@ export function MapelSkeleton() {
   return (
     <div className="flex flex-1 min-h-0 bg-(--color-surface) overflow-hidden select-none" data-testid="mapel-skeleton">
       {/* Left Column: Mapel List */}
-      <div className="flex flex-col border-r border-(--color-border) w-[288px] flex-[0_0_288px] min-w-0 bg-(--color-surface)">
+      <div className="flex flex-col border-r border-(--color-border) w-72 flex-[0_0_288px] min-w-0 bg-(--color-surface)">
         {/* 1. Subheader Row (H: 44px / h-11) */}
         <div className="flex h-11 shrink-0 items-center justify-between border-b border-(--color-border) px-3.5 bg-(--color-surface)">
           <Skeleton className="h-3.5 w-32 rounded shrink-0" />
@@ -13,7 +13,7 @@ export function MapelSkeleton() {
 
         {/* 2. Filter Bar (H: 48px / h-12) */}
         <div className="flex h-12 shrink-0 items-center gap-1.75 border-b border-(--color-border) px-3.5 bg-(--color-surface-subtle) text-xs">
-          <Skeleton className="h-6.5 flex-1 min-w-[150px] max-w-[280px] rounded shrink-0" />
+          <Skeleton className="h-6.5 flex-1 min-w-37.5 max-w-70 rounded shrink-0" />
           <Skeleton className="h-6.5 w-24 rounded shrink-0" />
         </div>
 
@@ -101,7 +101,7 @@ export function MapelSkeleton() {
               {/* Header */}
               <div className="flex h-6.5 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3 text-[10.5px] font-semibold text-(--color-text-muted)">
                 <div className="w-8 shrink-0">NO</div>
-                <div className="flex-1 min-w-[140px]">NAMA MATERI</div>
+                <div className="flex-1 min-w-35">NAMA MATERI</div>
                 <div className="w-24 shrink-0">DIPAKAI</div>
                 <div className="w-16 shrink-0">STATUS</div>
                 <div className="w-12 shrink-0" />
@@ -116,7 +116,7 @@ export function MapelSkeleton() {
                   <div className="w-8 shrink-0">
                     <Skeleton className="h-3 w-3 rounded shrink-0" />
                   </div>
-                  <div className="flex-1 min-w-[140px] pr-2">
+                  <div className="flex-1 min-w-35 pr-2">
                     <Skeleton
                       className={`h-3.5 rounded shrink-0 ${
                         idx % 3 === 0 ? 'w-28' : idx % 2 === 0 ? 'w-24' : 'w-32'

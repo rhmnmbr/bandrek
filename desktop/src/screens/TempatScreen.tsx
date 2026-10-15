@@ -327,7 +327,7 @@ export function TempatScreen() {
   return (
     <div className="flex h-full w-full flex-row overflow-hidden bg-(--color-surface)">
       {/* Left Column (288px) */}
-      <div className="flex flex-col w-[288px] flex-[0_0_288px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
+      <div className="flex flex-col w-72 flex-[0_0_288px] min-w-0 border-r border-(--color-border) bg-(--color-surface)">
         <TempatToolbar
           totalTempat={totalTempat}
           totalRuangan={totalRuangan}
@@ -405,7 +405,7 @@ export function TempatScreen() {
               <div className="text-[14px] font-semibold text-(--color-text-primary) mb-1">
                 Pilih atau buat tempat
               </div>
-              <div className="text-xs text-(--color-text-muted) max-w-[320px] mx-auto leading-relaxed">
+              <div className="text-xs text-(--color-text-muted) max-w-80 mx-auto leading-relaxed">
                 Pilih tempat dari daftar di sebelah kiri untuk melihat ruangan atau mengubahnya, atau buat tempat baru.
               </div>
             </div>

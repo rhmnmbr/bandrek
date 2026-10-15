@@ -77,7 +77,7 @@ export function UpdateRequiredScreen({
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-(--color-canvas) p-4 select-none">
-      <div className="w-full max-w-[500px] rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
+      <div className="w-full max-w-125 rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-xl flex flex-col gap-5">
         {/* Header Icon & Brand */}
         <div className="flex flex-col items-center text-center gap-2">
           <div className="relative">

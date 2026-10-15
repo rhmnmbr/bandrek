@@ -63,7 +63,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
   return (
     <div ref={containerRef} className="flex flex-col bg-white relative z-50">
       {/* 1. Subheader Row (H: 44px) */}
-      <div className="flex h-11 flex-none items-center gap-[11px] border-b border-[#E1DFDD] px-[14px]">
+      <div className="flex h-11 flex-none items-center gap-2.75 border-b border-[#E1DFDD] px-3.5">
         <div className="text-[12.5px] text-[#5C5A58] truncate">
           apa yang sudah dan belum diterima tiap siswa
         </div>
@@ -72,7 +72,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
           type="button"
           onClick={onToggleBulkMode}
           title={isBulkMode ? 'Keluar dari mode ceklis massal' : 'Pilih banyak sel sekaligus untuk mengisi riwayat lama'}
-          className={`flex-none h-[26px] px-[11px] rounded border text-[12.5px] cursor-pointer whitespace-nowrap transition-colors ${
+          className={`flex-none h-6.5 px-2.75 rounded border text-[12.5px] cursor-pointer whitespace-nowrap transition-colors ${
             isBulkMode
               ? 'border-[#0F6CBD] bg-[#EBF3FC] text-[#0C548F] font-semibold'
               : 'border-[#C8C6C4] bg-white text-[#242424] hover:bg-[#FAFAFA]'
@@ -84,27 +84,27 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
           type="button"
           disabled
           title="Cetak menyusul di tahap berikutnya"
-          className="flex-none h-[26px] px-[11px] rounded border border-[#E1DFDD] bg-[#F5F5F5] text-[#A19F9D] text-[12.5px] cursor-not-allowed"
+          className="flex-none h-6.5 px-2.75 rounded border border-[#E1DFDD] bg-[#F5F5F5] text-[#A19F9D] text-[12.5px] cursor-not-allowed"
         >
           Cetak
         </button>
       </div>
 
       {/* 2. Filter Bar (H: 48px, bg #FAFAFA) */}
-      <div className="flex flex-none flex-wrap items-center gap-[7px] border-b border-[#E1DFDD] bg-[#FAFAFA] p-[11px_14px] text-[12px] relative z-50">
+      <div className="flex flex-none flex-wrap items-center gap-1.75 border-b border-[#E1DFDD] bg-[#FAFAFA] p-[11px_14px] text-[12px] relative z-50">
         {/* Mapel Pill Selector (Wajib di kiri, 1 mapel) */}
         <div className="relative flex-none">
           <button
             type="button"
             onClick={() => setOpenDropdown((prev) => (prev === 'mapel' ? null : 'mapel'))}
             title="Matriks menampilkan satu mata pelajaran sekaligus"
-            className="flex h-[26px] items-center justify-between gap-[10px] rounded border border-[#0F6CBD] bg-[#EBF3FC] pl-2 pr-1.5 text-[12px] font-semibold text-[#0C548F] hover:brightness-95 cursor-pointer whitespace-nowrap"
+            className="flex h-6.5 items-center justify-between gap-2.5 rounded border border-[#0F6CBD] bg-[#EBF3FC] pl-2 pr-1.5 text-[12px] font-semibold text-[#0C548F] hover:brightness-95 cursor-pointer whitespace-nowrap"
           >
             <span>{currentMapel?.nama || 'Pilih mapel'}</span>
             <ChevronDown12Regular className="text-[#0C548F]" />
           </button>
           {openDropdown === 'mapel' && (
-            <div className="absolute left-0 top-[29px] z-50 min-w-full w-max max-h-[260px] overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
+            <div className="absolute left-0 top-7.25 z-50 min-w-full w-max max-h-65 overflow-y-auto rounded-md border border-[#C8C6C4] bg-white p-1 shadow-lg flex flex-col gap-px">
               {mapelList.map((m) => {
                 const isSelected = m.id === selectedMapelId;
                 return (
@@ -150,7 +150,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Cari siswa"
-          className="h-[26px] w-[150px] flex-none rounded border border-[#C8C6C4] bg-white px-2 text-[12px] text-[#242424] placeholder:text-[#8A8886] hover:border-[#8A8886] focus:border-[#0F6CBD] focus:outline-none"
+          className="h-6.5 w-37.5 flex-none rounded border border-[#C8C6C4] bg-white px-2 text-[12px] text-[#242424] placeholder:text-[#8A8886] hover:border-[#8A8886] focus:border-[#0F6CBD] focus:outline-none"
         />
 
         {/* Reset Filter Button */}
@@ -158,7 +158,7 @@ export const MatriksToolbar: React.FC<MatriksToolbarProps> = ({
           <button
             type="button"
             onClick={onResetFilter}
-            className="h-[26px] flex-none rounded px-2 text-[12px] text-[#0F6CBD] hover:bg-[#EBF3FC] cursor-pointer whitespace-nowrap"
+            className="h-6.5 flex-none rounded px-2 text-[12px] text-[#0F6CBD] hover:bg-[#EBF3FC] cursor-pointer whitespace-nowrap"
           >
             Reset filter
           </button>

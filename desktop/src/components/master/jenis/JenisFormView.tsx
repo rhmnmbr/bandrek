@@ -191,7 +191,7 @@ export function JenisFormView({
 
         {/* Nama Jenis */}
         <div className="flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+          <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Nama jenis <span className="text-(--color-danger)">*</span>
           </label>
           <input
@@ -218,7 +218,7 @@ export function JenisFormView({
 
         {/* Warna di Kalender */}
         <div className="flex flex-col gap-1">
-          <label className="text-[11.5px] text-(--color-text-secondary) min-h-[18px]">
+          <label className="text-[11.5px] text-(--color-text-secondary) min-h-4.5">
             Warna di kalender
           </label>
           <div className="flex flex-wrap gap-1.5">
@@ -350,7 +350,7 @@ export function JenisFormView({
           </button>
         )}
 
-        <div className="flex-1 min-w-[6px]" />
+        <div className="flex-1 min-w-1.5" />
 
         <button
           type="button"

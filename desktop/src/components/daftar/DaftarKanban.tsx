@@ -87,7 +87,7 @@ export const DaftarKanban: React.FC<DaftarKanbanProps> = ({
 }) => {
   return (
     <div className="flex-1 min-h-0 overflow-x-auto bg-(--color-surface-alt) p-3 select-none">
-      <div className="flex h-full gap-3 min-w-[1240px]">
+      <div className="flex h-full gap-3 min-w-310">
         {COLUMNS.map((col) => {
           const items = kegiatanList.filter(col.predicate);
 

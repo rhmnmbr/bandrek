@@ -32,7 +32,7 @@ export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
 
   return (
     <div className="flex flex-1 min-h-0 items-center justify-center p-6 bg-white">
-      <div className="max-w-[440px] text-center">
+      <div className="max-w-110 text-center">
         <div className="flex justify-center mb-3">
           <div className="w-12 h-12 rounded-full bg-(--color-warning-bg) flex items-center justify-center text-(--color-warning-ink)">
             <Warning24Regular className="w-6 h-6" />
@@ -44,7 +44,7 @@ export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
           <button
             type="button"
             onClick={onPrimaryAction}
-            className="h-[26px] px-3 rounded bg-[#0F6CBD] text-white text-[13px] font-semibold hover:bg-[#115EA3] cursor-pointer whitespace-nowrap"
+            className="h-6.5 px-3 rounded bg-[#0F6CBD] text-white text-[13px] font-semibold hover:bg-[#115EA3] cursor-pointer whitespace-nowrap"
           >
             {primaryLabel}
           </button>
@@ -52,7 +52,7 @@ export const MatriksEmptyState: React.FC<MatriksEmptyStateProps> = ({
             <button
               type="button"
               onClick={onResetFilter}
-              className="h-[26px] px-3 rounded border border-[#C8C6C4] bg-white text-[13px] text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
+              className="h-6.5 px-3 rounded border border-[#C8C6C4] bg-white text-[13px] text-[#242424] hover:bg-[#FAFAFA] cursor-pointer whitespace-nowrap"
             >
               Reset filter
             </button>

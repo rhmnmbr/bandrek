@@ -321,8 +321,8 @@ export function TempatFormView({
              ======================================================== */
           <>
             {/* Nama Ruangan (flex 1 1 260px, min-w 220px) */}
-            <div className="flex-[1_1_260px] min-w-[220px] flex flex-col gap-1">
-              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            <div className="flex-[1_1_260px] min-w-55 flex flex-col gap-1">
+              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
                 Nama ruangan <span className="text-(--color-danger)">*</span>
               </label>
               <input
@@ -348,8 +348,8 @@ export function TempatFormView({
             </div>
 
             {/* Kapasitas (flex 0 0 190px, min-w 190px) */}
-            <div className="flex-[0_0_190px] min-w-[190px] flex flex-col gap-1">
-              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            <div className="flex-[0_0_190px] min-w-47.5 flex flex-col gap-1">
+              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
                 Kapasitas
               </label>
               <div className="flex items-center gap-1.5">
@@ -359,7 +359,7 @@ export function TempatFormView({
                   onChange={(e) => setKapasitas(Number(e.target.value))}
                   min={1}
                   max={100}
-                  className="h-7 w-[110px] px-2 text-[12.5px] font-mono rounded-sm border border-(--color-border) bg-(--color-surface) outline-none focus:border-(--color-brand) transition-colors"
+                  className="h-7 w-27.5 px-2 text-[12.5px] font-mono rounded-sm border border-(--color-border) bg-(--color-surface) outline-none focus:border-(--color-brand) transition-colors"
                 />
                 <span className="text-xs text-(--color-text-secondary)">orang</span>
               </div>
@@ -387,8 +387,8 @@ export function TempatFormView({
              ======================================================== */
           <>
             {/* Nama Tempat (flex 1 1 320px, min-w 240px) */}
-            <div className="flex-[1_1_320px] min-w-[240px] flex flex-col gap-1">
-              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-[18px]">
+            <div className="flex-[1_1_320px] min-w-60 flex flex-col gap-1">
+              <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
                 Nama tempat <span className="text-(--color-danger)">*</span>
               </label>
               <input
@@ -471,7 +471,7 @@ export function TempatFormView({
               </button>
             )}
 
-            <div className="flex-1 min-w-[6px]" />
+            <div className="flex-1 min-w-1.5" />
 
             <button
               type="button"
@@ -514,7 +514,7 @@ export function TempatFormView({
               </button>
             )}
 
-            <div className="flex-1 min-w-[6px]" />
+            <div className="flex-1 min-w-1.5" />
 
             <button
               type="button"

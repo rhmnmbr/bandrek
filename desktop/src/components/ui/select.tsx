@@ -312,7 +312,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                       onMouseEnter={() => setHighlightedIndex(idx)}
                       title={typeof opt.label === "string" ? opt.label : undefined}
                       className={cn(
-                        "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] truncate transition-colors select-none outline-none",
+                        "w-full text-left px-2.25 py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] truncate transition-colors select-none outline-none",
                         isSelected
                           ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
                           : isHighlighted
@@ -928,7 +928,7 @@ export const GroupedRuanganSelect = React.forwardRef<
                     onClick={() => handleSelect("")}
                     onMouseEnter={() => setHighlightedIndex(thisIdx)}
                     className={cn(
-                      "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
+                      "w-full text-left px-2.25 py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
                       isSelected
                         ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
                         : isHighlighted
@@ -949,7 +949,7 @@ export const GroupedRuanganSelect = React.forwardRef<
               {groups.map((group) => (
                 <div key={group.id} className="flex flex-col gap-px">
                   {group.nama && (
-                    <div className="px-[9px] pt-1.5 pb-[3px] text-[10.5px] font-semibold tracking-wider text-[#5C5A58] select-none">
+                    <div className="px-2.25 pt-1.5 pb-0.75 text-[10.5px] font-semibold tracking-wider text-[#5C5A58] select-none">
                       {group.nama}
                     </div>
                   )}
@@ -969,7 +969,7 @@ export const GroupedRuanganSelect = React.forwardRef<
                         onClick={() => handleSelect(r.id)}
                         onMouseEnter={() => setHighlightedIndex(thisIdx)}
                         className={cn(
-                          "w-full text-left px-[9px] py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
+                          "w-full text-left px-2.25 py-1.5 border-none rounded-[4px] cursor-pointer text-[12.5px] whitespace-nowrap transition-colors select-none outline-none",
                           isSelected
                             ? "bg-[#EBF3FC] text-[#0C548F] font-semibold"
                             : isHighlighted
@@ -1002,7 +1002,7 @@ export const SelectTrigger = Select;
 export const SelectContent = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
 export const SelectItem = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
 export const SelectLabel = ({ children, className }: { children?: React.ReactNode; className?: string }) => (
-  <div className={cn("px-[9px] pt-1.5 pb-[3px] text-[10.5px] font-semibold tracking-wider text-[#5C5A58]", className)}>
+  <div className={cn("px-2.25 pt-1.5 pb-0.75 text-[10.5px] font-semibold tracking-wider text-[#5C5A58]", className)}>
     {children}
   </div>
 );

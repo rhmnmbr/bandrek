@@ -4,27 +4,27 @@ export function MatriksSkeleton() {
   return (
     <div className="flex flex-1 flex-col h-full bg-white overflow-hidden select-none" data-testid="matriks-skeleton">
       {/* 1. Subheader Row (H: 44px / h-11) */}
-      <div className="flex h-11 flex-none items-center gap-[11px] border-b border-(--color-border) px-[14px] bg-white">
+      <div className="flex h-11 flex-none items-center gap-2.75 border-b border-(--color-border) px-3.5 bg-white">
         <Skeleton className="h-3.5 w-64 rounded shrink-0" />
         <div className="flex-1" />
-        <Skeleton className="h-[26px] w-22 rounded shrink-0" />
-        <Skeleton className="h-[26px] w-14 rounded shrink-0" />
-        <Skeleton className="h-[26px] w-21.5 rounded shrink-0" />
+        <Skeleton className="h-6.5 w-22 rounded shrink-0" />
+        <Skeleton className="h-6.5 w-14 rounded shrink-0" />
+        <Skeleton className="h-6.5 w-21.5 rounded shrink-0" />
       </div>
 
       {/* 2. Filter Bar (H: 48px, bg-(--color-surface-alt)) */}
-      <div className="flex flex-none items-center gap-[7px] border-b border-(--color-border) bg-(--color-surface-alt) p-[11px_14px]">
+      <div className="flex flex-none items-center gap-1.75 border-b border-(--color-border) bg-(--color-surface-alt) p-[11px_14px]">
         {/* Mapel Pill */}
-        <Skeleton className="h-[26px] w-28 rounded shrink-0" />
+        <Skeleton className="h-6.5 w-28 rounded shrink-0" />
 
         {/* Vertical Divider */}
         <div className="h-5 w-px flex-none bg-(--color-border)" />
 
         {/* Kelas Pill */}
-        <Skeleton className="h-[26px] w-26 rounded shrink-0" />
+        <Skeleton className="h-6.5 w-26 rounded shrink-0" />
 
         {/* Input Cari Siswa */}
-        <Skeleton className="h-[26px] w-[150px] rounded shrink-0" />
+        <Skeleton className="h-6.5 w-37.5 rounded shrink-0" />
 
         <div className="flex-1 min-w-2" />
 
@@ -41,12 +41,12 @@ export function MatriksSkeleton() {
         </div>
       </div>
 
-      {/* 3. 4 Summary Cards (Exact match: flex gap-[9px] border-b border-[#E1DFDD] p-[11px_14px]) */}
-      <div className="flex flex-none gap-[9px] border-b border-(--color-border) p-[11px_14px] bg-white">
+      {/* 3. 4 Summary Cards (Exact match: flex gap-2.25 border-b border-[#E1DFDD] p-[11px_14px]) */}
+      <div className="flex flex-none gap-2.25 border-b border-(--color-border) p-[11px_14px] bg-white">
         {Array.from({ length: 4 }).map((_, idx) => (
           <div
             key={idx}
-            className="flex-1 min-w-0 rounded-lg border border-(--color-border) bg-white p-[8px_11px] flex flex-col justify-between h-[74px]"
+            className="flex-1 min-w-0 rounded-lg border border-(--color-border) bg-white p-[8px_11px] flex flex-col justify-between h-18.5"
           >
             <Skeleton className="h-2.5 w-24 rounded shrink-0" />
             <Skeleton className="h-5 w-14 rounded shrink-0 my-0.5" />
@@ -56,7 +56,7 @@ export function MatriksSkeleton() {
       </div>
 
       {/* 4. Scope Title & Metadata Row */}
-      <div className="flex flex-none items-baseline gap-2.5 px-[14px] pb-[9px] pt-1 bg-white">
+      <div className="flex flex-none items-baseline gap-2.5 px-3.5 pb-2.25 pt-1 bg-white">
         <Skeleton className="h-4 w-32 rounded shrink-0" />
         <Skeleton className="h-3 w-40 rounded shrink-0" />
       </div>
@@ -67,7 +67,7 @@ export function MatriksSkeleton() {
           {/* Header Row (H: 34px) */}
           <div className="flex sticky top-0 z-30 bg-(--color-surface-alt) border-b border-(--color-border) select-none">
             {/* Sticky Student Header Col (W: 260px) */}
-            <div className="w-[260px] flex-none sticky left-0 z-40 bg-(--color-surface-alt) border-r border-b border-(--color-border) h-[34px] flex items-center px-[11px]">
+            <div className="w-65 flex-none sticky left-0 z-40 bg-(--color-surface-alt) border-r border-b border-(--color-border) h-8.5 flex items-center px-2.75">
               <Skeleton className="h-3 w-20 rounded shrink-0" />
             </div>
 
@@ -75,14 +75,14 @@ export function MatriksSkeleton() {
             {Array.from({ length: 5 }).map((_, idx) => (
               <div
                 key={idx}
-                className="min-w-[96px] flex-1 h-[34px] border-r border-[#EDEBE9] border-b border-(--color-border) bg-(--color-surface-alt) px-1.5 py-1 flex items-center justify-center"
+                className="min-w-24 flex-1 h-8.5 border-r border-[#EDEBE9] border-b border-(--color-border) bg-(--color-surface-alt) px-1.5 py-1 flex items-center justify-center"
               >
                 <Skeleton className="h-3 w-16 rounded" />
               </div>
             ))}
 
             {/* Sticky Checkmark Col (W: 62px) */}
-            <div className="w-[62px] flex-none sticky right-0 z-40 bg-(--color-surface-alt) border-l border-b border-(--color-border) h-[34px] flex items-center justify-end px-2.5">
+            <div className="w-15.5 flex-none sticky right-0 z-40 bg-(--color-surface-alt) border-l border-b border-(--color-border) h-8.5 flex items-center justify-end px-2.5">
               <Skeleton className="size-3.5 rounded shrink-0" />
             </div>
           </div>
@@ -96,7 +96,7 @@ export function MatriksSkeleton() {
                 className="flex h-7 flex-none border-b border-[#EDEBE9] bg-white text-[12.5px]"
               >
                 {/* Sticky Student Name Col (W: 260px) */}
-                <div className="w-[260px] flex-none sticky left-0 z-10 border-r border-(--color-border) bg-white flex items-center gap-1.5 px-[11px]">
+                <div className="w-65 flex-none sticky left-0 z-10 border-r border-(--color-border) bg-white flex items-center gap-1.5 px-2.75">
                   {isTertinggalPlaceholder && (
                     <Skeleton className="size-3.5 rounded-xs shrink-0" />
                   )}
@@ -117,14 +117,14 @@ export function MatriksSkeleton() {
                 {Array.from({ length: 5 }).map((_, cIdx) => (
                   <div
                     key={cIdx}
-                    className="min-w-[96px] flex-1 flex items-center justify-center border-r border-[#EDEBE9] h-full"
+                    className="min-w-24 flex-1 flex items-center justify-center border-r border-[#EDEBE9] h-full"
                   >
                     <Skeleton className="size-3.5 rounded-[2px]" />
                   </div>
                 ))}
 
                 {/* Sticky Score Col (W: 62px) */}
-                <div className="w-[62px] flex-none sticky right-0 z-10 border-l border-(--color-border) bg-white flex items-center justify-end px-2.5">
+                <div className="w-15.5 flex-none sticky right-0 z-10 border-l border-(--color-border) bg-white flex items-center justify-end px-2.5">
                   <Skeleton className="h-3 w-6 rounded shrink-0" />
                 </div>
               </div>
@@ -135,9 +135,9 @@ export function MatriksSkeleton() {
           <div className="flex-1 min-h-0" />
 
           {/* Sticky Summary Row "MENERIMA" (H: 26px) */}
-          <div className="flex h-[26px] flex-none sticky bottom-0 z-20 bg-(--color-surface-alt) border-t border-(--color-border) select-none">
+          <div className="flex h-6.5 flex-none sticky bottom-0 z-20 bg-(--color-surface-alt) border-t border-(--color-border) select-none">
             {/* Sticky Label (W: 260px) */}
-            <div className="w-[260px] flex-none sticky left-0 z-30 bg-(--color-surface-alt) border-r border-(--color-border) flex items-center px-[11px]">
+            <div className="w-65 flex-none sticky left-0 z-30 bg-(--color-surface-alt) border-r border-(--color-border) flex items-center px-2.75">
               <Skeleton className="h-3 w-16 rounded shrink-0" />
             </div>
 
@@ -145,20 +145,20 @@ export function MatriksSkeleton() {
             {Array.from({ length: 5 }).map((_, idx) => (
               <div
                 key={idx}
-                className="min-w-[96px] flex-1 border-r border-[#EDEBE9] flex items-center justify-center"
+                className="min-w-24 flex-1 border-r border-[#EDEBE9] flex items-center justify-center"
               >
                 <Skeleton className="h-3 w-8 rounded shrink-0" />
               </div>
             ))}
 
             {/* Sticky Right Spacer (W: 62px) */}
-            <div className="w-[62px] flex-none sticky right-0 z-30 bg-(--color-surface-alt) border-l border-(--color-border)" />
+            <div className="w-15.5 flex-none sticky right-0 z-30 bg-(--color-surface-alt) border-l border-(--color-border)" />
           </div>
         </div>
       </div>
 
       {/* 7. Bottom Legend Bar Skeleton (H: 34px) */}
-      <div className="flex h-[34px] flex-none items-center gap-[13px] border-t border-(--color-border) bg-(--color-surface-alt) px-[14px] select-none">
+      <div className="flex h-8.5 flex-none items-center gap-3.25 border-t border-(--color-border) bg-(--color-surface-alt) px-3.5 select-none">
         {/* 7 legend items */}
         {Array.from({ length: 7 }).map((_, idx) => (
           <div key={idx} className="flex items-center gap-1.5 shrink-0">
@@ -166,7 +166,7 @@ export function MatriksSkeleton() {
             <Skeleton className="h-3 w-16 rounded shrink-0" />
           </div>
         ))}
-        <div className="flex-1 min-w-[6px]" />
+        <div className="flex-1 min-w-1.5" />
         <Skeleton className="h-3 w-48 rounded shrink-0" />
       </div>
     </div>

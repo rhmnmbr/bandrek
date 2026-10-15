@@ -13,7 +13,7 @@ export function JenisKegiatanSkeleton() {
 
         {/* Filter Bar (H: 48px / h-12) */}
         <div className="flex h-12 shrink-0 items-center gap-2 border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-xs">
-          <Skeleton className="h-6.5 flex-1 min-w-0 max-w-[280px] rounded shrink-0" />
+          <Skeleton className="h-6.5 flex-1 min-w-0 max-w-70 rounded shrink-0" />
         </div>
 
         {/* Table Container */}
@@ -22,27 +22,27 @@ export function JenisKegiatanSkeleton() {
             <div className="flex flex-col min-h-full w-full">
               {/* Sticky Header (H: 26px / h-6.5) */}
               <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-                <div className="flex-1 min-w-[140px]">JENIS KEGIATAN</div>
-                <div className="w-[104px] shrink-0">MATERI</div>
-                <div className="w-[100px] shrink-0">SISWA</div>
-                <div className="w-[84px] shrink-0 text-right">KEGIATAN</div>
+                <div className="flex-1 min-w-35">JENIS KEGIATAN</div>
+                <div className="w-26 shrink-0">MATERI</div>
+                <div className="w-25 shrink-0">SISWA</div>
+                <div className="w-21 shrink-0 text-right">KEGIATAN</div>
               </div>
 
               {/* Table Rows (H: 36px) */}
               <div className="flex flex-col">
                 {/* Row 1: Selected state */}
                 <div className="flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 bg-(--color-brand-subtle) shadow-[inset_3px_0_0_var(--color-brand)]">
-                  <div className="flex-1 min-w-[140px] flex items-center gap-2">
+                  <div className="flex-1 min-w-35 flex items-center gap-2">
                     <Skeleton className="size-2.5 rounded-full shrink-0" />
                     <Skeleton className="h-3.5 w-28 rounded shrink-0" />
                   </div>
-                  <div className="w-[104px] shrink-0">
+                  <div className="w-26 shrink-0">
                     <Skeleton className="h-3.5 w-12 rounded shrink-0" />
                   </div>
-                  <div className="w-[100px] shrink-0">
+                  <div className="w-25 shrink-0">
                     <Skeleton className="h-3.5 w-12 rounded shrink-0" />
                   </div>
-                  <div className="w-[84px] shrink-0 flex justify-end">
+                  <div className="w-21 shrink-0 flex justify-end">
                     <Skeleton className="h-3.5 w-6 rounded shrink-0" />
                   </div>
                 </div>
@@ -53,7 +53,7 @@ export function JenisKegiatanSkeleton() {
                     key={idx}
                     className="flex h-9 shrink-0 items-center border-b border-(--color-border-subtle) px-3.5 bg-(--color-surface)"
                   >
-                    <div className="flex-1 min-w-[140px] flex items-center gap-2">
+                    <div className="flex-1 min-w-35 flex items-center gap-2">
                       <Skeleton className="size-2.5 rounded-full shrink-0" />
                       <Skeleton
                         className={`h-3.5 rounded shrink-0 ${
@@ -61,13 +61,13 @@ export function JenisKegiatanSkeleton() {
                         }`}
                       />
                     </div>
-                    <div className="w-[104px] shrink-0">
+                    <div className="w-26 shrink-0">
                       <Skeleton className="h-3.5 w-12 rounded shrink-0" />
                     </div>
-                    <div className="w-[100px] shrink-0">
+                    <div className="w-25 shrink-0">
                       <Skeleton className="h-3.5 w-12 rounded shrink-0" />
                     </div>
-                    <div className="w-[84px] shrink-0 flex justify-end">
+                    <div className="w-21 shrink-0 flex justify-end">
                       <Skeleton className="h-3.5 w-6 rounded shrink-0" />
                     </div>
                   </div>
@@ -81,7 +81,7 @@ export function JenisKegiatanSkeleton() {
       </div>
 
       {/* Right Column: 352px sidebar form panel */}
-      <div className="flex w-[352px] flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
+      <div className="flex w-88 flex-[0_0_352px] min-w-0 min-h-0 flex-col overflow-hidden bg-(--color-surface-alt)">
         {/* Panel Header (H: 52px / h-13) */}
         <div className="flex h-13 shrink-0 items-center gap-2.5 border-b border-(--color-border) bg-(--color-surface) px-3.5">
           <Skeleton className="size-8 rounded-md shrink-0" />

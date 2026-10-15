@@ -24,15 +24,15 @@ export function SubjekTable({
   return (
     <div className="flex flex-1 min-h-0 flex-col">
       <div className="flex-1 min-h-0 overflow-auto">
-        <div className="flex flex-col min-h-full min-w-[718px] w-full">
+        <div className="flex flex-col min-h-full min-w-179.5 w-full">
           {/* Sticky Header */}
           <div className="sticky top-0 z-3 flex h-6.5 shrink-0 items-center border-b border-(--color-border) bg-(--color-surface-alt) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
-            <div className="w-[210px] shrink-0">NAMA LENGKAP</div>
-            <div className="w-[92px] shrink-0">KELAMIN</div>
-            <div className="flex-1 min-w-[120px]">MATA PELAJARAN</div>
-            <div className="w-[126px] shrink-0">KONTAK</div>
-            <div className="w-[74px] shrink-0 text-right">KEGIATAN</div>
-            <div className="w-[78px] shrink-0 pl-2">STATUS</div>
+            <div className="w-52.5 shrink-0">NAMA LENGKAP</div>
+            <div className="w-23 shrink-0">KELAMIN</div>
+            <div className="flex-1 min-w-30">MATA PELAJARAN</div>
+            <div className="w-31.5 shrink-0">KONTAK</div>
+            <div className="w-18.5 shrink-0 text-right">KEGIATAN</div>
+            <div className="w-19.5 shrink-0 pl-2">STATUS</div>
           </div>
 
           {/* Table Body */}
@@ -59,7 +59,7 @@ export function SubjekTable({
                     onOpenProfil(sb.id);
                   }}
                   title={sb.nama}
-                  className={`w-[210px] shrink-0 truncate pr-2 cursor-pointer hover:underline hover:text-(--color-brand-ink) ${
+                  className={`w-52.5 shrink-0 truncate pr-2 cursor-pointer hover:underline hover:text-(--color-brand-ink) ${
                     isDipilih ? 'font-semibold' : 'font-normal'
                   } ${sb.aktif ? 'text-(--color-text-primary)' : 'text-(--color-text-muted) line-through'}`}
                 >
@@ -68,7 +68,7 @@ export function SubjekTable({
 
                 {/* Kelamin */}
                 <div
-                  className={`w-[92px] shrink-0 ${
+                  className={`w-23 shrink-0 ${
                     sb.kelamin ? 'text-(--color-text-secondary)' : 'text-(--color-text-disabled)'
                   }`}
                 >
@@ -77,7 +77,7 @@ export function SubjekTable({
 
                 {/* Mapel */}
                 <div
-                  className={`flex-1 min-w-[120px] truncate pr-2 ${
+                  className={`flex-1 min-w-30 truncate pr-2 ${
                     mp.length > 0 ? 'text-(--color-text-secondary)' : 'text-(--color-text-disabled)'
                   }`}
                 >
@@ -86,7 +86,7 @@ export function SubjekTable({
 
                 {/* Kontak */}
                 <div
-                  className={`w-[126px] shrink-0 truncate pr-2 font-mono text-[11.5px] ${
+                  className={`w-31.5 shrink-0 truncate pr-2 font-mono text-[11.5px] ${
                     sb.kontak ? 'text-(--color-text-secondary)' : 'text-(--color-text-disabled)'
                   }`}
                 >
@@ -95,7 +95,7 @@ export function SubjekTable({
 
                 {/* Kegiatan */}
                 <div
-                  className={`w-[74px] shrink-0 text-right font-mono text-[11.5px] ${
+                  className={`w-18.5 shrink-0 text-right font-mono text-[11.5px] ${
                     sb.jumlahKegiatan ? 'text-(--color-text-primary)' : 'text-(--color-text-disabled)'
                   }`}
                 >
@@ -103,7 +103,7 @@ export function SubjekTable({
                 </div>
 
                 {/* Status */}
-                <div className="w-[78px] shrink-0 pl-2">
+                <div className="w-19.5 shrink-0 pl-2">
                   <span
                     className={`inline-flex items-center h-4.5 px-2 rounded-full text-[10.5px] font-semibold border whitespace-nowrap ${
                       sb.aktif

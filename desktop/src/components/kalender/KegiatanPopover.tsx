@@ -100,7 +100,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
         align="start"
         sideOffset={8}
         collisionPadding={8}
-        className="w-[340px] p-0 overflow-hidden bg-white border border-(--color-border-strong) rounded-lg shadow-(--shadow-overlay) duration-(--dur-normal) z-50 text-(--color-text)"
+        className="w-85 p-0 overflow-hidden bg-white border border-(--color-border-strong) rounded-lg shadow-(--shadow-overlay) duration-(--dur-normal) z-50 text-(--color-text)"
       >
         {/* 1. Header: Title + Status Badge + Close Button */}
         <div className="pt-3 px-3.5 pb-0 flex justify-between gap-2.5 items-start">
@@ -128,7 +128,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
             type="button"
             onClick={onClose}
             title="Tutup · Esc"
-            className="w-[22px] h-[22px] flex-none rounded flex items-center justify-center text-[#5C5A58] hover:bg-[#EDEBE9] hover:text-[#242424] cursor-pointer transition-colors"
+            className="w-5.5 h-5.5 flex-none rounded flex items-center justify-center text-[#5C5A58] hover:bg-[#EDEBE9] hover:text-[#242424] cursor-pointer transition-colors"
           >
             <Dismiss16Regular className="w-3.5 h-3.5" />
           </button>
@@ -138,7 +138,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
         <div className="pt-2.5 px-3.5 flex flex-col gap-1.5 text-[12.5px] text-[#424242]">
           {/* Row: Waktu */}
           <div className="flex gap-2.5 leading-[1.45]">
-            <span className="w-[66px] flex-none text-[#5C5A58]">Waktu</span>
+            <span className="w-16.5 flex-none text-[#5C5A58]">Waktu</span>
             <span className="flex-1 min-w-0 font-mono text-[12px]">
               {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
               {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}
@@ -147,14 +147,14 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
 
           {/* Row: Jenis */}
           <div className="flex gap-2.5 leading-[1.45]">
-            <span className="w-[66px] flex-none text-[#5C5A58]">Jenis</span>
+            <span className="w-16.5 flex-none text-[#5C5A58]">Jenis</span>
             <span className="flex-1 min-w-0">{kegiatan.namaJenis || '—'}</span>
           </div>
 
           {/* Row: Materi (if exists) */}
           {(kegiatan.namaMateri || kegiatan.materi) && (
             <div className="flex gap-2.5 leading-[1.45]">
-              <span className="w-[66px] flex-none text-[#5C5A58]">Materi</span>
+              <span className="w-16.5 flex-none text-[#5C5A58]">Materi</span>
               <span className="flex-1 min-w-0">
                 {kegiatan.namaMapel ? `${kegiatan.namaMapel} › ` : ''}
                 {kegiatan.namaMateri || '—'}
@@ -164,7 +164,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
 
           {/* Row: Tempat & Ruangan */}
           <div className="flex gap-2.5 leading-[1.45]">
-            <span className="w-[66px] flex-none text-[#5C5A58]">Tempat</span>
+            <span className="w-16.5 flex-none text-[#5C5A58]">Tempat</span>
             <span className="flex-1 min-w-0">
               {kegiatan.tempatCustom
                 ? kegiatan.tempatCustom
@@ -176,7 +176,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
 
           {/* Row: Subjek */}
           <div className="flex gap-2.5 leading-[1.45]">
-            <span className="w-[66px] flex-none text-[#5C5A58]">Subjek</span>
+            <span className="w-16.5 flex-none text-[#5C5A58]">Subjek</span>
             <span className="flex-1 min-w-0">
               {kegiatan.subjek.length === 0 ? (
                 '—'
@@ -196,7 +196,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
 
           {/* Row: Siswa */}
           <div className="flex gap-2.5 leading-[1.45]">
-            <span className="w-[66px] flex-none text-[#5C5A58]">Siswa</span>
+            <span className="w-16.5 flex-none text-[#5C5A58]">Siswa</span>
             <div className="flex-1 min-w-0">
               {daftarSiswa.length === 0 ? (
                 '—'
@@ -253,7 +253,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Row: Dibatalkan (if cancel record exists) */}
           {kegiatan.pembatalan && (
             <div className="flex gap-2.5 leading-[1.45]">
-              <span className="w-[66px] flex-none text-[#5C5A58]">Dibatalkan</span>
+              <span className="w-16.5 flex-none text-[#5C5A58]">Dibatalkan</span>
               <span className="flex-1 min-w-0">
                 {kegiatan.pembatalan.alasan || 'Tanpa alasan tercatat'}
                 {kegiatan.pembatalan.keterangan ? ` — ${kegiatan.pembatalan.keterangan}` : ''} ·{' '}
@@ -265,7 +265,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Row: Alasan (if reschedule record exists) */}
           {kegiatan.penjadwalanUlang && (
             <div className="flex gap-2.5 leading-[1.45]">
-              <span className="w-[66px] flex-none text-[#5C5A58]">Alasan</span>
+              <span className="w-16.5 flex-none text-[#5C5A58]">Alasan</span>
               <span className="flex-1 min-w-0">
                 {kegiatan.penjadwalanUlang.alasan || 'Tanpa alasan tercatat'}
                 {kegiatan.penjadwalanUlang.keterangan
@@ -279,7 +279,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Row: Reschedule Link To */}
           {targetJadwalUlangKe && (
             <div className="flex gap-2.5 leading-[1.45]">
-              <span className="w-[66px] flex-none text-[#5C5A58]">Pindah ke</span>
+              <span className="w-16.5 flex-none text-[#5C5A58]">Pindah ke</span>
               <button
                 type="button"
                 onClick={() => onNavigateKegiatan?.(targetJadwalUlangKe.id)}
@@ -293,7 +293,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           {/* Row: Reschedule Link From */}
           {targetJadwalUlangDari && (
             <div className="flex gap-2.5 leading-[1.45]">
-              <span className="w-[66px] flex-none text-[#5C5A58]">Pindahan dari</span>
+              <span className="w-16.5 flex-none text-[#5C5A58]">Pindahan dari</span>
               <button
                 type="button"
                 onClick={() => onNavigateKegiatan?.(targetJadwalUlangDari.id)}
@@ -315,7 +315,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                   type="button"
                   onClick={() => onOpenRealisasi?.(kegiatan)}
                   title="Catat kehadiran dan hasil sesi ini"
-                  className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#0F6CBD] text-white hover:bg-[#115EA3] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                  className="h-6.5 px-2.75 rounded text-xs font-semibold bg-[#0F6CBD] text-white hover:bg-[#115EA3] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
                 >
                   Isi realisasi
                 </button>
@@ -323,21 +323,21 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenDetail?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Lihat detail
               </button>
               <button
                 type="button"
                 onClick={() => onOpenEdit?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Ubah kegiatan
               </button>
               <button
                 type="button"
                 onClick={() => onOpenJadwalUlang?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Jadwalkan ulang
               </button>
@@ -345,7 +345,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                 type="button"
                 onClick={() => onTambahDiJamIni?.(kegiatan)}
                 title={`Tambah kegiatan baru di jam ${kegiatan.mulai}–${kegiatan.selesai}`}
-                className="h-[26px] px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
+                className="h-6.5 px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
               >
                 <Add12Regular className="w-3.5 h-3.5" />
                 <span>Tambah di jam ini</span>
@@ -353,7 +353,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenBatal?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#C50F1F] text-white hover:bg-[#A80816] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-semibold bg-[#C50F1F] text-white hover:bg-[#A80816] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Batalkan kegiatan
               </button>
@@ -367,7 +367,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                 type="button"
                 onClick={() => onTambahDiJamIni?.(kegiatan)}
                 title={`Tambah kegiatan baru di jam ${kegiatan.mulai}–${kegiatan.selesai}`}
-                className="h-[26px] px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
+                className="h-6.5 px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
               >
                 <Add12Regular className="w-3.5 h-3.5" />
                 <span>Tambah di jam ini</span>
@@ -376,14 +376,14 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                 type="button"
                 onClick={() => onOpenRealisasi?.(kegiatan)}
                 title="Perbaiki kehadiran atau catatan realisasi"
-                className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#0F6CBD] text-white hover:bg-[#115EA3] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-semibold bg-[#0F6CBD] text-white hover:bg-[#115EA3] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Ubah realisasi
               </button>
               <button
                 type="button"
                 onClick={() => onOpenDetail?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Lihat detail
               </button>
@@ -397,7 +397,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                 type="button"
                 onClick={() => onTambahDiJamIni?.(kegiatan)}
                 title={`Tambah kegiatan baru di jam ${kegiatan.mulai}–${kegiatan.selesai}`}
-                className="h-[26px] px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
+                className="h-6.5 px-2.5 rounded text-xs font-medium bg-white border border-(--color-brand) text-(--color-brand) hover:bg-(--color-brand-subtle) active:translate-y-px transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 shadow-2xs"
               >
                 <Add12Regular className="w-3.5 h-3.5" />
                 <span>Tambah di jam ini</span>
@@ -406,14 +406,14 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                 type="button"
                 disabled
                 title="Kegiatan yang dibatalkan atau dijadwalkan ulang tidak bisa direalisasi"
-                className="h-[26px] px-2.75 rounded text-xs font-semibold bg-[#EDEBE9] text-[#8A8886] cursor-not-allowed whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-semibold bg-[#EDEBE9] text-[#8A8886] cursor-not-allowed whitespace-nowrap"
               >
                 Isi realisasi
               </button>
               <button
                 type="button"
                 onClick={() => onOpenDetail?.(kegiatan)}
-                className="h-[26px] px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
+                className="h-6.5 px-2.75 rounded text-xs font-normal bg-white border border-[#C8C6C4] text-[#242424] hover:bg-[#F3F2F1] active:translate-y-px transition-all cursor-pointer whitespace-nowrap"
               >
                 Lihat detail
               </button>

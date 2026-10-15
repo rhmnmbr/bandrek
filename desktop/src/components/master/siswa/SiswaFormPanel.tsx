@@ -720,7 +720,7 @@ export function SiswaFormPanel({
               </button>
 
               {menuKelasOpen && (
-                <div className="absolute left-0 top-6.75 z-10 w-57 max-h-49 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-xl flex flex-col gap-0.25">
+                <div className="absolute left-0 top-6.75 z-10 w-57 max-h-49 overflow-y-auto rounded-md border border-(--color-border-strong) bg-(--color-surface) p-1 shadow-xl flex flex-col gap-px">
                   {availableClassesToAdd.map((k) => (
                     <button
                       key={k.id}
@@ -732,7 +732,7 @@ export function SiswaFormPanel({
                         }
                       }}
                       title={`Masukkan ke ${k.nama}`}
-                      className="w-full rounded p-1.5 text-left hover:bg-(--color-brand-subtle) border-none bg-transparent cursor-pointer flex flex-col gap-0.25"
+                      className="w-full rounded p-1.5 text-left hover:bg-(--color-brand-subtle) border-none bg-transparent cursor-pointer flex flex-col gap-px"
                     >
                       <span className="truncate text-[12.5px] font-medium text-(--color-text-primary)">
                         {k.nama}

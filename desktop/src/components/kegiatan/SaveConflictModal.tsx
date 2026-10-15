@@ -48,7 +48,7 @@ export const SaveConflictModal: React.FC<SaveConflictModalProps> = ({
           data-screen-label="B6-konflik"
           className={cn(
             'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
-            'w-full max-w-[520px] rounded-lg bg-white border border-(--color-border-strong)',
+            'w-full max-w-130 rounded-lg bg-white border border-(--color-border-strong)',
             'shadow-(--shadow-overlay) duration-(--dur-fast) animate-in fade-in-0 zoom-in-95 overflow-hidden select-none'
           )}
         >

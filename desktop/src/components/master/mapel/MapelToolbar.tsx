@@ -72,7 +72,7 @@ export function MapelToolbar({
           value={cari}
           onChange={(e) => onCariChange(e.target.value)}
           placeholder="Cari mata pelajaran"
-          className="h-6.5 w-[140px] flex-1 min-w-0 rounded-sm border border-(--color-border) bg-(--color-surface) px-2 text-xs outline-none focus:border-(--color-brand) transition-colors"
+          className="h-6.5 w-35 flex-1 min-w-0 rounded-sm border border-(--color-border) bg-(--color-surface) px-2 text-xs outline-none focus:border-(--color-brand) transition-colors"
         />
 
         {/* Status Dropdown */}
