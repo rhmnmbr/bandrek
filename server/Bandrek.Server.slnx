@@ -5,4 +5,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Bandrek.Server.Tests/Bandrek.Server.Tests.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="../tools/Bandrek.KeyGen/Bandrek.KeyGen.csproj" />
+  </Folder>
 </Solution>
