@@ -31,7 +31,13 @@ export const MatriksScreen: React.FC = () => {
   const { showToast } = useToast();
 
   // Master Data
-  const { data: mapelList = [] } = useMapelList();
+  const {
+    data: mapelList = [],
+    isLoading: isLoadingMapel,
+    isError: isErrorMapel,
+    error: errorMapel,
+    refetch: refetchMapel,
+  } = useMapelList();
   const { data: _siswaList = [] } = useSiswaList();
   const { data: kelasList = [] } = useKelasList();
 
@@ -52,6 +58,8 @@ export const MatriksScreen: React.FC = () => {
         setSelectedMapelId(first);
         sessionStorage.setItem('bandrek:matriks:mapel', first);
       }
+    } else if (selectedMapelId) {
+      setSelectedMapelId('');
     }
   }, [mapelAktif, selectedMapelId]);
 
@@ -106,7 +114,13 @@ export const MatriksScreen: React.FC = () => {
   }, [selectedKelasIds, searchQuery, showNonaktif]);
 
   // Fetch Matrix Data
-  const { data: matriksResult, isLoading } = useMatriks(
+  const {
+    data: matriksResult,
+    isLoading: isLoadingMatriks,
+    isError: isErrorMatriks,
+    error: errorMatriks,
+    refetch: refetchMatriks,
+  } = useMatriks(
     selectedMapelId,
     filterParams,
     Boolean(selectedMapelId)
@@ -353,9 +367,97 @@ export const MatriksScreen: React.FC = () => {
     };
   }, [matriksResult]);
 
-  // Loading state
-  if (isLoading || !matriksResult) {
+  // 1. Initial loading of Mapel master data
+  if (isLoadingMapel && mapelList.length === 0) {
     return <MatriksSkeleton />;
+  }
+
+  // 2. Error loading Mapel master data
+  if (isErrorMapel) {
+    return (
+      <div className="flex flex-1 flex-col h-full bg-white overflow-hidden" data-testid="matriks-screen">
+        <MatriksEmptyState
+          type="error"
+          errorMessage={(errorMapel as Error)?.message || 'Gagal memuat daftar mata pelajaran.'}
+          hasFilter={false}
+          onPrimaryAction={() => refetchMapel()}
+        />
+      </div>
+    );
+  }
+
+  // 3. No active Mapel in database
+  if (mapelAktif.length === 0) {
+    return (
+      <div className="flex flex-1 flex-col h-full bg-white overflow-hidden" data-testid="matriks-screen">
+        <MatriksToolbar
+          mapelList={[]}
+          selectedMapelId=""
+          onSelectMapel={() => {}}
+          kelasList={kelasList}
+          selectedKelasIds={selectedKelasIds}
+          onSelectKelasIds={setSelectedKelasIds}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          showNonaktif={showNonaktif}
+          onToggleNonaktif={() => setShowNonaktif((prev) => !prev)}
+          tandaiTertinggal={tandaiTertinggal}
+          onToggleTandaiTertinggal={() => setTandaiTertinggal((prev) => !prev)}
+          onResetFilter={handleResetFilter}
+          hasFilter={false}
+          isBulkMode={false}
+          onToggleBulkMode={() => {}}
+        />
+        <MatriksEmptyState
+          type="tanpa_mapel"
+          hasFilter={false}
+          onPrimaryAction={() => navigate('/master/mapel')}
+        />
+      </div>
+    );
+  }
+
+  // 4. Loading Matrix computation for the selected Mapel
+  if (isLoadingMatriks || (!matriksResult && !isErrorMatriks)) {
+    return <MatriksSkeleton />;
+  }
+
+  // 5. Error loading Matrix computation
+  if (isErrorMatriks || !matriksResult) {
+    return (
+      <div className="flex flex-1 flex-col h-full bg-white overflow-hidden" data-testid="matriks-screen">
+        <MatriksToolbar
+          mapelList={mapelAktif}
+          selectedMapelId={selectedMapelId}
+          onSelectMapel={handleSelectMapel}
+          kelasList={kelasList}
+          selectedKelasIds={selectedKelasIds}
+          onSelectKelasIds={setSelectedKelasIds}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          showNonaktif={showNonaktif}
+          onToggleNonaktif={() => setShowNonaktif((prev) => !prev)}
+          tandaiTertinggal={tandaiTertinggal}
+          onToggleTandaiTertinggal={() => setTandaiTertinggal((prev) => !prev)}
+          onResetFilter={handleResetFilter}
+          hasFilter={hasFilter}
+          isBulkMode={isBulkMode}
+          onToggleBulkMode={() => {
+            setIsBulkMode((prev) => !prev);
+            setSelectedKeys(new Set());
+            setPopoverState(null);
+          }}
+        />
+        <MatriksEmptyState
+          type="error"
+          namaMapel={mapelAktif.find((m) => m.id === selectedMapelId)?.nama}
+          errorMessage={(errorMatriks as Error)?.message || 'Gagal memuat kalkulasi matriks belajar.'}
+          hasFilter={hasFilter}
+          onPrimaryAction={() => refetchMatriks()}
+          onResetFilter={handleResetFilter}
+        />
+      </div>
+    );
   }
 
   // Check Prerequisite Empty States
