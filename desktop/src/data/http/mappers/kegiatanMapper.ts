@@ -81,8 +81,8 @@ export function mapActivityDtoToKegiatan(dto: ActivityDto): Kegiatan {
     // Server-computed fields
     aksiDiizinkan: (dto.allowedActions as AksiKegiatan[]) || [],
     tempat: dto.placeId,
-    namaTempat: dto.placeName || '',
-    namaRuangan: dto.roomName || '',
+    namaTempat: dto.customPlace || dto.placeName || '',
+    namaRuangan: dto.customPlace || dto.roomName || '',
     namaJenis: dto.activityTypeName || '',
     warnaJenis: (dto.activityTypeColor as JenisKegiatanWarna) || 'lainnya',
     namaMapel: dto.courseName ?? undefined,

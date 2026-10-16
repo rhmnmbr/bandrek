@@ -177,7 +177,11 @@ export const DetailKegiatanScreen: React.FC = () => {
 
   const subjekStr = kegiatan.subjek.length
     ? kegiatan.subjek
-        .map((x) => `${subjekMap.get(x.id)?.nama || x.id}${x.peran ? ` (${x.peran})` : ''}`)
+        .map((x) => {
+          const nm = x.nama || subjekMap.get(x.id)?.nama || x.id;
+          const hasPeran = x.peran && x.peran !== 'Tanpa peran';
+          return `${nm}${hasPeran ? ` (${x.peran})` : ''}`;
+        })
         .join(', ')
     : '—';
 
@@ -507,11 +511,15 @@ export const DetailKegiatanScreen: React.FC = () => {
               {/* Kolom Kiri */}
               <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                 <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
-                  <span className="w-15.5 flex-none text-(--color-text-secondary)">Waktu</span>
+                  <span className="w-15.5 flex-none text-(--color-text-secondary)">Mulai</span>
                   <span className="flex-1 min-w-0 font-mono text-(--color-text)">
-                    {kegiatan.tanggalSelesai && kegiatan.tanggalSelesai !== kegiatan.tanggal
-                      ? `${formatTanggalRingkas(kegiatan.tanggal)} – ${formatTanggalRingkas(kegiatan.tanggalSelesai)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`
-                      : `${formatTanggalRingkas(kegiatan.tanggal)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`}
+                    {formatTanggalRingkas(kegiatan.tanggal)}{kegiatan.sepanjangHari ? ' (Sepanjang hari)' : `, ${kegiatan.mulai}`}
+                  </span>
+                </div>
+                <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
+                  <span className="w-15.5 flex-none text-(--color-text-secondary)">Selesai</span>
+                  <span className="flex-1 min-w-0 font-mono text-(--color-text)">
+                    {formatTanggalRingkas(kegiatan.tanggalSelesai || kegiatan.tanggal)}{kegiatan.sepanjangHari ? ' (Sepanjang hari)' : `, ${kegiatan.selesai}`}
                   </span>
                 </div>
                 <div className="flex gap-2.5 text-[12.5px] leading-relaxed">

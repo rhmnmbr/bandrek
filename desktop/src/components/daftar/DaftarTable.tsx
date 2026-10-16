@@ -61,15 +61,23 @@ const DaftarTableRow = React.memo<DaftarTableRowProps>(({
 
   const isMultiDay = Boolean(ev.tanggalSelesai && ev.tanggalSelesai !== ev.tanggal);
   const formattedDate = isMultiDay
-    ? `${formatTanggalPendek(ev.tanggal)} – ${formatTanggalPendek(ev.tanggalSelesai!)}`
+    ? `${formatTanggalPendek(ev.tanggal)} → ${formatTanggalPendek(ev.tanggalSelesai!)}`
     : formatTanggalPendek(ev.tanggal);
-  const formattedJam = ev.sepanjangHari ? 'Sepanjang hari' : `${ev.mulai}–${ev.selesai}`;
+  const formattedJam = ev.sepanjangHari
+    ? 'Sepanjang hari'
+    : isMultiDay
+    ? `${ev.mulai} → ${ev.selesai}`
+    : `${ev.mulai}–${ev.selesai}`;
   const displayJenis = ev.namaJenis || '—';
   const displayMateri = ev.namaMateri
     ? `${ev.namaMapel || '—'} › ${ev.namaMateri}`
     : '—';
-  const displayRuangan = ev.namaRuangan
-    ? `${ev.namaTempat || '—'} · ${ev.namaRuangan}`
+  const displayRuangan = ev.tempatCustom
+    ? ev.tempatCustom
+    : ev.namaRuangan && ev.namaRuangan !== 'Ruangan tidak diketahui'
+    ? ev.namaTempat && ev.namaTempat !== 'Tempat tidak diketahui'
+      ? `${ev.namaTempat} · ${ev.namaRuangan}`
+      : ev.namaRuangan
     : 'Tanpa ruangan';
   const displayPengisi = ev.pengisiUtama?.nama || '—';
   const siswaCount = ev.siswa.length;
@@ -87,7 +95,7 @@ const DaftarTableRow = React.memo<DaftarTableRowProps>(({
       {/* TANGGAL */}
       <div
         className={cn(
-          'w-26 flex-none font-mono text-[11.5px] whitespace-nowrap',
+          'w-46 flex-none font-mono text-[11.5px] whitespace-nowrap overflow-hidden text-ellipsis pr-2',
           isToday ? 'text-[#0C548F] font-semibold' : 'text-[#5C5A58]'
         )}
       >
@@ -95,7 +103,7 @@ const DaftarTableRow = React.memo<DaftarTableRowProps>(({
       </div>
 
       {/* JAM */}
-      <div className="w-26 flex-none font-mono text-[11.5px] text-[#424242] whitespace-nowrap">
+      <div className="w-26 flex-none font-mono text-[11.5px] text-[#424242] whitespace-nowrap overflow-hidden text-ellipsis pr-2">
         {formattedJam}
       </div>
 
@@ -241,7 +249,7 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
         data-dft-scroll="tabel"
         className="flex-1 min-h-0 overflow-auto select-none"
       >
-        <div className="flex flex-col min-h-full min-w-265 w-full">
+        <div className="flex flex-col min-h-full min-w-285 w-full">
           {/* 1. Sticky Table Header */}
           <div className="flex items-center h-6.5 flex-none sticky top-0 z-10 w-full min-w-full bg-[#FAFAFA] border-b border-(--color-border) px-3.5 text-[10.5px] font-semibold tracking-wider text-(--color-text-muted)">
             {/* TANGGAL */}
@@ -253,7 +261,7 @@ export const DaftarTable: React.FC<DaftarTableProps> = ({
                   ? 'Urut terbaru dulu — klik untuk terlama dulu'
                   : 'Urut terlama dulu — klik untuk terbaru dulu'
               }
-              className="w-26 flex-none h-6.5 border-none bg-transparent p-0 text-left text-[10.5px] font-semibold tracking-wider text-(--color-brand) cursor-pointer flex items-center gap-1 hover:text-(--color-brand-pressed) transition-colors"
+              className="w-46 flex-none h-6.5 border-none bg-transparent p-0 text-left text-[10.5px] font-semibold tracking-wider text-(--color-brand) cursor-pointer flex items-center gap-1 hover:text-(--color-brand-pressed) transition-colors"
             >
               <span>TANGGAL</span>
               <span>{sortDesc ? '↓' : '↑'}</span>

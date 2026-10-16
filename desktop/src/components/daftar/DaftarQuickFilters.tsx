@@ -222,19 +222,18 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
         </span>
 
         {onChangeViewMode && (
-          <div className="flex items-center rounded border border-(--color-border) bg-(--color-surface-sunken) p-0.5 ml-1">
+          <div className="flex items-center rounded border border-(--color-border) bg-(--color-canvas) p-0.5 ml-1">
             <button
               type="button"
               onClick={() => {
                 if (viewMode !== 'tabel') onChangeViewMode('tabel');
               }}
               className={cn(
-                'flex items-center gap-1 h-5 px-1.5 rounded-xs text-[11px] cursor-pointer border-none select-none',
+                'flex items-center gap-1 h-5 px-1.5 rounded-xs text-[11px] cursor-pointer border-none select-none transition-colors',
                 viewMode === 'tabel'
                   ? 'bg-white text-(--color-text-primary) shadow-2xs font-semibold'
                   : 'bg-transparent text-(--color-text-muted) hover:text-(--color-text-primary) font-medium'
               )}
-              title="Tampilan Tabel"
             >
               <TableSimple16Regular className="w-3.5 h-3.5" />
               <span>Tabel</span>
@@ -245,12 +244,11 @@ export const DaftarQuickFilters: React.FC<DaftarQuickFiltersProps> = ({
                 if (viewMode !== 'kanban') onChangeViewMode('kanban');
               }}
               className={cn(
-                'flex items-center gap-1 h-5 px-1.5 rounded-xs text-[11px] cursor-pointer border-none select-none',
+                'flex items-center gap-1 h-5 px-1.5 rounded-xs text-[11px] cursor-pointer border-none select-none transition-colors',
                 viewMode === 'kanban'
                   ? 'bg-white text-(--color-text-primary) shadow-2xs font-semibold'
                   : 'bg-transparent text-(--color-text-muted) hover:text-(--color-text-primary) font-medium'
               )}
-              title="Tampilan Papan Kanban"
             >
               <GridKanban16Regular className="w-3.5 h-3.5" />
               <span>Papan</span>

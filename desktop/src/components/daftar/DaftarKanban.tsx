@@ -143,6 +143,11 @@ export const DaftarKanban: React.FC<DaftarKanbanProps> = ({
                       ? Object.values(k.realisasi.kehadiran).filter((st) => st === 'hadir').length
                       : null;
 
+                    const isMultiDay = Boolean(k.tanggalSelesai && k.tanggalSelesai !== k.tanggal);
+                    const waktuLabel = isMultiDay
+                      ? `${formatTanggalPendek(k.tanggal)} ${k.mulai} → ${formatTanggalPendek(k.tanggalSelesai!)} ${k.selesai}`
+                      : `${formatTanggalPendek(k.tanggal)} · ${k.sepanjangHari ? 'Sepanjang hari' : `${k.mulai}–${k.selesai}`}`;
+
                     return (
                       <div
                         key={k.id}
@@ -156,9 +161,11 @@ export const DaftarKanban: React.FC<DaftarKanbanProps> = ({
                       >
                         {/* Waktu & Jenis */}
                         <div className="flex items-center justify-between gap-2 text-[11px]">
-                          <span className="font-mono text-(--color-text-secondary) font-medium truncate">
-                            {k.sepanjangHari ? 'Sepanjang hari' : `${k.mulai} - ${k.selesai}`} · {formatTanggalPendek(k.tanggal)}
-                            {k.tanggalSelesai && k.tanggalSelesai !== k.tanggal ? ` – ${formatTanggalPendek(k.tanggalSelesai)}` : ''}
+                          <span
+                            className="font-mono text-(--color-text-secondary) font-medium truncate"
+                            title={waktuLabel}
+                          >
+                            {waktuLabel}
                           </span>
                           {k.namaJenis && (
                             <span className="flex-none rounded-full px-2 py-0.5 text-[10.5px] font-medium border border-(--color-border) bg-(--color-surface-alt) text-(--color-text-secondary)">
@@ -199,7 +206,12 @@ export const DaftarKanban: React.FC<DaftarKanbanProps> = ({
                             <div className="flex items-center gap-1.5 truncate">
                               <Building16Regular className="w-3.5 h-3.5 flex-none text-(--color-text-muted)" />
                               <span className="truncate">
-                                {k.namaRuangan || k.namaTempat || 'Tanpa ruangan'}
+                                {k.tempatCustom ||
+                                  (k.namaRuangan && k.namaRuangan !== 'Ruangan tidak diketahui'
+                                    ? k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui'
+                                      ? `${k.namaTempat} · ${k.namaRuangan}`
+                                      : k.namaRuangan
+                                    : 'Tanpa ruangan')}
                               </span>
                             </div>
                             <div className="flex items-center gap-1 flex-none text-(--color-text-muted)">

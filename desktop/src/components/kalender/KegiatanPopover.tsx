@@ -100,7 +100,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
         align="start"
         sideOffset={8}
         collisionPadding={8}
-        className="w-85 p-0 overflow-hidden bg-white border border-(--color-border-strong) rounded-lg shadow-(--shadow-overlay) duration-(--dur-normal) z-50 text-(--color-text)"
+        className="w-90 p-0 overflow-hidden bg-white border border-(--color-border-strong) rounded-lg shadow-(--shadow-overlay) duration-(--dur-normal) z-50 text-(--color-text)"
       >
         {/* 1. Header: Title + Status Badge + Close Button */}
         <div className="pt-3 px-3.5 pb-0 flex justify-between gap-2.5 items-start">
@@ -136,13 +136,19 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
 
         {/* 2. Metadata Rows */}
         <div className="pt-2.5 px-3.5 flex flex-col gap-1.5 text-[12.5px] text-[#424242]">
-          {/* Row: Waktu */}
+          {/* Row: Mulai */}
           <div className="flex gap-2.5 leading-[1.45]">
-            <span className="w-16.5 flex-none text-[#5C5A58]">Waktu</span>
+            <span className="w-16.5 flex-none text-[#5C5A58]">Mulai</span>
             <span className="flex-1 min-w-0 font-mono text-[12px]">
-              {kegiatan.tanggalSelesai && kegiatan.tanggalSelesai !== kegiatan.tanggal
-                ? `${formatTanggalRingkas(kegiatan.tanggal)} – ${formatTanggalRingkas(kegiatan.tanggalSelesai)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`
-                : `${formatTanggalRingkas(kegiatan.tanggal)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`}
+              {formatTanggalRingkas(kegiatan.tanggal)}{kegiatan.sepanjangHari ? ' (Sepanjang hari)' : `, ${kegiatan.mulai}`}
+            </span>
+          </div>
+
+          {/* Row: Selesai */}
+          <div className="flex gap-2.5 leading-[1.45]">
+            <span className="w-16.5 flex-none text-[#5C5A58]">Selesai</span>
+            <span className="flex-1 min-w-0 font-mono text-[12px]">
+              {formatTanggalRingkas(kegiatan.tanggalSelesai || kegiatan.tanggal)}{kegiatan.sepanjangHari ? ' (Sepanjang hari)' : `, ${kegiatan.selesai}`}
             </span>
           </div>
 
@@ -183,10 +189,12 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                 '—'
               ) : (
                 kegiatan.subjek.map((s, idx) => {
-                  const sNama = subjekMap.get(s.id) || s.id;
+                  const sNama = s.nama || subjekMap.get(s.id) || s.id;
+                  const hasPeran = s.peran && s.peran !== 'Tanpa peran';
                   return (
                     <span key={s.id}>
-                      {sNama} {s.peran ? <span className="text-[#5C5A58]">({s.peran})</span> : null}
+                      {sNama}
+                      {hasPeran ? <span className="text-[#5C5A58]"> ({s.peran})</span> : null}
                       {idx < kegiatan.subjek.length - 1 ? ', ' : ''}
                     </span>
                   );
