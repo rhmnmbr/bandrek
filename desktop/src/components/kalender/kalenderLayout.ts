@@ -39,7 +39,8 @@ export function susunLayoutKegiatan(
   nHari: number = 7,
   jamAwal: number = JAM_AWAL,
   jamAkhir: number = JAM_AKHIR,
-  totalGridWidthPx: number = 1251
+  totalGridWidthPx: number = 1251,
+  subjekMap?: Map<string, string>
 ): LayoutEventItem[] {
   const min0 = jamAwal * 60;
   const min1 = jamAkhir * 60;
@@ -84,7 +85,16 @@ export function susunLayoutKegiatan(
       else if (k.namaRuangan && k.namaRuangan !== 'Ruangan tidak diketahui' && k.namaRuangan !== 'Tanpa ruangan') metaParts.push(k.namaRuangan);
       else if (k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui') metaParts.push(k.namaTempat);
 
-      if (k.pengisiUtama) metaParts.push(k.pengisiUtama.nama);
+      if (k.pengisiUtama) {
+        metaParts.push(k.pengisiUtama.nama);
+      } else if (k.subjek && k.subjek.length > 0) {
+        const s0 = k.subjek[0];
+        const s0Nama = (subjekMap && subjekMap.get(s0.id)) || s0.nama;
+        if (s0Nama) {
+          metaParts.push(k.subjek.length > 1 ? `${s0Nama} +${k.subjek.length - 1}` : s0Nama);
+        }
+      }
+
       if (k.jumlahSiswa > 0) metaParts.push(`${k.jumlahSiswa} siswa`);
 
       return {

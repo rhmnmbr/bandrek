@@ -44,6 +44,7 @@ export function mapActivityDtoToKegiatan(dto: ActivityDto): Kegiatan {
     tempatCustom: dto.customPlace,
     subjek: (dto.subjects || []).map((s) => ({
       id: s.id,
+      nama: s.name ?? undefined,
       peran: s.role ? (s.role as PeranSubjek) : '',
     })),
     siswa: dto.studentIds || [],

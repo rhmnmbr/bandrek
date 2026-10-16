@@ -29,6 +29,7 @@ export type AksiKegiatan =
 
 export interface KegiatanSubjekItem {
   id: string; // Subjek ID
+  nama?: string | null;
   peran?: PeranSubjek | string | null;
 }
 

@@ -199,6 +199,10 @@ export const KalenderScreen: React.FC = () => {
     };
   }, [tanggalTampil, todayIso, nowTime]);
 
+  const subjekMap = React.useMemo(() => {
+    return new Map(subjekList.map((s) => [s.id, s.nama]));
+  }, [subjekList]);
+
   // Day columns data for Week & Day views
   const dayColumns: DayColumnData[] = React.useMemo(() => {
     return tanggalTampil.map((iso) => {
@@ -213,7 +217,9 @@ export const KalenderScreen: React.FC = () => {
         iso,
         nHari,
         JAM_AWAL,
-        JAM_AKHIR
+        JAM_AKHIR,
+        1251,
+        subjekMap
       );
 
       return {
@@ -225,7 +231,7 @@ export const KalenderScreen: React.FC = () => {
         events,
       };
     });
-  }, [tanggalTampil, filteredKegiatan, todayIso]);
+  }, [tanggalTampil, filteredKegiatan, todayIso, subjekMap]);
 
   // Handle Event Selection (Click on event card -> opens Popover)
   const handleSelectEvent = React.useCallback(
@@ -544,6 +550,7 @@ export const KalenderScreen: React.FC = () => {
             currentMonth={currentMonth}
             todayIso={todayIso}
             kegiatanList={filteredKegiatan}
+            subjekList={subjekList}
             onSelectEvent={handleSelectEvent}
             onSelectDay={(iso) => {
               setAnchorDate(iso);
@@ -554,6 +561,7 @@ export const KalenderScreen: React.FC = () => {
         ) : (
           <KalenderGrid
             days={dayColumns}
+            subjekList={subjekList}
             nowLine={nowLine}
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelectSlot}

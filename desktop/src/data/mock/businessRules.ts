@@ -171,6 +171,13 @@ export function enrichKegiatan(
 
   return {
     ...raw,
+    subjek: raw.subjek.map((s) => {
+      const subObj = subjects.find((sub) => sub.id === s.id);
+      return {
+        ...s,
+        nama: subObj ? subObj.nama : undefined,
+      };
+    }),
     status,
     statusRaw: raw.status,
     aksiDiizinkan,

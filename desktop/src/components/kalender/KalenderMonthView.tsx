@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ArrowSync16Regular } from '@fluentui/react-icons';
 import { cn } from '@/lib/utils';
-import type { Kegiatan } from '@/data/types';
+import type { Kegiatan, Subjek } from '@/data/types';
 import { toDate, toIso, NAMA_HARI } from '@/lib/dateUtils';
 import { jenisColorMap, type JenisKegiatanKey } from '@/components/ui/calendar-event';
 
@@ -10,6 +10,7 @@ export interface KalenderMonthViewProps {
   currentMonth: number; // 0-11
   todayIso: string;
   kegiatanList: Kegiatan[];
+  subjekList?: Subjek[];
   onSelectEvent: (kegiatan: Kegiatan, e: React.MouseEvent) => void;
   onSelectDay: (iso: string) => void;
   className?: string;
@@ -20,10 +21,15 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
   currentMonth,
   todayIso,
   kegiatanList,
+  subjekList,
   onSelectEvent,
   onSelectDay,
   className,
 }) => {
+  const subjekMap = React.useMemo(() => {
+    return new Map((subjekList || []).map((s) => [s.id, s.nama]));
+  }, [subjekList]);
+
   // Group activities by ISO date
   const eventsByDate = React.useMemo(() => {
     const map = new Map<string, Kegiatan[]>();
@@ -40,9 +46,13 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
         cur = toIso(curDate);
       }
     }
-    // Sort each day by start time
-    map.forEach((arr) => {
-      arr.sort((a, b) => a.mulai.localeCompare(b.mulai));
+    // Sort each day: events continuing from previous days (00:00) first, then by mulai
+    map.forEach((arr, dayIso) => {
+      arr.sort((a, b) => {
+        const aStart = dayIso > a.tanggal ? '00:00' : a.mulai;
+        const bStart = dayIso > b.tanggal ? '00:00' : b.mulai;
+        return aStart.localeCompare(bStart);
+      });
     });
     return map;
   }, [kegiatanList]);
@@ -125,6 +135,40 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
                       const jInfo = jenisColorMap[jenisKey] || jenisColorMap.pembelajaran;
                       const isBatal = k.status === 'dibatalkan';
 
+                      const isMultiDay = Boolean(k.tanggalSelesai && k.tanggalSelesai !== k.tanggal);
+                      let jamLabel = k.mulai;
+                      if (k.sepanjangHari) {
+                        jamLabel = 'Sepanjang hari';
+                      } else if (isMultiDay) {
+                        const endTgl = k.tanggalSelesai!;
+                        if (iso === k.tanggal) {
+                          jamLabel = `${k.mulai} →`;
+                        } else if (iso === endTgl) {
+                          jamLabel = `→ ${k.selesai}`;
+                        } else {
+                          jamLabel = '↔';
+                        }
+                      }
+
+                      const subjekNames = (k.subjek || [])
+                        .map((s) => s.nama || subjekMap.get(s.id) || '')
+                        .filter(Boolean);
+                      const subjekSummary = subjekNames.join(', ');
+
+                      const tooltipParts = [
+                        `${k.nama} · ${jamLabel}`,
+                        k.tempatCustom
+                          ? k.tempatCustom
+                          : k.namaRuangan && k.namaRuangan !== 'Ruangan tidak diketahui' && k.namaRuangan !== 'Tanpa ruangan'
+                          ? k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui'
+                            ? `${k.namaTempat} · ${k.namaRuangan}`
+                            : k.namaRuangan
+                          : k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui'
+                          ? k.namaTempat
+                          : null,
+                        subjekSummary ? `Subjek: ${subjekSummary}` : null,
+                      ].filter(Boolean);
+
                       return (
                         <div
                           key={k.id}
@@ -133,7 +177,7 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
                             e.stopPropagation();
                             onSelectEvent(k, e);
                           }}
-                          title={`${k.mulai} ${k.nama}`}
+                          title={tooltipParts.join('\n')}
                           style={{
                             backgroundColor: isBatal ? '#F5F5F5' : jInfo.bg,
                             borderLeftColor: isBatal ? '#C8C6C4' : jInfo.border,
@@ -146,9 +190,14 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
                         >
                           <span className="font-mono text-[10px] opacity-85 flex-none flex items-center gap-0.5">
                             {k.seriId && <ArrowSync16Regular className="w-2.5 h-2.5 flex-none" />}
-                            <span>{k.mulai}</span>
+                            <span>{jamLabel}</span>
                           </span>
-                          <span className="truncate font-medium">{k.nama}</span>
+                          <span className="truncate font-medium">
+                            <span>{k.nama}</span>
+                            {subjekSummary && (
+                              <span className="opacity-75 font-normal"> · {subjekSummary}</span>
+                            )}
+                          </span>
                         </div>
                       );
                     })}

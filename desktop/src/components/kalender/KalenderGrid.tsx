@@ -6,8 +6,9 @@ import {
   Warning12Regular,
   ArrowClockwise12Regular,
   ArrowSync16Regular,
+  Person12Regular,
 } from '@fluentui/react-icons';
-import type { Kegiatan } from '@/data/types';
+import type { Kegiatan, Subjek } from '@/data/types';
 import type { LayoutEventItem } from './kalenderLayout';
 import { JAM_AWAL, JAM_AKHIR, SLOT_PX, menit } from '@/lib/dateUtils';
 import { jenisColorMap, type JenisKegiatanKey } from '@/components/ui/calendar-event';
@@ -23,6 +24,7 @@ export interface DayColumnData {
 
 export interface KalenderGridProps {
   days: DayColumnData[];
+  subjekList?: Subjek[];
   nowLine?: {
     show: boolean;
     label: string;
@@ -105,6 +107,7 @@ function getFreeSlotsForHour(events: LayoutEventItem[], hour: number): FreeSlot[
 
 export const KalenderGrid: React.FC<KalenderGridProps> = ({
   days,
+  subjekList,
   nowLine,
   onSelectEvent,
   onSelectSlot,
@@ -115,6 +118,10 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const [slotPx, setSlotPx] = React.useState<number>(SLOT_PX);
   const [colWidth, setColWidth] = React.useState<number>(150);
+
+  const subjekMap = React.useMemo(() => {
+    return new Map((subjekList || []).map((s) => [s.id, s.nama]));
+  }, [subjekList]);
 
   // Session tracking to distinguish simple click from drag
   const [trackingSession, setTrackingSession] = React.useState<{
@@ -481,6 +488,33 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                     const isDijadwalUlang = k.status === 'dijadwal_ulang';
                     const isTerealisasi = k.status === 'terealisasi';
 
+                    const subjekItems = (k.subjek || [])
+                      .map((s) => ({
+                        id: s.id,
+                        nama: s.nama || subjekMap.get(s.id) || '',
+                        peran: s.peran && s.peran !== 'Tanpa peran' ? s.peran : null,
+                      }))
+                      .filter((s) => Boolean(s.nama));
+
+                    const hasSubjekBlock = subjekItems.length > 0 && (evHeight >= 64 || ev.height >= 64);
+
+                    const placeMeta = [
+                      k.tempatCustom
+                        ? k.tempatCustom
+                        : k.namaRuangan && k.namaRuangan !== 'Ruangan tidak diketahui' && k.namaRuangan !== 'Tanpa ruangan'
+                        ? k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui'
+                          ? `${k.namaTempat} · ${k.namaRuangan}`
+                          : k.namaRuangan
+                        : k.namaTempat && k.namaTempat !== 'Tempat tidak diketahui'
+                        ? k.namaTempat
+                        : null,
+                      k.jumlahSiswa > 0 ? `${k.jumlahSiswa} siswa` : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ');
+
+                    const metaText = hasSubjekBlock ? (placeMeta || ev.meta) : ev.meta;
+
                     return (
                       <div
                         key={ev.id}
@@ -553,9 +587,36 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
                           </div>
 
                           {/* Row 3: Metadata (hidden if block height < 44px) */}
-                          {ev.meta && (evHeight >= 44 || ev.height >= 44) && (
+                          {metaText && (evHeight >= 44 || ev.height >= 44) && (
                             <div className="text-[10.5px] leading-tight truncate opacity-85">
-                              {ev.meta}
+                              {metaText}
+                            </div>
+                          )}
+
+                          {/* Row 4: Subjek List (when block height >= 64px) */}
+                          {hasSubjekBlock && (
+                            <div className="mt-1 flex flex-col gap-0.5 border-t border-current/15 pt-1 overflow-hidden min-h-0">
+                              <div className="flex items-center gap-1 text-[10px] font-semibold opacity-75 leading-none">
+                                <Person12Regular className="w-3 h-3 flex-none" />
+                                <span>Subjek:</span>
+                              </div>
+                              <div className="flex flex-col gap-0.5 overflow-hidden">
+                                {subjekItems.map((s, idx) => (
+                                  <div
+                                    key={s.id || idx}
+                                    className="text-[10.5px] leading-tight truncate opacity-90 flex items-center gap-1"
+                                    title={s.peran ? `${s.nama} (${s.peran})` : s.nama}
+                                  >
+                                    <span className="w-1 h-1 rounded-full bg-current opacity-60 flex-none" />
+                                    <span className="truncate">{s.nama}</span>
+                                    {s.peran && (
+                                      <span className="text-[9.5px] opacity-70 flex-none font-mono">
+                                        ({s.peran})
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           )}
                         </div>
