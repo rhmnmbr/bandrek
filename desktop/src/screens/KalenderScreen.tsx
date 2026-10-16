@@ -27,6 +27,8 @@ import { susunLayoutKegiatan } from '@/components/kalender/kalenderLayout';
 import {
   toDate,
   toIso,
+  addDays,
+  getMonday,
   menit,
   NAMA_HARI_PENDEK,
   JAM_AWAL,
@@ -110,20 +112,41 @@ export const KalenderScreen: React.FC = () => {
     tanggalTampil,
   } = useKalenderState(todayIso);
 
-  // Fetch activities in broad range covering active view
-  const rentangMulai = tanggalTampil[0] || anchorDate;
-  const rentangSelesai = tanggalTampil[tanggalTampil.length - 1] || anchorDate;
+  // Fetch activities covering the full month grid enclosing the active anchor date.
+  // This ensures switching between 'hari', 'minggu', 'weekend', and 'bulan' uses the same cache key
+  // and eliminates network re-fetching and visual flicker when switching view tabs.
+  const { fetchMulai, fetchSelesai } = React.useMemo(() => {
+    const anchorD = toDate(anchorDate);
+    const firstOfMonth = new Date(anchorD.getFullYear(), anchorD.getMonth(), 1);
+    const startMon = getMonday(firstOfMonth);
+    const lastOfMonth = new Date(anchorD.getFullYear(), anchorD.getMonth() + 1, 0);
+    const totalDays = Math.ceil(((lastOfMonth.getTime() - startMon.getTime()) / 86400000 + 1) / 7) * 7;
+    const endSun = addDays(startMon, totalDays - 1);
+
+    const isoStart = toIso(startMon);
+    const isoEnd = toIso(endSun);
+
+    const minDate = tanggalTampil[0] && tanggalTampil[0] < isoStart ? tanggalTampil[0] : isoStart;
+    const maxDate =
+      tanggalTampil[tanggalTampil.length - 1] && tanggalTampil[tanggalTampil.length - 1] > isoEnd
+        ? tanggalTampil[tanggalTampil.length - 1]
+        : isoEnd;
+
+    return { fetchMulai: minDate, fetchSelesai: maxDate };
+  }, [anchorDate, tanggalTampil]);
 
   const { data: semuaKegiatan = [], isLoading: loadingKegiatan } = useKegiatanKalender({
-    rentangMulai,
-    rentangSelesai,
+    rentangMulai: fetchMulai,
+    rentangSelesai: fetchSelesai,
     tampilkanDibatalkan: true, // Fetch all so status filters work locally in real-time
   });
 
   // Filter activities per current filter state
   const { filteredKegiatan, allInPeriodCount } = React.useMemo(() => {
-    const setTampil = new Set(tanggalTampil);
-    const inPeriod = semuaKegiatan.filter((k) => setTampil.has(k.tanggal));
+    const inPeriod = semuaKegiatan.filter((k) => {
+      const endTgl = k.tanggalSelesai || k.tanggal;
+      return tanggalTampil.some((tgl) => tgl >= k.tanggal && tgl <= endTgl);
+    });
 
     let activeCount = 0;
     if (filters.jenis.length > 0) activeCount++;
@@ -436,7 +459,15 @@ export const KalenderScreen: React.FC = () => {
   const countLabel = `Menampilkan ${filteredKegiatan.length} dari ${allInPeriodCount} kegiatan`;
   const currentMonth = toDate(anchorDate).getMonth();
 
-  if (loadingKegiatan && semuaKegiatan.length === 0) {
+  // Skeleton is only shown on initial mount until first query resolution.
+  // Once loaded, switching view tabs or navigating dates will never replace the screen with a skeleton.
+  const hasInitiallyLoadedRef = React.useRef(false);
+  if (!loadingKegiatan) {
+    hasInitiallyLoadedRef.current = true;
+  }
+  const isInitialLoading = !hasInitiallyLoadedRef.current && loadingKegiatan && semuaKegiatan.length === 0;
+
+  if (isInitialLoading) {
     return <KalenderSkeleton />;
   }
 

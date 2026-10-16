@@ -222,8 +222,8 @@ export const KalenderGrid: React.FC<KalenderGridProps> = ({
     };
   }, [trackingSession?.iso, slotPx, onSelectSlot]);
 
-  // Dynamically calculate slot height and column width based on viewport
-  React.useEffect(() => {
+  // Dynamically calculate slot height and column width based on viewport synchronously before paint
+  React.useLayoutEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
 

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { repositories } from '../repositories';
 import type {
   KalenderFilterParams,
@@ -23,6 +23,7 @@ export function useKegiatanKalender(params: KalenderFilterParams) {
   return useQuery({
     queryKey: kegiatanKeys.kalender(params),
     queryFn: () => repositories.kegiatan.getKalender(params),
+    placeholderData: keepPreviousData,
   });
 }
 
