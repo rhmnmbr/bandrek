@@ -38,7 +38,10 @@ jobs:
           dotnet publish server/src/Bandrek.Server/Bandrek.Server.csproj \
             -c Release \
             -r linux-x64 \
+            --self-contained true \
+            -p:OpenApiGenerateDocuments=false \
             -o ./publish-linux
+          chmod +x ./publish-linux/Bandrek.Server
 
       - name: Set up deploy SSH key
         run: |
@@ -52,7 +55,9 @@ jobs:
           SSH_TARGET: ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}
           SSH_PORT: ${{ secrets.VPS_PORT || 22 }}
         run: |
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_ed25519 -p $SSH_PORT" \
+          rsync -avz --delete \
+            --exclude 'appsettings.Production.json' \
+            -e "ssh -i ~/.ssh/id_ed25519 -p $SSH_PORT" \
             ./publish-linux/ "$SSH_TARGET:/var/www/bandrek/"
 
       - name: Restart Service via SSH
@@ -62,6 +67,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 -p "$SSH_PORT" "$SSH_TARGET" '
             set -eu
+            chmod +x /var/www/bandrek/Bandrek.Server
             sudo systemctl restart bandrek-api
             sleep 2
             if sudo systemctl is-active --quiet bandrek-api; then
