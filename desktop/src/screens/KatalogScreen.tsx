@@ -1150,7 +1150,7 @@ export function KatalogScreen() {
                     const newId = String(Date.now());
                     setSubjekList([
                       ...subjekList,
-                      { id: newId, nama: "Tutor Baru", peran: "Support" },
+                      { id: newId, nama: "Tutor Baru", peran: "" },
                     ]);
                   }}
                 />

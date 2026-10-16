@@ -450,11 +450,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     }
   }, [isDirty, onClose]);
 
-  // Add subject from active subjects
+  // Add subject from active subjects (default: tanpa peran)
   const handleAddSubjek = (subjekId: string) => {
-    const hasPengisi = subjek.some((s) => s.peran === 'Pengisi');
-    const newPeran: SubjekPeran = hasPengisi ? 'Pendamping' : 'Pengisi';
-    setSubjek((prev) => [...prev, { id: subjekId, peran: newPeran }]);
+    setSubjek((prev) => [...prev, { id: subjekId, peran: null }]);
     setMenuTambahSubjekOpen(false);
     markTouched('subjek');
   };
@@ -463,7 +461,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   const handleChangeSubjekPeran = (index: number, newPeran: SubjekPeran) => {
     setSubjek((prev) => {
       const copy = [...prev];
-      copy[index] = { ...copy[index], peran: newPeran };
+      copy[index] = { ...copy[index], peran: newPeran || null };
       return copy;
     });
     markTouched('subjek');
@@ -1353,6 +1351,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                       key={`${item.id}-${idx}`}
                       nama={namaSubjek}
                       peran={item.peran as SubjekPeran}
+                      isPrimary={item.peran === 'Pengisi'}
                       availablePeran={['Pengisi', 'Pendamping', 'Pengganti', 'Support']}
                       onPeranChange={(newPeran) => handleChangeSubjekPeran(idx, newPeran)}
                       onRemove={() => handleRemoveSubjek(idx)}
