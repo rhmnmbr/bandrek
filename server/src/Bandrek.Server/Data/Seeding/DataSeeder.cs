@@ -27,7 +27,7 @@ public class DataSeeder
         _env = env;
     }
 
-    public async Task SeedAsync(bool forceReset = false)
+    public async Task SeedAsync(bool forceReset = false, bool seedDemo = false)
     {
         _logger.LogInformation("Applying database migrations...");
         await _db.Database.MigrateAsync();
@@ -38,11 +38,21 @@ public class DataSeeder
             await ClearExistingDataAsync();
         }
 
-        // 1. Seed Roles and Default Users
+        // 1. Seed Roles and Default Users (Always needed for system operation)
         await SeedUsersAndRolesAsync();
 
-        // Check if database is already seeded
+        // 2. Seed Educational Levels (Default options: SD, SMP, SMA)
         await SeedEducationalLevelsAsync();
+
+        // 3. In Production, NEVER automatically seed demo/dummy data from seed.json
+        // unless explicitly requested via --seed-demo
+        if (_env.IsProduction() && !seedDemo)
+        {
+            _logger.LogInformation("Running in Production environment. Demo/dummy data from seed.json will not be seeded.");
+            return;
+        }
+
+        // Check if database is already seeded
         if (await _db.Students.AnyAsync())
         {
             _logger.LogInformation("Database already contains data. Skipping domain data seed.");
@@ -53,7 +63,7 @@ public class DataSeeder
             return;
         }
 
-        // 2. Locate and load seed.json
+        // 4. Locate and load seed.json (Development / testing only)
         var seedPath = Path.Combine(_env.ContentRootPath, "Data", "Seeding", "seed.json");
         if (!File.Exists(seedPath))
         {
@@ -101,7 +111,24 @@ public class DataSeeder
         _logger.LogInformation("Database seeding completed successfully!");
     }
 
-    private async Task ClearExistingDataAsync()
+    public async Task CleanProdDataAsync()
+    {
+        _logger.LogInformation("Applying database migrations...");
+        await _db.Database.MigrateAsync();
+
+        _logger.LogWarning("Clearing all demo and operational data for production...");
+        await ClearExistingDataAsync();
+
+        _logger.LogInformation("Ensuring roles and default administrator exist...");
+        await SeedUsersAndRolesAsync();
+
+        _logger.LogInformation("Ensuring default educational levels exist...");
+        await SeedEducationalLevelsAsync();
+
+        _logger.LogInformation("Production database is now clean and ready for real operations.");
+    }
+
+    public async Task ClearExistingDataAsync()
     {
         _db.Realizations.RemoveRange(_db.Realizations);
         _db.ActivityStudents.RemoveRange(_db.ActivityStudents);

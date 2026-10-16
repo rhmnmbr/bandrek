@@ -151,13 +151,25 @@ app.MapRealizationEndpoints();
 app.MapLearningMatrixEndpoints();
 app.MapAuditEndpoints();
 
-// Execute Seeding on startup if database is empty or --reset-seed is passed
+// Execute Seeding on startup if database is empty or --reset-seed / --clean-prod is passed
 try
 {
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<Bandrek.Server.Data.Seeding.DataSeeder>();
     var forceReset = args.Contains("--reset-seed");
-    await seeder.SeedAsync(forceReset);
+    var cleanProd = args.Contains("--clean-prod") || args.Contains("--clear-data");
+    var seedDemo = args.Contains("--seed-demo");
+
+    if (cleanProd)
+    {
+        app.Logger.LogInformation("Flag --clean-prod / --clear-data detected. Cleaning operational data for production...");
+        await seeder.CleanProdDataAsync();
+        app.Logger.LogInformation("Database successfully prepared and cleaned for production.");
+    }
+    else
+    {
+        await seeder.SeedAsync(forceReset, seedDemo);
+    }
 }
 catch (Exception ex)
 {
