@@ -133,10 +133,10 @@ public static class RealizationEndpoints
                 topicName,
                 realization.CompletionStatus,
                 realization.Notes,
-                realization.StudentAttendances,
-                realization.StudentNotes,
-                realization.SubjectAttendances,
-                realization.SubjectNotes,
+                realization.StudentAttendances ?? new(),
+                realization.StudentNotes ?? new(),
+                realization.SubjectAttendances ?? new(),
+                realization.SubjectNotes ?? new(),
                 realization.FilledBy,
                 realization.FilledAt.ToString("yyyy-MM-dd HH:mm")));
         })

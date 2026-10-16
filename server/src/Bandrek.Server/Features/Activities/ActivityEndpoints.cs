@@ -532,7 +532,7 @@ public static class ActivityEndpoints
     {
         return db.Activities
             .AsNoTracking()
-            .Include(a => a.Room).ThenInclude(r => r.Place)
+            .Include(a => a.Room).ThenInclude(r => r!.Place)
             .Include(a => a.ActivityType)
             .Include(a => a.Course)
             .Include(a => a.Topic)

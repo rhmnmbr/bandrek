@@ -43,7 +43,7 @@ public class LearningMatrixRow
 {
     public string Id { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
-    public string EducationalLevel { get; set; } = string.Empty;
+    public string? EducationalLevel { get; set; }
     public bool IsActive { get; set; }
     public List<string> ClassGroupIds { get; set; } = new();
     public List<string> ClassGroupNames { get; set; } = new();
