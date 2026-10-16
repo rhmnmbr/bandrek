@@ -40,4 +40,6 @@ export interface UpdateActivityRequest {
      * @pattern ^-?(?:0|[1-9]\d*)$
      */
   concurrencyToken: number | string | null;
+  /** @nullable */
+  endDate?: string | null;
 }

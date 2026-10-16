@@ -217,7 +217,7 @@ export const DaftarKegiatanScreen: React.FC = () => {
   // Main predicate: matches dropdowns and search term with O(1) lookups
   const lolosFilter = React.useCallback(
     (ev: Kegiatan) => {
-      if (jenis.length > 0 && !jenisSet.has(ev.jenis)) return false;
+      if (jenis.length > 0 && (!ev.jenis || !jenisSet.has(ev.jenis))) return false;
       if (status.length > 0 && !statusSet.has(ev.status)) return false;
       if (subjek.length > 0 && !ev.subjek.some((s) => subjekSet.has(s.id))) return false;
       if (siswa.length > 0 && !ev.siswa.some((sid) => siswaSet.has(sid))) return false;

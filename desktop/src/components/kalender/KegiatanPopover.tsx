@@ -140,8 +140,9 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
           <div className="flex gap-2.5 leading-[1.45]">
             <span className="w-16.5 flex-none text-[#5C5A58]">Waktu</span>
             <span className="flex-1 min-w-0 font-mono text-[12px]">
-              {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
-              {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}
+              {kegiatan.tanggalSelesai && kegiatan.tanggalSelesai !== kegiatan.tanggal
+                ? `${formatTanggalRingkas(kegiatan.tanggal)} – ${formatTanggalRingkas(kegiatan.tanggalSelesai)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`
+                : `${formatTanggalRingkas(kegiatan.tanggal)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`}
             </span>
           </div>
 
@@ -185,7 +186,7 @@ export const KegiatanPopover: React.FC<KegiatanPopoverProps> = ({
                   const sNama = subjekMap.get(s.id) || s.id;
                   return (
                     <span key={s.id}>
-                      {sNama} <span className="text-[#5C5A58]">({s.peran})</span>
+                      {sNama} {s.peran ? <span className="text-[#5C5A58]">({s.peran})</span> : null}
                       {idx < kegiatan.subjek.length - 1 ? ', ' : ''}
                     </span>
                   );

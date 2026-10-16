@@ -40,24 +40,37 @@ public class ConflictDetector
         IEnumerable<string> subjectIds,
         IEnumerable<string> studentIds,
         string? excludeActivityId = null,
+        DateOnly? endDate = null,
         CancellationToken ct = default)
     {
         var subjectIdSet = subjectIds.ToHashSet();
         var studentIdSet = studentIds.ToHashSet();
+        var effectiveEndDate = endDate ?? date;
 
-        // 1. Fetch potential overlapping activities on the same date
-        var candidateActivities = await _db.Activities
+        // 1. Fetch potential overlapping activities within date range
+        var candidates = await _db.Activities
             .AsNoTracking()
             .Include(a => a.Room)
             .Include(a => a.Subjects).ThenInclude(s => s.SubjectPerson)
             .Include(a => a.Students).ThenInclude(s => s.Student)
-            .Where(a => a.Date == date &&
+            .Where(a => a.Date <= effectiveEndDate &&
+                        (a.EndDate ?? a.Date) >= date &&
                         a.RawStatus != RawActivityStatuses.Cancelled &&
                         a.RawStatus != RawActivityStatuses.Rescheduled &&
-                        (excludeActivityId == null || a.Id != excludeActivityId) &&
-                        a.StartTime.CompareTo(endTime) < 0 &&
-                        a.EndTime.CompareTo(startTime) > 0)
+                        (excludeActivityId == null || a.Id != excludeActivityId))
             .ToListAsync(ct);
+
+        // Filter by time overlap
+        var targetStart = TimeOnly.TryParse(startTime, out var ts) ? date.ToDateTime(ts) : date.ToDateTime(TimeOnly.MinValue);
+        var targetEnd = TimeOnly.TryParse(endTime, out var te) ? effectiveEndDate.ToDateTime(te) : effectiveEndDate.ToDateTime(TimeOnly.MaxValue);
+
+        var candidateActivities = candidates.Where(act =>
+        {
+            var actEndD = act.EndDate ?? act.Date;
+            var actStart = TimeOnly.TryParse(act.StartTime, out var asT) ? act.Date.ToDateTime(asT) : act.Date.ToDateTime(TimeOnly.MinValue);
+            var actEnd = TimeOnly.TryParse(act.EndTime, out var aeT) ? actEndD.ToDateTime(aeT) : actEndD.ToDateTime(TimeOnly.MaxValue);
+            return actStart < targetEnd && actEnd > targetStart;
+        }).ToList();
 
         var conflicts = new List<ConflictItem>();
 

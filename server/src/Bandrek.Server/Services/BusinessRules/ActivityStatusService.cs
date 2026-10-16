@@ -10,15 +10,17 @@ public class ActivityStatusService
         DateOnly date,
         string endTime,
         DateOnly today,
-        string nowTime)
+        string nowTime,
+        DateOnly? endDate = null)
     {
         if (rawStatus == RawActivityStatuses.Cancelled) return ActivityStatuses.Cancelled;
         if (rawStatus == RawActivityStatuses.Rescheduled) return ActivityStatuses.Rescheduled;
         if (rawStatus == RawActivityStatuses.Realized || hasRealization) return ActivityStatuses.Realized;
 
-        // Belum direalisasi adalah status turunan: tanggal sudah lewat, tapi realisasi belum diisi
-        bool isPastDate = date < today;
-        bool isPastTimeToday = date == today && string.CompareOrdinal(endTime, nowTime) <= 0;
+        // Belum direalisasi adalah status turunan: tanggal akhir sudah lewat, tapi realisasi belum diisi
+        var effectiveEndDate = endDate ?? date;
+        bool isPastDate = effectiveEndDate < today;
+        bool isPastTimeToday = effectiveEndDate == today && string.CompareOrdinal(endTime, nowTime) <= 0;
 
         if (rawStatus == RawActivityStatuses.Pending || isPastDate || isPastTimeToday)
         {

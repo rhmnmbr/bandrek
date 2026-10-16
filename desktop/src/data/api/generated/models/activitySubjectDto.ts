@@ -7,7 +7,8 @@
 
 export interface ActivitySubjectDto {
   id: string;
-  role: string;
+  /** @nullable */
+  role?: string | null;
   /** @nullable */
   name?: string | null;
 }

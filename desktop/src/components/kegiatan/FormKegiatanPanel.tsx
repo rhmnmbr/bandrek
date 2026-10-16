@@ -40,16 +40,17 @@ export interface FormKegiatanInitialData {
   mode: 'create' | 'edit';
   kegiatanId?: string;
   nama?: string;
-  jenis?: string;
+  jenis?: string | null;
   tanggal?: string;
+  tanggalSelesai?: string | null;
   mulai?: string;
   selesai?: string;
   sepanjangHari?: boolean;
   ruangan?: string;
-  tempatCustom?: string;
+  tempatCustom?: string | null;
   mapel?: string;
   materi?: string;
-  subjek?: Array<{ id: string; peran: string }>;
+  subjek?: Array<{ id: string; peran?: string | null }>;
   siswa?: string[];
   catatan?: string;
   seriId?: string | null;
@@ -98,6 +99,12 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   const [nama, setNama] = React.useState<string>(() => initialData?.nama || '');
   const [jenis, setJenis] = React.useState<string>(() => initialData?.jenis || '');
   const [tanggal, setTanggal] = React.useState<string>(() => initialData?.tanggal || '');
+  const [lintasHari, setLintasHari] = React.useState<boolean>(
+    () => Boolean(initialData?.tanggalSelesai && initialData.tanggalSelesai !== initialData.tanggal)
+  );
+  const [tanggalSelesai, setTanggalSelesai] = React.useState<string>(
+    () => initialData?.tanggalSelesai || initialData?.tanggal || ''
+  );
   const [mulai, setMulai] = React.useState<string>(() => initialData?.mulai || '08:00');
   const [selesai, setSelesai] = React.useState<string>(() => initialData?.selesai || '09:30');
   const [sepanjangHari, setSepanjangHari] = React.useState<boolean>(
@@ -112,7 +119,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   );
   const [mapel, setMapel] = React.useState<string>(() => initialData?.mapel || '');
   const [materi, setMateri] = React.useState<string>(() => initialData?.materi || '');
-  const [subjek, setSubjek] = React.useState<Array<{ id: string; peran: string }>>(() => {
+  const [subjek, setSubjek] = React.useState<Array<{ id: string; peran?: string | null }>>(() => {
     if (initialData?.subjek && initialData.subjek.length > 0) return initialData.subjek;
     return [];
   });
@@ -163,13 +170,6 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     return `Diulang ${intervalTeks} pada hari ${namaHari} sampai ${recurringUntilDate ? formatTanggalPendek(recurringUntilDate) : 'tanggal batas'}.`;
   }, [tanggal, recurringFreq, recurringEndType, recurringCount, recurringUntilDate]);
 
-  // Default fallback if initial data didn't have jenis
-  React.useEffect(() => {
-    if (!jenis && jenisList.length > 0) {
-      setJenis(jenisList[0].id);
-    }
-  }, [jenis, jenisList]);
-
   // Query materi list based on selected mapel
   const { data: materiList = [] } = useMateriList(mapel || '');
 
@@ -192,6 +192,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
   const namaRef = React.useRef<HTMLInputElement>(null);
   const jenisRef = React.useRef<HTMLButtonElement>(null);
   const tanggalRef = React.useRef<HTMLButtonElement>(null);
+  const tanggalSelesaiRef = React.useRef<HTMLButtonElement>(null);
   const mulaiRef = React.useRef<HTMLButtonElement>(null);
   const selesaiRef = React.useRef<HTMLButtonElement>(null);
   const ruanganRef = React.useRef<HTMLButtonElement>(null);
@@ -326,6 +327,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     queryKey: [
       'cekBentrok',
       tanggal,
+      lintasHari ? tanggalSelesai : tanggal,
       sepanjangHari ? '07:00' : mulai,
       sepanjangHari ? '18:00' : selesai,
       isCustomTempat ? '' : ruangan,
@@ -337,6 +339,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     queryFn: () =>
       repositories.kegiatan.cekBentrok({
         tanggal,
+        tanggalSelesai: lintasHari && tanggalSelesai ? tanggalSelesai : undefined,
         mulai: sepanjangHari ? '07:00' : mulai,
         selesai: sepanjangHari ? '18:00' : selesai,
         ruangan: isCustomTempat ? '' : ruangan,
@@ -347,7 +350,11 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     enabled: Boolean(
       open &&
         tanggal &&
-        (sepanjangHari || (mulai && selesai && menit(selesai) > menit(mulai)))
+        (!lintasHari || (tanggalSelesai && tanggalSelesai >= tanggal)) &&
+        (sepanjangHari ||
+          (mulai &&
+            selesai &&
+            (lintasHari && tanggalSelesai > tanggal ? true : menit(selesai) > menit(mulai))))
     ),
     staleTime: 500,
   });
@@ -361,9 +368,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     if (!nama.trim()) {
       err.nama = 'Nama kegiatan belum diisi. Tulis nama yang mudah dikenali di kalender.';
     }
-    if (!jenis) {
-      err.jenis = 'Pilih jenis kegiatan — jenis menentukan isian mana yang wajib.';
-    }
+    // Jenis kegiatan kini opsional
     if (currentJenisData && currentJenisData.materiWajib) {
       if (!mapel) {
         err.mapel = 'Pilih mata pelajaran.';
@@ -374,14 +379,24 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     if (!tanggal) {
       err.tanggal = 'Tanggal belum diisi.';
     }
+    if (lintasHari) {
+      if (!tanggalSelesai) {
+        err.tanggalSelesai = 'Tanggal selesai belum diisi.';
+      } else if (tanggal && tanggalSelesai < tanggal) {
+        err.tanggalSelesai = 'Tanggal selesai tidak boleh sebelum tanggal mulai.';
+      }
+    }
     if (!sepanjangHari) {
       if (!mulai) {
         err.mulai = 'Jam mulai belum diisi.';
       }
       if (!selesai) {
         err.selesai = 'Jam selesai belum diisi.';
-      } else if (mulai && menit(selesai) <= menit(mulai)) {
-        err.selesai = `Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah ${mulai}.`;
+      } else {
+        const isSameDay = !lintasHari || (tanggal && tanggalSelesai && tanggal === tanggalSelesai);
+        if (isSameDay && mulai && menit(selesai) <= menit(mulai)) {
+          err.selesai = `Jam selesai harus setelah jam mulai. Ubah jam selesai menjadi setelah ${mulai}.`;
+        }
       }
     }
     if (currentJenisData && currentJenisData.siswaWajib && selectedSiswaIds.length === 0) {
@@ -405,15 +420,15 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     return err;
   }, [
     nama,
-    jenis,
     currentJenisData,
     mapel,
     materi,
     tanggal,
+    lintasHari,
+    tanggalSelesai,
     mulai,
     selesai,
     sepanjangHari,
-    subjek,
     selectedSiswaIds,
     mode,
     isRecurring,
@@ -543,6 +558,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
         else if (errors.mapel) mapelRef.current?.focus();
         else if (errors.materi) materiRef.current?.focus();
         else if (errors.tanggal) tanggalRef.current?.focus();
+        else if (errors.tanggalSelesai) tanggalSelesaiRef.current?.focus();
         else if (errors.mulai) mulaiRef.current?.focus();
         else if (errors.selesai) selesaiRef.current?.focus();
 
@@ -561,22 +577,24 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
         const effectiveSelesai = sepanjangHari ? '18:00' : selesai;
         const effectiveRuangan = isCustomTempat ? '' : ruangan;
         const effectiveTempatCustom = isCustomTempat ? tempatCustom.trim() : null;
+        const effectiveTanggalSelesai = lintasHari && tanggalSelesai ? tanggalSelesai : null;
 
         if (mode === 'edit' && kegiatanId) {
           savedResult = await updateKegiatanAsync({
             id: kegiatanId,
             input: {
               nama: nama.trim(),
-              jenis,
+              jenis: jenis || null,
               mapel: currentJenisData?.materiWajib ? mapel : null,
               materi: currentJenisData?.materiWajib ? materi : null,
               tanggal,
+              tanggalSelesai: effectiveTanggalSelesai,
               mulai: effectiveMulai,
               selesai: effectiveSelesai,
               sepanjangHari,
               ruangan: effectiveRuangan,
               tempatCustom: effectiveTempatCustom,
-              subjek: subjek.map((s) => ({ id: s.id, peran: s.peran as any })),
+              subjek: subjek.map((s) => ({ id: s.id, peran: s.peran || null })),
               siswa: selectedSiswaIds,
               catatan: catatan.trim(),
             },
@@ -589,16 +607,17 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
         } else {
           savedResult = await createKegiatanAsync({
             nama: nama.trim(),
-            jenis,
+            jenis: jenis || null,
             mapel: currentJenisData?.materiWajib ? mapel : null,
             materi: currentJenisData?.materiWajib ? materi : null,
             tanggal,
+            tanggalSelesai: effectiveTanggalSelesai,
             mulai: effectiveMulai,
             selesai: effectiveSelesai,
             sepanjangHari,
             ruangan: effectiveRuangan,
             tempatCustom: effectiveTempatCustom,
-            subjek: subjek.map((s) => ({ id: s.id, peran: s.peran as any })),
+            subjek: subjek.map((s) => ({ id: s.id, peran: s.peran || null })),
             siswa: selectedSiswaIds,
             catatan: catatan.trim(),
             pengulangan: isRecurring
@@ -667,6 +686,8 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
       mapel,
       materi,
       tanggal,
+      lintasHari,
+      tanggalSelesai,
       mulai,
       selesai,
       sepanjangHari,
@@ -711,9 +732,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
   if (!open) return null;
 
-  // Header pill text e.g. "Rab, 16 Sep · 08:00" or "Rab, 16 Sep · Sepanjang hari"
+  // Header pill text e.g. "Rab, 16 Sep · 08:00" or "Rab, 16 Sep - Kam, 17 Sep · Sepanjang hari"
   const contextPill = tanggal
-    ? `${formatTanggalPendek(tanggal)} · ${sepanjangHari ? 'Sepanjang hari' : mulai || '08:00'}`
+    ? `${formatTanggalPendek(tanggal)}${lintasHari && tanggalSelesai && tanggalSelesai !== tanggal ? ` – ${formatTanggalPendek(tanggalSelesai)}` : ''} · ${sepanjangHari ? 'Sepanjang hari' : mulai || '08:00'}`
     : 'Tanggal belum dipilih';
 
   // Error summary list
@@ -723,6 +744,8 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
         field:
           k === 'recurringUntilDate' || k === 'recurringCount'
             ? 'Pengulangan'
+            : k === 'tanggalSelesai'
+            ? 'Tanggal Selesai'
             : k.charAt(0).toUpperCase() + k.slice(1),
         message: currentErrors[k],
         onFocusField: () => {
@@ -731,6 +754,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
           else if (k === 'mapel') mapelRef.current?.focus();
           else if (k === 'materi') materiRef.current?.focus();
           else if (k === 'tanggal') tanggalRef.current?.focus();
+          else if (k === 'tanggalSelesai') tanggalSelesaiRef.current?.focus();
           else if (k === 'mulai') mulaiRef.current?.focus();
           else if (k === 'selesai') selesaiRef.current?.focus();
         },
@@ -841,11 +865,17 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
             </div>
 
             {/* 2. Jenis Kegiatan & Tanggal */}
-            <div className="grid grid-cols-[1fr_132px] gap-2.5 items-start flex-none">
+            <div
+              className={
+                lintasHari
+                  ? 'grid grid-cols-[1fr_125px_125px] gap-2.5 items-start flex-none'
+                  : 'grid grid-cols-[1fr_132px] gap-2.5 items-start flex-none'
+              }
+            >
               {/* Jenis Kegiatan */}
               <div className="min-w-0">
                 <div className="h-3.5 mb-1 flex items-center">
-                  <FormLabel className="mb-0" required error={Boolean(dicoba && currentErrors.jenis)}>
+                  <FormLabel className="mb-0" error={Boolean(dicoba && currentErrors.jenis)}>
                     Jenis kegiatan
                   </FormLabel>
                 </div>
@@ -861,11 +891,14 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                     }
                     markTouched('jenis');
                   }}
-                  placeholder="Pilih jenis kegiatan"
-                  options={jenisList.map((j) => ({
-                    value: j.id,
-                    label: j.nama,
-                  }))}
+                  placeholder="Pilih jenis (opsional)"
+                  options={[
+                    { value: '', label: 'Tanpa jenis (opsional)' },
+                    ...jenisList.map((j) => ({
+                      value: j.id,
+                      label: j.nama,
+                    })),
+                  ]}
                   error={Boolean((dicoba || touched.jenis) && currentErrors.jenis)}
                 />
                 {(dicoba || touched.jenis) && currentErrors.jenis && (
@@ -884,7 +917,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
               <div className="min-w-0">
                 <div className="h-3.5 mb-1 flex items-center">
                   <FormLabel className="mb-0" required error={Boolean(dicoba && currentErrors.tanggal)}>
-                    Tanggal
+                    {lintasHari ? 'Tgl mulai' : 'Tanggal'}
                   </FormLabel>
                 </div>
                 <DatePicker
@@ -892,6 +925,9 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   value={tanggal}
                   onChange={(val) => {
                     setTanggal(val);
+                    if (lintasHari && (!tanggalSelesai || tanggalSelesai < val)) {
+                      setTanggalSelesai(val);
+                    }
                     markTouched('tanggal');
                   }}
                   formatDisplay="dd/MM/yyyy"
@@ -903,29 +939,77 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   <InlineError message={currentErrors.tanggal} />
                 )}
               </div>
+
+              {/* Tanggal Selesai (jika lintas hari) */}
+              {lintasHari && (
+                <div className="min-w-0">
+                  <div className="h-3.5 mb-1 flex items-center">
+                    <FormLabel
+                      className="mb-0"
+                      required
+                      error={Boolean(dicoba && currentErrors.tanggalSelesai)}
+                    >
+                      Tgl selesai
+                    </FormLabel>
+                  </div>
+                  <DatePicker
+                    ref={tanggalSelesaiRef}
+                    value={tanggalSelesai}
+                    onChange={(val) => {
+                      setTanggalSelesai(val);
+                      markTouched('tanggalSelesai');
+                    }}
+                    formatDisplay="dd/MM/yyyy"
+                    placeholder="Pilih tgl"
+                    error={Boolean((dicoba || touched.tanggalSelesai) && currentErrors.tanggalSelesai)}
+                    className="font-mono text-[12.5px]"
+                  />
+                  {(dicoba || touched.tanggalSelesai) && currentErrors.tanggalSelesai && (
+                    <InlineError message={currentErrors.tanggalSelesai} />
+                  )}
+                </div>
+              )}
             </div>
 
             {/* 3. Waktu & Tempat */}
             <div className="flex flex-col gap-1.5 flex-none">
               <div className="flex items-center justify-between">
                 <span className="text-[11.5px] font-semibold text-[#5C5A58]">WAKTU & TEMPAT</span>
-                <label className="flex items-center gap-1.5 cursor-pointer text-[12px] text-(--color-text-secondary) hover:text-(--color-text) select-none">
-                  <input
-                    type="checkbox"
-                    checked={sepanjangHari}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      setSepanjangHari(checked);
-                      if (checked) {
-                        setMulai('07:00');
-                        setSelesai('18:00');
-                      }
-                      setIsDirty(true);
-                    }}
-                    className="rounded border-(--color-border-strong) text-(--color-brand) focus:ring-(--color-brand) w-3.5 h-3.5 cursor-pointer"
-                  />
-                  <span className="font-medium">Sepanjang hari</span>
-                </label>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-1.5 cursor-pointer text-[12px] text-(--color-text-secondary) hover:text-(--color-text) select-none">
+                    <input
+                      type="checkbox"
+                      checked={lintasHari}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setLintasHari(checked);
+                        if (checked && (!tanggalSelesai || tanggalSelesai < tanggal)) {
+                          setTanggalSelesai(tanggal || '');
+                        }
+                        setIsDirty(true);
+                      }}
+                      className="rounded border-(--color-border-strong) text-(--color-brand) focus:ring-(--color-brand) w-3.5 h-3.5 cursor-pointer"
+                    />
+                    <span className="font-medium">Lintas hari</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer text-[12px] text-(--color-text-secondary) hover:text-(--color-text) select-none">
+                    <input
+                      type="checkbox"
+                      checked={sepanjangHari}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setSepanjangHari(checked);
+                        if (checked) {
+                          setMulai('07:00');
+                          setSelesai('18:00');
+                        }
+                        setIsDirty(true);
+                      }}
+                      className="rounded border-(--color-border-strong) text-(--color-brand) focus:ring-(--color-brand) w-3.5 h-3.5 cursor-pointer"
+                    />
+                    <span className="font-medium">Sepanjang hari</span>
+                  </label>
+                </div>
               </div>
 
               <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.35fr)] gap-2.5 items-start">

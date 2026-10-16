@@ -165,7 +165,7 @@ export const DetailKegiatanScreen: React.FC = () => {
   const tp = ru ? tempatMap.get(ru.tempat) : null;
   const tempatStr = kegiatan.tempatCustom || (ru ? `${tp?.nama || ''} · ${ru.nama}` : 'Tanpa tempat');
 
-  const jn = jenisMap.get(kegiatan.jenis);
+  const jn = kegiatan.jenis ? jenisMap.get(kegiatan.jenis) : null;
   const jenisStr = jn ? jn.nama : '—';
 
   const mp = kegiatan.mapel ? mapelMap.get(kegiatan.mapel) : null;
@@ -177,7 +177,7 @@ export const DetailKegiatanScreen: React.FC = () => {
 
   const subjekStr = kegiatan.subjek.length
     ? kegiatan.subjek
-        .map((x) => `${subjekMap.get(x.id)?.nama || x.id} (${x.peran})`)
+        .map((x) => `${subjekMap.get(x.id)?.nama || x.id}${x.peran ? ` (${x.peran})` : ''}`)
         .join(', ')
     : '—';
 
@@ -509,8 +509,9 @@ export const DetailKegiatanScreen: React.FC = () => {
                 <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
                   <span className="w-15.5 flex-none text-(--color-text-secondary)">Waktu</span>
                   <span className="flex-1 min-w-0 font-mono text-(--color-text)">
-                    {formatTanggalRingkas(kegiatan.tanggal)} ·{' '}
-                    {kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}
+                    {kegiatan.tanggalSelesai && kegiatan.tanggalSelesai !== kegiatan.tanggal
+                      ? `${formatTanggalRingkas(kegiatan.tanggal)} – ${formatTanggalRingkas(kegiatan.tanggalSelesai)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`
+                      : `${formatTanggalRingkas(kegiatan.tanggal)} · ${kegiatan.sepanjangHari ? 'Sepanjang hari' : `${kegiatan.mulai}–${kegiatan.selesai}`}`}
                   </span>
                 </div>
                 <div className="flex gap-2.5 text-[12.5px] leading-relaxed">
@@ -825,6 +826,7 @@ export const DetailKegiatanScreen: React.FC = () => {
             nama: kegiatan.nama,
             jenis: kegiatan.jenis,
             tanggal: kegiatan.tanggal,
+            tanggalSelesai: kegiatan.tanggalSelesai,
             mulai: kegiatan.mulai,
             selesai: kegiatan.selesai,
             sepanjangHari: Boolean(kegiatan.sepanjangHari),

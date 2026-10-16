@@ -22,6 +22,7 @@ import type {
   CreateActivityTypeRequest,
   CreateClassGroupRequest,
   CreateCourseRequest,
+  CreateEducationalLevelRequest,
   CreatePlaceRequest,
   CreateRoomRequest,
   CreateStudentRequest,
@@ -29,6 +30,7 @@ import type {
   CreateTopicRequest,
   CreateUserRequest,
   DeleteResultDto,
+  EducationalLevelDto,
   GetActivityListParams,
   GetActivityTypesParams,
   GetAllRoomsParams,
@@ -65,6 +67,7 @@ import type {
   UpdateClassGroupRequest,
   UpdateClassMemberRequest,
   UpdateCourseRequest,
+  UpdateEducationalLevelRequest,
   UpdatePlaceRequest,
   UpdateRoomRequest,
   UpdateStudentRequest,
@@ -753,6 +756,198 @@ export const getStudentProfile = async (id: string, options?: Parameters<typeof 
   {
     ...options,
     method: 'GET'
+
+
+  }
+);}
+
+
+
+export type getEducationalLevelsResponse200 = {
+  data: EducationalLevelDto[]
+  status: 200
+}
+
+export type getEducationalLevelsResponseSuccess = (getEducationalLevelsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getEducationalLevelsResponse = (getEducationalLevelsResponseSuccess)
+
+export const getGetEducationalLevelsUrl = () => {
+
+
+
+
+  return `/api/educational-levels`
+}
+
+export const getEducationalLevels = async ( options?: Parameters<typeof customFetch>[1]): Promise<getEducationalLevelsResponse> => {
+
+  return customFetch<getEducationalLevelsResponse>(getGetEducationalLevelsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+export type createEducationalLevelResponse201 = {
+  data: EducationalLevelDto
+  status: 201
+}
+
+export type createEducationalLevelResponse400 = {
+  data: void
+  status: 400
+}
+
+export type createEducationalLevelResponse409 = {
+  data: void
+  status: 409
+}
+
+export type createEducationalLevelResponseSuccess = (createEducationalLevelResponse201) & {
+  headers: Headers;
+};
+export type createEducationalLevelResponseError = (createEducationalLevelResponse400 | createEducationalLevelResponse409) & {
+  headers: Headers;
+};
+
+export type createEducationalLevelResponse = (createEducationalLevelResponseSuccess | createEducationalLevelResponseError)
+
+export const getCreateEducationalLevelUrl = () => {
+
+
+
+
+  return `/api/educational-levels`
+}
+
+export const createEducationalLevel = async (createEducationalLevelRequest: CreateEducationalLevelRequest, options?: Parameters<typeof customFetch>[1]): Promise<createEducationalLevelResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<createEducationalLevelResponse>(getCreateEducationalLevelUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(createEducationalLevelRequest)
+  }
+);}
+
+
+
+export type updateEducationalLevelResponse200 = {
+  data: EducationalLevelDto
+  status: 200
+}
+
+export type updateEducationalLevelResponse404 = {
+  data: void
+  status: 404
+}
+
+export type updateEducationalLevelResponse409 = {
+  data: void
+  status: 409
+}
+
+export type updateEducationalLevelResponseSuccess = (updateEducationalLevelResponse200) & {
+  headers: Headers;
+};
+export type updateEducationalLevelResponseError = (updateEducationalLevelResponse404 | updateEducationalLevelResponse409) & {
+  headers: Headers;
+};
+
+export type updateEducationalLevelResponse = (updateEducationalLevelResponseSuccess | updateEducationalLevelResponseError)
+
+export const getUpdateEducationalLevelUrl = (id: string,) => {
+
+
+
+
+  return `/api/educational-levels/${id}`
+}
+
+export const updateEducationalLevel = async (id: string,
+    updateEducationalLevelRequest: UpdateEducationalLevelRequest, options?: Parameters<typeof customFetch>[1]): Promise<updateEducationalLevelResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<updateEducationalLevelResponse>(getUpdateEducationalLevelUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(updateEducationalLevelRequest)
+  }
+);}
+
+
+
+export type deleteEducationalLevelResponse200 = {
+  data: void
+  status: 200
+}
+
+export type deleteEducationalLevelResponse404 = {
+  data: void
+  status: 404
+}
+
+export type deleteEducationalLevelResponseSuccess = (deleteEducationalLevelResponse200) & {
+  headers: Headers;
+};
+export type deleteEducationalLevelResponseError = (deleteEducationalLevelResponse404) & {
+  headers: Headers;
+};
+
+export type deleteEducationalLevelResponse = (deleteEducationalLevelResponseSuccess | deleteEducationalLevelResponseError)
+
+export const getDeleteEducationalLevelUrl = (id: string,) => {
+
+
+
+
+  return `/api/educational-levels/${id}`
+}
+
+export const deleteEducationalLevel = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<deleteEducationalLevelResponse> => {
+
+  return customFetch<deleteEducationalLevelResponse>(getDeleteEducationalLevelUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
 
 
   }

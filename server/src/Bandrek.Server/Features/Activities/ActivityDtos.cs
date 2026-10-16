@@ -4,7 +4,7 @@ namespace Bandrek.Server.Features.Activities;
 
 public record ActivitySubjectDto(
     string Id,
-    string Role,
+    string? Role = null,
     string? Name = null);
 
 public record PrimaryInstructorDto(
@@ -47,7 +47,8 @@ public record ConflictCheckRequest(
     string RoomId,
     List<string> SubjectIds,
     List<string> StudentIds,
-    string? ExcludeActivityId);
+    string? ExcludeActivityId,
+    string? EndDate = null);
 
 public record ConflictCheckResponse(
     bool HasConflict,
@@ -57,7 +58,7 @@ public record ConflictCheckResponse(
 public record ActivityDto(
     string Id,
     string Name,
-    string ActivityTypeId,
+    string? ActivityTypeId,
     string? CourseId,
     string? TopicId,
     string? ClassGroupId,
@@ -93,12 +94,13 @@ public record ActivityDto(
     bool NeedsRealization,
     int DaysLate,
     string StatusLabel,
-    uint ConcurrencyToken);
+    uint ConcurrencyToken,
+    string? EndDate = null);
 
 public record CreateActivityRequest(
     string? Id,
     string Name,
-    string ActivityTypeId,
+    string? ActivityTypeId,
     string? CourseId,
     string? TopicId,
     string? ClassGroupId,
@@ -111,7 +113,8 @@ public record CreateActivityRequest(
     List<ActivitySubjectDto> Subjects,
     List<string> StudentIds,
     string? Notes,
-    RecurringRuleDto? Recurring);
+    RecurringRuleDto? Recurring,
+    string? EndDate = null);
 
 public record UpdateActivityRequest(
     string? Name,
@@ -128,7 +131,8 @@ public record UpdateActivityRequest(
     List<ActivitySubjectDto>? Subjects,
     List<string>? StudentIds,
     string? Notes,
-    uint? ConcurrencyToken);
+    uint? ConcurrencyToken,
+    string? EndDate = null);
 
 public record CancelActivityRequest(
     string Reason,

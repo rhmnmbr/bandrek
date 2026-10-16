@@ -14,4 +14,6 @@ export interface ConflictCheckRequest {
   studentIds: string[];
   /** @nullable */
   excludeActivityId: string | null;
+  /** @nullable */
+  endDate?: string | null;
 }

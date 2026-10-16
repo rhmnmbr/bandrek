@@ -4,8 +4,8 @@ public class Activity
 {
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
-    public string ActivityTypeId { get; set; } = string.Empty;
-    public ActivityType ActivityType { get; set; } = null!;
+    public string? ActivityTypeId { get; set; }
+    public ActivityType? ActivityType { get; set; }
 
     public string? CourseId { get; set; }
     public Course? Course { get; set; }
@@ -17,6 +17,7 @@ public class Activity
     public ClassGroup? ClassGroup { get; set; }
 
     public DateOnly Date { get; set; }
+    public DateOnly? EndDate { get; set; }
     public string StartTime { get; set; } = string.Empty; // HH:mm
     public string EndTime { get; set; } = string.Empty;   // HH:mm
     public bool IsAllDay { get; set; } = false;
@@ -70,7 +71,7 @@ public class ActivitySubject
     public string SubjectPersonId { get; set; } = string.Empty;
     public SubjectPerson SubjectPerson { get; set; } = null!;
 
-    public string Role { get; set; } = SubjectRoles.Instructor;
+    public string? Role { get; set; }
 }
 
 public class ActivityStudent

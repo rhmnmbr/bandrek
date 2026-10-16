@@ -144,4 +144,45 @@ public class ActivityStatusServiceTests
         var actions = _sut.ComputeAllowedActions(status, futureDate, "08:00", _today, _nowTime);
         Assert.Equal(["lihat_detail", "edit", "jadwal_ulang", "batalkan"], actions);
     }
+
+    [Fact]
+    public void ComputeStatus_CrossDay_ReturnsScheduledWhileStillInProgress()
+    {
+        // Activity started yesterday (Sep 15 at 16:00), ends today (Sep 16 at 17:00)
+        // Today is Sep 16, nowTime is 11:39 -> should be Scheduled (still running, end time not passed yet)
+        var yesterday = new DateOnly(2026, 9, 15);
+        var status = _sut.ComputeStatus(
+            rawStatus: RawActivityStatuses.Scheduled,
+            hasRealization: false,
+            date: yesterday,
+            endTime: "17:00",
+            today: _today,
+            nowTime: _nowTime,
+            endDate: _today);
+
+        Assert.Equal(ActivityStatuses.Scheduled, status);
+
+        // Can realize because it has already started (started yesterday)
+        var actions = _sut.ComputeAllowedActions(status, yesterday, "16:00", _today, _nowTime);
+        Assert.Equal(["lihat_detail", "edit", "isi_realisasi", "jadwal_ulang", "batalkan"], actions);
+    }
+
+    [Fact]
+    public void ComputeStatus_CrossDay_ReturnsPendingRealizationWhenEndDatePassed()
+    {
+        // Activity started Sep 14 at 16:00, ended Sep 15 at 17:00
+        // Today is Sep 16 -> should be PendingRealization
+        var startDate = new DateOnly(2026, 9, 14);
+        var endDate = new DateOnly(2026, 9, 15);
+        var status = _sut.ComputeStatus(
+            rawStatus: RawActivityStatuses.Scheduled,
+            hasRealization: false,
+            date: startDate,
+            endTime: "17:00",
+            today: _today,
+            nowTime: _nowTime,
+            endDate: endDate);
+
+        Assert.Equal(ActivityStatuses.PendingRealization, status);
+    }
 }

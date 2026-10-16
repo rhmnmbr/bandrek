@@ -135,7 +135,7 @@ export const KalenderScreen: React.FC = () => {
 
     const filtered = inPeriod.filter((k) => {
       // 1. Jenis filter
-      if (filters.jenis.length > 0 && !filters.jenis.includes(k.jenis)) return false;
+      if (filters.jenis.length > 0 && (!k.jenis || !filters.jenis.includes(k.jenis))) return false;
       // 2. Subjek filter
       if (filters.subjek.length > 0 && !k.subjek.some((s) => filters.subjek.includes(s.id))) return false;
       // 3. Siswa filter
@@ -300,6 +300,7 @@ export const KalenderScreen: React.FC = () => {
           nama: kegiatan.nama,
           jenis: kegiatan.jenis,
           tanggal: kegiatan.tanggal,
+          tanggalSelesai: kegiatan.tanggalSelesai,
           mulai: kegiatan.mulai,
           selesai: kegiatan.selesai,
           sepanjangHari: Boolean(kegiatan.sepanjangHari),

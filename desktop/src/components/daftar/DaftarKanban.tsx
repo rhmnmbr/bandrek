@@ -157,11 +157,14 @@ export const DaftarKanban: React.FC<DaftarKanbanProps> = ({
                         {/* Waktu & Jenis */}
                         <div className="flex items-center justify-between gap-2 text-[11px]">
                           <span className="font-mono text-(--color-text-secondary) font-medium truncate">
-                            {k.mulai} - {k.selesai} · {formatTanggalPendek(k.tanggal)}
+                            {k.sepanjangHari ? 'Sepanjang hari' : `${k.mulai} - ${k.selesai}`} · {formatTanggalPendek(k.tanggal)}
+                            {k.tanggalSelesai && k.tanggalSelesai !== k.tanggal ? ` – ${formatTanggalPendek(k.tanggalSelesai)}` : ''}
                           </span>
-                          <span className="flex-none rounded-full px-2 py-0.5 text-[10.5px] font-medium border border-(--color-border) bg-(--color-surface-alt) text-(--color-text-secondary)">
-                            {k.namaJenis}
-                          </span>
+                          {k.namaJenis && (
+                            <span className="flex-none rounded-full px-2 py-0.5 text-[10.5px] font-medium border border-(--color-border) bg-(--color-surface-alt) text-(--color-text-secondary)">
+                              {k.namaJenis}
+                            </span>
+                          )}
                         </div>
 
                         {/* Judul Kegiatan */}

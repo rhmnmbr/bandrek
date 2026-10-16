@@ -28,7 +28,6 @@ namespace Bandrek.Server.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ActivityTypeId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CancellationNotes")
@@ -63,6 +62,9 @@ namespace Bandrek.Server.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("EndDate")
                         .HasColumnType("date");
 
                     b.Property<string>("EndTime")
@@ -163,7 +165,6 @@ namespace Bandrek.Server.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Role")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -805,8 +806,7 @@ namespace Bandrek.Server.Migrations
                     b.HasOne("Bandrek.Server.Data.Entities.ActivityType", "ActivityType")
                         .WithMany("Activities")
                         .HasForeignKey("ActivityTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Bandrek.Server.Data.Entities.ClassGroup", "ClassGroup")
                         .WithMany("Activities")

@@ -59,8 +59,11 @@ const DaftarTableRow = React.memo<DaftarTableRowProps>(({
   const isTerjadwal = ev.status === 'terjadwal';
   const perlu = ev.perluRealisasi ?? isBelum;
 
-  const formattedDate = formatTanggalPendek(ev.tanggal);
-  const formattedJam = `${ev.mulai}–${ev.selesai}`;
+  const isMultiDay = Boolean(ev.tanggalSelesai && ev.tanggalSelesai !== ev.tanggal);
+  const formattedDate = isMultiDay
+    ? `${formatTanggalPendek(ev.tanggal)} – ${formatTanggalPendek(ev.tanggalSelesai!)}`
+    : formatTanggalPendek(ev.tanggal);
+  const formattedJam = ev.sepanjangHari ? 'Sepanjang hari' : `${ev.mulai}–${ev.selesai}`;
   const displayJenis = ev.namaJenis || '—';
   const displayMateri = ev.namaMateri
     ? `${ev.namaMapel || '—'} › ${ev.namaMateri}`

@@ -3171,7 +3171,10 @@
             "type": "string"
           },
           "activityTypeId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "courseId": {
             "type": [
@@ -3371,13 +3374,18 @@
               "string"
             ],
             "format": "uint32"
+          },
+          "endDate": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "ActivitySubjectDto": {
         "required": [
-          "id",
-          "role"
+          "id"
         ],
         "type": "object",
         "properties": {
@@ -3385,7 +3393,10 @@
             "type": "string"
           },
           "role": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "name": {
             "type": [
@@ -3772,6 +3783,12 @@
               "null",
               "string"
             ]
+          },
+          "endDate": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -3929,7 +3946,10 @@
             "type": "string"
           },
           "activityTypeId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "courseId": {
             "type": [
@@ -3999,6 +4019,12 @@
               {
                 "$ref": "#/components/schemas/RecurringRuleDto"
               }
+            ]
+          },
+          "endDate": {
+            "type": [
+              "null",
+              "string"
             ]
           }
         }
@@ -5961,6 +5987,12 @@
               "string"
             ],
             "format": "uint32"
+          },
+          "endDate": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },

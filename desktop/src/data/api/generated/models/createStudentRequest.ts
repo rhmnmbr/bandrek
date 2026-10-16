@@ -9,7 +9,8 @@ export interface CreateStudentRequest {
   /** @nullable */
   id: string | null;
   fullName: string;
-  educationalLevel: string;
+  /** @nullable */
+  educationalLevel: string | null;
   /** @nullable */
   isActive: boolean | null;
   birthDate: string;

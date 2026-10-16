@@ -57,15 +57,17 @@ export function computeStatusKegiatan(
   tanggal: string,
   selesai: string,
   simulatedToday: string,
-  simulatedNow: string
+  simulatedNow: string,
+  endDate?: string | null
 ): StatusKegiatan {
   if (rawStatus === 'dibatalkan') return 'dibatalkan';
   if (rawStatus === 'dijadwal-ulang') return 'dijadwal_ulang';
   if (rawStatus === 'terealisasi' || (realisasi && realisasi.mulai)) return 'terealisasi';
 
   // Belum direalisasi adalah status turunan: tanggal sudah lewat, tapi realisasi belum diisi
-  const isPastDate = tanggal < simulatedToday;
-  const isPastTimeToday = tanggal === simulatedToday && selesai <= simulatedNow;
+  const effectiveEnd = endDate || tanggal;
+  const isPastDate = effectiveEnd < simulatedToday;
+  const isPastTimeToday = effectiveEnd === simulatedToday && selesai <= simulatedNow;
 
   if (rawStatus === 'belum' || isPastDate || isPastTimeToday) {
     return 'belum_direalisasi';
@@ -128,7 +130,15 @@ export function enrichKegiatan(
   const course = courses.find((m) => m.id === raw.mapel);
   const topic = topics.find((t) => t.id === raw.materi);
 
-  const status = computeStatusKegiatan(raw.status, raw.realisasi, raw.tanggal, raw.selesai, today, now);
+  const status = computeStatusKegiatan(
+    raw.status,
+    raw.realisasi,
+    raw.tanggal,
+    raw.selesai,
+    today,
+    now,
+    raw.tanggalSelesai
+  );
   const aksiDiizinkan = computeAksiKegiatan(status, raw.tanggal, raw.mulai, today, now);
 
   // Cari pengisi utama (subjek pertama dengan peran Pengisi)
@@ -169,8 +179,8 @@ export function enrichKegiatan(
     namaRuangan: raw.tempatCustom ? raw.tempatCustom : room ? room.nama : 'Ruangan tidak diketahui',
     tempatCustom: raw.tempatCustom || null,
     sepanjangHari: Boolean(raw.sepanjangHari),
-    namaJenis: kind ? kind.nama : 'Kegiatan',
-    warnaJenis: kind ? kind.warna : 'lainnya',
+    namaJenis: kind ? kind.nama : (raw.jenis || 'Kegiatan'),
+    warnaJenis: (kind ? kind.warna : 'lainnya') as any,
     namaMapel: course ? course.nama : undefined,
     namaMateri: topic ? topic.nama : undefined,
     jumlahSiswa: raw.siswa.length,
@@ -178,6 +188,7 @@ export function enrichKegiatan(
     perluRealisasi,
     telatHari,
     labelStatus,
+    tanggalSelesai: raw.tanggalSelesai || null,
     seriId: raw.seriId || null,
     urutanSeri: raw.urutanSeri || null,
     totalSeri: raw.totalSeri || null,

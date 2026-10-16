@@ -177,7 +177,7 @@ export const RealisasiScreen: React.FC = () => {
   }, [kegiatan]);
 
   // Derived master data & kind properties
-  const currentJenis = kegiatan ? jenisMap.get(kegiatan.jenis) : null;
+  const currentJenis = kegiatan && kegiatan.jenis ? jenisMap.get(kegiatan.jenis) : null;
   const pakaiMateri = Boolean(currentJenis?.materiWajib);
 
   const currentRuangan = kegiatan?.ruangan ? ruanganMap.get(kegiatan.ruangan) : null;

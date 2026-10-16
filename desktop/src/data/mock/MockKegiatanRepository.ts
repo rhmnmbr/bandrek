@@ -281,6 +281,7 @@ export class MockKegiatanRepository implements IKegiatanRepository {
           materi: input.materi || null,
           kelas: input.kelas || null,
           tanggal: input.tanggal,
+          tanggalSelesai: input.tanggalSelesai || null,
           mulai: input.mulai,
           selesai: input.selesai,
           sepanjangHari: input.sepanjangHari ?? false,
@@ -313,11 +314,13 @@ export class MockKegiatanRepository implements IKegiatanRepository {
         const updated: RawKegiatanSeed = {
           ...existing,
           nama: input.nama ?? existing.nama,
-          jenis: input.jenis ?? existing.jenis,
+          jenis: input.jenis !== undefined ? input.jenis : existing.jenis,
           mapel: input.mapel !== undefined ? input.mapel : existing.mapel,
           materi: input.materi !== undefined ? input.materi : existing.materi,
           kelas: input.kelas !== undefined ? input.kelas : existing.kelas,
           tanggal: input.tanggal ?? existing.tanggal,
+          tanggalSelesai:
+            input.tanggalSelesai !== undefined ? input.tanggalSelesai : existing.tanggalSelesai,
           mulai: input.mulai ?? existing.mulai,
           selesai: input.selesai ?? existing.selesai,
           sepanjangHari:

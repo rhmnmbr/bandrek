@@ -51,10 +51,34 @@ export function susunLayoutKegiatan(
 
   // 1. Filter kegiatan pada tanggal dan rentang jam
   const rawList: RawEvent[] = kegiatanList
-    .filter((k) => k.tanggal === isoTanggal)
+    .filter((k) => {
+      const endTgl = k.tanggalSelesai || k.tanggal;
+      return isoTanggal >= k.tanggal && isoTanggal <= endTgl;
+    })
     .map((k) => {
-      const s = k.sepanjangHari ? min0 : menit(k.mulai);
-      const e = k.sepanjangHari ? min1 : menit(k.selesai);
+      const endTgl = k.tanggalSelesai || k.tanggal;
+      const isMultiDay = endTgl !== k.tanggal;
+
+      let s = k.sepanjangHari ? min0 : menit(k.mulai);
+      let e = k.sepanjangHari ? min1 : menit(k.selesai);
+      let jamLabel = k.sepanjangHari ? 'Sepanjang hari' : `${k.mulai}–${k.selesai}`;
+
+      if (isMultiDay && !k.sepanjangHari) {
+        if (isoTanggal === k.tanggal) {
+          s = menit(k.mulai);
+          e = min1; // extends to end of calendar day
+          jamLabel = `${k.mulai} → lintas hari`;
+        } else if (isoTanggal === endTgl) {
+          s = min0; // starts at calendar morning
+          e = menit(k.selesai);
+          jamLabel = `→ ${k.selesai}`;
+        } else {
+          s = min0;
+          e = min1;
+          jamLabel = 'Lintas hari';
+        }
+      }
+
       const metaParts: string[] = [];
       if (k.tempatCustom) metaParts.push(k.tempatCustom);
       else if (k.namaRuangan && k.namaRuangan !== 'Ruangan tidak diketahui' && k.namaRuangan !== 'Tanpa ruangan') metaParts.push(k.namaRuangan);
@@ -64,13 +88,13 @@ export function susunLayoutKegiatan(
       if (k.jumlahSiswa > 0) metaParts.push(`${k.jumlahSiswa} siswa`);
 
       return {
-        id: k.id,
+        id: isMultiDay ? `${k.id}_${isoTanggal}` : k.id,
         kegiatan: k,
         s,
         e,
-        tanggal: k.tanggal,
+        tanggal: isoTanggal,
         meta: metaParts.join(' · '),
-        jamLabel: k.sepanjangHari ? 'Sepanjang hari' : `${k.mulai}–${k.selesai}`,
+        jamLabel,
       };
     })
     .filter((x) => x.e > min0 && x.s < min1)

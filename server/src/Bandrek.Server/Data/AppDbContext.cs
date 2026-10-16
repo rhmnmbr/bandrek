@@ -217,7 +217,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
             b.HasOne(a => a.ActivityType)
                 .WithMany(t => t.Activities)
                 .HasForeignKey(a => a.ActivityTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             b.HasOne(a => a.Course)
                 .WithMany(c => c.Activities)
@@ -253,7 +253,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
         builder.Entity<ActivitySubject>(b =>
         {
             b.HasKey(asub => new { asub.ActivityId, asub.SubjectPersonId });
-            b.Property(asub => asub.Role).HasMaxLength(50).IsRequired();
+            b.Property(asub => asub.Role).HasMaxLength(50);
 
             b.HasOne(asub => asub.Activity)
                 .WithMany(a => a.Subjects)

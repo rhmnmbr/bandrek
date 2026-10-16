@@ -31,11 +31,12 @@ export function mapActivityDtoToKegiatan(dto: ActivityDto): Kegiatan {
   return {
     id: dto.id,
     nama: dto.name,
-    jenis: dto.activityTypeId,
+    jenis: dto.activityTypeId || '',
     mapel: dto.courseId,
     materi: dto.topicId,
     kelas: dto.classGroupId,
     tanggal: dto.date,
+    tanggalSelesai: dto.endDate ?? undefined,
     mulai: dto.startTime,
     selesai: dto.endTime,
     sepanjangHari: dto.isAllDay,
@@ -43,7 +44,7 @@ export function mapActivityDtoToKegiatan(dto: ActivityDto): Kegiatan {
     tempatCustom: dto.customPlace,
     subjek: (dto.subjects || []).map((s) => ({
       id: s.id,
-      peran: (s.role as PeranSubjek) || 'Pengisi',
+      peran: s.role ? (s.role as PeranSubjek) : '',
     })),
     siswa: dto.studentIds || [],
     catatan: dto.notes || '',
@@ -104,11 +105,12 @@ export function mapCreateKegiatanInputToRequest(
   return {
     id: null,
     name: input.nama,
-    activityTypeId: input.jenis,
+    activityTypeId: input.jenis ? input.jenis : null,
     courseId: input.mapel ?? null,
     topicId: input.materi ?? null,
     classGroupId: input.kelas ?? null,
     date: input.tanggal,
+    endDate: input.tanggalSelesai ?? null,
     startTime: input.mulai,
     endTime: input.selesai,
     isAllDay: input.sepanjangHari ?? false,
@@ -116,7 +118,7 @@ export function mapCreateKegiatanInputToRequest(
     customPlace: input.tempatCustom ?? null,
     subjects: (input.subjek || []).map((s) => ({
       id: s.id,
-      role: s.peran,
+      role: s.peran || null,
       name: null,
     })),
     studentIds: input.siswa || [],
@@ -139,11 +141,12 @@ export function mapUpdateKegiatanInputToRequest(
 ): UpdateActivityRequest {
   return {
     name: input.nama ?? null,
-    activityTypeId: input.jenis ?? null,
+    activityTypeId: input.jenis !== undefined ? (input.jenis || null) : null,
     courseId: input.mapel !== undefined ? input.mapel : null,
     topicId: input.materi !== undefined ? input.materi : null,
     classGroupId: input.kelas !== undefined ? input.kelas : null,
     date: input.tanggal ?? null,
+    endDate: input.tanggalSelesai !== undefined ? (input.tanggalSelesai || null) : null,
     startTime: input.mulai ?? null,
     endTime: input.selesai ?? null,
     isAllDay: input.sepanjangHari !== undefined ? input.sepanjangHari : null,
@@ -152,7 +155,7 @@ export function mapUpdateKegiatanInputToRequest(
     subjects: input.subjek
       ? input.subjek.map((s) => ({
           id: s.id,
-          role: s.peran,
+          role: s.peran || null,
           name: null,
         }))
       : null,
@@ -186,7 +189,7 @@ export function mapJadwalUlangKegiatanInputToRequest(
     newSubjects: input.subjekBaru
       ? input.subjekBaru.map((s) => ({
           id: s.id,
-          role: s.peran,
+          role: s.peran || null,
           name: null,
         }))
       : null,
@@ -200,6 +203,7 @@ export function mapCekBentrokInputToRequest(
 ): ConflictCheckRequest {
   return {
     date: input.tanggal,
+    endDate: input.tanggalSelesai ?? null,
     startTime: input.mulai,
     endTime: input.selesai,
     roomId: input.ruangan,

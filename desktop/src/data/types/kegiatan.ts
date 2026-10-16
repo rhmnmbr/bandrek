@@ -29,7 +29,7 @@ export type AksiKegiatan =
 
 export interface KegiatanSubjekItem {
   id: string; // Subjek ID
-  peran: PeranSubjek;
+  peran?: PeranSubjek | string | null;
 }
 
 export interface PembatalanKegiatan {
@@ -52,11 +52,12 @@ export interface PenjadwalanUlangKegiatan {
 export interface Kegiatan {
   id: string;
   nama: string;
-  jenis: string; // JenisKegiatan ID
+  jenis?: string | null; // JenisKegiatan ID (opsional)
   mapel?: string | null; // MataPelajaran ID
   materi?: string | null; // Materi ID
   kelas?: string | null; // Kelas ID (opsional penanda asal)
   tanggal: string; // YYYY-MM-DD
+  tanggalSelesai?: string | null; // YYYY-MM-DD (opsional jika lintas hari)
   mulai: string; // HH:mm
   selesai: string; // HH:mm
   sepanjangHari?: boolean;
@@ -123,6 +124,7 @@ export interface HasilDeteksiBentrok {
 
 export interface CekBentrokInput {
   tanggal: string;
+  tanggalSelesai?: string | null;
   mulai: string;
   selesai: string;
   ruangan: string;
@@ -179,11 +181,12 @@ export interface AturanPengulangan {
 // ==========================================
 export interface CreateKegiatanInput {
   nama: string;
-  jenis: string;
+  jenis?: string | null;
   mapel?: string | null;
   materi?: string | null;
   kelas?: string | null;
   tanggal: string;
+  tanggalSelesai?: string | null;
   mulai: string;
   selesai: string;
   sepanjangHari?: boolean;

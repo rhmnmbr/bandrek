@@ -13,7 +13,8 @@ import type { RescheduleInfoDto } from './rescheduleInfoDto';
 export interface ActivityDto {
   id: string;
   name: string;
-  activityTypeId: string;
+  /** @nullable */
+  activityTypeId: string | null;
   /** @nullable */
   courseId: string | null;
   /** @nullable */
@@ -70,4 +71,6 @@ export interface ActivityDto {
   statusLabel: string;
   /** @pattern ^-?(?:0|[1-9]\d*)$ */
   concurrencyToken: number | string;
+  /** @nullable */
+  endDate?: string | null;
 }

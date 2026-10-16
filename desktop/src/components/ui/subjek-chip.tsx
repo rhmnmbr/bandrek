@@ -7,7 +7,7 @@ export type SubjekPeran = "Pengisi" | "Support" | "Pendamping" | string;
 
 export interface SubjekChipProps {
   nama: string;
-  peran?: SubjekPeran;
+  peran?: SubjekPeran | null;
   isPrimary?: boolean;
   onRemove?: () => void;
   onPeranChange?: (peran: SubjekPeran) => void;
@@ -18,7 +18,7 @@ export interface SubjekChipProps {
 
 export const SubjekChip: React.FC<SubjekChipProps> = ({
   nama,
-  peran = "Pengisi",
+  peran,
   isPrimary = true,
   onRemove,
   onPeranChange,
@@ -27,6 +27,7 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
   className,
 }) => {
   const [popoverOpen, setPopoverOpen] = React.useState(false);
+  const effectivePrimary = isPrimary && Boolean(peran);
 
   return (
     <PopoverPrimitive.Root open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -36,7 +37,7 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
           "inline-flex items-center gap-1.5 h-6 rounded-full border text-[11.5px] whitespace-nowrap select-none transition-colors",
           onRemove ? "pl-2.5 pr-1" : "px-2.5",
           "focus-visible:outline-none focus-visible:border-(--color-focus-ring) focus-visible:shadow-[inset_0_0_0_1px_var(--color-focus-ring)]",
-          isPrimary
+          effectivePrimary
             ? "border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand-ink) font-medium"
             : "border-(--color-border-strong) bg-white text-(--color-text-secondary)",
           disabled && "opacity-60 pointer-events-none",
@@ -45,7 +46,7 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
       >
         <span className="inline-flex items-center">
           <span>{nama}</span>
-          {peran && (
+          {peran ? (
             <>
               <span className="mx-1 opacity-50">·</span>
               {onPeranChange ? (
@@ -64,6 +65,23 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
                 <span className="font-normal opacity-90">{peran}</span>
               )}
             </>
+          ) : (
+            onPeranChange && (
+              <>
+                <span className="mx-1 opacity-50">·</span>
+                <PopoverPrimitive.Trigger asChild>
+                  <button
+                    type="button"
+                    disabled={disabled}
+                    className="hover:underline cursor-pointer italic font-normal text-(--color-text-muted) inline-flex items-center gap-0.5 focus:outline-none"
+                    title="Pilih peran subjek"
+                  >
+                    <span>Tanpa peran</span>
+                    <ChevronDown12Regular className="w-2.5 h-2.5 opacity-70 flex-none" />
+                  </button>
+                </PopoverPrimitive.Trigger>
+              </>
+            )
           )}
         </span>
 
@@ -106,6 +124,22 @@ export const SubjekChip: React.FC<SubjekChipProps> = ({
             <div className="px-2 py-1 text-[10.5px] font-semibold text-(--color-text-muted) uppercase tracking-wider">
               Pilih Peran
             </div>
+            <button
+              type="button"
+              onClick={() => {
+                onPeranChange("");
+                setPopoverOpen(false);
+              }}
+              className={cn(
+                "w-full text-left px-2 py-1.5 rounded-sm flex items-center justify-between cursor-pointer",
+                !peran
+                  ? "bg-(--color-brand-subtle) text-(--color-brand-ink) font-semibold"
+                  : "hover:bg-(--color-surface-alt) text-(--color-text)"
+              )}
+            >
+              <span className="italic">Tanpa peran</span>
+              {!peran && <Checkmark12Regular className="text-(--color-brand) flex-none" />}
+            </button>
             {availablePeran.map((p) => (
               <button
                 type="button"

@@ -11,7 +11,8 @@ export interface CreateActivityRequest {
   /** @nullable */
   id: string | null;
   name: string;
-  activityTypeId: string;
+  /** @nullable */
+  activityTypeId: string | null;
   /** @nullable */
   courseId: string | null;
   /** @nullable */
@@ -31,4 +32,6 @@ export interface CreateActivityRequest {
   /** @nullable */
   notes: string | null;
   recurring: null | RecurringRuleDto;
+  /** @nullable */
+  endDate?: string | null;
 }

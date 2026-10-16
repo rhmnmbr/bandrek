@@ -54,6 +54,12 @@ public static class ActivityEndpoints
                 return Results.BadRequest(new { message = "Format tanggal tidak valid (YYYY-MM-DD)." });
             }
 
+            DateOnly? endDate = null;
+            if (!string.IsNullOrWhiteSpace(request.EndDate) && DateOnly.TryParse(request.EndDate, out var ed))
+            {
+                endDate = ed;
+            }
+
             var result = await detector.DetectAsync(
                 date: date,
                 startTime: request.StartTime,
@@ -62,6 +68,7 @@ public static class ActivityEndpoints
                 subjectIds: request.SubjectIds ?? new List<string>(),
                 studentIds: request.StudentIds ?? new List<string>(),
                 excludeActivityId: request.ExcludeActivityId,
+                endDate: endDate,
                 ct: ct);
 
             return Results.Ok(new ConflictCheckResponse(
@@ -100,7 +107,7 @@ public static class ActivityEndpoints
 
             if (DateOnly.TryParse(startDate, out var sDate))
             {
-                query = query.Where(a => a.Date >= sDate);
+                query = query.Where(a => (a.EndDate ?? a.Date) >= sDate);
             }
             if (DateOnly.TryParse(endDate, out var eDate))
             {
@@ -149,7 +156,7 @@ public static class ActivityEndpoints
         {
             var query = BuildActivityQuery(db);
 
-            if (DateOnly.TryParse(startDate, out var sDate)) query = query.Where(a => a.Date >= sDate);
+            if (DateOnly.TryParse(startDate, out var sDate)) query = query.Where(a => (a.EndDate ?? a.Date) >= sDate);
             if (DateOnly.TryParse(endDate, out var eDate)) query = query.Where(a => a.Date <= eDate);
             if (!string.IsNullOrWhiteSpace(activityTypeId)) query = query.Where(a => a.ActivityTypeId == activityTypeId);
             if (!string.IsNullOrWhiteSpace(classGroupId)) query = query.Where(a => a.ClassGroupId == classGroupId);
@@ -163,21 +170,21 @@ public static class ActivityEndpoints
                 switch (quickFilter)
                 {
                     case "hari":
-                        query = query.Where(a => a.Date == today);
+                        query = query.Where(a => a.Date <= today && (a.EndDate ?? a.Date) >= today);
                         break;
                     case "minggu":
                     {
                         int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
                         var startOfWeek = today.AddDays(-diff);
                         var endOfWeek = startOfWeek.AddDays(6);
-                        query = query.Where(a => a.Date >= startOfWeek && a.Date <= endOfWeek);
+                        query = query.Where(a => a.Date <= endOfWeek && (a.EndDate ?? a.Date) >= startOfWeek);
                         break;
                     }
                     case "datang":
-                        query = query.Where(a => a.Date >= today);
+                        query = query.Where(a => (a.EndDate ?? a.Date) >= today);
                         break;
                     case "perlu":
-                        query = query.Where(a => a.RawStatus == RawActivityStatuses.Pending || a.Date < today);
+                        query = query.Where(a => a.RawStatus == RawActivityStatuses.Pending || (a.EndDate ?? a.Date) < today);
                         break;
                 }
             }
@@ -243,12 +250,11 @@ public static class ActivityEndpoints
             CancellationToken ct) =>
         {
             if (string.IsNullOrWhiteSpace(request.Name) ||
-                string.IsNullOrWhiteSpace(request.ActivityTypeId) ||
                 string.IsNullOrWhiteSpace(request.Date) ||
                 string.IsNullOrWhiteSpace(request.StartTime) ||
                 string.IsNullOrWhiteSpace(request.EndTime))
             {
-                return Results.BadRequest(new { message = "Nama, jenis, tanggal, jam mulai, dan jam selesai wajib diisi." });
+                return Results.BadRequest(new { message = "Nama, tanggal, jam mulai, dan jam selesai wajib diisi." });
             }
 
             if (!DateOnly.TryParse(request.Date, out var baseDate))
@@ -322,11 +328,12 @@ public static class ActivityEndpoints
             if (activity == null) return Results.NotFound(new { message = $"Kegiatan dengan ID '{id}' tidak ditemukan." });
 
             if (!string.IsNullOrWhiteSpace(request.Name)) activity.Name = request.Name.Trim();
-            if (!string.IsNullOrWhiteSpace(request.ActivityTypeId)) activity.ActivityTypeId = request.ActivityTypeId;
+            if (request.ActivityTypeId != null) activity.ActivityTypeId = string.IsNullOrWhiteSpace(request.ActivityTypeId) ? null : request.ActivityTypeId;
             if (request.CourseId != null) activity.CourseId = string.IsNullOrWhiteSpace(request.CourseId) ? null : request.CourseId;
             if (request.TopicId != null) activity.TopicId = string.IsNullOrWhiteSpace(request.TopicId) ? null : request.TopicId;
             if (request.ClassGroupId != null) activity.ClassGroupId = string.IsNullOrWhiteSpace(request.ClassGroupId) ? null : request.ClassGroupId;
             if (!string.IsNullOrWhiteSpace(request.Date) && DateOnly.TryParse(request.Date, out var d)) activity.Date = d;
+            if (request.EndDate != null) activity.EndDate = !string.IsNullOrWhiteSpace(request.EndDate) && DateOnly.TryParse(request.EndDate, out var ed) ? ed : null;
             if (!string.IsNullOrWhiteSpace(request.StartTime)) activity.StartTime = request.StartTime;
             if (!string.IsNullOrWhiteSpace(request.EndTime)) activity.EndTime = request.EndTime;
             if (request.IsAllDay.HasValue) activity.IsAllDay = request.IsAllDay.Value;
@@ -538,15 +545,22 @@ public static class ActivityEndpoints
     {
         string actId = string.IsNullOrWhiteSpace(customId) ? $"keg-{Guid.NewGuid().ToString("N")[..8]}" : customId;
 
+        DateOnly? endDate = null;
+        if (!string.IsNullOrWhiteSpace(request.EndDate) && DateOnly.TryParse(request.EndDate, out var ed))
+        {
+            endDate = ed >= date ? ed : date;
+        }
+
         var act = new Activity
         {
             Id = actId,
             Name = request.Name.Trim(),
-            ActivityTypeId = request.ActivityTypeId,
+            ActivityTypeId = string.IsNullOrWhiteSpace(request.ActivityTypeId) ? null : request.ActivityTypeId,
             CourseId = string.IsNullOrWhiteSpace(request.CourseId) ? null : request.CourseId,
             TopicId = string.IsNullOrWhiteSpace(request.TopicId) ? null : request.TopicId,
             ClassGroupId = string.IsNullOrWhiteSpace(request.ClassGroupId) ? null : request.ClassGroupId,
             Date = date,
+            EndDate = endDate,
             StartTime = request.StartTime,
             EndTime = request.EndTime,
             IsAllDay = request.IsAllDay ?? false,
@@ -623,7 +637,8 @@ public static class ActivityEndpoints
             a.Date,
             a.EndTime,
             today,
-            nowTime);
+            nowTime,
+            a.EndDate);
 
         var allowedActions = statusService.ComputeAllowedActions(
             status,
@@ -632,7 +647,8 @@ public static class ActivityEndpoints
             today,
             nowTime);
 
-        int daysLate = a.Date < today ? (today.DayNumber - a.Date.DayNumber) : 0;
+        var effectiveEndDate = a.EndDate ?? a.Date;
+        int daysLate = effectiveEndDate < today ? (today.DayNumber - effectiveEndDate.DayNumber) : 0;
         bool needsRealization = status == ActivityStatuses.PendingRealization;
 
         string statusLabel = status switch
@@ -646,7 +662,7 @@ public static class ActivityEndpoints
         };
 
         PrimaryInstructorDto? primaryInstructor = null;
-        var instructor = a.Subjects.FirstOrDefault(s => s.Role == SubjectRoles.Instructor);
+        var instructor = a.Subjects.FirstOrDefault(s => !string.IsNullOrEmpty(s.Role) && s.Role == SubjectRoles.Instructor);
         if (instructor != null)
         {
             primaryInstructor = new PrimaryInstructorDto(
@@ -701,6 +717,7 @@ public static class ActivityEndpoints
             TopicId: a.TopicId,
             ClassGroupId: a.ClassGroupId,
             Date: a.Date.ToString("yyyy-MM-dd"),
+            EndDate: a.EndDate?.ToString("yyyy-MM-dd"),
             StartTime: a.StartTime,
             EndTime: a.EndTime,
             IsAllDay: a.IsAllDay,

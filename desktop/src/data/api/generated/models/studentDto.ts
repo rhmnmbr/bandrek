@@ -8,7 +8,8 @@
 export interface StudentDto {
   id: string;
   fullName: string;
-  educationalLevel: string;
+  /** @nullable */
+  educationalLevel: string | null;
   isActive: boolean;
   birthDate: string;
   gender: string;

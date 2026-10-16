@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ArrowSync16Regular } from '@fluentui/react-icons';
 import { cn } from '@/lib/utils';
 import type { Kegiatan } from '@/data/types';
-import { toDate, NAMA_HARI } from '@/lib/dateUtils';
+import { toDate, toIso, NAMA_HARI } from '@/lib/dateUtils';
 import { jenisColorMap, type JenisKegiatanKey } from '@/components/ui/calendar-event';
 
 export interface KalenderMonthViewProps {
@@ -28,9 +28,17 @@ export const KalenderMonthView: React.FC<KalenderMonthViewProps> = ({
   const eventsByDate = React.useMemo(() => {
     const map = new Map<string, Kegiatan[]>();
     for (const k of kegiatanList) {
-      const arr = map.get(k.tanggal) || [];
-      arr.push(k);
-      map.set(k.tanggal, arr);
+      const endTgl = k.tanggalSelesai || k.tanggal;
+      let cur = k.tanggal;
+      let safetyCounter = 0;
+      while (cur <= endTgl && safetyCounter++ < 365) {
+        const arr = map.get(cur) || [];
+        arr.push(k);
+        map.set(cur, arr);
+        const curDate = toDate(cur);
+        curDate.setDate(curDate.getDate() + 1);
+        cur = toIso(curDate);
+      }
     }
     // Sort each day by start time
     map.forEach((arr) => {
