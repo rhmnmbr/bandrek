@@ -1379,20 +1379,15 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   </span>
                 )}
 
-                {/* "+ tambah" Button with Popover (only shown when master subjek has data) */}
-                {subjekList.length > 0 && (
+                {/* "+ tambah" Button with Popover (only shown when there are available subjek to add) */}
+                {remainingSubjek.length > 0 && (
                   <PopoverPrimitive.Root
                     open={menuTambahSubjekOpen}
                     onOpenChange={setMenuTambahSubjekOpen}
                   >
                     <PopoverPrimitive.Trigger asChild>
                       <AddSubjekButton
-                        disabled={remainingSubjek.length === 0}
-                        title={
-                          remainingSubjek.length === 0
-                            ? 'Semua subjek aktif sudah dipakai'
-                            : 'Tambah subjek dari daftar aktif'
-                        }
+                        title="Tambah subjek dari daftar aktif"
                       />
                     </PopoverPrimitive.Trigger>
                     <PopoverPrimitive.Portal>
