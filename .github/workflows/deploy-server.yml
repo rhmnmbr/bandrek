@@ -8,6 +8,10 @@ on:
       - '.github/workflows/deploy-server.yml'
   workflow_dispatch:
 
+concurrency:
+  group: deploy-bandrek-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     name: Build & Deploy Backend
@@ -32,46 +36,35 @@ jobs:
             -r linux-x64 \
             -o ./publish-linux
 
-      - name: Transfer Artifacts to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
-          source: "./publish-linux/*"
-          target: "~/bandrek-deploy-temp"
-          strip_components: 1
+      - name: Set up deploy SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.VPS_PORT || 22 }} -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Apply Deploy & Restart Service on VPS
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
-          script: |
-            echo "Stopping bandrek-api service..."
-            sudo systemctl stop bandrek-api
+      - name: Sync Artifacts via Rsync
+        env:
+          SSH_TARGET: ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}
+          SSH_PORT: ${{ secrets.VPS_PORT || 22 }}
+        run: |
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_ed25519 -p $SSH_PORT" \
+            ./publish-linux/ "$SSH_TARGET:/var/www/bandrek/"
 
-            echo "Syncing new binary files to /var/www/bandrek/..."
-            sudo cp -r ~/bandrek-deploy-temp/* /var/www/bandrek/
-            rm -rf ~/bandrek-deploy-temp
-
-            echo "Setting permissions..."
-            sudo chown -R www-data:www-data /var/www/bandrek
-            sudo chmod -R 755 /var/www/bandrek
-            sudo chmod +x /var/www/bandrek/Bandrek.Server
-
-            echo "Starting bandrek-api service..."
-            sudo systemctl start bandrek-api
-
-            echo "Verifying service status..."
+      - name: Restart Service via SSH
+        env:
+          SSH_TARGET: ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}
+          SSH_PORT: ${{ secrets.VPS_PORT || 22 }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p "$SSH_PORT" "$SSH_TARGET" '
+            set -eu
+            sudo systemctl restart bandrek-api
             sleep 2
             if sudo systemctl is-active --quiet bandrek-api; then
-              echo ">>> Bandrek Server successfully deployed and ACTIVE! <<<"
+              echo ">>> Bandrek Server is RUNNING and ACTIVE! <<<"
             else
               echo ">>> ERROR: Service failed to start! <<<"
               sudo journalctl -u bandrek-api -n 30 --no-pager
               exit 1
             fi
+          '
