@@ -157,18 +157,19 @@ try
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<Bandrek.Server.Data.Seeding.DataSeeder>();
     var forceReset = args.Contains("--reset-seed");
-    var cleanProd = args.Contains("--clean-prod") || args.Contains("--clear-data");
+    var cleanProd = args.Contains("--clean-prod") || args.Contains("--clear-data") || args.Contains("--clean");
     var seedDemo = args.Contains("--seed-demo");
+    var noSeed = args.Contains("--no-seed") || args.Contains("--empty");
 
     if (cleanProd)
     {
-        app.Logger.LogInformation("Flag --clean-prod / --clear-data detected. Cleaning operational data for production...");
+        app.Logger.LogInformation("Flag --clean-prod / --clear-data detected. Cleaning operational data...");
         await seeder.CleanProdDataAsync();
-        app.Logger.LogInformation("Database successfully prepared and cleaned for production.");
+        app.Logger.LogInformation("Database successfully prepared and cleaned.");
     }
     else
     {
-        await seeder.SeedAsync(forceReset, seedDemo);
+        await seeder.SeedAsync(forceReset, seedDemo, noSeed);
     }
 }
 catch (Exception ex)

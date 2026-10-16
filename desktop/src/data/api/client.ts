@@ -247,9 +247,14 @@ export const customFetch = async <T>(
   if (!response.ok) {
     let errorData: any = null;
     try {
-      errorData = await response.json();
+      const text = await response.text();
+      try {
+        errorData = JSON.parse(text);
+      } catch {
+        errorData = text;
+      }
     } catch {
-      errorData = await response.text();
+      errorData = response.statusText;
     }
 
     if (response.status === 401) {

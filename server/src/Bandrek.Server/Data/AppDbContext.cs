@@ -237,6 +237,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
             b.HasOne(a => a.Room)
                 .WithMany(r => r.Activities)
                 .HasForeignKey(a => a.RoomId)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             b.HasOne(a => a.RescheduledFrom)

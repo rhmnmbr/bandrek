@@ -26,7 +26,7 @@ export interface RawKegiatanSeed {
   mulai: string;
   selesai: string;
   sepanjangHari?: boolean;
-  ruangan: string;
+  ruangan?: string | null;
   tempatCustom?: string | null;
   subjek: Array<{ id: string; peran?: any }>;
   siswa: string[];

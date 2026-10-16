@@ -25,7 +25,8 @@ export interface ActivityDto {
   startTime: string;
   endTime: string;
   isAllDay: boolean;
-  roomId: string;
+  /** @nullable */
+  roomId: string | null;
   /** @nullable */
   customPlace: string | null;
   subjects: ActivitySubjectDto[];

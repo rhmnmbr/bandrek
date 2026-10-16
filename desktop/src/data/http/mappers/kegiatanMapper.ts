@@ -114,7 +114,7 @@ export function mapCreateKegiatanInputToRequest(
     startTime: input.mulai,
     endTime: input.selesai,
     isAllDay: input.sepanjangHari ?? false,
-    roomId: input.ruangan,
+    roomId: input.ruangan || null,
     customPlace: input.tempatCustom ?? null,
     subjects: (input.subjek || []).map((s) => ({
       id: s.id,

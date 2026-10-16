@@ -12,22 +12,25 @@ public class DataSeeder
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ILogger<DataSeeder> _logger;
     private readonly IWebHostEnvironment _env;
+    private readonly IConfiguration _config;
 
     public DataSeeder(
         AppDbContext db,
         UserManager<AppUser> userManager,
         RoleManager<IdentityRole> roleManager,
         ILogger<DataSeeder> logger,
-        IWebHostEnvironment env)
+        IWebHostEnvironment env,
+        IConfiguration config)
     {
         _db = db;
         _userManager = userManager;
         _roleManager = roleManager;
         _logger = logger;
         _env = env;
+        _config = config;
     }
 
-    public async Task SeedAsync(bool forceReset = false, bool seedDemo = false)
+    public async Task SeedAsync(bool forceReset = false, bool seedDemo = false, bool noSeed = false)
     {
         _logger.LogInformation("Applying database migrations...");
         await _db.Database.MigrateAsync();
@@ -44,7 +47,14 @@ public class DataSeeder
         // 2. Seed Educational Levels (Default options: SD, SMP, SMA)
         await SeedEducationalLevelsAsync();
 
-        // 3. In Production, NEVER automatically seed demo/dummy data from seed.json
+        // 3. Skip demo data if disabled via flag or configuration
+        if (noSeed || !_config.GetValue<bool>("Seeding:SeedDemoData", true))
+        {
+            _logger.LogInformation("Demo data seeding is disabled via configuration or flag. Skipping demo data seed.");
+            return;
+        }
+
+        // 4. In Production, NEVER automatically seed demo/dummy data from seed.json
         // unless explicitly requested via --seed-demo
         if (_env.IsProduction() && !seedDemo)
         {
@@ -52,8 +62,8 @@ public class DataSeeder
             return;
         }
 
-        // Check if database is already seeded
-        if (await _db.Students.AnyAsync())
+        // 5. Check if database is already seeded with domain data
+        if (await _db.Students.AnyAsync() || await _db.Subjects.AnyAsync() || await _db.Activities.AnyAsync())
         {
             _logger.LogInformation("Database already contains data. Skipping domain data seed.");
             if (!await _db.AuditLogs.AnyAsync())
@@ -130,23 +140,52 @@ public class DataSeeder
 
     public async Task ClearExistingDataAsync()
     {
-        _db.Realizations.RemoveRange(_db.Realizations);
-        _db.ActivityStudents.RemoveRange(_db.ActivityStudents);
-        _db.ActivitySubjects.RemoveRange(_db.ActivitySubjects);
-        _db.Activities.RemoveRange(_db.Activities);
-        _db.ManualChecklists.RemoveRange(_db.ManualChecklists);
-        _db.ClassGroupStudents.RemoveRange(_db.ClassGroupStudents);
-        _db.ClassGroups.RemoveRange(_db.ClassGroups);
-        _db.Subjects.RemoveRange(_db.Subjects);
-        _db.Students.RemoveRange(_db.Students);
-        _db.ActivityTypes.RemoveRange(_db.ActivityTypes);
-        _db.Topics.RemoveRange(_db.Topics);
-        _db.Courses.RemoveRange(_db.Courses);
-        _db.Rooms.RemoveRange(_db.Rooms);
-        _db.Places.RemoveRange(_db.Places);
-        _db.AuditLogs.RemoveRange(_db.AuditLogs);
+        if (_db.Database.IsRelational())
+        {
+            await _db.Database.ExecuteSqlRawAsync(@"
+                TRUNCATE TABLE 
+                    ""Realizations"", 
+                    ""ActivityStudents"", 
+                    ""ActivitySubjects"", 
+                    ""Activities"", 
+                    ""ManualChecklists"", 
+                    ""ClassGroupStudents"", 
+                    ""ClassGroups"", 
+                    ""Subjects"", 
+                    ""Students"", 
+                    ""ActivityTypes"", 
+                    ""Topics"", 
+                    ""Courses"", 
+                    ""Rooms"", 
+                    ""Places"", 
+                    ""AuditLogs"" 
+                CASCADE;");
+        }
+        else
+        {
+            await _db.Activities
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(a => a.RescheduledFromId, (string?)null)
+                    .SetProperty(a => a.RescheduledToId, (string?)null));
 
-        await _db.SaveChangesAsync();
+            _db.Realizations.RemoveRange(_db.Realizations);
+            _db.ActivityStudents.RemoveRange(_db.ActivityStudents);
+            _db.ActivitySubjects.RemoveRange(_db.ActivitySubjects);
+            _db.Activities.RemoveRange(_db.Activities);
+            _db.ManualChecklists.RemoveRange(_db.ManualChecklists);
+            _db.ClassGroupStudents.RemoveRange(_db.ClassGroupStudents);
+            _db.ClassGroups.RemoveRange(_db.ClassGroups);
+            _db.Subjects.RemoveRange(_db.Subjects);
+            _db.Students.RemoveRange(_db.Students);
+            _db.ActivityTypes.RemoveRange(_db.ActivityTypes);
+            _db.Topics.RemoveRange(_db.Topics);
+            _db.Courses.RemoveRange(_db.Courses);
+            _db.Rooms.RemoveRange(_db.Rooms);
+            _db.Places.RemoveRange(_db.Places);
+            _db.AuditLogs.RemoveRange(_db.AuditLogs);
+
+            await _db.SaveChangesAsync();
+        }
     }
 
     private async Task SeedUsersAndRolesAsync()
@@ -203,30 +242,40 @@ public class DataSeeder
     {
         if (root.TryGetProperty("tempat", out var placesArray))
         {
+            var existingPlaceIds = await _db.Places.Select(p => p.Id).ToHashSetAsync();
             foreach (var elem in placesArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingPlaceIds.Contains(id)) continue;
+
                 var place = new Place
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     Name = elem.GetProperty("nama").GetString()!
                 };
                 _db.Places.Add(place);
+                existingPlaceIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
 
         if (root.TryGetProperty("ruangan", out var roomsArray))
         {
+            var existingRoomIds = await _db.Rooms.Select(r => r.Id).ToHashSetAsync();
             foreach (var elem in roomsArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingRoomIds.Contains(id)) continue;
+
                 var room = new Room
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     PlaceId = elem.GetProperty("tempat").GetString()!,
                     Name = elem.GetProperty("nama").GetString()!,
                     Capacity = elem.TryGetProperty("kapasitas", out var cap) ? cap.GetInt32() : 12
                 };
                 _db.Rooms.Add(room);
+                existingRoomIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
@@ -236,23 +285,32 @@ public class DataSeeder
     {
         if (root.TryGetProperty("mapel", out var coursesArray))
         {
+            var existingCourseIds = await _db.Courses.Select(c => c.Id).ToHashSetAsync();
             foreach (var elem in coursesArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingCourseIds.Contains(id)) continue;
+
                 var course = new Course
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     Name = elem.GetProperty("nama").GetString()!,
                     IsActive = !elem.TryGetProperty("aktif", out var act) || act.GetBoolean()
                 };
                 _db.Courses.Add(course);
+                existingCourseIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
 
         if (root.TryGetProperty("materi", out var topicsArray))
         {
+            var existingTopicIds = await _db.Topics.Select(t => t.Id).ToHashSetAsync();
             foreach (var elem in topicsArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingTopicIds.Contains(id)) continue;
+
                 var levels = new List<string>();
                 if (elem.TryGetProperty("jenjang", out var jArray) && jArray.ValueKind == JsonValueKind.Array)
                 {
@@ -265,7 +323,7 @@ public class DataSeeder
 
                 var topic = new Topic
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     CourseId = elem.GetProperty("mapel").GetString()!,
                     Name = elem.GetProperty("nama").GetString()!,
                     EducationalLevels = levels,
@@ -273,6 +331,7 @@ public class DataSeeder
                     OrderIndex = elem.TryGetProperty("urutan", out var ord) ? ord.GetInt32() : 1
                 };
                 _db.Topics.Add(topic);
+                existingTopicIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
@@ -282,17 +341,22 @@ public class DataSeeder
     {
         if (root.TryGetProperty("jenis", out var typesArray))
         {
+            var existingTypeIds = await _db.ActivityTypes.Select(t => t.Id).ToHashSetAsync();
             foreach (var elem in typesArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingTypeIds.Contains(id)) continue;
+
                 var type = new ActivityType
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     Name = elem.GetProperty("nama").GetString()!,
                     Color = elem.TryGetProperty("warna", out var w) ? w.GetString() ?? "pembelajaran" : "pembelajaran",
                     RequiresTopic = elem.TryGetProperty("materiWajib", out var mw) && mw.GetBoolean(),
                     RequiresStudents = !elem.TryGetProperty("siswaWajib", out var sw) || sw.GetBoolean()
                 };
                 _db.ActivityTypes.Add(type);
+                existingTypeIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
@@ -302,11 +366,15 @@ public class DataSeeder
     {
         if (root.TryGetProperty("siswa", out var studentsArray))
         {
+            var existingStudentIds = await _db.Students.Select(s => s.Id).ToHashSetAsync();
             foreach (var elem in studentsArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingStudentIds.Contains(id)) continue;
+
                 var student = new Student
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     FullName = elem.GetProperty("nama").GetString()!,
                     EducationalLevel = elem.TryGetProperty("jenjang", out var jj) ? jj.GetString() : null,
                     IsActive = elem.GetProperty("aktif").GetBoolean(),
@@ -321,6 +389,7 @@ public class DataSeeder
                     Notes = elem.TryGetProperty("catatan", out var cat) ? cat.GetString() : null
                 };
                 _db.Students.Add(student);
+                existingStudentIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
@@ -330,8 +399,12 @@ public class DataSeeder
     {
         if (root.TryGetProperty("subjek", out var subjectsArray))
         {
+            var existingSubjectIds = await _db.Subjects.Select(s => s.Id).ToHashSetAsync();
             foreach (var elem in subjectsArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingSubjectIds.Contains(id)) continue;
+
                 var courseIds = new List<string>();
                 if (elem.TryGetProperty("mapel", out var mArray) && mArray.ValueKind == JsonValueKind.Array)
                 {
@@ -358,7 +431,7 @@ public class DataSeeder
 
                 var subject = new SubjectPerson
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     FullName = elem.GetProperty("nama").GetString()!,
                     Gender = elem.GetProperty("kelamin").GetString() ?? Genders.Male,
                     Role = elem.TryGetProperty("peran", out var p) ? p.GetString() ?? SubjectRoles.Instructor : SubjectRoles.Instructor,
@@ -368,6 +441,7 @@ public class DataSeeder
                     WeeklyAvailabilities = availabilities
                 };
                 _db.Subjects.Add(subject);
+                existingSubjectIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
@@ -377,30 +451,40 @@ public class DataSeeder
     {
         if (root.TryGetProperty("kelas", out var classArray))
         {
+            var existingClassGroupIds = await _db.ClassGroups.Select(cg => cg.Id).ToHashSetAsync();
+            var existingClassGroupStudents = await _db.ClassGroupStudents
+                .Select(cgs => $"{cgs.ClassGroupId}_{cgs.StudentId}")
+                .ToHashSetAsync();
+
             foreach (var elem in classArray.EnumerateArray())
             {
                 var classId = elem.GetProperty("id").GetString()!;
-                var classGroup = new ClassGroup
+                if (!existingClassGroupIds.Contains(classId))
                 {
-                    Id = classId,
-                    Name = elem.GetProperty("nama").GetString()!,
-                    EducationalLevel = elem.TryGetProperty("jenjang", out var j) ? j.GetString() : null,
-                    Description = elem.TryGetProperty("keterangan", out var d) ? d.GetString() : null
-                };
-                _db.ClassGroups.Add(classGroup);
+                    var classGroup = new ClassGroup
+                    {
+                        Id = classId,
+                        Name = elem.GetProperty("nama").GetString()!,
+                        EducationalLevel = elem.TryGetProperty("jenjang", out var j) ? j.GetString() : null,
+                        Description = elem.TryGetProperty("keterangan", out var d) ? d.GetString() : null
+                    };
+                    _db.ClassGroups.Add(classGroup);
+                    existingClassGroupIds.Add(classId);
+                }
 
                 if (elem.TryGetProperty("anggota", out var members) && members.ValueKind == JsonValueKind.Array)
                 {
                     foreach (var m in members.EnumerateArray())
                     {
                         var studentId = m.GetString();
-                        if (!string.IsNullOrEmpty(studentId))
+                        if (!string.IsNullOrEmpty(studentId) && !existingClassGroupStudents.Contains($"{classId}_{studentId}"))
                         {
                             _db.ClassGroupStudents.Add(new ClassGroupStudent
                             {
                                 ClassGroupId = classId,
                                 StudentId = studentId
                             });
+                            existingClassGroupStudents.Add($"{classId}_{studentId}");
                         }
                     }
                 }
@@ -413,11 +497,15 @@ public class DataSeeder
     {
         if (root.TryGetProperty("ceklisManual", out var cmArray))
         {
+            var existingCmIds = await _db.ManualChecklists.Select(m => m.Id).ToHashSetAsync();
             foreach (var elem in cmArray.EnumerateArray())
             {
+                var id = elem.GetProperty("id").GetString()!;
+                if (existingCmIds.Contains(id)) continue;
+
                 var cm = new ManualChecklist
                 {
-                    Id = elem.GetProperty("id").GetString()!,
+                    Id = id,
                     StudentId = elem.GetProperty("siswa").GetString()!,
                     TopicId = elem.GetProperty("materi").GetString()!,
                     Date = elem.TryGetProperty("tanggal", out var t) && !string.IsNullOrEmpty(t.GetString())
@@ -431,6 +519,7 @@ public class DataSeeder
                     Source = "manual"
                 };
                 _db.ManualChecklists.Add(cm);
+                existingCmIds.Add(id);
             }
             await _db.SaveChangesAsync();
         }
@@ -441,6 +530,7 @@ public class DataSeeder
         if (!root.TryGetProperty("kegiatan", out var activitiesArray)) return;
 
         // Step A: Insert Activity master records without reschedule self-references
+        var existingActivityIds = await _db.Activities.Select(a => a.Id).ToHashSetAsync();
         var pendingReschedules = new List<(string Id, string? FromId, string? ToId)>();
         var realizationsToInsert = new List<Realization>();
         var subjectsToInsert = new List<ActivitySubject>();
@@ -449,6 +539,7 @@ public class DataSeeder
         foreach (var elem in activitiesArray.EnumerateArray())
         {
             var actId = elem.GetProperty("id").GetString()!;
+            if (existingActivityIds.Contains(actId)) continue;
 
             var courseId = elem.TryGetProperty("mapel", out var m) && m.ValueKind == JsonValueKind.String
                 ? m.GetString()
@@ -499,6 +590,8 @@ public class DataSeeder
                 pendingReschedules.Add((actId, fromId, toId));
             }
 
+            var rawRoom = elem.TryGetProperty("ruangan", out var rVal) ? rVal.GetString() : null;
+
             var activity = new Activity
             {
                 Id = actId,
@@ -511,7 +604,7 @@ public class DataSeeder
                 StartTime = elem.GetProperty("mulai").GetString()!,
                 EndTime = elem.GetProperty("selesai").GetString()!,
                 IsAllDay = elem.TryGetProperty("sepanjangHari", out var allday) && allday.GetBoolean(),
-                RoomId = elem.GetProperty("ruangan").GetString()!,
+                RoomId = string.IsNullOrWhiteSpace(rawRoom) ? null : rawRoom,
                 CustomPlace = elem.TryGetProperty("tempatCustom", out var tc) ? tc.GetString() : null,
                 Notes = elem.TryGetProperty("catatan", out var cat) ? cat.GetString() ?? "" : "",
                 RawStatus = rawStatus,
@@ -526,6 +619,7 @@ public class DataSeeder
             };
 
             _db.Activities.Add(activity);
+            existingActivityIds.Add(actId);
 
             // Collect Subjects
             if (elem.TryGetProperty("subjek", out var subArray) && subArray.ValueKind == JsonValueKind.Array)

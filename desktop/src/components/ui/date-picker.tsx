@@ -32,6 +32,8 @@ export interface DatePickerProps {
   value?: string | Date;
   defaultValue?: string | Date;
   onChange?: (dateIso: string) => void;
+  minDate?: string | Date;
+  maxDate?: string | Date;
   placeholder?: string;
   disabled?: boolean;
   error?: boolean | string;
@@ -73,6 +75,8 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       value: propValue,
       defaultValue,
       onChange,
+      minDate,
+      maxDate,
       placeholder = "Pilih tanggal",
       disabled = false,
       error = false,
@@ -88,6 +92,18 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     );
     const [open, setOpen] = React.useState(false);
     const [viewMode, setViewMode] = React.useState<"days" | "months" | "years">("days");
+
+    const minIso = React.useMemo(() => {
+      if (!minDate) return undefined;
+      if (minDate instanceof Date) return format(minDate, "yyyy-MM-dd");
+      return minDate;
+    }, [minDate]);
+
+    const maxIso = React.useMemo(() => {
+      if (!maxDate) return undefined;
+      if (maxDate instanceof Date) return format(maxDate, "yyyy-MM-dd");
+      return maxDate;
+    }, [maxDate]);
 
     // Synchronize controlled value
     React.useEffect(() => {
@@ -110,17 +126,25 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
         if (internalDate) {
           setViewDate(internalDate);
           setYearRangeStart(Math.floor(getYear(internalDate) / 12) * 12);
+        } else if (minIso) {
+          const mDate = normalizeDate(minIso);
+          if (mDate) {
+            setViewDate(mDate);
+            setYearRangeStart(Math.floor(getYear(mDate) / 12) * 12);
+          }
         } else {
           setYearRangeStart(Math.floor(getYear(viewDate) / 12) * 12);
         }
       } else {
         setViewMode("days");
       }
-    }, [open]);
+    }, [open, minIso]);
 
     const handleSelectDay = (day: Date) => {
-      setInternalDate(day);
       const isoStr = format(day, "yyyy-MM-dd");
+      if (minIso && isoStr < minIso) return;
+      if (maxIso && isoStr > maxIso) return;
+      setInternalDate(day);
       onChange?.(isoStr);
       setOpen(false);
     };
@@ -133,8 +157,10 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 
     const handleToday = () => {
       const today = new Date();
-      setInternalDate(today);
       const isoStr = format(today, "yyyy-MM-dd");
+      if (minIso && isoStr < minIso) return;
+      if (maxIso && isoStr > maxIso) return;
+      setInternalDate(today);
       onChange?.(isoStr);
       setViewDate(today);
       setYearRangeStart(Math.floor(getYear(today) / 12) * 12);
@@ -342,24 +368,36 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                     const inCurrentMonth = isSameMonth(day, viewDate);
                     const selected = internalDate && isSameDay(day, internalDate);
                     const today = isToday(day);
+                    const dayIso = format(day, "yyyy-MM-dd");
+                    const isDayDisabled = Boolean(
+                      (minIso && dayIso < minIso) || (maxIso && dayIso > maxIso)
+                    );
 
                     return (
                       <button
                         key={day.toISOString()}
                         type="button"
+                        disabled={isDayDisabled}
                         onClick={() => handleSelectDay(day)}
                         className={cn(
-                          "h-6 w-6 mx-auto flex items-center justify-center rounded-full text-[11.5px] font-normal cursor-pointer select-none transition-colors border",
-                          selected &&
+                          "h-6 w-6 mx-auto flex items-center justify-center rounded-full text-[11.5px] font-normal select-none transition-colors border",
+                          isDayDisabled
+                            ? "border-transparent text-(--color-text-muted) opacity-25 cursor-not-allowed pointer-events-none hover:bg-transparent"
+                            : "cursor-pointer",
+                          !isDayDisabled &&
+                            selected &&
                             "border-(--color-brand) bg-(--color-brand) text-white font-semibold hover:bg-(--color-brand)",
-                          !selected &&
+                          !isDayDisabled &&
+                            !selected &&
                             today &&
                             "border-(--color-brand) text-(--color-brand) font-semibold hover:bg-(--color-brand-subtle)",
-                          !selected &&
+                          !isDayDisabled &&
+                            !selected &&
                             !today &&
                             inCurrentMonth &&
                             "border-transparent text-(--color-text) hover:bg-(--color-brand-subtle)",
-                          !selected &&
+                          !isDayDisabled &&
+                            !selected &&
                             !today &&
                             !inCurrentMonth &&
                             "border-transparent text-(--color-icon-faint) hover:bg-(--color-surface-alt)"
@@ -458,7 +496,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                   <button
                     type="button"
                     onClick={handleToday}
-                    className="text-(--color-brand) font-medium hover:underline cursor-pointer select-none"
+                    disabled={Boolean(
+                      (minIso && format(new Date(), "yyyy-MM-dd") < minIso) ||
+                      (maxIso && format(new Date(), "yyyy-MM-dd") > maxIso)
+                    )}
+                    className="text-(--color-brand) font-medium hover:underline cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
                   >
                     Hari ini
                   </button>
@@ -475,7 +517,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                   <button
                     type="button"
                     onClick={handleToday}
-                    className="text-(--color-brand) font-medium hover:underline cursor-pointer select-none"
+                    disabled={Boolean(
+                      (minIso && format(new Date(), "yyyy-MM-dd") < minIso) ||
+                      (maxIso && format(new Date(), "yyyy-MM-dd") > maxIso)
+                    )}
+                    className="text-(--color-brand) font-medium hover:underline cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
                   >
                     Hari ini
                   </button>

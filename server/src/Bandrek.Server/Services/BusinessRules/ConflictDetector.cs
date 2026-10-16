@@ -36,7 +36,7 @@ public class ConflictDetector
         DateOnly date,
         string startTime,
         string endTime,
-        string roomId,
+        string? roomId,
         IEnumerable<string> subjectIds,
         IEnumerable<string> studentIds,
         string? excludeActivityId = null,

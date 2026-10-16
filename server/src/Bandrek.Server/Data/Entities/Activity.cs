@@ -22,8 +22,8 @@ public class Activity
     public string EndTime { get; set; } = string.Empty;   // HH:mm
     public bool IsAllDay { get; set; } = false;
 
-    public string RoomId { get; set; } = string.Empty;
-    public Room Room { get; set; } = null!;
+    public string? RoomId { get; set; }
+    public Room? Room { get; set; }
 
     public string? CustomPlace { get; set; }
     public string Notes { get; set; } = string.Empty;

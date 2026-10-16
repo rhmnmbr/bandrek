@@ -3207,7 +3207,10 @@
             "type": "boolean"
           },
           "roomId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "customPlace": {
             "type": [
@@ -3764,7 +3767,10 @@
             "type": "string"
           },
           "roomId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "subjectIds": {
             "type": "array",
@@ -3985,7 +3991,10 @@
             ]
           },
           "roomId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "customPlace": {
             "type": [

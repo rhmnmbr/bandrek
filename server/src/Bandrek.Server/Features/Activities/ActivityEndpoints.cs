@@ -337,8 +337,8 @@ public static class ActivityEndpoints
             if (!string.IsNullOrWhiteSpace(request.StartTime)) activity.StartTime = request.StartTime;
             if (!string.IsNullOrWhiteSpace(request.EndTime)) activity.EndTime = request.EndTime;
             if (request.IsAllDay.HasValue) activity.IsAllDay = request.IsAllDay.Value;
-            if (!string.IsNullOrWhiteSpace(request.RoomId)) activity.RoomId = request.RoomId;
-            if (request.CustomPlace != null) activity.CustomPlace = request.CustomPlace.Trim();
+            if (request.RoomId != null) activity.RoomId = string.IsNullOrWhiteSpace(request.RoomId) ? null : request.RoomId;
+            if (request.CustomPlace != null) activity.CustomPlace = string.IsNullOrWhiteSpace(request.CustomPlace) ? null : request.CustomPlace.Trim();
             if (request.Notes != null) activity.Notes = request.Notes.Trim();
 
             // Update subjects
@@ -564,8 +564,8 @@ public static class ActivityEndpoints
             StartTime = request.StartTime,
             EndTime = request.EndTime,
             IsAllDay = request.IsAllDay ?? false,
-            RoomId = request.RoomId,
-            CustomPlace = request.CustomPlace?.Trim(),
+            RoomId = string.IsNullOrWhiteSpace(request.RoomId) ? null : request.RoomId,
+            CustomPlace = string.IsNullOrWhiteSpace(request.CustomPlace) ? null : request.CustomPlace.Trim(),
             Notes = request.Notes?.Trim() ?? string.Empty,
             RawStatus = RawActivityStatuses.Scheduled
         };

@@ -40,7 +40,7 @@ function enrichRuangan(r: Ruangan): Ruangan {
 function enrichTempat(t: Tempat): Tempat {
   const rooms = mockStore.ruangan.filter((r) => r.tempat === t.id).map(enrichRuangan);
   const roomIds = rooms.map((r) => r.id);
-  const kegCount = mockStore.kegiatan.filter((k) => roomIds.includes(k.ruangan)).length;
+  const kegCount = mockStore.kegiatan.filter((k) => Boolean(k.ruangan) && roomIds.includes(k.ruangan!)).length;
   const anakN = rooms.length;
 
   const dapatDihapus = anakN === 0 && kegCount === 0;

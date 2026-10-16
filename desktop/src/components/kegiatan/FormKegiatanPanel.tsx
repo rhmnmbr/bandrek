@@ -382,8 +382,8 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
     if (lintasHari) {
       if (!tanggalSelesai) {
         err.tanggalSelesai = 'Tanggal selesai belum diisi.';
-      } else if (tanggal && tanggalSelesai < tanggal) {
-        err.tanggalSelesai = 'Tanggal selesai tidak boleh sebelum tanggal mulai.';
+      } else if (tanggal && tanggalSelesai <= tanggal) {
+        err.tanggalSelesai = 'Tanggal selesai harus setelah tanggal mulai.';
       }
     }
     if (!sepanjangHari) {
@@ -922,9 +922,20 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   ref={tanggalRef}
                   value={tanggal}
                   onChange={(val) => {
+                    const oldStart = tanggal;
                     setTanggal(val);
-                    if (lintasHari && (!tanggalSelesai || tanggalSelesai < val)) {
-                      setTanggalSelesai(val);
+                    if (lintasHari) {
+                      if (!tanggalSelesai || tanggalSelesai <= val) {
+                        setTanggalSelesai(toIso(addDays(toDate(val), 1)));
+                      } else if (oldStart) {
+                        const oldTime = toDate(oldStart).getTime();
+                        const newTime = toDate(val).getTime();
+                        const diffDays = Math.round((newTime - oldTime) / 86400000);
+                        if (diffDays > 0) {
+                          // Tgl mulai diganti ke depan: tgl selesai ikut maju menyesuaikan
+                          setTanggalSelesai((prev) => toIso(addDays(toDate(prev), diffDays)));
+                        }
+                      }
                     }
                     markTouched('tanggal');
                   }}
@@ -953,6 +964,7 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   <DatePicker
                     ref={tanggalSelesaiRef}
                     value={tanggalSelesai}
+                    minDate={tanggal ? toIso(addDays(toDate(tanggal), 1)) : undefined}
                     onChange={(val) => {
                       setTanggalSelesai(val);
                       markTouched('tanggalSelesai');
@@ -981,8 +993,10 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                       onChange={(e) => {
                         const checked = e.target.checked;
                         setLintasHari(checked);
-                        if (checked && (!tanggalSelesai || tanggalSelesai < tanggal)) {
-                          setTanggalSelesai(tanggal || '');
+                        if (checked) {
+                          // Default tgl selesai selalu H+1 dari tgl mulai
+                          const base = tanggal ? toDate(tanggal) : new Date();
+                          setTanggalSelesai(toIso(addDays(base, 1)));
                         }
                         setIsDirty(true);
                       }}
@@ -1359,43 +1373,51 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
                   );
                 })}
 
-                {/* "+ tambah" Button with Popover */}
-                <PopoverPrimitive.Root
-                  open={menuTambahSubjekOpen}
-                  onOpenChange={setMenuTambahSubjekOpen}
-                >
-                  <PopoverPrimitive.Trigger asChild>
-                    <AddSubjekButton
-                      disabled={remainingSubjek.length === 0}
-                      title={
-                        remainingSubjek.length === 0
-                          ? 'Semua subjek aktif sudah dipakai'
-                          : 'Tambah subjek dari daftar aktif'
-                      }
-                    />
-                  </PopoverPrimitive.Trigger>
-                  <PopoverPrimitive.Portal>
-                    <PopoverPrimitive.Content
-                      align="start"
-                      sideOffset={4}
-                      className="z-50 w-56 max-h-50 overflow-y-auto rounded-md border border-(--color-border) bg-white p-1 text-[12px] shadow-(--shadow-overlay) animate-in fade-in-0 zoom-in-95"
-                    >
-                      <div className="px-2 py-1 text-[10.5px] font-semibold text-(--color-text-muted) uppercase tracking-wider">
-                        Tambah Subjek
-                      </div>
-                      {remainingSubjek.map((s) => (
-                        <button
-                          key={s.id}
-                          type="button"
-                          onClick={() => handleAddSubjek(s.id)}
-                          className="w-full text-left px-2 py-1.5 rounded-sm hover:bg-(--color-surface-alt) text-(--color-text) cursor-pointer flex items-center"
-                        >
-                          <span className="truncate">{s.nama}</span>
-                        </button>
-                      ))}
-                    </PopoverPrimitive.Content>
-                  </PopoverPrimitive.Portal>
-                </PopoverPrimitive.Root>
+                {subjek.length === 0 && subjekList.length === 0 && (
+                  <span className="text-[11.5px] text-(--color-text-muted) italic">
+                    Belum ada data subjek.
+                  </span>
+                )}
+
+                {/* "+ tambah" Button with Popover (only shown when master subjek has data) */}
+                {subjekList.length > 0 && (
+                  <PopoverPrimitive.Root
+                    open={menuTambahSubjekOpen}
+                    onOpenChange={setMenuTambahSubjekOpen}
+                  >
+                    <PopoverPrimitive.Trigger asChild>
+                      <AddSubjekButton
+                        disabled={remainingSubjek.length === 0}
+                        title={
+                          remainingSubjek.length === 0
+                            ? 'Semua subjek aktif sudah dipakai'
+                            : 'Tambah subjek dari daftar aktif'
+                        }
+                      />
+                    </PopoverPrimitive.Trigger>
+                    <PopoverPrimitive.Portal>
+                      <PopoverPrimitive.Content
+                        align="start"
+                        sideOffset={4}
+                        className="z-50 w-56 max-h-50 overflow-y-auto rounded-md border border-(--color-border) bg-white p-1 text-[12px] shadow-(--shadow-overlay) animate-in fade-in-0 zoom-in-95"
+                      >
+                        <div className="px-2 py-1 text-[10.5px] font-semibold text-(--color-text-muted) uppercase tracking-wider">
+                          Tambah Subjek
+                        </div>
+                        {remainingSubjek.map((s) => (
+                          <button
+                            key={s.id}
+                            type="button"
+                            onClick={() => handleAddSubjek(s.id)}
+                            className="w-full text-left px-2 py-1.5 rounded-sm hover:bg-(--color-surface-alt) text-(--color-text) cursor-pointer flex items-center"
+                          >
+                            <span className="truncate">{s.nama}</span>
+                          </button>
+                        ))}
+                      </PopoverPrimitive.Content>
+                    </PopoverPrimitive.Portal>
+                  </PopoverPrimitive.Root>
+                )}
               </div>
 
               {(dicoba || touched.subjek) && currentErrors.subjek && (
@@ -1530,7 +1552,11 @@ export const FormKegiatanPanel: React.FC<FormKegiatanPanelProps> = ({
 
                 {/* Grouped Checklist */}
                 <div className="flex-1 min-h-35 overflow-y-auto divide-y divide-(--color-border-subtle)">
-                  {groupedStudents.length === 0 ? (
+                  {activeSiswa.length === 0 ? (
+                    <div className="p-4 text-center text-(--color-text-muted) text-[11.5px]">
+                      Belum ada data siswa di master data.
+                    </div>
+                  ) : groupedStudents.length === 0 ? (
                     <div className="p-4 text-center text-(--color-text-muted) text-[11.5px]">
                       Tidak ada siswa yang cocok dengan &quot;{searchSiswa}&quot;.
                     </div>

@@ -24,7 +24,8 @@ export interface CreateActivityRequest {
   endTime: string;
   /** @nullable */
   isAllDay: boolean | null;
-  roomId: string;
+  /** @nullable */
+  roomId: string | null;
   /** @nullable */
   customPlace: string | null;
   subjects: ActivitySubjectDto[];

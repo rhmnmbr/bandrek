@@ -61,7 +61,7 @@ export interface Kegiatan {
   mulai: string; // HH:mm
   selesai: string; // HH:mm
   sepanjangHari?: boolean;
-  ruangan: string; // Ruangan ID
+  ruangan?: string | null; // Ruangan ID (opsional jika tempat custom)
   tempatCustom?: string | null;
   subjek: KegiatanSubjekItem[];
   siswa: string[]; // List of Siswa IDs
@@ -127,7 +127,7 @@ export interface CekBentrokInput {
   tanggalSelesai?: string | null;
   mulai: string;
   selesai: string;
-  ruangan: string;
+  ruangan?: string | null;
   subjek: string[]; // List of Subjek IDs
   siswa: string[]; // List of Siswa IDs
   excludeKegiatanId?: string; // Untuk mode Edit, jangan bentrok dengan diri sendiri
@@ -190,7 +190,7 @@ export interface CreateKegiatanInput {
   mulai: string;
   selesai: string;
   sepanjangHari?: boolean;
-  ruangan: string;
+  ruangan?: string | null;
   tempatCustom?: string | null;
   subjek: KegiatanSubjekItem[];
   siswa: string[];

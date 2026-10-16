@@ -224,7 +224,7 @@ export function detectScheduleConflicts(
 
   for (const k of candidateKegiatan) {
     // 1. Bentrok Ruangan (hanya untuk ruangan terdaftar, bukan custom/kosong)
-    if (Boolean(ruangan) && k.ruangan === ruangan) {
+    if (ruangan && k.ruangan === ruangan) {
       conflicts.push({
         tipe: 'ruangan',
         entitasId: ruangan,

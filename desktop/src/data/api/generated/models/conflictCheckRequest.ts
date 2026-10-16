@@ -9,7 +9,8 @@ export interface ConflictCheckRequest {
   date: string;
   startTime: string;
   endTime: string;
-  roomId: string;
+  /** @nullable */
+  roomId?: string | null;
   subjectIds: string[];
   studentIds: string[];
   /** @nullable */
