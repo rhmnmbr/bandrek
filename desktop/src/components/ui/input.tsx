@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Search12Regular, Dismiss12Regular, Warning12Regular } from "@fluentui/react-icons";
+import {
+  Search12Regular,
+  Dismiss12Regular,
+  Warning12Regular,
+  Eye16Regular,
+  EyeOff16Regular,
+} from "@fluentui/react-icons";
 import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -95,6 +101,48 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   }
 );
 SearchInput.displayName = "SearchInput";
+
+export interface PasswordInputProps extends Omit<InputProps, "type"> {}
+
+export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
+  ({ className, density = "compact", disabled, ...props }, ref) => {
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    return (
+      <div className="relative flex items-center w-full">
+        <Input
+          ref={ref}
+          type={showPassword ? "text" : "password"}
+          disabled={disabled}
+          density={density}
+          className={cn(density === "compact" ? "pr-7.5" : "pr-8", className)}
+          {...props}
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          disabled={disabled}
+          onClick={() => setShowPassword((prev) => !prev)}
+          className={cn(
+            "absolute flex items-center justify-center cursor-pointer border-none bg-transparent transition-colors rounded",
+            density === "compact" ? "right-1 w-5.5 h-5.5" : "right-1.5 w-6 h-6",
+            "text-(--color-icon-faint) hover:text-(--color-text) hover:bg-black/5 active:bg-black/10",
+            disabled && "opacity-50 cursor-not-allowed pointer-events-none"
+          )}
+          aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+          title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+        >
+          {showPassword ? (
+            <EyeOff16Regular className={density === "compact" ? "w-3.5 h-3.5" : "w-4 h-4"} />
+          ) : (
+            <Eye16Regular className={density === "compact" ? "w-3.5 h-3.5" : "w-4 h-4"} />
+          )}
+        </button>
+      </div>
+    );
+  }
+);
+PasswordInput.displayName = "PasswordInput";
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: boolean | string;

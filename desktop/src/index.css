@@ -301,3 +301,10 @@
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
 
+/* Disable native Edge/WebView2 password reveal and clear buttons */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+}
+
+

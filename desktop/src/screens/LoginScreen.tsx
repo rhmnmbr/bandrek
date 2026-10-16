@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Warning16Regular, Server16Regular } from '@fluentui/react-icons';
 import { useLogin, useAuthSession } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
+import { PasswordInput } from '@/components/ui/input';
 import { BandrekLogo } from '@/components/ui/bandrek-logo';
 import { getServerUrl } from '@/data/api/client';
 
@@ -89,12 +90,12 @@ export function LoginScreen() {
             <label className="text-[12px] font-medium text-(--color-text-secondary)">
               Kata sandi
             </label>
-            <input
-              type="password"
+            <PasswordInput
+              density="comfortable"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Kata sandi akun"
-              className="h-8 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[13.5px] outline-none focus:border-(--color-brand) transition-colors"
+              autoComplete="current-password"
             />
           </div>
 

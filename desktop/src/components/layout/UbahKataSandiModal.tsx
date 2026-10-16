@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Warning16Regular, Dismiss16Regular, LockClosed16Regular } from '@fluentui/react-icons';
 import { useAuthSession, useChangePassword } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
+import { PasswordInput } from '@/components/ui/input';
 
 export interface UbahKataSandiModalProps {
   isOpen: boolean;
@@ -154,14 +155,12 @@ export function UbahKataSandiModal({ isOpen, onClose }: UbahKataSandiModalProps)
             <label className="text-[11.5px] font-medium text-(--color-text-secondary)">
               Kata sandi saat ini <span className="text-(--color-danger)">*</span>
             </label>
-            <input
+            <PasswordInput
               ref={lamaInputRef}
-              type="password"
               value={kataSandiLama}
               onChange={(e) => setKataSandiLama(e.target.value)}
               placeholder="Masukkan kata sandi saat ini"
               autoComplete="current-password"
-              className="h-7.5 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[13px] outline-none focus:border-(--color-brand) transition-colors"
             />
           </div>
 
@@ -170,13 +169,11 @@ export function UbahKataSandiModal({ isOpen, onClose }: UbahKataSandiModalProps)
             <label className="text-[11.5px] font-medium text-(--color-text-secondary)">
               Kata sandi baru <span className="text-(--color-danger)">*</span>
             </label>
-            <input
-              type="password"
+            <PasswordInput
               value={kataSandiBaru}
               onChange={(e) => setKataSandiBaru(e.target.value)}
               placeholder="Minimal 4 karakter"
               autoComplete="new-password"
-              className="h-7.5 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[13px] outline-none focus:border-(--color-brand) transition-colors"
             />
           </div>
 
@@ -185,13 +182,11 @@ export function UbahKataSandiModal({ isOpen, onClose }: UbahKataSandiModalProps)
             <label className="text-[11.5px] font-medium text-(--color-text-secondary)">
               Ulangi kata sandi baru <span className="text-(--color-danger)">*</span>
             </label>
-            <input
-              type="password"
+            <PasswordInput
               value={konfirmasi}
               onChange={(e) => setKonfirmasi(e.target.value)}
               placeholder="Ketik ulang kata sandi baru"
               autoComplete="new-password"
-              className="h-7.5 rounded-sm border border-(--color-border) bg-(--color-surface) px-2.5 text-[13px] outline-none focus:border-(--color-brand) transition-colors"
             />
           </div>
 

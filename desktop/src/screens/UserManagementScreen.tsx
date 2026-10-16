@@ -9,6 +9,7 @@ import {
   useUpdateUser,
 } from '@/data/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
+import { PasswordInput } from '@/components/ui/input';
 import { MasterTableSkeleton, FormPanelSkeleton, UserManagementSkeleton } from '@/components/skeleton';
 import { useMinimumLoading } from '@/lib/useMinimumLoading';
 
@@ -228,8 +229,7 @@ function UserFormView({
           <label className="text-[11.5px] text-(--color-text-secondary) flex items-center gap-1 min-h-4.5">
             Kata sandi {isNewMode && <span className="text-(--color-danger)">*</span>}
           </label>
-          <input
-            type="password"
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={
@@ -237,11 +237,8 @@ function UserFormView({
                 ? 'Kata sandi akun'
                 : 'Kosongkan jika tidak ingin mengubah sandi'
             }
-            className={`h-7 px-2 text-[13.5px] rounded-sm border bg-(--color-surface) outline-none transition-colors ${
-              hasPasswordError
-                ? 'border-(--color-danger) focus:border-(--color-danger)'
-                : 'border-(--color-border) focus:border-(--color-brand)'
-            }`}
+            error={hasPasswordError}
+            autoComplete="new-password"
           />
         </div>
 
