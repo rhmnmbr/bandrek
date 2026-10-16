@@ -1,12 +1,14 @@
 name: Deploy Bandrek Server to VPS
 
+# Deployment is manual by design (same as Satupadu):
+# Pushing or merging to main will never touch production until someone explicitly clicks "Run workflow".
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'server/**'
-      - '.github/workflows/deploy-server.yml'
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag, or commit to deploy'
+        required: false
+        default: 'main'
 
 concurrency:
   group: deploy-bandrek-production
@@ -20,6 +22,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || 'main' }}
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
